@@ -1,0 +1,37 @@
+spring:
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+    serialization:
+      indent-output: false
+      write-dates-as-timestamps: false
+      write-date-timestamps-as-nanoseconds: false
+logging:
+  file: log/hawaii.log
+  level:
+    org.hawaiiframework: INFO
+    org.springframework: INFO
+hawaii:
+  time:
+    enabled: true
+    timezone: UTC
+
+---
+
+spring:
+  profiles: dev
+  jackson:
+    serialization.indent-output: true
+logging:
+  level:
+    org.hawaiiframework: DEBUG
+
+---
+
+spring:
+  profiles: test
+
+---
+
+spring:
+  profiles: prod

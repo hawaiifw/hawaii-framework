@@ -1,0 +1,58 @@
+[[appendix-hawaii-application-properties]]
+[appendix]
+=== Hawaii application properties
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent neque mi, lobortis non sagittis vitae, porttitor ac dolor. Morbi facilisis porta vestibulum. Donec id risus scelerisque, dictum leo et, mattis ante. Praesent ac viverra nisi, ac cursus lectus. Ut vel tellus sit amet libero efficitur tristique. Aenean id massa pulvinar, imperdiet sapien et, tempus dui. Sed imperdiet porttitor iaculis. Vivamus mattis sit amet nisi nec dictum.
+
+[source%nowrap,properties,indent=0,subs="verbatim,attributes,macros"]
+----
+	# ===================================================================
+	# HAWAII PROPERTIES
+	#
+	# This sample file is provided as a guideline. Do NOT copy it in its
+	# entirety to your own application.               ^^^
+	# ===================================================================
+
+	# HAWAII SPRING BOOT DEFAULTS
+	spring:
+	  jackson:
+		date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+		property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+		serialization:
+		  indent-output: false
+		  write-dates-as-timestamps: false
+		  write-date-timestamps-as-nanoseconds: false
+	logging:
+	  file: log/hawaii.log
+	  level:
+		  org.hawaiiframework: INFO
+		  org.springframework: INFO
+
+    [[appendix-hawaii-application-properties-time]]
+	# HAWAII TIME
+	hawaii:
+	  time:
+	    enabled: true # Enable creation of the `HawaiiTime` bean.
+	    timezone: UTC # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
+
+	---
+
+	spring:
+	  profiles: dev
+	  jackson:
+		serialization.indent-output: true
+	logging:
+	  level:
+		org.hawaiiframework: DEBUG
+
+	---
+
+	spring:
+	  profiles: test
+
+	---
+
+	spring:
+	  profiles: prod
+
+----

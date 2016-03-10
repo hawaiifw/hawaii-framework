@@ -1,0 +1,331 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "http://repo.spring.io/snapshot" }
+    }
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
+        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
+        classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+    }
+}
+
+ext {
+    javaVersion = "1.8"
+    dependencyManagementPluginVersion = "0.5.4.RELEASE"
+    springPlatformVersion = "2.0.2.RELEASE" // "2.1.0.BUILD-SNAPSHOT" --> boot 1.4
+    javadocLinks = [
+        "http://commons.apache.org/proper/commons-lang/javadocs/api-3.4/",
+        "http://docs.oracle.com/javase/8/docs/api/",
+        "http://docs.oracle.com/javaee/7/api/",
+        "http://docs.spring.io/spring/docs/4.2.4.RELEASE/javadoc-api/",
+        "http://docs.spring.io/spring-boot/docs/1.3.2.RELEASE/api/",
+        "http://docs.spring.io/spring-data/commons/docs/1.11.2.RELEASE/api/",
+        "http://docs.spring.io/spring-security/site/docs/4.0.3.RELEASE/apidocs/",
+        "http://docs.spring.io/spring-session/docs/1.0.2.RELEASE/api/",
+        "http://fasterxml.github.io/jackson-core/javadoc/2.6/",
+        "http://fasterxml.github.io/jackson-databind/javadoc/2.6/",
+        "http://fasterxml.github.io/jackson-databind/javadoc/2.6/",
+        "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.6/",
+        "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.6/"
+    ] as String[]
+}
+
+configure(allprojects) { project ->
+
+    group = "org.hawaiiframework"
+
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "idea"
+    apply plugin: "maven"
+    apply plugin: "propdeps"
+    apply plugin: "propdeps-maven"
+    apply plugin: "propdeps-idea"
+    apply plugin: "propdeps-eclipse"
+
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/snapshot" }
+    }
+
+    configurations {
+        all*.exclude group: "commons-logging", module: "commons-logging"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "io.spring.platform:platform-bom:${springPlatformVersion}"
+        }
+    }
+
+    dependencies {
+        compile("org.slf4j:jcl-over-slf4j")
+        compile("org.slf4j:slf4j-api")
+        testCompile("junit:junit")
+        testCompile("org.hamcrest:hamcrest-core")
+        testCompile("org.hamcrest:hamcrest-library")
+        testCompile("org.mockito:mockito-core")
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+}
+
+configure(subprojects) { subproject ->
+
+    jar {
+        manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+        manifest.attributes["Implementation-Title"] = subproject.name
+        manifest.attributes["Implementation-Version"] = subproject.version
+
+        from("${rootProject.projectDir}/src/dist") {
+            include "license.txt"
+            include "notice.txt"
+            into "META-INF"
+            expand(copyright: new Date().format("yyyy"), version: project.version)
+        }
+    }
+
+    javadoc {
+        description = "Generates project-level Javadoc API documentation."
+
+        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        options.author = true
+        options.header = project.name
+        options.links(javadocLinks)
+        options.addStringOption("Xdoclint:none", "-quiet")
+
+        // suppress warnings due to cross-module @see and @link references;
+        // note that global 'api' task does display all warnings.
+        logging.captureStandardError LogLevel.INFO
+        logging.captureStandardOutput LogLevel.INFO // suppress "## warnings" message
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = "sources"
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = "javadoc"
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+}
+
+project("hawaii-autoconfigure") {
+
+    description = "Hawaii Autoconfigure"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile "org.springframework.boot:spring-boot"
+        compile "org.springframework.boot:spring-boot-autoconfigure"
+        compile "org.yaml:snakeyaml"
+        optional "com.fasterxml.jackson.core:jackson-databind"
+        optional "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        optional "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        optional "javax.servlet:javax.servlet-api"
+    }
+}
+
+project("hawaii-core") {
+
+    description = "Hawaii Core"
+
+    dependencies {
+        compile "com.google.guava:guava"
+        compile "org.apache.commons:commons-lang3"
+        optional "com.fasterxml.jackson.core:jackson-databind"
+        optional "org.aspectj:aspectjweaver"
+        optional "org.springframework:spring-aop"
+        optional "org.springframework:spring-core"
+        optional "org.springframework:spring-context"
+        optional "org.springframework:spring-web"
+        optional "org.springframework:spring-webmvc"
+    }
+}
+
+project("hawaii-starter") {
+
+    description = "Hawaii Starter"
+
+    dependencies {
+        compile project(":hawaii-autoconfigure")
+        compile project(":hawaii-core")
+        compile "org.springframework.boot:spring-boot-starter"
+        compile "org.springframework.boot:spring-boot-starter-aop"
+    }
+}
+
+project("hawaii-starter-rest") {
+
+    description = "Hawaii Starter Rest"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile "com.fasterxml.jackson.core:jackson-databind"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        compile "org.json:json"
+    }
+}
+
+project("hawaii-starter-test") {
+
+    description = "Hawaii Starter Test"
+
+    dependencies {
+        compile project(":hawaii-test")
+    }
+}
+
+project("hawaii-test") {
+
+    description = "Hawaii Test"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile "com.jayway.jsonpath:json-path"
+        compile "com.jayway.jsonpath:json-path-assert"
+        compile "junit:junit"
+        compile "org.hamcrest:hamcrest-core"
+        compile "org.hamcrest:hamcrest-library"
+        compile "org.mockito:mockito-core"
+        compile "org.skyscreamer:jsonassert"
+        compile "org.springframework:spring-beans"
+        compile "org.springframework:spring-core"
+        compile "org.springframework:spring-test"
+        compile "org.springframework:spring-web"
+    }
+}
+
+configure(rootProject) {
+
+    description = "Hawaii Framework"
+
+    apply plugin: "org.asciidoctor.convert"
+
+    // don't publish the default jar for the root project
+    configurations.archives.artifacts.clear()
+
+    asciidoctor {
+        backends = ["html5", "pdf"]
+        sourceDir project.file("src/asciidoc")
+        attributes  "revnumber": project.version,
+                    "spring-version": "${dependencyManagement.importedProperties['spring.version']}",
+                    "spring-boot-version": "${dependencyManagement.importedProperties['spring-boot.version']}"
+    }
+
+    task api(type: Javadoc) {
+        group = "Documentation"
+        description = "Generates aggregated Javadoc API documentation."
+        title = "${rootProject.description} ${version} API"
+
+        dependsOn {
+            subprojects.collect {
+                it.tasks.getByName("jar")
+            }
+        }
+        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        options.author = true
+        options.header = rootProject.description
+        options.overview = "src/api/overview.html"
+        options.stylesheetFile = file("src/api/stylesheet.css")
+        options.splitIndex = true
+        options.links(javadocLinks)
+        options.addStringOption("Xdoclint:none", "-quiet")
+
+        source subprojects.collect { project ->
+            project.sourceSets.main.allJava
+        }
+
+        classpath += files(subprojects.collect { it.sourceSets.main.compileClasspath })
+        destinationDir = new File(buildDir, "api")
+        maxMemory = "1024m"
+    }
+
+    task docs(dependsOn: ["api", "asciidoctor"]) {
+        group = "Documentation"
+        description = "Generates aggregated Javadoc API and reference documentation."
+    }
+
+    task docsZip(type: Zip, dependsOn: "docs") {
+        group = "Distribution"
+        baseName = "hawaii-framework"
+        classifier = "docs"
+        description = "Builds -${classifier} archive containing Javadoc API and reference documentation."
+
+        from (api) {
+            into "api"
+        }
+
+        from (asciidoctor) {
+            include "html5/index.html"
+            include "pdf/index.pdf"
+            into "reference"
+            rename { filename ->
+                filename.replace "index", "reference-documentation"
+            }
+        }
+    }
+
+    task distZip(type: Zip, dependsOn: "docsZip") {
+        group = "Distribution"
+        baseName = "hawaii-framework"
+        classifier = "dist"
+        description = "Builds -${classifier} archive containing all jars and documentation."
+
+        from("src/dist") {
+            include "license.txt"
+            include "notice.txt"
+            expand(copyright: new Date().format("yyyy"), version: project.version)
+        }
+
+        from(zipTree(docsZip.archivePath)) {
+            into "docs"
+        }
+
+        subprojects.each { subproject ->
+            into ("libs") {
+                from subproject.jar
+                if (subproject.tasks.findByPath("sourcesJar")) {
+                    from subproject.sourcesJar
+                }
+                if (subproject.tasks.findByPath("javadocJar")) {
+                    from subproject.javadocJar
+                }
+            }
+        }
+    }
+
+    artifacts {
+        archives docsZip
+        archives distZip
+    }
+
+    task wrapper(type: Wrapper) {
+        description = "Generates gradlew[.bat] scripts"
+        gradleVersion = "2.11"
+    }
+}

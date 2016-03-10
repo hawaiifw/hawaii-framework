@@ -1,0 +1,21 @@
+rootProject.name = "hawaii"
+
+def String[] modules = [
+        "hawaii-autoconfigure",
+        "hawaii-core",
+        "hawaii-test"
+]
+
+def String[] starters = [
+        "hawaii-starter",
+        "hawaii-starter-rest",
+        "hawaii-starter-test"
+]
+
+include modules
+include starters
+
+starters.each { name ->
+    def p = findProject(":${name}")
+    p.projectDir = new File(settingsDir, "hawaii-starters/${name}");
+}

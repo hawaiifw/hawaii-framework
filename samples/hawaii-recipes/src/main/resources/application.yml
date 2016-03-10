@@ -1,0 +1,6 @@
+spring:
+  h2.console.enabled: true
+logging:
+  level:
+    org.hawaiiframework: DEBUG
+hawaii.time.timzezone: Europe/Amsterdam
