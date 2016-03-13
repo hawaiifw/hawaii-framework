@@ -44,6 +44,7 @@ configure(allprojects) { project ->
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
     apply plugin: "maven"
+    apply plugin: "signing"
     apply plugin: "propdeps"
     apply plugin: "propdeps-maven"
     apply plugin: "propdeps-idea"
@@ -130,6 +131,54 @@ configure(subprojects) { subproject ->
     artifacts {
         archives sourcesJar
         archives javadocJar
+    }
+
+//    signing {
+//        sign configurations.archives
+//    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
+                }
+
+                pom.project {
+                    name "Hawaii Framework"
+                    packaging "jar"
+                    description "Hawaii Framework"
+                    url "https://github.com/hawaiifw/hawaii-framework"
+
+                    scm {
+                        connection "scm:git@github.com/hawaiifw/hawaii-framework.git"
+                        developerConnection "scm:git@github.com:hawaiifw/hawaii-framework.git"
+                        url "https://github.com/hawaiifw/hawaii-framework"
+                    }
+
+                    licenses {
+                        license {
+                            name "The Apache License, Version 2.0"
+                            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id "marceloverdijk"
+                            name "Marcel Overdijk"
+                            email "marcel@overdijk.me"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
