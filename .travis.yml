@@ -5,6 +5,7 @@ jdk:
 deploy:
   provider: script
   script: ./.travis-deploy-snapshot.sh
+  skip_cleanup: true
   on:
     branch: master
 cache:
