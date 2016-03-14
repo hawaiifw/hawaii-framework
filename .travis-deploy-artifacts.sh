@@ -16,9 +16,10 @@ fi
 
 HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
 GH_PAGES_DIR=.gh-pages
+GH_REF=github.com/hawaiifw/hawaii-framework
 
 rm -rf $GH_PAGES_DIR
-git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/hawaiifw/hawaii-framework $GH_PAGES_DIR > /dev/null 2>&1
+git clone --quiet --branch=gh-pages https://${GH_TOKEN}@${GH_REF} $GH_PAGES_DIR > /dev/null 2>&1
 
 rm -rf $GH_PAGES_DIR/docs/$HAWAII_FRAMEWORK_VERSION
 mkdir -p $GH_PAGES_DIR/docs/$HAWAII_FRAMEWORK_VERSION
