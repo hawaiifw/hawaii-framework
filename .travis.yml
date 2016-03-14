@@ -4,14 +4,14 @@ jdk:
   - oraclejdk8
 deploy:
   provider: script
-  script: ./.travis-deploy-snapshot.sh
+  script: ./.travis-deploy-archives.sh
   skip_cleanup: true
   on:
     branch: master
 cache:
   directories:
-  - $HOME/.gradle
-  - $HOME/.m2
+    - $HOME/.gradle
+    - $HOME/.m2
 notifications:
   webhooks:
     urls:
