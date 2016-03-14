@@ -2,8 +2,14 @@
 
 set -e
 
+echo "Deploy!!"
+echo "branch = ${TRAVIS_BRANCH}"
+echo "pr? = ${TRAVIS_PULL_REQUEST}"
+
+
 # Do not deploy archives when building pull request
-if [ "$TRAVIS_BRANCH" != "master" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+if [ "${TRAVIS_BRANCH}" != "master" ] || [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
+  echo "Exit!!"
   exit 0
 fi
 
