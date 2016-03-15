@@ -1,6 +1,8 @@
 ---
 ---
 
+$grid-float-breakpoint: 992px !default;
+
 @import "bootstrap-3.3.6/bootstrap";
 @import "font-awesome-4.5.0/font-awesome";
 @import "fonts/merriweather-v11";     // font-family: 'Merriweather', serif;
@@ -17,12 +19,16 @@ body {
   margin-bottom: 60px; /* footer height */
 
   > .container {
-    padding: 30px 15px 0;
+    padding: 10px 15px 0;
   }
 }
 
 h1, h2 {
   font-weight: 900;
+}
+
+.page-header {
+  margin-top: 20px;
 }
 
 .navbar-brand {
