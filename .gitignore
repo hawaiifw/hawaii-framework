@@ -12,4 +12,8 @@ build
 lib
 log
 target
+
+# jekyll
+.sass-cache
+.jekyll-metadata
 _site
