@@ -1,10 +1,6 @@
 title: Hawaii Framework
 url: http://www.hawaiiframework.org
 
-twitter:
-  username: hawaiifw
-  url: https://twitter.com/hawaiifw
-
 gems:
   - jekyll-sitemap
 
@@ -12,3 +8,10 @@ sass:
   style: :compressed
 
 timezone: Europe/Amsterdam
+
+github:
+  url: https://github.com/hawaiifw/hawaii-framework
+
+twitter:
+  username: hawaiifw
+  url: https://twitter.com/hawaiifw

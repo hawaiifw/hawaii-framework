@@ -16,8 +16,8 @@
         <li{% if page.active == "blog" %} class="active"{% endif %}><a href="/blog">Blog</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/hawaiifw/hawaii-framework"><i class="fa fa-fw fa-lg fa-github"></i> GitHub</a></li>
-        <li><a href="https://www.twitter.com/hawaiiframework"><i class="fa fa-fw fa-lg fa-twitter"></i> @HawaiiFramework</a></li>
+        <li><a href="{{ site.github.url }}"><i class="fa fa-fw fa-lg fa-github"></i> GitHub</a></li>
+        <li><a href="{{ site.twitter.url }}"><i class="fa fa-fw fa-lg fa-twitter"></i> @{{ site.twitter.username }}</a></li>
       </ul>
     </div>
   </div>
