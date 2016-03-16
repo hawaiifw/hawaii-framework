@@ -12,6 +12,10 @@ timezone: Europe/Amsterdam
 github:
   url: https://github.com/hawaiifw/hawaii-framework
 
+google:
+  analytics:
+    tracking-id: UA-75184212-1
+
 twitter:
   username: hawaiifw
   url: https://twitter.com/hawaiifw
