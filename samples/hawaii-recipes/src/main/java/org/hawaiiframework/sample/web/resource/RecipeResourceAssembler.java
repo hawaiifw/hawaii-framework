@@ -17,7 +17,7 @@
 package org.hawaiiframework.sample.web.resource;
 
 import org.hawaiiframework.sample.model.Recipe;
-import org.hawaiiframework.web.resource.AbstractResourceAssembler;
+import org.hawaiiframework.web.resource.ResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @author Marcel Overdijk
  */
 @Component
-public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, RecipeResource> {
+public class RecipeResourceAssembler implements ResourceAssembler<Recipe, RecipeResource> {
 
     private final IngredientResourceAssembler ingredientResourceAssembler;
 

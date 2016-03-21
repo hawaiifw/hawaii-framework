@@ -42,7 +42,7 @@ public class PropertyNameConverter implements Converter<String, String> {
      * is defined, the following field names and error codes will be translated:
      * <ol>
      * <li>description -> description</li>
-     * <li>grossPrice -> grossPrice</li>
+     * <li>grossPrice -> gross_price</li>
      * <li>InvalidLength -> invalid_length</li>
      * </ol>
      */

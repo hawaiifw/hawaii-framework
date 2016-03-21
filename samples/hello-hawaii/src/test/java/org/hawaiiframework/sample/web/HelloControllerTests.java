@@ -63,9 +63,8 @@ public class HelloControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void greetWithNameShouldReturnAlohaWithName() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("name", "Marcel");
-        mockMvc.perform(get("/rest/hello/greet").param("name", "Marcel"))
+        mockMvc.perform(get("/rest/hello/greet")
+                .param("name", "Marcel"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))

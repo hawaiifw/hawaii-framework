@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ValidationErrorResourceAssembler extends AbstractResourceAssembler<ValidationError, ValidationErrorResource> {
+public class ValidationErrorResourceAssembler implements ResourceAssembler<ValidationError, ValidationErrorResource> {
 
     private final PropertyNameConverter propertyNameConverter;
 
