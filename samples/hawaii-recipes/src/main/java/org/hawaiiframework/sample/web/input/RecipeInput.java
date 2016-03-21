@@ -34,7 +34,7 @@ public class RecipeInput {
     private Float cookTime;
     private Float readyTime;
     private List<IngredientInput> ingredients = new ArrayList<>();
-    private List<String> instructions = new ArrayList<>();
+    private String instructions;
 
     public String getName() {
         return name;
@@ -84,11 +84,11 @@ public class RecipeInput {
         this.ingredients = ingredients;
     }
 
-    public List<String> getInstructions() {
+    public String getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(List<String> instructions) {
+    public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 

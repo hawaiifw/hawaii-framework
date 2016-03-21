@@ -65,8 +65,8 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Ingredient> ingredients = new ArrayList<>();
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Instruction> instructions = new ArrayList<>();
+    @Column(nullable = false, length = 5000)
+    private String instructions;
 
     public Long getId() {
         return id;
@@ -140,11 +140,11 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public List<Instruction> getInstructions() {
+    public String getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(List<Instruction> instructions) {
+    public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 

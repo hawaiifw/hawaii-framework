@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.util.stream.Collectors;
-
 /**
  * @author Marcel Overdijk
  */
@@ -49,7 +47,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
         resource.setCookTime(recipe.getCookTime());
         resource.setReadyTime(recipe.getReadyTime());
         resource.setIngredients(ingredientResourceAssembler.toResources(recipe.getIngredients()));
-        resource.setInstructions(recipe.getInstructions().stream().map(i -> i.getDescription()).collect(Collectors.toList()));
+        resource.setInstructions(recipe.getInstructions());
         return resource;
     }
 }

@@ -1,5 +1,5 @@
 -- Aloha Chicken
-insert into recipe (id, created_date, name, email, description, preparation_time, cook_time, ready_time) values (1, '2016-02-15', 'Marcel', 'marcel.overdijk@qnh.nl', 'Aloha Chicken', 20, 60, 80)
+insert into recipe (id, created_date, name, email, description, preparation_time, cook_time, ready_time, instructions) values (1, '2016-02-15', 'Marcel', 'marcel.overdijk@qnh.nl', 'Aloha Chicken', 20, 60, 80, '<p>Preheat oven to 400 degrees F (200 degrees C).</p><p>Arrange chicken pieces in a single layer in a well greased 9x13 inch baking dish. In a small bowl mix together the ginger, paprika, onion powder and garlic salt. Add the vinegar and mix well. Divide this mixture. Brush 1/2 over the chicken pieces and bake in the preheated oven for 15 minutes.</p><p>Turn the chicken pieces, baste with the remaining 1/2 of the vinegar mixture and bake for 15 minutes longer. Meanwhile, in a medium bowl combine the ketchup, soy sauce, pineapple and brown sugar. When chicken baking time is up, spoon the pineapple/soy mixture over the chicken. Bake for another 30 minutes. Serve while still hot.</p>')
 insert into ingredient (id, recipe_id, quantity, description) values ( 1, 1, 4.00, 'pounds chicken thighs')
 insert into ingredient (id, recipe_id, quantity, description) values ( 2, 1, 1.00, 'teaspoon ground ginger')
 insert into ingredient (id, recipe_id, quantity, description) values ( 3, 1, 1.00, 'teaspoon paprika')
@@ -10,12 +10,9 @@ insert into ingredient (id, recipe_id, quantity, description) values ( 7, 1, 1.0
 insert into ingredient (id, recipe_id, quantity, description) values ( 8, 1, 0.25, 'cup soy sauce')
 insert into ingredient (id, recipe_id, quantity, description) values ( 9, 1, 1.00, '(20 ounce) can crushed pineapple with juice')
 insert into ingredient (id, recipe_id, quantity, description) values (10, 1, 0.25, 'cup packed brown sugar')
-insert into instruction (id, recipe_id, description) values (1, 1, 'Preheat oven to 400 degrees F (200 degrees C).')
-insert into instruction (id, recipe_id, description) values (2, 1, 'Arrange chicken pieces in a single layer in a well greased 9x13 inch baking dish. In a small bowl mix together the ginger, paprika, onion powder and garlic salt. Add the vinegar and mix well. Divide this mixture. Brush 1/2 over the chicken pieces and bake in the preheated oven for 15 minutes.')
-insert into instruction (id, recipe_id, description) values (3, 1, 'Turn the chicken pieces, baste with the remaining 1/2 of the vinegar mixture and bake for 15 minutes longer. Meanwhile, in a medium bowl combine the ketchup, soy sauce, pineapple and brown sugar. When chicken baking time is up, spoon the pineapple/soy mixture over the chicken. Bake for another 30 minutes. Serve while still hot.')
 
 -- Hawaiian Banana Nut Bread
-insert into recipe (id, created_date, name, email, description, preparation_time, cook_time, ready_time) values (2, '2016-02-16', 'Marcel', 'marcel.overdijk@qnh.nl', 'Hawaiian Banana Nut Bread', 10, 60, 80)
+insert into recipe (id, created_date, name, email, description, preparation_time, cook_time, ready_time, instructions) values (2, '2016-02-16', 'Marcel', 'marcel.overdijk@qnh.nl', 'Hawaiian Banana Nut Bread', 10, 60, 80, '<p>Preheat oven to 350 degrees F (175 degrees C). Grease two 9x5 inch loaf pans.</p><p>In a large mixing bowl, combine the flour, salt, baking soda, sugar and cinnamon. Add the walnuts, eggs, old, banana, pineapple, vanilla, cocounu and cherries; stir just until blended. Pour batter evenly into the prepared pans.</p><p>Bake at 250 degrees F (175 degrees C) for 60 minutes, or until a tooth pick inserted into the center of a loaf comes out clean. Cool in the pan for 10 minutes, then remove to a wire rack to cool completely.</p>')
 insert into ingredient (id, recipe_id, quantity, description) values (11, 2, 3.00, 'cups all-purpose flour')
 insert into ingredient (id, recipe_id, quantity, description) values (12, 2, 0.75, 'teaspoon salt')
 insert into ingredient (id, recipe_id, quantity, description) values (13, 2, 1.00, 'teaspoon baking soda')
@@ -29,6 +26,3 @@ insert into ingredient (id, recipe_id, quantity, description) values (20, 2, 1.0
 insert into ingredient (id, recipe_id, quantity, description) values (21, 2, 2.00, 'teaspoons vanilla extract')
 insert into ingredient (id, recipe_id, quantity, description) values (22, 2, 1.00, 'cup flaked coconut')
 insert into ingredient (id, recipe_id, quantity, description) values (23, 2, 1.00, 'cup maraschino cherries, diced')
-insert into instruction (id, recipe_id, description) values (4, 2, 'Preheat oven to 350 degrees F (175 degrees C). Grease two 9x5 inch loaf pans.')
-insert into instruction (id, recipe_id, description) values (5, 2, 'In a large mixing bowl, combine the flour, salt, baking soda, sugar and cinnamon. Add the walnuts, eggs, old, banana, pineapple, vanilla, cocounu and cherries; stir just until blended. Pour batter evenly into the prepared pans.')
-insert into instruction (id, recipe_id, description) values (6, 2, 'Bake at 250 degrees F (175 degrees C) for 60 minutes, or until a tooth pick inserted into the center of a loaf comes out clean. Cool in the pan for 10 minutes, then remove to a wire rack to cool completely.')
