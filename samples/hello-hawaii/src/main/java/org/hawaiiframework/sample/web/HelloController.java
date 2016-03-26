@@ -16,8 +16,14 @@
 
 package org.hawaiiframework.sample.web;
 
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.sample.service.HelloService;
+import org.hawaiiframework.sample.service.Language;
 import org.hawaiiframework.time.HawaiiTime;
+import org.hawaiiframework.validation.ValidationError;
+import org.hawaiiframework.validation.ValidationException;
+import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.web.annotation.Get;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -28,6 +34,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Locale;
+
+import static com.sun.tools.doclint.Entity.lang;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -49,11 +58,23 @@ public class HelloController {
     }
 
     @Get(path = "/greet", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> greet(@RequestParam(required = false) String name) {
-        logger.info("greet called with name: {}", name);
+    public ResponseEntity<JSONObject> greet(@RequestParam(required = false) String name, @RequestParam(required = false) String language) {
+
+        logger.info("greet called with name: {}, language: {}", name, language);
+
+        // Validate language
+        if (StringUtils.isNotBlank(language)) {
+            language = StringUtils.upperCase(language);
+            if (!EnumUtils.isValidEnum(Language.class, language)) {
+                throw new ValidationException(new ValidationError("language", "invalid"));
+            }
+        }
+
+        // Create resource to be returned to client
         JSONObject resource = new JSONObject();
         resource.put("timestamp", hawaiiTime.zonedDateTime());
-        resource.put("greeting", helloService.greet(name));
+        resource.put("greeting", helloService.greet(name, EnumUtils.getEnum(Language.class, language)));
+
         return ResponseEntity.ok().body(resource);
     }
 }

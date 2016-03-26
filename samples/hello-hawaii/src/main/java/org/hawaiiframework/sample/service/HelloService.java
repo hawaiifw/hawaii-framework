@@ -17,7 +17,11 @@
 package org.hawaiiframework.sample.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import java.util.Locale;
 
 /**
  * @author Marcel Overdijk
@@ -25,7 +29,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class HelloService {
 
-    public String greet(String name) {
-        return String.format("Aloha %s, pehea 'oe?", (StringUtils.isNoneBlank(name) ? name : "stranger"));
+    private final MessageSource messageSource;
+
+    @Autowired
+    public HelloService(final MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    public String greet(String name, Language language) {
+        Locale locale = (language == null) ? Language.HAWAIIAN.getLocale() : language.getLocale();
+        if (StringUtils.isBlank(name)) {
+            name = messageSource.getMessage("stranger", null, locale);
+        }
+        Object[] args = new Object[] { name };
+        return messageSource.getMessage("greet", args, locale);
     }
 }
