@@ -18,6 +18,7 @@ package org.hawaiiframework.validation;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.hamcrest.Matcher;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.jar.Pack200;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
@@ -114,8 +116,28 @@ public class ValidationResult {
         addError(new ValidationError(code));
     }
 
+    public void rejectIf(boolean expr, String code) {
+        if (expr) {
+            reject(code);
+        }
+    }
+
+    public <T> void rejectIf(T actual, Matcher<? super T> matcher, String code) {
+        rejectIf(matcher.matches(actual), code);
+    }
+
     public void rejectValue(String code) {
         rejectValue(null, code);
+    }
+
+    public void rejectValueIf(boolean expr, String code) {
+        if (expr) {
+            rejectValue(code);
+        }
+    }
+
+    public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String code) {
+        rejectValueIf(matcher.matches(actual), code);
     }
 
     public void rejectValue(String field, String code) {
@@ -131,6 +153,16 @@ public class ValidationResult {
         } else {
             addError(new ValidationError(fieldBuilder.toString(), code));
         }
+    }
+
+    public void rejectValueIf(boolean expr, String field, String code) {
+        if (expr) {
+            rejectValue(field, code);
+        }
+    }
+
+    public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String field, String code) {
+        rejectValueIf(matcher.matches(actual), field, code);
     }
 
     /**

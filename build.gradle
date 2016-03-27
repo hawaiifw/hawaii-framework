@@ -74,8 +74,6 @@ configure(allprojects) { project ->
         compile("org.slf4j:jcl-over-slf4j")
         compile("org.slf4j:slf4j-api")
         testCompile("junit:junit")
-        testCompile("org.hamcrest:hamcrest-core")
-        testCompile("org.hamcrest:hamcrest-library")
         testCompile("org.mockito:mockito-core")
     }
 
@@ -188,6 +186,8 @@ project("hawaii-autoconfigure") {
         optional "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
         optional "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         optional "javax.servlet:javax.servlet-api"
+        testCompile("org.hamcrest:hamcrest-core")
+        testCompile("org.hamcrest:hamcrest-library")
     }
 }
 
@@ -196,8 +196,9 @@ project("hawaii-core") {
     description = "Hawaii Core"
 
     dependencies {
-        compile "com.google.guava:guava"
         compile "org.apache.commons:commons-lang3"
+        compile "org.hamcrest:hamcrest-core"
+        compile "org.hamcrest:hamcrest-library"
         optional "com.fasterxml.jackson.core:jackson-databind"
         optional "org.aspectj:aspectjweaver"
         optional "org.springframework:spring-aop"
