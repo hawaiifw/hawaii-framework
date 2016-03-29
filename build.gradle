@@ -32,7 +32,8 @@ ext {
         "http://fasterxml.github.io/jackson-databind/javadoc/2.6/",
         "http://fasterxml.github.io/jackson-databind/javadoc/2.6/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.6/",
-        "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.6/"
+        "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.6/",
+        "http://hamcrest.org/JavaHamcrest/javadoc/1.3/"
     ] as String[]
 }
 
