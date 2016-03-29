@@ -464,7 +464,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div id="abstract" class="paragraph">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+<p>E kūlia i ka nu’u. Strive to reach the highest.</p>
 </div>
 </div>
 </div>
@@ -472,12 +472,29 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="anchor" href="#introduction"></a>1. Introduction to Hawaii</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+<p>The Hawaii Framework is a Java framework for developing Spring based applications.</p>
+</div>
+<div class="paragraph">
+<p>It provides production-ready features and integrations based best practices and experience to boost projects.</p>
+</div>
+<div class="paragraph">
+<p>The Hawaii Framework is developed internally at <a href="https://qnh.eu">QNH</a> and is used in projects for medium and large
+enterprise customers.</p>
 </div>
 <div class="sect2">
 <h3 id="introduction-spring-boot"><a class="anchor" href="#introduction-spring-boot"></a>1.1. Spring Boot</h3>
 <div class="paragraph">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+<p>Combining <a href="http://projects.spring.io/spring-boot">Spring Boot</a> and the Hawaii production-ready features and auto
+configuration brings even more power and simplicity to developers, without sacrificing flexibility.</p>
+</div>
+<div class="paragraph">
+<p>The Hawaii Framework also provides various Spring Boot Starters to automatically include the needed dependencies and
+trigger the auto configuration of the Hawaii production-ready features.</p>
+</div>
+<div class="paragraph">
+<p>But it is important to mention that most of the Hawaii features can also used without using Spring Boot.
+In that case the desired features need to be configured manually by defining the appropriate Spring beans inside the
+application&#8217;s context.</p>
 </div>
 </div>
 </div>
@@ -517,9 +534,9 @@ It provides an application wide <code>java.time.Clock</code> reference which is 
 <div class="paragraph">
 <p>It is similar to Joda&#8217;s <code>DateTimeUtils</code> which also allows setting a fixed current time.
 However it is important to note that Joda&#8217;s <code>DateTimeUtils</code> uses a static variable to store the current time.
-<code>HawaiiTime</code> does clearly not take this approach. Instead the <code>HawaiiTime</code> bean needs to be injected in any
-class that needs to instantiate new date and time objects. This approach is more flexible and e.g. has the
-benefit that unit tests can be run in parallel. See example usage below.</p>
+<code>HawaiiTime</code> does not take this approach. Instead the <code>HawaiiTime</code> bean needs to be injected in any class that needs to
+instantiate new date and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be
+run in parallel. See example usage below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -709,7 +726,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2016-03-29 08:17:13 UTC
+Last updated 2016-03-29 21:19:39 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
