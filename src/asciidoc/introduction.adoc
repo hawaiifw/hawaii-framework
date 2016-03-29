@@ -1,9 +1,22 @@
 [[introduction]]
 == Introduction to Hawaii
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.
+The Hawaii Framework is a Java framework for developing Spring based applications.
+
+It provides production-ready features and integrations based best practices and experience to boost projects.
+
+The Hawaii Framework is developed internally at https://qnh.eu[QNH] and is used in projects for medium and large
+enterprise customers.
 
 [[introduction-spring-boot]]
 === Spring Boot
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.
+Combining http://projects.spring.io/spring-boot[Spring Boot] and the Hawaii production-ready features and auto
+configuration brings even more power and simplicity to developers, without sacrificing flexibility.
+
+The Hawaii Framework also provides various Spring Boot Starters to automatically include the needed dependencies and
+trigger the auto configuration of the Hawaii production-ready features.
+
+But it is important to mention that most of the Hawaii features can also used without using Spring Boot.
+In that case the desired features need to be configured manually by defining the appropriate Spring beans inside the
+application's context.

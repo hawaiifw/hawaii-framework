@@ -21,9 +21,9 @@ It provides an application wide `java.time.Clock` reference which is particular 
 
 It is similar to Joda's `DateTimeUtils` which also allows setting a fixed current time.
 However it is important to note that Joda's `DateTimeUtils` uses a static variable to store the current time.
-`HawaiiTime` does clearly not take this approach. Instead the `HawaiiTime` bean needs to be injected in any
-class that needs to instantiate new date and time objects. This approach is more flexible and e.g. has the
-benefit that unit tests can be run in parallel. See example usage below.
+`HawaiiTime` does not take this approach. Instead the `HawaiiTime` bean needs to be injected in any class that needs to
+instantiate new date and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be
+run in parallel. See example usage below.
 
 [source,java,indent=0]
 ----
