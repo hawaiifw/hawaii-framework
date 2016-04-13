@@ -34,6 +34,9 @@ public class ApplicationContextBinderApplicationListener implements ApplicationL
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
+            if (ApplicationContextHolder.getApplicationContext() != null) {
+                ApplicationContextHolder.release();
+            }
             ApplicationContext applicationContext = ((ContextRefreshedEvent) event).getApplicationContext();
             ApplicationContextHolder.bind(applicationContext);
         } else if (event instanceof ContextClosedEvent) {
