@@ -56,7 +56,7 @@ public class ApplicationContextHolder {
     public static void bind(ApplicationContext context) {
         Object old = contextMap.putIfAbsent(getContextClassLoader(), context);
         if (old != null) {
-            throw new IllegalStateException("ApplicationContext already bound to he class loader of the current thread");
+            throw new IllegalStateException("ApplicationContext already bound to the class loader of the current thread");
         }
     }
 
