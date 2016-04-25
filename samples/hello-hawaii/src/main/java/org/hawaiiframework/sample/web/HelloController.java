@@ -23,7 +23,6 @@ import org.hawaiiframework.sample.service.Language;
 import org.hawaiiframework.time.HawaiiTime;
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
-import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.web.annotation.Get;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -34,9 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Locale;
-
-import static com.sun.tools.doclint.Entity.lang;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**

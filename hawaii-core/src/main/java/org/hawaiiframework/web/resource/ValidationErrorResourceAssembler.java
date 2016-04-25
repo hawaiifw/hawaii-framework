@@ -70,6 +70,9 @@ public class ValidationErrorResourceAssembler implements ResourceAssembler<Valid
         }
         // retrieve the application defined property naming strategy from the object mapper's serialization config
         PropertyNamingStrategy propertyNamingStrategy = objectMapper.getSerializationConfig().getPropertyNamingStrategy();
+        if (propertyNamingStrategy == null) {
+            return propertyName;
+        }
         return propertyNamingStrategy.nameForField(null, null, propertyName);
     }
 }
