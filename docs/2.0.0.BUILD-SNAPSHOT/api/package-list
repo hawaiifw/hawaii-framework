@@ -6,6 +6,7 @@ org.hawaiiframework.boot.autoconfigure.rest
 org.hawaiiframework.boot.autoconfigure.time
 org.hawaiiframework.context
 org.hawaiiframework.exception
+org.hawaiiframework.sql
 org.hawaiiframework.test.mockmvc
 org.hawaiiframework.time
 org.hawaiiframework.util
