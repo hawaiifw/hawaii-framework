@@ -29,6 +29,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 public class RecipeInput {
 
     private String name;
+    private String email;
     private String description;
     private Float preparationTime;
     private Float cookTime;
@@ -42,6 +43,14 @@ public class RecipeInput {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDescription() {
