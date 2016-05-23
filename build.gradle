@@ -17,8 +17,8 @@ buildscript {
 
 ext {
     javaVersion = "1.8"
-    dependencyManagementPluginVersion = "0.5.4.RELEASE"
-    springPlatformVersion = "2.0.2.RELEASE" // "2.1.0.BUILD-SNAPSHOT" --> boot 1.4
+    dependencyManagementPluginVersion = "0.5.6.RELEASE"
+    springPlatformVersion = "2.0.5.RELEASE" // "2.1.0.BUILD-SNAPSHOT" --> boot 1.4
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.4/",
         "http://docs.oracle.com/javase/8/docs/api/",
