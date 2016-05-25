@@ -9,6 +9,7 @@ buildscript {
         maven { url "http://repo.spring.io/milestone" }
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -36,6 +37,8 @@ repositories {
     mavenLocal()
     maven { url "http://repo.spring.io/milestone" }
     maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 dependencies {
