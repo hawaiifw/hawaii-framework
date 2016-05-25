@@ -18,7 +18,7 @@ buildscript {
 ext {
     javaVersion = "1.8"
     dependencyManagementPluginVersion = "0.5.6.RELEASE"
-    springPlatformVersion = "2.0.5.RELEASE" // "2.1.0.BUILD-SNAPSHOT" --> boot 1.4
+    springPlatformVersion = "2.0.5.RELEASE"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.4/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -42,6 +42,7 @@ configure(allprojects) { project ->
     group = "org.hawaiiframework"
 
     apply plugin: "java"
+    apply plugin: "checkstyle"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
     apply plugin: "maven"
@@ -76,6 +77,19 @@ configure(allprojects) { project ->
         compile("org.slf4j:slf4j-api")
         testCompile("junit:junit")
         testCompile("org.mockito:mockito-core")
+    }
+
+    // The Google checkstyle configuration downloaded from https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml
+    // gives a lot of errors with the Google code style formatter downloaded from
+    // https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml
+    // It seems the Google code style formatter for IDEA has not been updated anymore.
+    // See also https://github.com/google/styleguide/issues/26
+    // Need to think about what to do.
+    // Maybe use one of Spring's code style formatters and checkstyle definitions...
+    checkstyle {
+        configFile = rootProject.file("src/checkstyle/hawaii-framework-checkstyle.xml")
+        configProperties = ["checkstyle.config.dir": rootProject.file("src/checkstyle")]
+        toolVersion = "6.18"
     }
 
     idea {

@@ -5,7 +5,8 @@ Follow the guidelines below for contributing to the Hawaii Framework.
 ## Code Style
 
 All Java code should use the Hawaii Framework Code Style which is based on the [Google Java Style][].
-We have [Eclipse][Eclipse code style formatter] and [IDEA][IDEA code style formatter] code style formatters which should be imported and used in the IDE of your choice.
+We have [Eclipse][Eclipse code style formatter] and [IDEA][IDEA code style formatter] code style
+formatters which should be imported and used in the IDE of your choice.
 
 ## Workflow
 
