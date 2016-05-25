@@ -13,5 +13,6 @@ See the [contributor guidelines][] for details.
 ## License
 The Hawaii Framework is released under version 2.0 of the [Apache License][].
 
+
 [contributor guidelines]: https://github.com/hawaiifw/hawaii-framework/blob/master/CONTRIBUTING.md
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
