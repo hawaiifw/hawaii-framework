@@ -16,8 +16,8 @@
 
 package org.hawaiiframework.sample.web.input;
 
-import org.hawaiiframework.validation.Validator;
 import org.hawaiiframework.validation.ValidationResult;
+import org.hawaiiframework.validation.Validator;
 import org.springframework.stereotype.Component;
 
 /**

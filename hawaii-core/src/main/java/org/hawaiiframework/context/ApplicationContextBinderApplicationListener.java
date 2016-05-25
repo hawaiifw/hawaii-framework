@@ -23,8 +23,8 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
- * {@link ApplicationListener} that binds the {@link ApplicationContext}
- * to the Hawaii {@link ApplicationContextHolder}.
+ * {@link ApplicationListener} that binds the {@link ApplicationContext} to the Hawaii {@link
+ * ApplicationContextHolder}.
  *
  * @author Marcel Overdijk
  * @since 2.0.0

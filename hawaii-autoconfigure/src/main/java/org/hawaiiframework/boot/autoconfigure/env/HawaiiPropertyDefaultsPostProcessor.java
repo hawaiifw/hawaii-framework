@@ -37,9 +37,9 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * An {@link EnvironmentPostProcessor} that configures the default Hawaii properties.
- * Note these default properties are added with lowest precedence meaning properties
- * set via e.g. command line, system or application properties will take precedence.
+ * An {@link EnvironmentPostProcessor} that configures the default Hawaii properties. Note these
+ * default properties are added with lowest precedence meaning properties set via e.g. command line,
+ * system or application properties will take precedence.
  *
  * @author Marcel Overdijk
  * @since 2.0.0

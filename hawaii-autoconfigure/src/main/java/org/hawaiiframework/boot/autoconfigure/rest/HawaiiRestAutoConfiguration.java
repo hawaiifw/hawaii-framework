@@ -17,6 +17,7 @@
 package org.hawaiiframework.boot.autoconfigure.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;

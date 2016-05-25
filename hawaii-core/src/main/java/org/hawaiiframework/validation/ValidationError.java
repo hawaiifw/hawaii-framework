@@ -47,7 +47,7 @@ public class ValidationError {
      * Constructs a new {@link ValidationError} with the supplied field name and error code.
      *
      * @param field the field name
-     * @param code the error code
+     * @param code  the error code
      */
     public ValidationError(String field, String code) {
         Assert.notNull(code, "Code must not be null");

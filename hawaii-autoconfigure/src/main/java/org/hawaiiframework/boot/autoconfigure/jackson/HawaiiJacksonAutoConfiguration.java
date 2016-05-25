@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,7 +32,8 @@ import org.springframework.context.annotation.Configuration;
 public class HawaiiJacksonAutoConfiguration {
 
     /**
-     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects {@link ObjectMapper}.
+     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects {@link
+     * ObjectMapper}.
      */
     @Bean
     public JavaTimeModule javaTimeModule() {
@@ -39,7 +41,8 @@ public class HawaiiJacksonAutoConfiguration {
     }
 
     /**
-     * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with {@link ObjectMapper}.
+     * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with {@link
+     * ObjectMapper}.
      */
     @Bean
     public JsonOrgModule jsonOrgModule() {

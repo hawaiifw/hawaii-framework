@@ -30,7 +30,6 @@ import java.util.Objects;
  * @param <T7> the type of the 7th element
  * @param <T8> the type of the 8th element
  * @param <T9> the type of the 9th element
- *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

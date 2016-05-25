@@ -29,8 +29,8 @@ import java.util.Scanner;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's
- * generic {@link ResourceLoader} mechanism.
+ * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic
+ * {@link ResourceLoader} mechanism.
  *
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -74,7 +74,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     }
 
     /**
-     * Return the prefix that gets prepended to sql query names when building the resource location.
+     * Return the prefix that gets prepended to sql query names when building the resource
+     * location.
      */
     protected String getPrefix() {
         return this.prefix;

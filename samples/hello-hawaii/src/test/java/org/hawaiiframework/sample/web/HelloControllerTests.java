@@ -18,7 +18,6 @@ package org.hawaiiframework.sample.web;
 
 import org.hawaiiframework.sample.Application;
 import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

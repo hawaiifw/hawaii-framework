@@ -18,6 +18,7 @@ package org.hawaiiframework.web.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+
 import org.hawaiiframework.validation.ValidationError;
 import org.springframework.util.Assert;
 
@@ -51,17 +52,14 @@ public class ValidationErrorResourceAssembler implements ResourceAssembler<Valid
 
     /**
      * Converts the given property name (field name or error code) using the application defined
-     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in responses.
-     * The naming strategy is defined in application.yml via the 'spring.jackson.property-naming-strategy' property.
+     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in
+     * responses. The naming strategy is defined in application.yml via the
+     * 'spring.jackson.property-naming-strategy' property.
      *
      * <p>For example, if the {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy}
-     * is defined, the following field names and error codes will be translated as following:
-     * <ol>
-     * <li>description -> description</li>
-     * <li>price -> price</li>
-     * <li>discountPrice -> discount_price</li>
-     * <li>Required -> required</li>
-     * <li>InvalidLength -> invalid_length</li>
+     * is defined, the following field names and error codes will be translated as following: <ol>
+     * <li>description -> description</li> <li>price -> price</li> <li>discountPrice ->
+     * discount_price</li> <li>Required -> required</li> <li>InvalidLength -> invalid_length</li>
      * </ol>
      */
     protected String convertProperty(String propertyName) {

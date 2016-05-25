@@ -28,7 +28,6 @@ import java.util.Objects;
  * @param <T5> the type of the 5th element
  * @param <T6> the type of the 6th element
  * @param <T7> the type of the 7th element
- *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

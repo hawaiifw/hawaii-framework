@@ -24,9 +24,6 @@ public interface InputConverter<T, D> {
 
     /**
      * Converts the given input into a domain object.
-     *
-     * @param input
-     * @return
      */
     D convert(T input);
 

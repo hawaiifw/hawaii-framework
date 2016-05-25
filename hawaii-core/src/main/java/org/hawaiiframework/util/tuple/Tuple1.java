@@ -23,7 +23,6 @@ import java.util.Objects;
  * A {@link Tuple} of 1 element.
  *
  * @param <T1> the type of the 1st element
- *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

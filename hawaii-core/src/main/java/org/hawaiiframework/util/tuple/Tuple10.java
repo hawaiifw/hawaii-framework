@@ -21,17 +21,16 @@ import java.util.Objects;
 /**
  * A {@link Tuple} of 10 elements.
  *
- * @param <T1> the type of the 1st element
- * @param <T2> the type of the 2nd element
- * @param <T3> the type of the 3rd element
- * @param <T4> the type of the 4th element
- * @param <T5> the type of the 5th element
- * @param <T6> the type of the 6th element
- * @param <T7> the type of the 7th element
- * @param <T8> the type of the 8th element
- * @param <T9> the type of the 9th element
+ * @param <T1>  the type of the 1st element
+ * @param <T2>  the type of the 2nd element
+ * @param <T3>  the type of the 3rd element
+ * @param <T4>  the type of the 4th element
+ * @param <T5>  the type of the 5th element
+ * @param <T6>  the type of the 6th element
+ * @param <T7>  the type of the 7th element
+ * @param <T8>  the type of the 8th element
+ * @param <T9>  the type of the 9th element
  * @param <T10> the type of the 10th element
- *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

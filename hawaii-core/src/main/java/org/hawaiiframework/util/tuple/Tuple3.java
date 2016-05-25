@@ -24,7 +24,6 @@ import java.util.Objects;
  * @param <T1> the type of the 1st element
  * @param <T2> the type of the 2nd element
  * @param <T3> the type of the 3rd element
- *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

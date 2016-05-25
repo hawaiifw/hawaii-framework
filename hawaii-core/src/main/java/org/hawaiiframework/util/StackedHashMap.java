@@ -26,12 +26,11 @@ import java.util.Set;
 /**
  * A stacked {@code HashMap} implementation.
  *
- * <p>This implementation is useful if you want to add and/or remove mappings to a map,
- * but also want to return to a previous state of the map easily.
+ * <p>This implementation is useful if you want to add and/or remove mappings to a map, but also
+ * want to return to a previous state of the map easily.
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
- *
  * @author Marcel Overdijk
  * @see HashMap
  * @since 2.0.0
@@ -68,8 +67,8 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     * Pops the top element ({@code HashMap}) from the stack.
-     * Note that the initial element cannot be popped from the stack.
+     * Pops the top element ({@code HashMap}) from the stack. Note that the initial element cannot
+     * be popped from the stack.
      *
      * @return the top element of the stack
      * @throws IllegalStateException if there is only {@code 1} element on the stack
@@ -91,8 +90,8 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     * Returns the number of elements ({@code HashMap}s) on the stack.
-     * There will always be at least {code 1} element on the stack.
+     * Returns the number of elements ({@code HashMap}s) on the stack. There will always be at least
+     * {code 1} element on the stack.
      *
      * @return the number of elements on the stack
      */
@@ -101,9 +100,8 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     * Clears the stack.
-     * After clearing the stack there will be {@code 1 } element ({@code HashMap}) on the stack without any mappings.
-     *
+     * Clears the stack. After clearing the stack there will be {@code 1 } element ({@code HashMap})
+     * on the stack without any mappings.
      */
     public void clearStack() {
         this.stack = new ArrayDeque<>();

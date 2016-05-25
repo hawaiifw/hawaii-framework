@@ -29,9 +29,6 @@ public interface ResourceAssembler<T, D> {
 
     /**
      * Converts the given object into a resource.
-     *
-     * @param object
-     * @return
      */
     D toResource(T object);
 
@@ -39,7 +36,6 @@ public interface ResourceAssembler<T, D> {
      * Converts all given objects into resources.
      *
      * @param objects must not be {@literal null}.
-     * @return
      * @see #toResource(Object)
      */
     default List<D> toResources(Iterable<? extends T> objects) {

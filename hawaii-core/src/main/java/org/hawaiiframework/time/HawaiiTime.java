@@ -33,14 +33,15 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 /**
- * This class provides a application wide {@link Clock} reference to instantiate new {@code java.time}
- * date and time objects.
+ * This class provides a application wide {@link Clock} reference to instantiate new {@code
+ * java.time} date and time objects.
  *
- * <p>It provides convenient methods to use a fixed date time which is particular useful for unit testing
- * but also to change the date time in a running application to test how it behaves on a given date or time.
+ * <p>It provides convenient methods to use a fixed date time which is particular useful for unit
+ * testing but also to change the date time in a running application to test how it behaves on a
+ * given date or time.
  *
- * <p>Be aware that third-party libraries being used by the application do obviously not use {@code HawaiiTime}
- * and probably instantiate date and time objects based on the {@code System} time.
+ * <p>Be aware that third-party libraries being used by the application do obviously not use {@code
+ * HawaiiTime} and probably instantiate date and time objects based on the {@code System} time.
  *
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -72,8 +73,8 @@ public class HawaiiTime {
     }
 
     /**
-     * Constructs a new {@code HawaiiTime} with the supplied clock.
-     * Also the {@code ZoneId} is derived from the supplied clock.
+     * Constructs a new {@code HawaiiTime} with the supplied clock. Also the {@code ZoneId} is
+     * derived from the supplied clock.
      */
     public HawaiiTime(Clock clock) {
         Assert.notNull(clock, "Clock must not be null");
@@ -181,7 +182,7 @@ public class HawaiiTime {
      * Sets a fixed clock to be used.
      *
      * @param instant the fixed instant
-     * @param zone the fixed zone
+     * @param zone    the fixed zone
      */
     protected void useFixedClock(Instant instant, ZoneId zone) {
         Assert.notNull(instant, "Instant must not be null");
