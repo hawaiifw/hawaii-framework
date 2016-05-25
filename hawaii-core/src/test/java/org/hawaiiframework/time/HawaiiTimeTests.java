@@ -101,8 +101,7 @@ public class HawaiiTimeTests {
     @Test
     public void testUseFixedClockWithOffsetDateTime() {
         hawaiiTime.useFixedClock(OffsetDateTime.now(FIXED_EPOCH_CLOCK));
-        assertThat(
-                hawaiiTime.getClock(), is(FIXED_EPOCH_CLOCK));
+        assertThat(hawaiiTime.getClock(), is(FIXED_EPOCH_CLOCK));
     }
 
     @Test
