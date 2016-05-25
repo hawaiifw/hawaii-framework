@@ -8,6 +8,47 @@ All Java code should use the Hawaii Framework Code Style which is based on the [
 We have [Eclipse][Eclipse code style formatter] and [IDEA][IDEA code style formatter] code style
 formatters which should be imported and used in the IDE of your choice.
 
+### Apache License Header
+
+Add the following Apache license header to all new Java classes.
+
+```java
+/*
+ * Copyright 2015-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package ...;
+```
+
+For existing classes always check the date range in the license header and update it if needed.
+
+### Javadoc tags
+
+Always add your name to the `@author` tags and use `@since` tags for newly-added public API types
+and methods. For example:
+
+```java
+/**
+ * ...
+ *
+ * @author Marcel Overdijk
+ * @author Wouter Eerdekens
+ * @since 2.0.0
+ */
+```
+
 ## Development Guidelines
 
 TODO
@@ -33,13 +74,14 @@ The following steps give a detailed overview of how to create a pull request.
 ### Caveats & Further Instructions
 
 Never code changes in the `master` branch or other branches forked from the [Hawaii Framework GitHub repository].
-There is no guarantee your pull request will be merged so it is wise to keep the `master` branch clean.
+There is no guarantee your pull request will be merged, so it is wise to keep the `master` branch clean.
+
 The `master` branch of your forked repository should be in sync with the `master` branch of the
-[Hawaii Framework GitHub repository] as much as possible. Please read further how to do this.
+[Hawaii Framework GitHub repository] as much as possible.
 
 To keep your `master` branch in sync with the [Hawaii Framework GitHub repository] follow the below steps:
 
- * Add a new remote to your fork's local repository like
+ * Add a new remote to your fork's local repository:
    `git remote add upstream https://github.com/hawaiifw/hawaii-framework.git`.
  * Fetch the upstream changes: `git fetch upstream`.
  * Checkout your fork's local `master` branch: `git checkout master`.
