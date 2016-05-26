@@ -8,4 +8,3 @@ The following adjustments have been made:
  * `org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body`: `insert` was (`do not insert`)
  * `org.eclipse.jdt.core.formatter.tabulation.size`: `4` (was `2)`
  * `org.eclipse.jdt.core.formatter.use_on_off_tags`: `true` (was `false`)
- 
