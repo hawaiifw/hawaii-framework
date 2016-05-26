@@ -16,8 +16,9 @@
 
 package org.hawaiiframework.web.resource;
 
+import java.util.Objects;
+
 import org.hawaiiframework.validation.ValidationError;
-import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -36,13 +37,12 @@ public class ValidationErrorResourceAssembler
     }
 
     public ValidationErrorResourceAssembler(ObjectMapper objectMapper) {
-        Assert.notNull(objectMapper, "'objectMapper' must not be null");
-        this.objectMapper = objectMapper;
+        this.objectMapper = Objects.requireNonNull(objectMapper, "'objectMapper' must not be null");
     }
 
     @Override
     public ValidationErrorResource toResource(ValidationError validationError) {
-        Assert.notNull(validationError, "'validationError' must not be null");
+        Objects.requireNonNull(validationError, "'validationError' must not be null");
         String field = convertProperty(validationError.getField());
         String code = convertProperty(validationError.getCode());
         ValidationErrorResource resource = new ValidationErrorResource();

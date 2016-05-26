@@ -17,9 +17,9 @@
 package org.hawaiiframework.validation;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.hawaiiframework.exception.HawaiiException;
-import org.springframework.util.Assert;
 
 /**
  * @author Marcel Overdijk
@@ -40,32 +40,32 @@ public class ValidationException extends HawaiiException {
     /**
      * Constructs a new {@link ValidationException} with the supplied {@link ValidationResult}.
      *
-     * @param validationResult the validation result
+     * @param validationResult the validation result, not null
      */
     public ValidationException(ValidationResult validationResult) {
-        Assert.notNull(validationResult, "Validation result must not be null");
+        Objects.requireNonNull(validationResult, "'validationResult' must not be null");
         this.validationResult = validationResult;
     }
 
     /**
      * Constructs a new {@link ValidationException} with the supplied {@link ValidationError}.
      *
-     * @param validationError the validation error
+     * @param validationError the validation error, not null
      */
     public ValidationException(ValidationError validationError) {
         this();
-        Assert.notNull(validationError, "'validationError' error must not be null");
+        Objects.requireNonNull(validationError, "'validationError' must not be null");
         validationResult.addError(validationError);
     }
 
     /**
      * Constructs a new {@link ValidationException} with the supplied {@link ValidationError}s.
      *
-     * @param validationErrors the validation errors
+     * @param validationErrors the validation errors, not null
      */
     public ValidationException(List<ValidationError> validationErrors) {
         this();
-        Assert.notNull(validationErrors, "'validationErrors' must not be null");
+        Objects.requireNonNull(validationErrors, "'validationErrors' must not be null");
         validationResult.addAllErrors(validationErrors);
     }
 

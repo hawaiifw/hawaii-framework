@@ -18,10 +18,9 @@ package org.hawaiiframework.validation;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.springframework.util.Assert;
-
 import java.util.Objects;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * Encapsulates a validation error.

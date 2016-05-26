@@ -48,7 +48,7 @@ public class HelloController {
     private final HawaiiTime hawaiiTime;
 
     @Autowired
-    public HelloController(final HelloService helloService, final HawaiiTime hawaiiTime) {
+    public HelloController(HelloService helloService, HawaiiTime hawaiiTime) {
         this.helloService = helloService;
         this.hawaiiTime = hawaiiTime;
     }

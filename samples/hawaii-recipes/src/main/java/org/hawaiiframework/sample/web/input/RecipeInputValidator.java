@@ -18,11 +18,12 @@ package org.hawaiiframework.sample.web.input;
 
 import static org.hamcrest.Matchers.greaterThan;
 
+import java.util.Objects;
+
 import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 /**
  * @author Marcel Overdijk
@@ -34,8 +35,8 @@ public class RecipeInputValidator implements Validator<RecipeInput> {
 
     @Autowired
     public RecipeInputValidator(final IngredientInputValidator ingredientInputValidator) {
-        Assert.notNull(ingredientInputValidator, "'ingredientInputValidator' must not be null");
-        this.ingredientInputValidator = ingredientInputValidator;
+        this.ingredientInputValidator = Objects.requireNonNull(ingredientInputValidator,
+                "'ingredientInputValidator' must not be null");
     }
 
     @Override

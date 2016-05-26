@@ -17,13 +17,13 @@
 package org.hawaiiframework.web.exception;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ValidationErrorResource;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,9 +40,9 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     public HawaiiResponseEntityExceptionHandler(
             ValidationErrorResourceAssembler validationErrorResourceAssembler) {
-        Assert.notNull(validationErrorResourceAssembler,
-                "'validationErrorResourceAssembler' must not be null");
-        this.validationErrorResourceAssembler = validationErrorResourceAssembler;
+        this.validationErrorResourceAssembler =
+                Objects.requireNonNull(validationErrorResourceAssembler,
+                        "'validationErrorResourceAssembler' must not be null");
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

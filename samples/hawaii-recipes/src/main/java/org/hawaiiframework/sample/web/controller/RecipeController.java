@@ -16,10 +16,15 @@
 
 package org.hawaiiframework.sample.web.controller;
 
-import static org.hawaiiframework.sample.web.Paths.*;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_CREATE_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_DELETE_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_UPDATE_PATH;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.sample.repository.RecipeRepository;
@@ -37,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,14 +63,13 @@ public class RecipeController {
     public RecipeController(final RecipeRepository recipeRepository,
             final RecipeResourceAssembler recipeResourceAssembler,
             final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
-        Assert.notNull(recipeRepository, "'recipeRepository' must not be null");
-        Assert.notNull(recipeResourceAssembler, "'recipeResourceAssembler' must not be null");
-        Assert.notNull(recipeInputValidator, "'recipeInputValidator' must not be null");
-        Assert.notNull(hawaiiTime, "'hawaiiTime' must not be null");
-        this.recipeRepository = recipeRepository;
-        this.recipeResourceAssembler = recipeResourceAssembler;
-        this.recipeInputValidator = recipeInputValidator;
-        this.hawaiiTime = hawaiiTime;
+        this.recipeRepository =
+                Objects.requireNonNull(recipeRepository, "'recipeRepository' must not be null");
+        this.recipeResourceAssembler = Objects.requireNonNull(recipeResourceAssembler,
+                "'recipeResourceAssembler' must not be null");
+        this.recipeInputValidator = Objects.requireNonNull(recipeInputValidator,
+                "'recipeInputValidator' must not be null");
+        this.hawaiiTime = Objects.requireNonNull(hawaiiTime, "'hawaiiTime' must not be null");
     }
 
     @Get(path = RECIPES_LIST_PATH, produces = APPLICATION_JSON_VALUE)

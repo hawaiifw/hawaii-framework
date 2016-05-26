@@ -16,11 +16,12 @@
 
 package org.hawaiiframework.sample.web.resource;
 
+import java.util.Objects;
+
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.web.resource.ResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 /**
  * @author Marcel Overdijk
@@ -32,8 +33,8 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
 
     @Autowired
     public RecipeResourceAssembler(final IngredientResourceAssembler ingredientResourceAssembler) {
-        Assert.notNull(ingredientResourceAssembler, "'ingredientResourceAssembler' must not be null");
-        this.ingredientResourceAssembler = ingredientResourceAssembler;
+        this.ingredientResourceAssembler = Objects.requireNonNull(ingredientResourceAssembler,
+                "'ingredientResourceAssembler' must not be null");
     }
 
     @Override

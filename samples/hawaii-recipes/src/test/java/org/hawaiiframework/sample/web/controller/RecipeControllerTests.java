@@ -22,7 +22,9 @@ import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.hawaiiframework.sample.Application;
 import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;

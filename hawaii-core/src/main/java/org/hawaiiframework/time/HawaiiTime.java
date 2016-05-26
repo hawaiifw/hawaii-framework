@@ -29,8 +29,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-
-import org.springframework.util.Assert;
+import java.util.Objects;
 
 /**
  * This class provides a application wide {@link Clock} reference to instantiate new {@code
@@ -67,19 +66,22 @@ public class HawaiiTime {
 
     /**
      * Constructs a new {@code HawaiiTime} with the supplied zone.
+     *
+     * @param zone the zone, not null
      */
     public HawaiiTime(ZoneId zone) {
-        Assert.notNull(zone, "'zone' must not be null");
-        this.zone = zone;
+        this.zone = Objects.requireNonNull(zone, "'zone' must not be null");
         useSystemClock();
     }
 
     /**
      * Constructs a new {@code HawaiiTime} with the supplied clock. Also the {@code ZoneId} is
      * derived from the supplied clock.
+     *
+     * @param clock the clock, not null
      */
     public HawaiiTime(Clock clock) {
-        Assert.notNull(clock, "'clock' must not be null");
+        Objects.requireNonNull(clock, "'clock' must not be null");
         this.zone = clock.getZone();
         setClock(clock);
     }
@@ -96,11 +98,10 @@ public class HawaiiTime {
     /**
      * Sets the clock to be used by this {@code HawaiiTime}.
      *
-     * @param clock the clock
+     * @param clock the clock, not null
      */
     public void setClock(Clock clock) {
-        Assert.notNull(clock, "'clock' must not be null");
-        this.clock = clock;
+        this.clock = Objects.requireNonNull(clock, "'clock' must not be null");
     }
 
     /**
@@ -124,10 +125,10 @@ public class HawaiiTime {
     /**
      * Sets a fixed clock to be used.
      *
-     * @param clock the fixed clock
+     * @param clock the fixed clock, not null
      */
     public void useFixedClock(Clock clock) {
-        Assert.notNull(clock, "'clock' must not be null");
+        Objects.requireNonNull(clock, "'clock' must not be null");
         useFixedClock(clock.instant(), clock.getZone());
     }
 
@@ -143,52 +144,52 @@ public class HawaiiTime {
     /**
      * Sets a fixed clock to be used.
      *
-     * @param dateTime the fixed date time
+     * @param dateTime the fixed date time, not null
      */
     public void useFixedClock(LocalDateTime dateTime) {
-        Assert.notNull(dateTime, "'dateTime' must not be null");
+        Objects.requireNonNull(dateTime, "'dateTime' must not be null");
         useFixedClock(dateTime.atZone(this.zone).toInstant(), this.zone);
     }
 
     /**
      * Sets a fixed clock to be used.
      *
-     * @param dateTime the fixed date time
+     * @param dateTime the fixed date time, not null
      */
     public void useFixedClock(OffsetDateTime dateTime) {
-        Assert.notNull(dateTime, "'dateTime' must not be null");
+        Objects.requireNonNull(dateTime, "'dateTime' must not be null");
         useFixedClock(dateTime.toInstant(), dateTime.getOffset());
     }
 
     /**
      * Sets a fixed clock to be used.
      *
-     * @param dateTime the fixed date time
+     * @param dateTime the fixed date time, not null
      */
     public void useFixedClock(ZonedDateTime dateTime) {
-        Assert.notNull(dateTime, "'' must not be null");
+        Objects.requireNonNull(dateTime, "'dateTime' must not be null");
         useFixedClock(dateTime.toInstant(), dateTime.getZone());
     }
 
     /**
      * Sets a fixed clock to be used.
      *
-     * @param instant the fixed instant
+     * @param instant the fixed instant, not null
      */
     protected void useFixedClock(Instant instant) {
-        Assert.notNull(instant, "'instant' must not be null");
+        Objects.requireNonNull(instant, "'instant' must not be null");
         setClock(Clock.fixed(instant, this.zone));
     }
 
     /**
      * Sets a fixed clock to be used.
      *
-     * @param instant the fixed instant
-     * @param zone the fixed zone
+     * @param instant the fixed instant, not null
+     * @param zone the fixed zone, not null
      */
     protected void useFixedClock(Instant instant, ZoneId zone) {
-        Assert.notNull(instant, "'instant' must not be null");
-        Assert.notNull(zone, "'zone' must not be null");
+        Objects.requireNonNull(instant, "'instant' must not be null");
+        Objects.requireNonNull(zone, "'zone' must not be null");
         setClock(Clock.fixed(instant, zone));
     }
 

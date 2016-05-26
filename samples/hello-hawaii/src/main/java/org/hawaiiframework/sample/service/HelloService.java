@@ -32,7 +32,7 @@ public class HelloService {
     private final MessageSource messageSource;
 
     @Autowired
-    public HelloService(final MessageSource messageSource) {
+    public HelloService(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
