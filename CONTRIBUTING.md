@@ -5,11 +5,13 @@ Follow the guidelines below for contributing to the Hawaii Framework.
 ## Code Style
 
 All Java code should use the Hawaii Framework Code Style which is based on the [Google Java Style][]
-with the main exception that we use +4 spaces for block indentation instead of +2.
-This [README][Hawaii Framework Java Style code formatter README] contains a full list of adjustments made.
+with the most important exception that we use +4 spaces for block indentation instead of +2.
 
 Eclipse users should simply import the Eclipse [Hawaii Framework Java Style code formatter][].
 IntelliJ IDEA users should first install the [Eclipse Code Formatter plugin][] to import the same Eclipse code formatter file.
+
+This [README][Hawaii Framework Java Style code formatter README] contains a full list of adjustments
+made to the code formatter.
 
 ### Apache License Header
 
