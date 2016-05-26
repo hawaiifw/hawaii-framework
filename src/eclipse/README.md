@@ -1,1 +1,8 @@
-The `hawaii-framework-java-style.xml` code style is a copy of `https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml`.
+The `hawaii-framework-java-style.xml` code style is a copy of `https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml`:
+
+The following adjustments have been made:
+
+ * `org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration`: `1` (was `0`)
+ * `org.eclipse.jdt.core.formatter.blank_lines_before_package`: `1` (was `0`)
+ * `org.eclipse.jdt.core.formatter.tabulation.size`: `4` (was `2)`
+ * `org.eclipse.jdt.core.formatter.use_on_off_tags`: `true` (was `false`)

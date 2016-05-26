@@ -4,9 +4,12 @@ Follow the guidelines below for contributing to the Hawaii Framework.
 
 ## Code Style
 
-All Java code should use the Hawaii Framework Code Style which is based on the [Google Java Style][].
-We have [Eclipse][Eclipse code style formatter] and [IDEA][IDEA code style formatter] code style
-formatters which should be imported and used in the IDE of your choice.
+All Java code should use the Hawaii Framework Code Style which is based on the [Google Java Style][]
+with the main exception that we use +4 spaces for block indentation instead of +2.
+This [README][Hawaii Framework Java Style code formatter README] contains a full list of adjustments made.
+
+Eclipse users should simply import the Eclipse [Hawaii Framework Java Style code formatter][].
+IntelliJ IDEA users should first install the [Eclipse Code Formatter plugin][] to import the same Eclipse code formatter file.
 
 ### Apache License Header
 
@@ -91,7 +94,8 @@ To keep your `master` branch in sync with the [Hawaii Framework GitHub repositor
 
 
 [Google Java Style]: https://google.github.io/styleguide/javaguide.html
-[Eclipse code style formatter]: https://github.com/hawaiifw/hawaii-framework/blob/master/src/eclipse/hawaii-framework-java-style.xml
-[IDEA code style formatter]: https://github.com/hawaiifw/hawaii-framework/blob/master/src/idea/hawaii-framework-java-style.xml
+[Hawaii Framework Java Style code formatter]: https://github.com/hawaiifw/hawaii-framework/blob/master/src/eclipse/hawaii-framework-java-style.xml
+[Hawaii Framework Java Style code formatter README]: https://github.com/hawaiifw/hawaii-framework/blob/master/src/eclipse/README.md
+[Eclipse Code Formatter plugin]: http://plugins.jetbrains.com/plugin/6546
 [GitHub]: https://github.com/
 [Hawaii Framework GitHub repository]: https://github.com/hawaiifw/hawaii-framework
