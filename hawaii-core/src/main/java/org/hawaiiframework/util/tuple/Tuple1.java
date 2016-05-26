@@ -62,8 +62,12 @@ public class Tuple1<T1> implements Tuple, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Tuple1 other = (Tuple1) o;
         return Objects.equals(this.element1, other.element1);
     }

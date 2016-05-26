@@ -16,17 +16,17 @@
 
 package org.hawaiiframework.sql;
 
-import org.hawaiiframework.exception.HawaiiException;
-import org.springframework.core.Ordered;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.hawaiiframework.exception.HawaiiException;
+import org.springframework.core.Ordered;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 /**
  * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic
@@ -74,8 +74,7 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     }
 
     /**
-     * Return the prefix that gets prepended to sql query names when building the resource
-     * location.
+     * Return the prefix that gets prepended to sql query names when building the resource location.
      */
     protected String getPrefix() {
         return this.prefix;
@@ -125,7 +124,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
             return null;
         } else {
             try {
-                return new Scanner(resource.getInputStream(), this.charset.name()).useDelimiter("\\Z").next();
+                return new Scanner(resource.getInputStream(), this.charset.name())
+                        .useDelimiter("\\Z").next();
             } catch (IOException e) {
                 throw new HawaiiException("Error reading resource: " + location, e);
             }

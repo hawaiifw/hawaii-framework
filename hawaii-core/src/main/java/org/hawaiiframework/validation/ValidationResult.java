@@ -16,9 +16,7 @@
 
 package org.hawaiiframework.validation;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.hamcrest.Matcher;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -27,12 +25,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.hamcrest.Matcher;
 
 /**
  * Stores validation errors for a specific object.
  *
- * <p>This class is heavily inspired on Spring's {@link org.springframework.validation.Errors}
+ * <p>
+ * This class is heavily inspired on Spring's {@link org.springframework.validation.Errors}
  * interface. The main difference is that Hawaii's {@link ValidationResult} does not bind or require
  * the target object being validated.
  *

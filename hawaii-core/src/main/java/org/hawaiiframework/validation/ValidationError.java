@@ -16,10 +16,12 @@
 
 package org.hawaiiframework.validation;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.util.Assert;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import java.util.Objects;
 
 /**
  * Encapsulates a validation error.
@@ -47,12 +49,11 @@ public class ValidationError {
      * Constructs a new {@link ValidationError} with the supplied field name and error code.
      *
      * @param field the field name
-     * @param code  the error code
+     * @param code the error code
      */
     public ValidationError(String field, String code) {
-        Assert.notNull(code, "Code must not be null");
         this.field = field;
-        this.code = code;
+        this.code = Objects.requireNonNull(code, "'code' must not be null");
     }
 
     /**

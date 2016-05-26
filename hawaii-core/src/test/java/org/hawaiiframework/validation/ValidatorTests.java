@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.validation;
 
-import org.junit.Test;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 /**
  * Tests for {@link Validator}.
@@ -33,6 +33,7 @@ public class ValidatorTests {
     @Test
     public void testValidateAndThrowReturnsVoidWhenNoValidationErrors() {
         Validator validator = new Validator() {
+
             @Override
             public void validate(Object object, ValidationResult validationResult) {
                 // no validation errors
@@ -44,6 +45,7 @@ public class ValidatorTests {
     @Test
     public void testValidateAndThrowWithValidationResultReturnsVoidWhenNoValidationErrors() {
         Validator validator = new Validator() {
+
             @Override
             public void validate(Object object, ValidationResult validationResult) {
                 // no validation errors
@@ -56,6 +58,7 @@ public class ValidatorTests {
     @Test(expected = ValidationException.class)
     public void testValidateAndThrowThrowsExceptionWhenValidationErrors() {
         Validator validator = new Validator() {
+
             @Override
             public void validate(Object object, ValidationResult validationResult) {
                 // force validation error
@@ -68,6 +71,7 @@ public class ValidatorTests {
     @Test(expected = ValidationException.class)
     public void testValidateAndThrowWithValidationResultThrowsExceptionWhenValidationErrors() {
         Validator validator = new Validator() {
+
             @Override
             public void validate(Object object, ValidationResult validationResult) {
                 // force validation error
@@ -81,6 +85,7 @@ public class ValidatorTests {
     @Test
     public void testIsValidReturnsTrueWhenNoValidationErrors() {
         Validator validator = new Validator() {
+
             @Override
             public void validate(Object object, ValidationResult validationResult) {
                 // no validation errors
@@ -92,6 +97,7 @@ public class ValidatorTests {
     @Test
     public void testIsValidReturnsFalseWhenValidationErrors() {
         Validator validator = new Validator() {
+
             @Override
             public void validate(Object object, ValidationResult validationResult) {
                 // force validation error

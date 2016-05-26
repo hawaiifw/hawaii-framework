@@ -32,7 +32,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
 
     @Autowired
     public RecipeResourceAssembler(final IngredientResourceAssembler ingredientResourceAssembler) {
-        Assert.notNull(ingredientResourceAssembler, "IngredientResourceAssembler must not be null");
+        Assert.notNull(ingredientResourceAssembler, "'ingredientResourceAssembler' must not be null");
         this.ingredientResourceAssembler = ingredientResourceAssembler;
     }
 

@@ -16,17 +16,17 @@
 
 package org.hawaiiframework.boot.autoconfigure.env;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.EnvironmentTestUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests for {@link HawaiiPropertyDefaultsPostProcessor}.
@@ -46,11 +46,15 @@ public class HawaiiPropertyDefaultsPostProcessorTests {
         defaultHawaiiProperties.put("logging.file", "log/hawaii.log");
         defaultHawaiiProperties.put("logging.level.org.springframework", "INFO");
         defaultHawaiiProperties.put("logging.level.org.hawaiiframework", "INFO");
-        defaultHawaiiProperties.put("spring.jackson.date-format", "com.fasterxml.jackson.databind.util.ISO8601DateFormat");
-        defaultHawaiiProperties.put("spring.jackson.property-naming-strategy", "CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES");
+        defaultHawaiiProperties.put("spring.jackson.date-format",
+                "com.fasterxml.jackson.databind.util.ISO8601DateFormat");
+        defaultHawaiiProperties.put("spring.jackson.property-naming-strategy",
+                "CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES");
         defaultHawaiiProperties.put("spring.jackson.serialization.indent-output", "false");
-        defaultHawaiiProperties.put("spring.jackson.serialization.write-dates-as-timestamps", "false");
-        defaultHawaiiProperties.put("spring.jackson.serialization.write-date-timestamps-as-nanoseconds", "false");
+        defaultHawaiiProperties.put("spring.jackson.serialization.write-dates-as-timestamps",
+                "false");
+        defaultHawaiiProperties
+                .put("spring.jackson.serialization.write-date-timestamps-as-nanoseconds", "false");
 
         defaultHawaiiDevProperties = new HashMap<>(defaultHawaiiProperties);
         defaultHawaiiDevProperties.put("logging.level.org.hawaiiframework", "DEBUG");

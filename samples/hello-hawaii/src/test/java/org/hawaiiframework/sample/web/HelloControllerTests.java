@@ -16,15 +16,6 @@
 
 package org.hawaiiframework.sample.web;
 
-import org.hawaiiframework.sample.Application;
-import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-
-import java.time.OffsetDateTime;
-
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -33,6 +24,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.OffsetDateTime;
+
+import org.hawaiiframework.sample.Application;
+import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 
 /**
  * @author Marcel Overdijk
@@ -53,70 +53,62 @@ public class HelloControllerTests extends AbstractMockMvcTest {
     }
 
     @Test
-    public void greetWithoutNameAndLanguageShouldReturnHawaiianGreetingWithoutName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet"))
-                .andExpect(status().isOk())
+    public void greetWithoutNameAndLanguageShouldReturnHawaiianGreetingWithoutName()
+            throws Exception {
+        mockMvc.perform(get("/rest/hello/greet")).andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Aloha stranger, pehea 'oe?")));
     }
 
     @Test
-    public void greetWithNameButWithoutLanguageShouldReturnHawaiianGreetingWithName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
-                .param("name", "Marcel"))
-                .andExpect(status().isOk())
+    public void greetWithNameButWithoutLanguageShouldReturnHawaiianGreetingWithName()
+            throws Exception {
+        mockMvc.perform(get("/rest/hello/greet").param("name", "Marcel")).andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Aloha Marcel, pehea 'oe?")));
     }
 
     @Test
-    public void greetWithoutNameButWithDutchLanguageShouldReturnDutchGreetingWithoutName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
-                .param("language", "dutch"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+    public void greetWithoutNameButWithDutchLanguageShouldReturnDutchGreetingWithoutName()
+            throws Exception {
+        mockMvc.perform(get("/rest/hello/greet").param("language", "dutch"))
+                .andExpect(status().isOk()).andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hallo vreemdeling, hoe gaat het?")));
     }
 
     @Test
     public void greetWithNameAndDutchLanguageShouldReturnDutchGreetingWithName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
-                .param("name", "Marcel")
-                .param("language", "dutch"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+        mockMvc.perform(get("/rest/hello/greet").param("name", "Marcel").param("language", "dutch"))
+                .andExpect(status().isOk()).andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hallo Marcel, hoe gaat het?")));
     }
 
     @Test
-    public void greetWithoutNameButWithEnglishLanguageShouldReturnEnglishGreetingWithoutName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
-                .param("language", "english"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+    public void greetWithoutNameButWithEnglishLanguageShouldReturnEnglishGreetingWithoutName()
+            throws Exception {
+        mockMvc.perform(get("/rest/hello/greet").param("language", "english"))
+                .andExpect(status().isOk()).andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hello stranger, how are you doing?")));
     }
 
     @Test
-    public void greetWithNameAndEnglishLanguageShouldReturnEnglishGreetingWithName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
-                .param("name", "Marcel")
-                .param("language", "english"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+    public void greetWithNameAndEnglishLanguageShouldReturnEnglishGreetingWithName()
+            throws Exception {
+        mockMvc.perform(
+                get("/rest/hello/greet").param("name", "Marcel").param("language", "english"))
+                .andExpect(status().isOk()).andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hello Marcel, how are you doing?")));
     }
 
     @Test
     public void greetWithInvalidLanguageShouldReturnError() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
-                .param("language", "unknown"))
+        mockMvc.perform(get("/rest/hello/greet").param("language", "unknown"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))

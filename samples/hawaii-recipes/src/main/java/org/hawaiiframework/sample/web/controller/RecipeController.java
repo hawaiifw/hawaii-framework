@@ -16,6 +16,11 @@
 
 package org.hawaiiframework.sample.web.controller;
 
+import static org.hawaiiframework.sample.web.Paths.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+import java.util.List;
+
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.sample.repository.RecipeRepository;
 import org.hawaiiframework.sample.web.input.RecipeInput;
@@ -37,11 +42,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-import static org.hawaiiframework.sample.web.Paths.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 /**
  * @author Marcel Overdijk
  */
@@ -56,11 +56,13 @@ public class RecipeController {
     private final HawaiiTime hawaiiTime;
 
     @Autowired
-    public RecipeController(final RecipeRepository recipeRepository, final RecipeResourceAssembler recipeResourceAssembler, final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
-        Assert.notNull(recipeRepository, "RecipeRepository must not be null");
-        Assert.notNull(recipeResourceAssembler, "RecipeResourceAssembler must not be null");
-        Assert.notNull(recipeInputValidator, "RecipeInputValidator must not be null");
-        Assert.notNull(hawaiiTime, "HawaiiTime must not be null");
+    public RecipeController(final RecipeRepository recipeRepository,
+            final RecipeResourceAssembler recipeResourceAssembler,
+            final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
+        Assert.notNull(recipeRepository, "'recipeRepository' must not be null");
+        Assert.notNull(recipeResourceAssembler, "'recipeResourceAssembler' must not be null");
+        Assert.notNull(recipeInputValidator, "'recipeInputValidator' must not be null");
+        Assert.notNull(hawaiiTime, "'hawaiiTime' must not be null");
         this.recipeRepository = recipeRepository;
         this.recipeResourceAssembler = recipeResourceAssembler;
         this.recipeInputValidator = recipeInputValidator;
@@ -78,7 +80,8 @@ public class RecipeController {
         return ResponseEntity.ok().body(resources);
     }
 
-    @Post(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @Post(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody RecipeInput recipeInput) {
         logger.info("create called with input: {}", recipeInput);
         // Validate recipe input; and throw validation exception in case of validation errors
@@ -104,8 +107,10 @@ public class RecipeController {
         return ResponseEntity.ok().body(resource);
     }
 
-    @Put(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody RecipeInput recipeInput) {
+    @Put(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> update(@PathVariable("id") Long id,
+            @RequestBody RecipeInput recipeInput) {
         logger.info("update called with id: {}, input: {}", id, recipeInput);
         // Retrieve recipe by id
         Recipe recipe = recipeRepository.findOne(id);

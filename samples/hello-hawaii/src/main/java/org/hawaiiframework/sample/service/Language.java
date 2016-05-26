@@ -23,9 +23,7 @@ import java.util.Locale;
  */
 public enum Language {
 
-    DUTCH("nl"),
-    ENGLISH("en"),
-    HAWAIIAN("us-HI");
+    DUTCH("nl"), ENGLISH("en"), HAWAIIAN("us-HI");
 
     private Locale locale;
 

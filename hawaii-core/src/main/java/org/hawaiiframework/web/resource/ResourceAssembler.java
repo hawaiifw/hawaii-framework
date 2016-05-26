@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.web.resource;
 
-import org.springframework.util.Assert;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.util.Assert;
 
 /**
  * @author Marcel Overdijk
@@ -39,7 +39,7 @@ public interface ResourceAssembler<T, D> {
      * @see #toResource(Object)
      */
     default List<D> toResources(Iterable<? extends T> objects) {
-        Assert.notNull(objects, "Objects must not be null");
+        Assert.notNull(objects, "'objects' must not be null");
         List<D> result = new ArrayList<D>();
         for (T object : objects) {
             result.add(toResource(object));

@@ -64,9 +64,15 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         Tuple3 other = (Tuple3) o;
         return Objects.equals(this.element3, other.element3);
     }

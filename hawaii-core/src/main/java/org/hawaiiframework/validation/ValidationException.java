@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.validation;
 
+import java.util.List;
+
 import org.hawaiiframework.exception.HawaiiException;
 import org.springframework.util.Assert;
-
-import java.util.List;
 
 /**
  * @author Marcel Overdijk
@@ -54,7 +54,7 @@ public class ValidationException extends HawaiiException {
      */
     public ValidationException(ValidationError validationError) {
         this();
-        Assert.notNull(validationError, "Validation error must not be null");
+        Assert.notNull(validationError, "'validationError' error must not be null");
         validationResult.addError(validationError);
     }
 
@@ -65,7 +65,7 @@ public class ValidationException extends HawaiiException {
      */
     public ValidationException(List<ValidationError> validationErrors) {
         this();
-        Assert.notNull(validationErrors, "Validation errors must not be null");
+        Assert.notNull(validationErrors, "'validationErrors' must not be null");
         validationResult.addAllErrors(validationErrors);
     }
 

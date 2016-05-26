@@ -40,7 +40,8 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends Tuple6<T1, T2, T3, T4, T
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple7(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6, T7 element7) {
+    public Tuple7(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6,
+            T7 element7) {
         super(element1, element2, element3, element4, element5, element6);
         this.element7 = element7;
     }
@@ -68,9 +69,15 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends Tuple6<T1, T2, T3, T4, T
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         Tuple7 other = (Tuple7) o;
         return Objects.equals(this.element7, other.element7);
     }

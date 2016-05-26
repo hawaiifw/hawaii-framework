@@ -16,12 +16,12 @@
 
 package org.hawaiiframework.util.tuple;
 
-import org.junit.Test;
-
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 /**
  * Tests for {@link Tuple9}.
@@ -31,7 +31,8 @@ import static org.junit.Assert.assertThat;
 public class Tuple9Tests extends AbstractTupleTests {
 
     private Tuple9<Object1, Object2, Object3, Object4, Object5, Object6, Object7, Object8, Object9> tuple =
-            Tuples.of(object1, object2, object3, object4, object5, object6, object7, object8, object9);
+            Tuples.of(object1, object2, object3, object4, object5, object6, object7, object8,
+                    object9);
 
     @Test
     public void testSizeIs9() {

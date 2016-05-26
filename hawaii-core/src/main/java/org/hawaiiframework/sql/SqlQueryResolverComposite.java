@@ -16,13 +16,13 @@
 
 package org.hawaiiframework.sql;
 
-import org.hawaiiframework.exception.HawaiiException;
-import org.springframework.core.Ordered;
-import org.springframework.util.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.hawaiiframework.exception.HawaiiException;
+import org.springframework.core.Ordered;
+import org.springframework.util.CollectionUtils;
 
 /**
  * A {@link SqlQueryResolver} that delegates to others.

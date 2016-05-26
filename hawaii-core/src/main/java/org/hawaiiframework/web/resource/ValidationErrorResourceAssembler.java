@@ -16,17 +16,18 @@
 
 package org.hawaiiframework.web.resource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-
 import org.hawaiiframework.validation.ValidationError;
 import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ValidationErrorResourceAssembler implements ResourceAssembler<ValidationError, ValidationErrorResource> {
+public class ValidationErrorResourceAssembler
+        implements ResourceAssembler<ValidationError, ValidationErrorResource> {
 
     private final ObjectMapper objectMapper;
 
@@ -35,13 +36,13 @@ public class ValidationErrorResourceAssembler implements ResourceAssembler<Valid
     }
 
     public ValidationErrorResourceAssembler(ObjectMapper objectMapper) {
-        Assert.notNull(objectMapper, "Object mapper must not be null");
+        Assert.notNull(objectMapper, "'objectMapper' must not be null");
         this.objectMapper = objectMapper;
     }
 
     @Override
     public ValidationErrorResource toResource(ValidationError validationError) {
-        Assert.notNull(validationError, "Validation error must not be null");
+        Assert.notNull(validationError, "'validationError' must not be null");
         String field = convertProperty(validationError.getField());
         String code = convertProperty(validationError.getCode());
         ValidationErrorResource resource = new ValidationErrorResource();
@@ -56,18 +57,26 @@ public class ValidationErrorResourceAssembler implements ResourceAssembler<Valid
      * responses. The naming strategy is defined in application.yml via the
      * 'spring.jackson.property-naming-strategy' property.
      *
-     * <p>For example, if the {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy}
-     * is defined, the following field names and error codes will be translated as following: <ol>
-     * <li>description -> description</li> <li>price -> price</li> <li>discountPrice ->
-     * discount_price</li> <li>Required -> required</li> <li>InvalidLength -> invalid_length</li>
+     * <p>
+     * For example, if the
+     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy}
+     * is defined, the following field names and error codes will be translated as following:
+     * <ol>
+     * <li>description -> description</li>
+     * <li>price -> price</li>
+     * <li>discountPrice -> discount_price</li>
+     * <li>Required -> required</li>
+     * <li>InvalidLength -> invalid_length</li>
      * </ol>
      */
     protected String convertProperty(String propertyName) {
         if (objectMapper == null || propertyName == null || propertyName.length() == 0) {
             return propertyName;
         }
-        // retrieve the application defined property naming strategy from the object mapper's serialization config
-        PropertyNamingStrategy propertyNamingStrategy = objectMapper.getSerializationConfig().getPropertyNamingStrategy();
+        // retrieve the application defined property naming strategy from the object mapper's
+        // serialization config
+        PropertyNamingStrategy propertyNamingStrategy =
+                objectMapper.getSerializationConfig().getPropertyNamingStrategy();
         if (propertyNamingStrategy == null) {
             return propertyName;
         }

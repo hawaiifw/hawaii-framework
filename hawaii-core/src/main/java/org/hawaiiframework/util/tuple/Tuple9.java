@@ -33,7 +33,8 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> {
+public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
+        extends Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,7 +43,8 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Tuple8<T1, T2, T
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple9(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6, T7 element7, T8 element8, T9 element9) {
+    public Tuple9(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6,
+            T7 element7, T8 element8, T9 element9) {
         super(element1, element2, element3, element4, element5, element6, element7, element8);
         this.element9 = element9;
     }
@@ -70,9 +72,15 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Tuple8<T1, T2, T
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         Tuple9 other = (Tuple9) o;
         return Objects.equals(this.element9, other.element9);
     }

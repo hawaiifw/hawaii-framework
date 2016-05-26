@@ -16,8 +16,8 @@
 
 package org.hawaiiframework.time;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -32,8 +32,8 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for {@link HawaiiTime}.
@@ -42,7 +42,8 @@ import static org.junit.Assert.assertThat;
  */
 public class HawaiiTimeTests {
 
-    private static final Clock FIXED_EPOCH_CLOCK = Clock.fixed(Instant.EPOCH, HawaiiTime.DEFAULT_ZONE);
+    private static final Clock FIXED_EPOCH_CLOCK =
+            Clock.fixed(Instant.EPOCH, HawaiiTime.DEFAULT_ZONE);
     private static final ZoneId EUROPE_AMSTERDAM_ZONE_ID = ZoneId.of("Europe/Amsterdam");
 
     private HawaiiTime hawaiiTime;

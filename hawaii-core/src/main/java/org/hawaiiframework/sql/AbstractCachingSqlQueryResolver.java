@@ -16,22 +16,25 @@
 
 package org.hawaiiframework.sql;
 
-import org.hawaiiframework.exception.HawaiiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.hawaiiframework.exception.HawaiiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Convenient base class for {@link SqlQueryResolver} implementations. Caches sql queries once
  * resolved: This means that sql query resolution won't be a performance problem, no matter how
  * costly initial sql query retrieval is.
  *
- * <p>Subclasses need to implement the {@link #loadSqlQuery} template method to load the sql query.
+ * <p>
+ * Subclasses need to implement the {@link #loadSqlQuery} template method to load the sql query.
  *
- * <p>Note this implementation is based on Spring's {@link org.springframework.web.servlet.view.AbstractCachingViewResolver}.
+ * <p>
+ * Note this implementation is based on Spring's
+ * {@link org.springframework.web.servlet.view.AbstractCachingViewResolver}.
  *
  * @author Marcel Overdijk
  * @see #loadSqlQuery
@@ -51,7 +54,8 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     /**
      * Fast access cache for sql queries, returning already cached instances without a global lock.
      */
-    private final Map<Object, String> sqlQueryAccessCache = new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
+    private final Map<Object, String> sqlQueryAccessCache =
+            new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
     /**
      * The maximum number of entries in the cache.
      */
@@ -61,6 +65,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      */
     private final Map<Object, String> sqlQueryCreationCache =
             new LinkedHashMap<Object, String>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
+
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<Object, String> eldest) {
                     if (size() > getCacheLimit()) {
@@ -98,9 +103,12 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     }
 
     /**
-     * Enable or disable caching. <p>This is equivalent to setting the {@link #setCacheLimit
-     * "cacheLimit"} property to the default limit (1024) or to 0, respectively. <p>Default is
-     * "true": caching is enabled. Disable this only for debugging and development.
+     * Enable or disable caching.
+     * <p>
+     * This is equivalent to setting the {@link #setCacheLimit "cacheLimit"} property to the default
+     * limit (1024) or to 0, respectively.
+     * <p>
+     * Default is "true": caching is enabled. Disable this only for debugging and development.
      */
     public void setCache(boolean cache) {
         this.cacheLimit = (cache ? DEFAULT_CACHE_LIMIT : 0);
@@ -108,17 +116,20 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
 
     /**
      * Whether a sql query name once resolved to {@code null} should be cached and automatically
-     * resolved to {@code null} subsequently. <p>Default is "true": unresolved sql query names are
-     * being cached. Note that this flag only applies if the general {@link #setCache "cache"} flag
-     * is kept at its default of "true" as well.
+     * resolved to {@code null} subsequently.
+     * <p>
+     * Default is "true": unresolved sql query names are being cached. Note that this flag only
+     * applies if the general {@link #setCache "cache"} flag is kept at its default of "true" as
+     * well.
      */
     public void setCacheUnresolved(boolean cacheUnresolved) {
         this.cacheUnresolved = cacheUnresolved;
     }
 
     /**
-     * Return the cache key for the given sql query name. <p>Default is the sql query name but can
-     * be overridden in subclasses.
+     * Return the cache key for the given sql query name.
+     * <p>
+     * Default is the sql query name but can be overridden in subclasses.
      */
     protected Object getCacheKey(String sqlQueryName) {
         return sqlQueryName;
@@ -128,7 +139,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * Provides functionality to clear the cache for a certain sql query.
      *
      * @param sqlQueryName the sql query name for which the cached sql query (if any) needs to be
-     *                     removed
+     *        removed
      */
     public void removeFromCache(String sqlQueryName) {
         if (!isCache()) {
@@ -199,7 +210,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * @return the sql query, or {@code null} if not found (optional, to allow for {@code
      * SqlQueryResolver} chaining)
      * @throws HawaiiException if the sql query could not be resolved (typically in case of problems
-     *                         resolving the sql query)
+     *         resolving the sql query)
      * @see #resolveSqlQuery
      */
     protected abstract String loadSqlQuery(String sqlQueryName) throws HawaiiException;

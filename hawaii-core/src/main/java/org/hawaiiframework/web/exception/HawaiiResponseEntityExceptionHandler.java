@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.exception;
 
+import java.util.List;
+
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ValidationErrorResource;
@@ -27,8 +29,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.List;
-
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -38,8 +38,10 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
 
-    public HawaiiResponseEntityExceptionHandler(ValidationErrorResourceAssembler validationErrorResourceAssembler) {
-        Assert.notNull(validationErrorResourceAssembler, "Validation error resource assembler must not be null");
+    public HawaiiResponseEntityExceptionHandler(
+            ValidationErrorResourceAssembler validationErrorResourceAssembler) {
+        Assert.notNull(validationErrorResourceAssembler,
+                "'validationErrorResourceAssembler' must not be null");
         this.validationErrorResourceAssembler = validationErrorResourceAssembler;
     }
 
@@ -53,7 +55,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity handleValidationException(ValidationException e) {
         List<ValidationError> validationErrors = e.getValidationResult().getErrors();
-        List<ValidationErrorResource> resources = validationErrorResourceAssembler.toResources(validationErrors);
+        List<ValidationErrorResource> resources =
+                validationErrorResourceAssembler.toResources(validationErrors);
         return ResponseEntity.badRequest().body(resources);
     }
 }

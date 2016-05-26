@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.sample.web;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.sample.service.HelloService;
@@ -32,8 +34,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @author Marcel Overdijk
@@ -54,7 +54,8 @@ public class HelloController {
     }
 
     @Get(path = "/greet", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> greet(@RequestParam(required = false) String name, @RequestParam(required = false) String language) {
+    public ResponseEntity<JSONObject> greet(@RequestParam(required = false) String name,
+            @RequestParam(required = false) String language) {
 
         logger.info("greet called with name: {}, language: {}", name, language);
 
@@ -69,7 +70,8 @@ public class HelloController {
         // Create resource to be returned to client
         JSONObject resource = new JSONObject();
         resource.put("timestamp", hawaiiTime.zonedDateTime());
-        resource.put("greeting", helloService.greet(name, EnumUtils.getEnum(Language.class, language)));
+        resource.put("greeting",
+                helloService.greet(name, EnumUtils.getEnum(Language.class, language)));
 
         return ResponseEntity.ok().body(resource);
     }

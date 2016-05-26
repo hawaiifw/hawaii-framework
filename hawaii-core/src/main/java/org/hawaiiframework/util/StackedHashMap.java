@@ -26,8 +26,9 @@ import java.util.Set;
 /**
  * A stacked {@code HashMap} implementation.
  *
- * <p>This implementation is useful if you want to add and/or remove mappings to a map, but also
- * want to return to a previous state of the map easily.
+ * <p>
+ * This implementation is useful if you want to add and/or remove mappings to a map, but also want
+ * to return to a previous state of the map easily.
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values

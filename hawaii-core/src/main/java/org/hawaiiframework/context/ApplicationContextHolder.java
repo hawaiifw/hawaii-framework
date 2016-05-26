@@ -16,9 +16,9 @@
 
 package org.hawaiiframework.context;
 
-import org.springframework.context.ApplicationContext;
-
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Marcel Overdijk
@@ -26,7 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ApplicationContextHolder {
 
-    private static final ConcurrentHashMap<ClassLoader, ApplicationContext> contextMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ClassLoader, ApplicationContext> contextMap =
+            new ConcurrentHashMap<>();
 
     public static ApplicationContext getRequiredApplicationContext() {
         ApplicationContext context = getApplicationContext();
@@ -56,7 +57,8 @@ public class ApplicationContextHolder {
     public static void bind(ApplicationContext context) {
         Object old = contextMap.putIfAbsent(getContextClassLoader(), context);
         if (old != null) {
-            throw new IllegalStateException("ApplicationContext already bound to the class loader of the current thread");
+            throw new IllegalStateException(
+                    "ApplicationContext already bound to the class loader of the current thread");
         }
     }
 
@@ -70,7 +72,8 @@ public class ApplicationContextHolder {
     private static ClassLoader getContextClassLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
-            throw new IllegalStateException("Unable to get the class loader for the current thread");
+            throw new IllegalStateException(
+                    "Unable to get the class loader for the current thread");
         }
         return classLoader;
     }

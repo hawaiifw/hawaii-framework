@@ -24,7 +24,8 @@ import org.springframework.stereotype.Component;
  * @author Marcel Overdijk
  */
 @Component
-public class IngredientResourceAssembler implements ResourceAssembler<Ingredient, IngredientResource> {
+public class IngredientResourceAssembler
+        implements ResourceAssembler<Ingredient, IngredientResource> {
 
     @Override
     public IngredientResource toResource(Ingredient ingredient) {
