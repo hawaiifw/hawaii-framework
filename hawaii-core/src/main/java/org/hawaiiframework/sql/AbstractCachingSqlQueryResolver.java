@@ -28,10 +28,8 @@ import org.slf4j.LoggerFactory;
  * Convenient base class for {@link SqlQueryResolver} implementations. Caches sql queries once
  * resolved: This means that sql query resolution won't be a performance problem, no matter how
  * costly initial sql query retrieval is.
- *
  * <p>
  * Subclasses need to implement the {@link #loadSqlQuery} template method to load the sql query.
- *
  * <p>
  * Note this implementation is based on Spring's
  * {@link org.springframework.web.servlet.view.AbstractCachingViewResolver}.

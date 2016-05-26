@@ -56,7 +56,6 @@ public class ValidationErrorResourceAssembler
      * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in
      * responses. The naming strategy is defined in application.yml via the
      * 'spring.jackson.property-naming-strategy' property.
-     *
      * <p>
      * For example, if the
      * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy}

@@ -31,7 +31,6 @@ import org.hamcrest.Matcher;
 
 /**
  * Stores validation errors for a specific object.
- *
  * <p>
  * This class is heavily inspired on Spring's {@link org.springframework.validation.Errors}
  * interface. The main difference is that Hawaii's {@link ValidationResult} does not bind or require

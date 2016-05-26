@@ -18,12 +18,10 @@ package org.hawaiiframework.validation;
 
 /**
  * A validator for validating application-specific objects.
- *
  * <p>
  * This interface is inspired on Spring's {@link org.springframework.validation.Validator}
  * mechanism. However Hawaii's validator mechanism uses it's own {@link ValidationResult} instead of
  * Spring's {@link org.springframework.validation.Errors} for returning validation errors.
- *
  * <p>
  * Implementors should typically only implement {@link Validator#validate(Object, ValidationResult)}
  * as other methods are already implemented using the interface's default methods.
