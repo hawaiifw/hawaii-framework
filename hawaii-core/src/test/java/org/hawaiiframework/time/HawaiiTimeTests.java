@@ -76,7 +76,7 @@ public class HawaiiTimeTests {
         assertThat(this.hawaiiTime.getClock(), is(FIXED_EPOCH_CLOCK));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testSetClockCannotBeNull() {
         this.hawaiiTime.setClock(null);
     }
