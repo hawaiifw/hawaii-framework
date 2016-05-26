@@ -2,6 +2,7 @@ The `hawaii-framework-java-style.xml` code style is a copy of `https://github.co
 
 The following adjustments have been made:
 
+ * `org.eclipse.jdt.core.formatter.comment.format_header`: `false` (was `true`)
  * `org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration`: `1` (was `0`)
  * `org.eclipse.jdt.core.formatter.blank_lines_before_package`: `1` (was `0`)
  * `org.eclipse.jdt.core.formatter.tabulation.size`: `4` (was `2)`
