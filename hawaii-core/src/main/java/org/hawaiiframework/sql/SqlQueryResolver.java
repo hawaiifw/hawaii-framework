@@ -26,7 +26,6 @@ import org.hawaiiframework.exception.HawaiiException;
  */
 public interface SqlQueryResolver {
 
-
     /**
      * Resolve the given sql query by name.
      * <p>

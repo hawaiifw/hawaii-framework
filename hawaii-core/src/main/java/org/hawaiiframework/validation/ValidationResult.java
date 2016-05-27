@@ -43,13 +43,14 @@ public class ValidationResult {
 
     private final Deque<String> nestedPathStack = new ArrayDeque<>();
     private final List<ValidationError> errors = new LinkedList<>();
+
     /**
      * The separator between path elements in a nested path, for example in "name" or
      * "address.street".
      */
-    String NESTED_PATH_SEPARATOR = ".";
-    String NESTED_PATH_INDEX_PREFIX = "[";
-    String NESTED_PATH_INDEX_SUFFIX = "]";
+    public String NESTED_PATH_SEPARATOR = ".";
+    public String NESTED_PATH_INDEX_PREFIX = "[";
+    public String NESTED_PATH_INDEX_SUFFIX = "]";
 
     /**
      * Returns the current nested path of this {@link ValidationResult}.

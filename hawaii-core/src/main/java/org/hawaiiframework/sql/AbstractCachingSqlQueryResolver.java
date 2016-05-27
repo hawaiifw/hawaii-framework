@@ -44,20 +44,25 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * Default maximum number of entries for the sql query cache: 1024
      */
     public static final int DEFAULT_CACHE_LIMIT = 1024;
+
     /**
      * Dummy marker object for unresolved sql queries in the cache Maps.
      */
     private static final String UNRESOLVED_SQL_QUERY = new String();
+
     private static Logger logger = LoggerFactory.getLogger(AbstractCachingSqlQueryResolver.class);
+
     /**
      * Fast access cache for sql queries, returning already cached instances without a global lock.
      */
     private final Map<Object, String> sqlQueryAccessCache =
             new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
+
     /**
      * The maximum number of entries in the cache.
      */
     private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
+
     /**
      * Map from sql query key to sql query instance, synchronized for sql query creation.
      */
@@ -74,6 +79,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
                     }
                 }
             };
+
     /**
      * Whether we should refrain from resolving sql queries again if unresolved once,
      */
