@@ -61,10 +61,11 @@ opinionated guidelines.
 
 ### Check your parameters
 When a particular method or constructor accepts parameters and there are expectations around these parameters such
-as not being null, we explicitely test these parameters using the
+as not being null, we explicitly test these parameters using the
 [Objects](https://docs.oracle.com/javase/7/docs/api/java/util/Objects.html) class introduced by Jdk1.7.
 
-For example use Objects.notNull methods to assure a value can't be null and we get notified when it does.
+For example use Objects.requireNonNull methods to assure a value can't be null and we get notified when it does.
+(use requireNonNull instead of notNull. requireNonNull throws an Exception, notNull is a boolean.)
 Make sure you add a valuable message. Note that the Javadoc explicitly states that the value can't be null.
 ```java
 /**
