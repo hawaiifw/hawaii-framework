@@ -60,13 +60,15 @@ The following development guidelines should be applied when applying changes to 
 opinionated guidelines.
 
 ### Check your parameters
+
 When a particular method or constructor accepts parameters and there are expectations around these parameters such
 as not being null, we explicitly test these parameters using the
-[Objects](https://docs.oracle.com/javase/7/docs/api/java/util/Objects.html) class introduced by Jdk1.7.
+[Objects](https://docs.oracle.com/javase/7/docs/api/java/util/Objects.html) class introduced by JDK 7.
 
-For example use Objects.requireNonNull methods to assure a value can't be null and we get notified when it does.
-(use requireNonNull instead of notNull. requireNonNull throws an Exception, notNull is a boolean.)
-Make sure you add a valuable message. Note that the Javadoc explicitly states that the value can't be null.
+For example use `Objects.requireNonNull` methods to assure a value cannot be null and we get notified when it does.
+Use `requireNonNull` instead of `notNull` as arequireNonNulla throws an `Exception` and `notNull` returns just a boolean.
+Make sure you add a valuable message. Note that the Javadoc explicitly states that the value must not be null.
+
 ```java
 /**
   * Sets a fixed clock to be used.
@@ -79,7 +81,8 @@ public void useFixedClock(Clock clock) {
 }
 ```
 
-### When to add Javadoc.
+### When to add Javadoc
+
 In short: Always.
 
 The value of a Framework is hugely driven by its documentation. So every package, class, interface and
@@ -87,6 +90,7 @@ method needs proper javadoc. One could argue this is overkill for simple getters
 but for the sake of completeness javadoc is added for those methods as well.
 
 ### How to Unit Test
+
 Each functionality needs a Unit test to prove the functionality does what it needs to do. You need to make sure
 your production code and your test code grow together in functionality (Test Driven Development). This will result
 in better code, since you will need to test your code in isolation.
@@ -104,17 +108,9 @@ For example:
 ```java
 @Test
 public void testDefaultConstructorUsesSystemClock() {
-    assertThat(new HawaiiTime().getClock(), is(Clock.system(HawaiiTime.DEFAULT_ZONE)));
-}
-```
-or with some sugar:
-```java
-@Test
-public void testDefaultConstructorUsesSystemClock() {
     assertThat(new HawaiiTime().getClock(), is(equalTo(Clock.system(HawaiiTime.DEFAULT_ZONE))));
 }
 ```
-
 
 ## Workflow
 
