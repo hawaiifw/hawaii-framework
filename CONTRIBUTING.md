@@ -66,7 +66,7 @@ as not being null, we explicitly test these parameters using the
 [Objects](https://docs.oracle.com/javase/7/docs/api/java/util/Objects.html) class introduced by JDK 7.
 
 For example use `Objects.requireNonNull` methods to assure a value cannot be null and we get notified when it does.
-Use `requireNonNull` instead of `notNull` as arequireNonNulla throws an `Exception` and `notNull` returns just a boolean.
+Use `requireNonNull` instead of `notNull` as arequireNonNulla throws an `Exception` and `notNull` returns just a `boolean`.
 Make sure you add a valuable message. Note that the Javadoc explicitly states that the value must not be null.
 
 ```java
