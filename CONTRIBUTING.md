@@ -56,7 +56,65 @@ and methods. For example:
 
 ## Development Guidelines
 
-TODO
+The following development guidelines should be applied when applying changes to the Hawaii Framework. These are
+opinionated guidelines.
+
+### Check your parameters
+When a particular method or constructor accepts parameters and there are expectations around these parameters such
+as not being null, we explicitly test these parameters using the
+[Objects](https://docs.oracle.com/javase/7/docs/api/java/util/Objects.html) class introduced by Jdk1.7.
+
+For example use Objects.requireNonNull methods to assure a value can't be null and we get notified when it does.
+(use requireNonNull instead of notNull. requireNonNull throws an Exception, notNull is a boolean.)
+Make sure you add a valuable message. Note that the Javadoc explicitly states that the value can't be null.
+```java
+/**
+  * Sets a fixed clock to be used.
+  *
+  * @param clock the fixed clock, not null
+  */
+public void useFixedClock(Clock clock) {
+     Objects.requireNonNull(clock, "'clock' must not be null");
+     useFixedClock(clock.instant(), clock.getZone());
+}
+```
+
+### When to add Javadoc.
+In short: Always.
+
+The value of a Framework is hugely driven by its documentation. So every package, class, interface and
+method needs proper javadoc. One could argue this is overkill for simple getters and setters,
+but for the sake of completeness javadoc is added for those methods as well.
+
+### How to Unit Test
+Each functionality needs a Unit test to prove the functionality does what it needs to do. You need to make sure
+your production code and your test code grow together in functionality (Test Driven Development). This will result
+in better code, since you will need to test your code in isolation.
+
+In order to test in isolation, [Mock Objects](https://en.wikipedia.org/wiki/Mock_object) are used
+(e.g. with the [Mockito](http://mockito.org) framework), so the dependencies can be controlled.
+
+The goal is not to have a 100% test coverage, but to add tests for relatively complex functionality.
+
+In order to get readable tests, [hamcrest matchers](https://code.google.com/archive/p/hamcrest/wikis/Tutorial.wiki)
+are the preferred way of writing your tests.
+
+For example:
+
+```java
+@Test
+public void testDefaultConstructorUsesSystemClock() {
+    assertThat(new HawaiiTime().getClock(), is(Clock.system(HawaiiTime.DEFAULT_ZONE)));
+}
+```
+or with some sugar:
+```java
+@Test
+public void testDefaultConstructorUsesSystemClock() {
+    assertThat(new HawaiiTime().getClock(), is(equalTo(Clock.system(HawaiiTime.DEFAULT_ZONE))));
+}
+```
+
 
 ## Workflow
 
