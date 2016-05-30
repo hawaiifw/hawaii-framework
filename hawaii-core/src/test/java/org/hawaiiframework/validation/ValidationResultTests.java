@@ -18,6 +18,7 @@ package org.hawaiiframework.validation;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
@@ -62,22 +63,22 @@ public class ValidationResultTests {
     @Test
     public void testPushNestedPath() {
         validationResult.pushNestedPath("name");
-        assertThat(validationResult.getNestedPath(), is("name"));
+        assertThat(validationResult.getNestedPath(), is(equalTo("name")));
     }
 
     @Test
     public void testPushNestedPathWithIndex() {
         validationResult.pushNestedPath("order_lines", 5);
-        assertThat(validationResult.getNestedPath(), is("order_lines[5]"));
+        assertThat(validationResult.getNestedPath(), is(equalTo("order_lines[5]")));
     }
 
     @Test
     public void testPopNestedPath() {
         validationResult.pushNestedPath("order_lines", 5);
         validationResult.pushNestedPath("quantity");
-        assertThat(validationResult.getNestedPath(), is("order_lines[5].quantity"));
+        assertThat(validationResult.getNestedPath(), is(equalTo("order_lines[5].quantity")));
         validationResult.popNestedPath();
-        assertThat(validationResult.getNestedPath(), is("order_lines[5]"));
+        assertThat(validationResult.getNestedPath(), is(equalTo("order_lines[5]")));
     }
 
     @Test
@@ -86,48 +87,48 @@ public class ValidationResultTests {
             validationResult.popNestedPath();
             fail();
         } catch (IllegalStateException e) {
-            assertThat(e.getMessage(), is("Cannot pop nested path: no nested path on stack"));
+            assertThat(e.getMessage(), is(equalTo("Cannot pop nested path: no nested path on stack")));
         }
     }
 
     @Test
     public void testReject() {
         validationResult.reject("inactive");
-        assertThat(validationResult.getErrors(), hasSize(1));
+        assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
         assertThat(validationResult.getErrors().get(0).getField(), is(nullValue()));
-        assertThat(validationResult.getErrors().get(0).getCode(), is("inactive"));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("inactive")));
     }
 
     @Test
     public void testRejectValueWithoutNestedValue() {
         validationResult.rejectValue("name", "required");
-        assertThat(validationResult.getErrors(), hasSize(1));
-        assertThat(validationResult.getErrors().get(0).getField(), is("name"));
-        assertThat(validationResult.getErrors().get(0).getCode(), is("required"));
+        assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
+        assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("name")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("required")));
     }
 
     @Test
     public void testRejectValueWithNestedPath() {
         validationResult.pushNestedPath("order_line[5]");
         validationResult.rejectValue("quantity", "required");
-        assertThat(validationResult.getErrors(), hasSize(1));
-        assertThat(validationResult.getErrors().get(0).getField(), is("order_line[5].quantity"));
-        assertThat(validationResult.getErrors().get(0).getCode(), is("required"));
+        assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
+        assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("order_line[5].quantity")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("required")));
     }
 
     @Test
     public void testRejectValueWithoutNestedPathAndField() {
         validationResult.rejectValue(null, "required");
-        assertThat(validationResult.getErrors(), hasSize(1));
+        assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
         assertThat(validationResult.getErrors().get(0).getField(), is(nullValue()));
-        assertThat(validationResult.getErrors().get(0).getCode(), is("required"));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("required")));
     }
 
     @Test
     public void testAddError() {
         ValidationError error = new ValidationError("name", "required");
         validationResult.addError(error);
-        assertThat(validationResult.getErrors(), hasSize(1));
+        assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
         assertThat(validationResult.getErrors(), contains(error));
     }
 
@@ -136,7 +137,7 @@ public class ValidationResultTests {
         ValidationError error1 = new ValidationError("name", "required");
         ValidationError error2 = new ValidationError("order_lines[5].quantity", "required");
         validationResult.addAllErrors(Arrays.asList(error1, error2));
-        assertThat(validationResult.getErrors(), hasSize(2));
+        assertThat(validationResult.getErrors(), hasSize(equalTo(2)));
         assertThat(validationResult.getErrors(), contains(error1, error2));
     }
 }

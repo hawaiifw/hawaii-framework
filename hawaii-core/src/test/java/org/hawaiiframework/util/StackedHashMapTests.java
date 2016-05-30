@@ -17,6 +17,7 @@
 package org.hawaiiframework.util;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
@@ -42,8 +43,8 @@ public class StackedHashMapTests {
     @Test
     public void testDefaultConstructor() {
         map = new StackedHashMap<>();
-        assertThat(map.size(), is(0));
-        assertThat(map.stackSize(), is(1));
+        assertThat(map.size(), is(equalTo(0)));
+        assertThat(map.stackSize(), is(equalTo(1)));
 
     }
 
@@ -53,8 +54,8 @@ public class StackedHashMapTests {
         initial.put("foo", "bar");
         map = new StackedHashMap<>(initial);
         assertThat(map, hasEntry("foo", "bar"));
-        assertThat(map.size(), is(1));
-        assertThat(map.stackSize(), is(1));
+        assertThat(map.size(), is(equalTo(1)));
+        assertThat(map.stackSize(), is(equalTo(1)));
     }
 
     @Test
@@ -63,8 +64,8 @@ public class StackedHashMapTests {
         map.put("foo", "bar");
         map.push();
         assertThat(map, hasEntry("foo", "bar"));
-        assertThat(map.size(), is(1));
-        assertThat(map.stackSize(), is(2));
+        assertThat(map.size(), is(equalTo(1)));
+        assertThat(map.stackSize(), is(equalTo(2)));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class StackedHashMapTests {
         Map<Object, Object> poppedMap = map.pop();
         assertThat(poppedMap, hasEntry("foo", "bar"));
         assertThat(map, not(hasKey("foo")));
-        assertThat(map.stackSize(), is(1));
+        assertThat(map.stackSize(), is(equalTo(1)));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -89,23 +90,23 @@ public class StackedHashMapTests {
         map = new StackedHashMap<>();
         map.put("foo", "bar");
         Map peekedMap = map.peek();
-        assertThat(peekedMap, is(map));
+        assertThat(peekedMap, is(equalTo(map)));
     }
 
     @Test
     public void testStackSize() {
         map = new StackedHashMap<>();
-        assertThat(map.stackSize(), is(1));
+        assertThat(map.stackSize(), is(equalTo(1)));
         map.push();
-        assertThat(map.stackSize(), is(2));
+        assertThat(map.stackSize(), is(equalTo(2)));
         map.push();
-        assertThat(map.stackSize(), is(3));
+        assertThat(map.stackSize(), is(equalTo(3)));
         map.peek();
-        assertThat(map.stackSize(), is(3));
+        assertThat(map.stackSize(), is(equalTo(3)));
         map.pop();
-        assertThat(map.stackSize(), is(2));
+        assertThat(map.stackSize(), is(equalTo(2)));
         map.pop();
-        assertThat(map.stackSize(), is(1));
+        assertThat(map.stackSize(), is(equalTo(1)));
     }
 
     @Test
@@ -114,8 +115,8 @@ public class StackedHashMapTests {
         map.put("foo", "bar");
         map.push();
         map.clearStack();
-        assertThat(map.size(), is(0));
-        assertThat(map.stackSize(), is(1));
+        assertThat(map.size(), is(equalTo(0)));
+        assertThat(map.stackSize(), is(equalTo(1)));
     }
 
     @Test
@@ -129,7 +130,7 @@ public class StackedHashMapTests {
     public void testEntrySet() {
         map = new StackedHashMap<>();
         map.put("foo", "bar");
-        assertThat(map.entrySet(), hasSize(1));
+        assertThat(map.entrySet(), hasSize(equalTo(1)));
         assertThat(map.entrySet(), contains(new SimpleEntry("foo", "bar")));
     }
 }
