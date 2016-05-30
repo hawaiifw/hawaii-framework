@@ -15,6 +15,6 @@
  */
 
 /**
- * Hawaii's auto-configuration capabilities.
+ * Auto-configuration for {@link org.hawaiiframework.time.HawaiiTime}.
  */
-package org.hawaiiframework.boot.autoconfigure;
+package org.hawaiiframework.boot.autoconfigure.time;

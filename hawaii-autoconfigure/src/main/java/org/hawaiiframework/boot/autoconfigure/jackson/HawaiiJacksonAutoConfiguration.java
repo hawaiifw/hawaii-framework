@@ -32,7 +32,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class HawaiiJacksonAutoConfiguration {
 
     /**
-     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects
+     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects with
      * {@link ObjectMapper}.
      */
     @Bean

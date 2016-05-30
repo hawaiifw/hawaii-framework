@@ -15,6 +15,6 @@
  */
 
 /**
- * Hawaii's auto-configuration capabilities.
+ * Hawaii {@link org.springframework.core.env.Environment} support.
  */
-package org.hawaiiframework.boot.autoconfigure;
+package org.hawaiiframework.boot.autoconfigure.env;

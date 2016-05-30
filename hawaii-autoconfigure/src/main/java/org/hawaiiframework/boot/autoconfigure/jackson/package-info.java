@@ -15,6 +15,6 @@
  */
 
 /**
- * Hawaii's auto-configuration capabilities.
+ * Auto-configuration for Jackson.
  */
-package org.hawaiiframework.boot.autoconfigure;
+package org.hawaiiframework.boot.autoconfigure.jackson;

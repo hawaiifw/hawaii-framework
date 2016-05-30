@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.boot.autoconfigure.env;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -79,7 +80,7 @@ public class HawaiiPropertyDefaultsPostProcessorTests {
         processor.postProcessEnvironment(context.getEnvironment(), null);
         Map<String, Object> expected = new HashMap<>(defaultHawaiiProperties);
         expected.forEach((key, value) -> {
-            assertThat(getEnvProperty(key), is(value));
+            assertThat(getEnvProperty(key), is(equalTo(value)));
         });
     }
 
@@ -89,7 +90,7 @@ public class HawaiiPropertyDefaultsPostProcessorTests {
         processor.postProcessEnvironment(context.getEnvironment(), null);
         Map<String, Object> expected = new HashMap<>(defaultHawaiiDevProperties);
         expected.forEach((key, value) -> {
-            assertThat(getEnvProperty(key), is(value));
+            assertThat(getEnvProperty(key), is(equalTo(value)));
         });
     }
 
@@ -99,7 +100,7 @@ public class HawaiiPropertyDefaultsPostProcessorTests {
         processor.postProcessEnvironment(context.getEnvironment(), null);
         Map<String, Object> expected = new HashMap<>(defaultHawaiiTestProperties);
         expected.forEach((key, value) -> {
-            assertThat(getEnvProperty(key), is(value));
+            assertThat(getEnvProperty(key), is(equalTo(value)));
         });
     }
 
@@ -109,7 +110,7 @@ public class HawaiiPropertyDefaultsPostProcessorTests {
         processor.postProcessEnvironment(context.getEnvironment(), null);
         Map<String, Object> expected = new HashMap<>(defaultHawaiiProdProperties);
         expected.forEach((key, value) -> {
-            assertThat(getEnvProperty(key), is(value));
+            assertThat(getEnvProperty(key), is(equalTo(value)));
         });
     }
 
@@ -117,7 +118,7 @@ public class HawaiiPropertyDefaultsPostProcessorTests {
     public void testCustomBannerLocation() {
         EnvironmentTestUtils.addEnvironment(context, "banner.location: classpath:my-banner.txt");
         processor.postProcessEnvironment(context.getEnvironment(), null);
-        assertThat(getEnvProperty("banner.location"), is("classpath:my-banner.txt"));
+        assertThat(getEnvProperty("banner.location"), is(equalTo("classpath:my-banner.txt")));
     }
 
     private String getEnvProperty(String key) {
