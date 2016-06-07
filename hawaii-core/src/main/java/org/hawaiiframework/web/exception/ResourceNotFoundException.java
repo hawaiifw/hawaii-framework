@@ -16,26 +16,27 @@
 
 package org.hawaiiframework.web.exception;
 
-import org.hawaiiframework.exception.HawaiiException;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ResourceNotFoundException extends HawaiiException {
+public class ResourceNotFoundException extends HttpException {
 
     public ResourceNotFoundException() {
+        super(NOT_FOUND);
     }
 
     public ResourceNotFoundException(String message) {
-        super(message);
+        super(message, NOT_FOUND);
     }
 
     public ResourceNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+        super(message, cause, NOT_FOUND);
     }
 
     public ResourceNotFoundException(Throwable cause) {
-        super(cause);
+        super(cause, NOT_FOUND);
     }
 }
