@@ -53,6 +53,15 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
                         "'validationErrorResourceAssembler' must not be null");
     }
 
+    /**
+     * Handles {@code HttpException} instances.
+     *
+     * Each {@code HttpException} has an associated {@code HttpStatus} that is used as the response status.
+     *
+     * @param e the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
     @ExceptionHandler(HttpException.class)
     @ResponseBody
     public ResponseEntity handleHttpException(HttpException e, WebRequest request) {
@@ -60,6 +69,15 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         return ResponseEntity.status(status).body(buildErrorResponseBody(e, status, request));
     }
 
+    /**
+     * Handles {@code ValidationException} instances.
+     *
+     * The response status is: 400 Bad Request.
+     *
+     * @param e the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
     @ExceptionHandler(ValidationException.class)
     @ResponseBody
     public ResponseEntity handleValidationException(ValidationException e, WebRequest request) {
@@ -72,6 +90,13 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         return ResponseEntity.status(status).body(body);
     }
 
+    /**
+     * Handles {@code Throwable} instances. This method acts as a fallback handler.
+     *
+     * @param t the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ResponseEntity handleThrowable(Throwable t, WebRequest request) {
@@ -84,6 +109,14 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         return ResponseEntity.status(status).body(buildErrorResponseBody(ex, status, request));
     }
 
+    /**
+     * Builds a meaningful response body for the given throwable, HTTP status and request.
+     *
+     * @param t the exception
+     * @param status the HTTP status
+     * @param request the current request
+     * @return an error response
+     */
     protected ErrorResponseResource buildErrorResponseBody(Throwable t, HttpStatus status, WebRequest request) {
         ErrorResponseResource resource = new ErrorResponseResource();
         addRequestInfo(request, resource);
@@ -92,6 +125,12 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         return resource;
     }
 
+    /**
+     * Add servlet request information to the {@code ErrorResponseResource} instance.
+     *
+     * @param request the current request
+     * @param resource the current error response resource
+     */
     private void addRequestInfo(WebRequest request, ErrorResponseResource resource) {
         if (request instanceof ServletWebRequest) {
             ServletWebRequest servletWebRequest = (ServletWebRequest) request;
@@ -103,11 +142,22 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         }
     }
 
+    /**
+     * Add HTTP status information to the {@code ErrorResponseResource} instance.
+     *
+     * @param status the current HTTP status
+     * @param resource the current error response resource
+     */
     private void addHttpStatus(HttpStatus status, ErrorResponseResource resource) {
         resource.setStatusCode(status.value());
         resource.setStatusMessage(status.getReasonPhrase());
     }
 
+    /**
+     * Add the exception message to the {@code ErrorResponseResource} instance.
+     * @param t the current exception
+     * @param resource the current error response resource
+     */
     private void addErrorMessage(Throwable t, ErrorResponseResource resource) {
         String message = t.getMessage();
         if (!StringUtils.isEmpty(message)) {
