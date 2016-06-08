@@ -12,6 +12,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.greaterThan;
 
 /**
+ * Helper class that contains convenient methods for validation of object properties
  * Created by hans.lammers on 8-6-2016.
  */
 public class ValidationHelper {
@@ -43,16 +44,19 @@ public class ValidationHelper {
 
     /**
      * Perform the validation
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
      */
-    public void validate() throws InvocationTargetException, IllegalAccessException {
+    public void validate() {
         for (Map.Entry<String, Integer> entry : maxLengthStrings.entrySet()) {
             Method getter = PropertyUtil.getPropertyDescriptor(entry.getKey(), objectToValidate).getReadMethod();
             if (getter.getReturnType() != String.class) {
                 throw new HawaiiException(String.format("Field %s is not of type String", entry.getKey()));
             }
-            Object value = getter.invoke(objectToValidate);
+            Object value = null;
+            try {
+                value = getter.invoke(objectToValidate);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new HawaiiException(String.format("Field %s is not accessable", entry.getKey()));
+            }
             String strValue = (String) value;
             if (StringUtils.isBlank(strValue)) {
                 validationResult.rejectValue(entry.getKey(), "required");

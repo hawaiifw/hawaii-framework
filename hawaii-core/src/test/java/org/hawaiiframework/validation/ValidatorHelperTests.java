@@ -19,25 +19,24 @@ package org.hawaiiframework.validation;
 import org.hawaiiframework.exception.HawaiiException;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+//import org.junit.Test;
+
+
 /**
- * Tests for {@link Validator}.
+ * The type Validator helper tests.
  *
- * @author Marcel Overdijk
+ * @author Hans Lammers
  */
 public class ValidatorHelperTests {
 
     /**
-     *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * Test validation succeeds.
      */
     @Test
-    public void testValidationSucceeds() throws InvocationTargetException, IllegalAccessException {
+    public void testValidationSucceeds() {
         ValidationResult vr = new ValidationResult();
         TestTarget target = new TestTarget("bla", 1);
         ValidationHelper validationHelper = new ValidationHelper(target, vr);
@@ -48,12 +47,10 @@ public class ValidatorHelperTests {
     }
 
     /**
-     *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * Test validation fails for non strings.
      */
     @Test(expected = HawaiiException.class)
-    public void testValidationFailsForNonStrings() throws InvocationTargetException, IllegalAccessException {
+    public void testValidationFailsForNonStrings() {
         ValidationResult vr = new ValidationResult();
         TestTarget target = new TestTarget("bla", 1);
         ValidationHelper validationHelper = new ValidationHelper(target, vr);
@@ -64,12 +61,10 @@ public class ValidatorHelperTests {
     }
 
     /**
-     *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * Test validation fails for invalid strings.
      */
     @Test
-    public void testValidationFailsForInvalidStrings() throws InvocationTargetException, IllegalAccessException {
+    public void testValidationFailsForInvalidStrings() {
         ValidationResult vr = new ValidationResult();
         TestTarget target = new TestTarget("blaaaaaaaaaaaad", 1);
         ValidationHelper validationHelper = new ValidationHelper(target, vr);
@@ -80,12 +75,10 @@ public class ValidatorHelperTests {
     }
 
     /**
-     *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * Test validation fails for null strings.
      */
     @Test
-    public void testValidationFailsForNullStrings() throws InvocationTargetException, IllegalAccessException {
+    public void testValidationFailsForNullStrings() {
         ValidationResult vr = new ValidationResult();
         TestTarget target = new TestTarget(null, 1);
         ValidationHelper validationHelper = new ValidationHelper(target, vr);
