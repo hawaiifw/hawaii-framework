@@ -51,5 +51,4 @@ public class HttpException extends HawaiiException {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
-
 }

@@ -39,5 +39,4 @@ public class BadRequestException extends HttpException {
     public BadRequestException(Throwable cause) {
         super(cause, BAD_REQUEST);
     }
-
 }

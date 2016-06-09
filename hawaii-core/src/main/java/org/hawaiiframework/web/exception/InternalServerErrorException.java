@@ -39,5 +39,4 @@ public class InternalServerErrorException extends HttpException {
     public InternalServerErrorException(Throwable cause) {
         super(cause, INTERNAL_SERVER_ERROR);
     }
-
 }
