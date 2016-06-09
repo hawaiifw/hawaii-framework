@@ -16,14 +16,12 @@
 
 package org.hawaiiframework.sample.web.resource;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.web.resource.ResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Marcel Overdijk

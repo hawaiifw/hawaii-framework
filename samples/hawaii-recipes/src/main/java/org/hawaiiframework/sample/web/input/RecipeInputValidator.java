@@ -19,8 +19,6 @@ package org.hawaiiframework.sample.web.input;
 import static java.util.Objects.requireNonNull;
 import static org.hamcrest.Matchers.greaterThan;
 
-import java.util.Objects;
-
 import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
