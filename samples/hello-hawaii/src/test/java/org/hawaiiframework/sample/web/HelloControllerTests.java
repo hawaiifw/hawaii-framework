@@ -33,6 +33,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 
 /**
  * @author Marcel Overdijk
@@ -108,11 +109,11 @@ public class HelloControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void greetWithInvalidLanguageShouldReturnError() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet").param("language", "unknown"))
+        mockMvc.perform(get("/rest/hello/greet").param("language", "unknown").contentType(MediaType.APPLICATION_ATOM_XML))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].field", is("language")))
-                .andExpect(jsonPath("$[0].code", is("invalid")));
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].field", is("language")))
+                .andExpect(jsonPath("$.errors[0].code", is("invalid")));
     }
 }
