@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.web.exception;
+package org.hawaiiframework.web.resource;
 
-import org.hawaiiframework.web.resource.ValidationErrorResource;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
 /**
- * This class represents the body of a REST error response.
+ * This class represents the body of an error response.
  *
  * @author Ivan Melotte
  * @since 2.0.0
@@ -38,7 +40,7 @@ public class ErrorResponseResource {
     private List<ValidationErrorResource> errors;
 
     /**
-     * Return the HTTP method.
+     * Returns the HTTP method.
      *
      * @return the HTTP method
      */
@@ -47,7 +49,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Set the HTTP method.
+     * Sets the HTTP method.
      *
      * @param method the HTTP method
      */
@@ -56,7 +58,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the request URI.
+     * Returns the request URI.
      *
      * @return the request URI
      */
@@ -65,7 +67,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Set the request URI.
+     * Sets the request URI.
      *
      * @param uri the request URI
      */
@@ -74,7 +76,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the query string.
+     * Returns the query string.
      *
      * @return the query string.
      */
@@ -83,7 +85,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Set the query string.
+     * Sets the query string.
      *
      * @param query the query string
      */
@@ -92,7 +94,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the request content type.
+     * Returns the request content type.
      *
      * @return the content type
      */
@@ -101,7 +103,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Set the request content type.
+     * Sets the request content type.
      *
      * @param contentType the content type.
      */
@@ -110,16 +112,16 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the response status code.
+     * Returns the response status code.
      *
-     * @return the responst status code.
+     * @return the response status code.
      */
     public int getStatusCode() {
         return statusCode;
     }
 
     /**
-     * Set the response status code.
+     * Sets the response status code.
      *
      * @param statusCode the response status code.
      */
@@ -128,7 +130,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the response status message.
+     * Returns the response status message.
      *
      * @return the status message.
      */
@@ -137,7 +139,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Set the response status message.
+     * Sets the response status message.
      *
      * @param statusMessage the response status message
      */
@@ -146,7 +148,7 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the error message ({@code Throwable#getMessage()})
+     * Returns the error message ({@code Throwable#getMessage()})
      *
      * @return the error message
      */
@@ -154,7 +156,8 @@ public class ErrorResponseResource {
         return errorMessage;
     }
 
-    /** Set the error message.
+    /**
+     * Sets the error message.
      *
      * @param errorMessage the error message.
      */
@@ -163,18 +166,18 @@ public class ErrorResponseResource {
     }
 
     /**
-     * Get the validation errors.
+     * Returns the validation errors.
      *
-     * @return the validation errors list.
+     * @return the validation errors
      */
     public List<ValidationErrorResource> getErrors() {
         return errors;
     }
 
     /**
-     * Set the validation errors.
+     * Sets the validation errors.
      *
-     * @param errors the validation errors.
+     * @param errors the validation errors
      */
     public void setErrors(List<ValidationErrorResource> errors) {
         this.errors = errors;
@@ -182,15 +185,6 @@ public class ErrorResponseResource {
 
     @Override
     public String toString() {
-        return "ErrorResponseResource{" +
-                "method='" + method + '\'' +
-                ", uri='" + uri + '\'' +
-                ", query='" + query + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", statusCode=" + statusCode +
-                ", statusMessage='" + statusMessage + '\'' +
-                ", errorMessage='" + errorMessage + '\'' +
-                ", errors=" + errors +
-                '}';
+        return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
     }
 }

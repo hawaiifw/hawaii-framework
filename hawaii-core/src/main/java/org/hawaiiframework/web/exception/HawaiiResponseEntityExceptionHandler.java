@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
+import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
