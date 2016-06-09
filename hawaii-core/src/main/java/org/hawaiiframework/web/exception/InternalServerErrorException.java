@@ -16,27 +16,28 @@
 
 package org.hawaiiframework.web.exception;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
- * @author Marcel Overdijk
+ * @author Ivan Melotte
  * @since 2.0.0
  */
-public class ResourceNotFoundException extends HttpException {
+public class InternalServerErrorException extends HttpException {
 
-    public ResourceNotFoundException() {
-        super(NOT_FOUND);
+    public InternalServerErrorException() {
+        super(INTERNAL_SERVER_ERROR);
     }
 
-    public ResourceNotFoundException(String message) {
-        super(message, NOT_FOUND);
+    public InternalServerErrorException(String message) {
+        super(message, INTERNAL_SERVER_ERROR);
     }
 
-    public ResourceNotFoundException(String message, Throwable cause) {
-        super(message, cause, NOT_FOUND);
+    public InternalServerErrorException(String message, Throwable cause) {
+        super(message, cause, INTERNAL_SERVER_ERROR);
     }
 
-    public ResourceNotFoundException(Throwable cause) {
-        super(cause, NOT_FOUND);
+    public InternalServerErrorException(Throwable cause) {
+        super(cause, INTERNAL_SERVER_ERROR);
     }
+
 }

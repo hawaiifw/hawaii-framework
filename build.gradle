@@ -200,6 +200,7 @@ project("hawaii-core") {
         compile "org.apache.commons:commons-lang3"
         compile "org.hamcrest:hamcrest-core"
         compile "org.hamcrest:hamcrest-library"
+        compile "javax.servlet:javax.servlet-api"
         optional "com.fasterxml.jackson.core:jackson-databind"
         optional "org.aspectj:aspectjweaver"
         optional "org.springframework:spring-aop"

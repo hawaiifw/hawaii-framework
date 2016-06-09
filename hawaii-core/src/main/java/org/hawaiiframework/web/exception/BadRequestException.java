@@ -16,27 +16,28 @@
 
 package org.hawaiiframework.web.exception;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * @author Marcel Overdijk
+ * @author Ivan Melotte
  * @since 2.0.0
  */
-public class ResourceNotFoundException extends HttpException {
+public class BadRequestException extends HttpException {
 
-    public ResourceNotFoundException() {
-        super(NOT_FOUND);
+    public BadRequestException() {
+        super(BAD_REQUEST);
     }
 
-    public ResourceNotFoundException(String message) {
-        super(message, NOT_FOUND);
+    public BadRequestException(String message) {
+        super(message, BAD_REQUEST);
     }
 
-    public ResourceNotFoundException(String message, Throwable cause) {
-        super(message, cause, NOT_FOUND);
+    public BadRequestException(String message, Throwable cause) {
+        super(message, cause, BAD_REQUEST);
     }
 
-    public ResourceNotFoundException(Throwable cause) {
-        super(cause, NOT_FOUND);
+    public BadRequestException(Throwable cause) {
+        super(cause, BAD_REQUEST);
     }
+
 }
