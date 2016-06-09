@@ -23,6 +23,8 @@ import org.hawaiiframework.web.resource.ResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Marcel Overdijk
  */
@@ -33,7 +35,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
 
     @Autowired
     public RecipeResourceAssembler(final IngredientResourceAssembler ingredientResourceAssembler) {
-        this.ingredientResourceAssembler = Objects.requireNonNull(ingredientResourceAssembler,
+        this.ingredientResourceAssembler = requireNonNull(ingredientResourceAssembler,
                 "'ingredientResourceAssembler' must not be null");
     }
 

@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.sample.web.input;
 
+import static java.util.Objects.requireNonNull;
 import static org.hamcrest.Matchers.greaterThan;
 
 import java.util.Objects;
@@ -35,7 +36,7 @@ public class RecipeInputValidator implements Validator<RecipeInput> {
 
     @Autowired
     public RecipeInputValidator(final IngredientInputValidator ingredientInputValidator) {
-        this.ingredientInputValidator = Objects.requireNonNull(ingredientInputValidator,
+        this.ingredientInputValidator = requireNonNull(ingredientInputValidator,
                 "'ingredientInputValidator' must not be null");
     }
 

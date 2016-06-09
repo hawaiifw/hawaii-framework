@@ -23,6 +23,8 @@ import org.hawaiiframework.validation.ValidationError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -37,12 +39,12 @@ public class ValidationErrorResourceAssembler
     }
 
     public ValidationErrorResourceAssembler(ObjectMapper objectMapper) {
-        this.objectMapper = Objects.requireNonNull(objectMapper, "'objectMapper' must not be null");
+        this.objectMapper = requireNonNull(objectMapper, "'objectMapper' must not be null");
     }
 
     @Override
     public ValidationErrorResource toResource(ValidationError validationError) {
-        Objects.requireNonNull(validationError, "'validationError' must not be null");
+        requireNonNull(validationError, "'validationError' must not be null");
         String field = convertProperty(validationError.getField());
         String code = convertProperty(validationError.getCode());
         ValidationErrorResource resource = new ValidationErrorResource();

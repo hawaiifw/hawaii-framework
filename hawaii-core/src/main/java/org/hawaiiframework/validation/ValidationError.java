@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.validation;
 
+import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class ValidationError {
      */
     public ValidationError(String field, String code) {
         this.field = field;
-        this.code = Objects.requireNonNull(code, "'code' must not be null");
+        this.code = requireNonNull(code, "'code' must not be null");
     }
 
     /**

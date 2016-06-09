@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.sample.web.controller;
 
+import static java.util.Objects.requireNonNull;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_CREATE_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_DELETE_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
@@ -24,7 +25,6 @@ import static org.hawaiiframework.sample.web.Paths.RECIPES_UPDATE_PATH;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.sample.repository.RecipeRepository;
@@ -64,12 +64,12 @@ public class RecipeController {
             final RecipeResourceAssembler recipeResourceAssembler,
             final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
         this.recipeRepository =
-                Objects.requireNonNull(recipeRepository, "'recipeRepository' must not be null");
-        this.recipeResourceAssembler = Objects.requireNonNull(recipeResourceAssembler,
+                requireNonNull(recipeRepository, "'recipeRepository' must not be null");
+        this.recipeResourceAssembler = requireNonNull(recipeResourceAssembler,
                 "'recipeResourceAssembler' must not be null");
-        this.recipeInputValidator = Objects.requireNonNull(recipeInputValidator,
-                "'recipeInputValidator' must not be null");
-        this.hawaiiTime = Objects.requireNonNull(hawaiiTime, "'hawaiiTime' must not be null");
+        this.recipeInputValidator =
+                requireNonNull(recipeInputValidator, "'recipeInputValidator' must not be null");
+        this.hawaiiTime = requireNonNull(hawaiiTime, "'hawaiiTime' must not be null");
     }
 
     @Get(path = RECIPES_LIST_PATH, produces = APPLICATION_JSON_VALUE)

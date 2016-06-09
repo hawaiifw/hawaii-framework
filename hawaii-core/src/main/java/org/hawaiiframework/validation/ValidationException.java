@@ -21,6 +21,8 @@ import java.util.Objects;
 
 import org.hawaiiframework.exception.HawaiiException;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Marcel Overdijk
  * @see ValidationResult
@@ -43,7 +45,7 @@ public class ValidationException extends HawaiiException {
      * @param validationResult the validation result, not null
      */
     public ValidationException(ValidationResult validationResult) {
-        Objects.requireNonNull(validationResult, "'validationResult' must not be null");
+        requireNonNull(validationResult, "'validationResult' must not be null");
         this.validationResult = validationResult;
     }
 
@@ -54,7 +56,7 @@ public class ValidationException extends HawaiiException {
      */
     public ValidationException(ValidationError validationError) {
         this();
-        Objects.requireNonNull(validationError, "'validationError' must not be null");
+        requireNonNull(validationError, "'validationError' must not be null");
         validationResult.addError(validationError);
     }
 
@@ -65,7 +67,7 @@ public class ValidationException extends HawaiiException {
      */
     public ValidationException(List<ValidationError> validationErrors) {
         this();
-        Objects.requireNonNull(validationErrors, "'validationErrors' must not be null");
+        requireNonNull(validationErrors, "'validationErrors' must not be null");
         validationResult.addAllErrors(validationErrors);
     }
 

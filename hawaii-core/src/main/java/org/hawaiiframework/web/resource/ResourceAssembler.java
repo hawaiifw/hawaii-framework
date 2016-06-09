@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -38,7 +40,7 @@ public interface ResourceAssembler<T, D> {
      * @see #toResource(Object)
      */
     default List<D> toResources(Iterable<? extends T> objects) {
-        Objects.requireNonNull(objects, "'objects' must not be null");
+        requireNonNull(objects, "'objects' must not be null");
         List<D> result = new ArrayList<D>();
         for (T object : objects) {
             result.add(toResource(object));

@@ -31,6 +31,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * This class provides a application wide {@link Clock} reference to instantiate new {@code
  * java.time} date and time objects.
@@ -68,7 +70,7 @@ public class HawaiiTime {
      * @param zone the zone, not null
      */
     public HawaiiTime(ZoneId zone) {
-        this.zone = Objects.requireNonNull(zone, "'zone' must not be null");
+        this.zone = requireNonNull(zone, "'zone' must not be null");
         useSystemClock();
     }
 
@@ -79,7 +81,7 @@ public class HawaiiTime {
      * @param clock the clock, not null
      */
     public HawaiiTime(Clock clock) {
-        Objects.requireNonNull(clock, "'clock' must not be null");
+        requireNonNull(clock, "'clock' must not be null");
         this.zone = clock.getZone();
         setClock(clock);
     }
@@ -99,7 +101,7 @@ public class HawaiiTime {
      * @param clock the clock, not null
      */
     public void setClock(Clock clock) {
-        this.clock = Objects.requireNonNull(clock, "'clock' must not be null");
+        this.clock = requireNonNull(clock, "'clock' must not be null");
     }
 
     /**
@@ -126,7 +128,7 @@ public class HawaiiTime {
      * @param clock the fixed clock, not null
      */
     public void useFixedClock(Clock clock) {
-        Objects.requireNonNull(clock, "'clock' must not be null");
+        requireNonNull(clock, "'clock' must not be null");
         useFixedClock(clock.instant(), clock.getZone());
     }
 
@@ -145,7 +147,7 @@ public class HawaiiTime {
      * @param dateTime the fixed date time, not null
      */
     public void useFixedClock(LocalDateTime dateTime) {
-        Objects.requireNonNull(dateTime, "'dateTime' must not be null");
+        requireNonNull(dateTime, "'dateTime' must not be null");
         useFixedClock(dateTime.atZone(this.zone).toInstant(), this.zone);
     }
 
@@ -155,7 +157,7 @@ public class HawaiiTime {
      * @param dateTime the fixed date time, not null
      */
     public void useFixedClock(OffsetDateTime dateTime) {
-        Objects.requireNonNull(dateTime, "'dateTime' must not be null");
+        requireNonNull(dateTime, "'dateTime' must not be null");
         useFixedClock(dateTime.toInstant(), dateTime.getOffset());
     }
 
@@ -165,7 +167,7 @@ public class HawaiiTime {
      * @param dateTime the fixed date time, not null
      */
     public void useFixedClock(ZonedDateTime dateTime) {
-        Objects.requireNonNull(dateTime, "'dateTime' must not be null");
+        requireNonNull(dateTime, "'dateTime' must not be null");
         useFixedClock(dateTime.toInstant(), dateTime.getZone());
     }
 
@@ -175,7 +177,7 @@ public class HawaiiTime {
      * @param instant the fixed instant, not null
      */
     protected void useFixedClock(Instant instant) {
-        Objects.requireNonNull(instant, "'instant' must not be null");
+        requireNonNull(instant, "'instant' must not be null");
         setClock(Clock.fixed(instant, this.zone));
     }
 
@@ -186,8 +188,8 @@ public class HawaiiTime {
      * @param zone the fixed zone, not null
      */
     protected void useFixedClock(Instant instant, ZoneId zone) {
-        Objects.requireNonNull(instant, "'instant' must not be null");
-        Objects.requireNonNull(zone, "'zone' must not be null");
+        requireNonNull(instant, "'instant' must not be null");
+        requireNonNull(zone, "'zone' must not be null");
         setClock(Clock.fixed(instant, zone));
     }
 
