@@ -439,9 +439,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#features-environments">3.1. Environments</a></li>
 <li><a href="#features-configuration-properties">3.2. Configuration properties</a></li>
-<li><a href="#features-hawaii-time">3.3. Hawaii Time</a></li>
-<li><a href="#features-resource-assembler">3.4. Resource Assembler</a></li>
+<li><a href="#features-logging">3.3. Logging</a></li>
+<li><a href="#features-hawaii-time">3.4. Hawaii Time</a></li>
 <li><a href="#features-validation">3.5. Validation</a></li>
+<li><a href="#features-web">3.6. Web</a>
+<ul class="sectlevel3">
+<li><a href="#features-web-global-exception-handler">3.6.1. Global Exception Handler</a></li>
+<li><a href="#features-web-rest-representations">3.6.2. REST Representations</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#starters">4. Hawaii Starters</a>
@@ -526,7 +532,13 @@ application&#8217;s context.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-hawaii-time"><a class="anchor" href="#features-hawaii-time"></a>3.3. Hawaii Time</h3>
+<h3 id="features-logging"><a class="anchor" href="#features-logging"></a>3.3. Logging</h3>
+<div class="paragraph">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="features-hawaii-time"><a class="anchor" href="#features-hawaii-time"></a>3.4. Hawaii Time</h3>
 <div class="paragraph">
 <p><code>HawaiiTime</code> is not merely a convenient wrapper to instantiate new <code>java.time</code> date and time objects.
 It provides an application wide <code>java.time.Clock</code> reference which is particular useful for unit testing.</p>
@@ -612,15 +624,36 @@ and supports different timezone formats like <code>UTC</code>, <code>Europe/Amst
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-resource-assembler"><a class="anchor" href="#features-resource-assembler"></a>3.4. Resource Assembler</h3>
+<h3 id="features-validation"><a class="anchor" href="#features-validation"></a>3.5. Validation</h3>
 <div class="paragraph">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-validation"><a class="anchor" href="#features-validation"></a>3.5. Validation</h3>
+<h3 id="features-web"><a class="anchor" href="#features-web"></a>3.6. Web</h3>
+<div class="sect3">
+<h4 id="features-web-global-exception-handler"><a class="anchor" href="#features-web-global-exception-handler"></a>3.6.1. Global Exception Handler</h4>
 <div class="paragraph">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-web-rest-representations"><a class="anchor" href="#features-web-rest-representations"></a>3.6.2. REST Representations</h4>
+<div class="paragraph">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+</div>
+<div class="sect4">
+<h5 id="features-web-rest-representations-input-converter"><a class="anchor" href="#features-web-rest-representations-input-converter"></a>Input Converter</h5>
+<div class="paragraph">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="features-web-rest-representations-resource-assembler"><a class="anchor" href="#features-web-rest-representations-resource-assembler"></a>Resource Assembler</h5>
+<div class="paragraph">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -726,7 +759,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2016-06-12 13:19:42 UTC
+Last updated 2016-06-13 07:27:52 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
