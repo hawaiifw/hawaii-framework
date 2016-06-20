@@ -26,6 +26,8 @@ import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +50,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public HawaiiResponseEntityExceptionHandler(
             ValidationErrorResourceAssembler validationErrorResourceAssembler) {
@@ -103,6 +106,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ResponseEntity handleThrowable(Throwable t, WebRequest request) {
+        logger.error("", t);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
     }
