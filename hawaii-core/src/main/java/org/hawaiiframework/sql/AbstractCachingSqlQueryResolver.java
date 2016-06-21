@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
  * {@link org.springframework.web.servlet.view.AbstractCachingViewResolver}.
  *
  * @author Marcel Overdijk
+ * @author Paul Klos
  * @see #loadSqlQuery
  * @since 2.0.0
  */

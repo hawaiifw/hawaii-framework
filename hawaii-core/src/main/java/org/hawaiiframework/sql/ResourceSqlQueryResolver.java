@@ -35,6 +35,7 @@ import org.springframework.core.io.ResourceLoader;
  * {@link ResourceLoader} mechanism.
  *
  * @author Marcel Overdijk
+ * @author Paul Klos
  * @since 2.0.0
  */
 public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver implements Ordered {

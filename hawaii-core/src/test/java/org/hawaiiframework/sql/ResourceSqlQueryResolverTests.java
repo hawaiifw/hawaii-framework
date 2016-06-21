@@ -16,7 +16,10 @@ import org.junit.Test;
 import org.springframework.core.io.FileSystemResourceLoader;
 
 /**
- * Created by paul on 20-6-16.
+ * Unit tests for ResourceSqlQueryResolver.
+ *
+ * @author Paul Klos
+ * @since 2.0.0
  */
 public class ResourceSqlQueryResolverTests {
     private ResourceSqlQueryResolver queryResolver;
