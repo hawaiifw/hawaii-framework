@@ -23,6 +23,8 @@ import java.nio.charset.Charset;
 import java.util.Scanner;
 
 import org.hawaiiframework.exception.HawaiiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -33,6 +35,7 @@ import org.springframework.core.io.ResourceLoader;
  * {@link ResourceLoader} mechanism.
  *
  * @author Marcel Overdijk
+ * @author Paul Klos
  * @since 2.0.0
  */
 public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver implements Ordered {
@@ -50,6 +53,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     private String suffix = "";
 
     private int order = Ordered.LOWEST_PRECEDENCE;
+
+    private static Logger logger = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
 
     public ResourceSqlQueryResolver() {
         this(new DefaultResourceLoader());
@@ -117,18 +122,56 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     }
 
     @Override
-    protected String loadSqlQuery(String sqlQueryName) throws HawaiiException {
+    protected void doRefreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
         String location = getPrefix() + sqlQueryName + getSuffix();
         Resource resource = this.resourceLoader.getResource(location);
-        if (!resource.exists()) {
-            return null;
+        if (resource.exists()) {
+            if (resource.getFilename() != null) {
+                // This is an actual file
+                long checkpoint = queryHolder.getQueryTimestamp();
+                long lastModified;
+                try {
+                    lastModified = resource.lastModified();
+                    if (lastModified > checkpoint) {
+                        loadSqlQuery(sqlQueryName, queryHolder);
+                    } else {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
+                        }
+                    }
+                } catch (IOException e) {
+                    // Can't really happen as we already checked that the resource has a filename
+                    throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
+                }
+            }
         } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Resource {} does not exist", resource.getFilename());
+            }
+        }
+    }
+
+    @Override
+    protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder) throws HawaiiException {
+        String location = getPrefix() + sqlQueryName + getSuffix();
+        Resource resource = this.resourceLoader.getResource(location);
+        String query = null;
+        if (resource.exists()) {
             try {
-                return new Scanner(resource.getInputStream(), this.charset.name())
+                query = new Scanner(resource.getInputStream(), this.charset.name())
                         .useDelimiter("\\Z").next();
+                if (queryHolder != null && resource.getFilename() != null) {
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Updating query {}", resource.getFilename());
+                    }
+                    queryHolder.setSqlQuery(query);
+                    queryHolder.setRefreshTimestamp(System.currentTimeMillis());
+                    queryHolder.setQueryTimestamp(resource.lastModified());
+                }
             } catch (IOException e) {
                 throw new HawaiiException("Error reading resource: " + location, e);
             }
         }
+        return query;
     }
 }
