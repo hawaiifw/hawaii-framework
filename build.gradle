@@ -74,8 +74,10 @@ configure(allprojects) { project ->
     dependencies {
         compile("org.slf4j:jcl-over-slf4j")
         compile("org.slf4j:slf4j-api")
+        compile("commons-io:commons-io")
         testCompile("junit:junit")
         testCompile("org.mockito:mockito-core")
+        testCompile("org.springframework.boot:spring-boot-starter-logging")
     }
 
     idea {

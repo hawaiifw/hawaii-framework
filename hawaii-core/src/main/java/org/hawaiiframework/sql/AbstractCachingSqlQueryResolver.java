@@ -19,6 +19,7 @@ package org.hawaiiframework.sql;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     /**
      * Fast access cache for sql queries, returning already cached instances without a global lock.
      */
-    private final Map<Object, String> sqlQueryAccessCache =
+    private final Map<Object, QueryHolder> sqlQueryAccessCache =
             new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
 
     /**
@@ -66,11 +67,11 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     /**
      * Map from sql query key to sql query instance, synchronized for sql query creation.
      */
-    private final Map<Object, String> sqlQueryCreationCache =
-            new LinkedHashMap<Object, String>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
+    private final Map<Object, QueryHolder> sqlQueryCreationCache =
+            new LinkedHashMap<Object, QueryHolder>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
 
                 @Override
-                protected boolean removeEldestEntry(Map.Entry<Object, String> eldest) {
+                protected boolean removeEldestEntry(Map.Entry<Object, QueryHolder> eldest) {
                     if (size() > getCacheLimit()) {
                         sqlQueryAccessCache.remove(eldest.getKey());
                         return true;
@@ -84,6 +85,8 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * Whether we should refrain from resolving sql queries again if unresolved once,
      */
     private boolean cacheUnresolved = true;
+
+    private long cacheMillis = -1;
 
     /**
      * Return the maximum number of entries for the sql query cache.
@@ -140,6 +143,28 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     }
 
     /**
+     * Set the number of seconds to cache a loaded query.
+     *
+     * After the cache seconds have expired, {@link #doRefreshQueryHolder(String, QueryHolder)}
+     * will be called, so even if refreshing a once loaded query is enabled,
+     * it is up to the subclass to define the refresh mechanism.
+     *
+     * Note, setting this to anything other than -1 only makes
+     * sense if the queries are loaded from a source other than
+     * the classpath.
+     *
+     * <ul>
+     * <li>Default is "-1", indicating to cache forever.
+     * <li>A positive number will cache a query for the given
+     * number of seconds. This is essentially the interval between refresh checks.
+     * <li>A value of "0" will check for expiry on each query access!</b>
+     * </ul>
+     */
+    public void setCacheSeconds(int cacheSeconds) {
+        this.cacheMillis = (1000 * cacheSeconds);
+    }
+
+    /**
      * Provides functionality to clear the cache for a certain sql query.
      *
      * @param sqlQueryName the sql query name for which the cached sql query (if any) needs to be
@@ -180,21 +205,30 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     @Override
     public String resolveSqlQuery(String sqlQueryName) throws HawaiiException {
         if (!isCache()) {
-            return loadSqlQuery(sqlQueryName);
+            return loadSqlQuery(sqlQueryName, null);
         } else {
             Object cacheKey = getCacheKey(sqlQueryName);
-            String sqlQuery = this.sqlQueryAccessCache.get(cacheKey);
-            if (sqlQuery == null) {
+            QueryHolder queryHolder = this.sqlQueryAccessCache.get(cacheKey);
+            if (queryHolder != null) {
+                long originalTimestamp = queryHolder.getRefreshTimestamp();
+                if (originalTimestamp > System.currentTimeMillis() - this.cacheMillis) {
+                    // Up-to-date
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Query {} within cache seconds, not refreshing", sqlQueryName);
+                    }
+                    return queryHolder.getSqlQuery();
+                }
+                refreshQueryHolder(sqlQueryName, queryHolder);
+            } else {
                 synchronized (this.sqlQueryCreationCache) {
-                    sqlQuery = this.sqlQueryCreationCache.get(cacheKey);
-                    if (sqlQuery == null) {
-                        sqlQuery = loadSqlQuery(sqlQueryName);
-                        if (sqlQuery == null && this.cacheUnresolved) {
-                            sqlQuery = UNRESOLVED_SQL_QUERY;
-                        }
-                        if (sqlQuery != null) {
-                            this.sqlQueryAccessCache.put(cacheKey, sqlQuery);
-                            this.sqlQueryCreationCache.put(cacheKey, sqlQuery);
+                    queryHolder = this.sqlQueryCreationCache.get(cacheKey);
+                    if (queryHolder == null) {
+                        queryHolder = new QueryHolder();
+                        queryHolder.setRefreshTimestamp(System.currentTimeMillis());
+                        loadSqlQuery(sqlQueryName, queryHolder);
+                        if (this.cacheUnresolved || queryHolder.getSqlQuery() != null) {
+                            this.sqlQueryAccessCache.put(cacheKey, queryHolder);
+                            this.sqlQueryCreationCache.put(cacheKey, queryHolder);
                             if (logger.isTraceEnabled()) {
                                 logger.trace("Cached sql query [" + cacheKey + "]");
                             }
@@ -202,8 +236,51 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
                     }
                 }
             }
-            return (sqlQuery != UNRESOLVED_SQL_QUERY ? sqlQuery : null);
+            return queryHolder.getSqlQuery();
         }
+    }
+
+    /**
+     * If a lock can be obtained on the QueryHolder, calls {@link #doRefreshQueryHolder(String, QueryHolder)}
+     * to actually refresh the QueryHolder. If not, i.e. while another thread is refreshing the QueryHolder,
+     * this method simply returns, which means that the currently cached version is still used.
+     *
+     * @param sqlQueryName
+     * @param queryHolder
+     */
+    private void refreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("Attempting to refresh QueryHolder for query {}", sqlQueryName);
+        }
+        if (!queryHolder.refreshLock.tryLock()) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("QueryHolder is locked");
+            }
+            return;
+        }
+        try {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Refreshing query");
+            }
+            doRefreshQueryHolder(sqlQueryName, queryHolder);
+        } finally {
+            queryHolder.refreshLock.unlock();
+        }
+    }
+
+    /**
+     * Subclasses may override this method to implement their own expiry
+     * mechanism. The default implementation does nothing,
+     * i.e. once a query is cached it will never be updated.
+     *
+     * This method is only called when the current thread has a lock on the
+     * QueryHolder, so subclasses need not deal with thread-safety.
+     *
+     * @param sqlQueryName the name of the query to refresh
+     * @param queryHolder the cached QueryHolder to check
+     */
+    protected void doRefreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
+        // do nothing
     }
 
     /**
@@ -211,11 +288,52 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * cached by this {@code SqlQueryResolver} base class.
      *
      * @param sqlQueryName the name of the sql query to retrieve
+     * @param queryHolder the QueryHolder to populate
      * @return the sql query, or {@code null} if not found (optional, to allow for {@code
      * SqlQueryResolver} chaining)
      * @throws HawaiiException if the sql query could not be resolved (typically in case of problems
      *         resolving the sql query)
      * @see #resolveSqlQuery
      */
-    protected abstract String loadSqlQuery(String sqlQueryName) throws HawaiiException;
+    protected abstract String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder) throws HawaiiException;
+
+    /**
+     * QueryHolder for caching. Stores the timestamp of the last refresh
+     * (updated every time the query is refreshed) as well as the query
+     * timestamp. Whether or not the latter is only meaningful depends on the
+     * way the query is loaded. For example, loading a query as a resource from
+     * the classpath will not result in any meaningful timestamp, whereas
+     * loading it from the file system will.
+     */
+    protected class QueryHolder {
+        private String sqlQuery;
+        private volatile long refreshTimestamp = -2;
+        private long queryTimestamp = -1;
+        private final ReentrantLock refreshLock = new ReentrantLock();
+
+        public String getSqlQuery() {
+            return sqlQuery;
+        }
+
+        public void setSqlQuery(String sqlQuery) {
+            this.sqlQuery = sqlQuery;
+        }
+
+        public long getRefreshTimestamp() {
+            return refreshTimestamp;
+        }
+
+        public void setRefreshTimestamp(long refreshTimestamp) {
+            this.refreshTimestamp = refreshTimestamp;
+        }
+
+        public long getQueryTimestamp() {
+            return queryTimestamp;
+        }
+
+        public void setQueryTimestamp(long queryTimestamp) {
+            this.queryTimestamp = queryTimestamp;
+        }
+
+    }
 }
