@@ -56,7 +56,7 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     description = "Generates gradlew[.bat] scripts"
-    gradleVersion = "2.14"
+    gradleVersion = "2.13"
 }
 
 bootRun {
