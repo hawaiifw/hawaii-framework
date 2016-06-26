@@ -39,7 +39,8 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void listShouldReturnRecipes() throws Exception {
-        mockMvc.perform(get(RECIPES_LIST_PATH)).andExpect(status().isOk())
+        mockMvc.perform(get(RECIPES_LIST_PATH))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].created_date", is("2016-02-15")))
@@ -123,7 +124,8 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void getShouldReturnRecipe() throws Exception {
-        mockMvc.perform(get(RECIPES_GET_PATH, 1)).andExpect(status().isOk())
+        mockMvc.perform(get(RECIPES_GET_PATH, 1))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.created_date", is("2016-02-15")))
