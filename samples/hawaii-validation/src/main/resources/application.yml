@@ -1,5 +1,4 @@
 logging:
   level:
     org.hawaiiframework: DEBUG
-hawaii.time.timzezone: Europe/Amsterdam
-spring.messages.fallback-to-system-locale: false
+spring.jackson.serialization.indent-output: true

@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.sample.service;
-
-import java.util.Locale;
+package org.hawaiiframework.sample.web.input;
 
 /**
  * @author Marcel Overdijk
  */
-public enum Language {
+public enum AddressType {
 
-    DUTCH("nl"), ENGLISH("en"), HAWAIIAN("us-HI");
-
-    private Locale locale;
-
-    Language(String locale) {
-        this.locale = new Locale(locale);
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
+    PRIMARY, ALTERNATIVE;
 }
