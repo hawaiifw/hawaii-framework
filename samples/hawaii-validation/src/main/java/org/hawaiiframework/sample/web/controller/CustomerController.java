@@ -21,8 +21,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.hawaiiframework.sample.web.input.CustomerInput;
 import org.hawaiiframework.sample.web.input.CustomerInputValidator;
 import org.hawaiiframework.web.annotation.Post;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,10 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Marcel Overdijk
  */
 @RestController
-@RequestMapping(path = "/rest/customers")
+@RequestMapping(path = "/api/customers")
 public class CustomerController {
-
-    private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     private final CustomerInputValidator customerInputValidator;
 

@@ -19,7 +19,7 @@ package org.hawaiiframework.sample.web;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,12 +32,12 @@ import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author Marcel Overdijk
  */
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 public class HelloControllerTests extends AbstractMockMvcTest {
 
     private OffsetDateTime now = OffsetDateTime.now();
@@ -57,7 +57,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
             throws Exception {
         mockMvc.perform(get("/api/hello/greet"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Aloha stranger, pehea 'oe?")));
     }
@@ -68,7 +68,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
         mockMvc.perform(get("/api/hello/greet")
                 .param("name", "Marcel"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Aloha Marcel, pehea 'oe?")));
     }
@@ -79,7 +79,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
         mockMvc.perform(get("/api/hello/greet")
                 .param("language", "dutch"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hallo vreemdeling, hoe gaat het?")));
     }
@@ -90,7 +90,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
                 .param("name", "Marcel")
                 .param("language", "dutch"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hallo Marcel, hoe gaat het?")));
     }
@@ -101,7 +101,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
         mockMvc.perform(get("/api/hello/greet")
                 .param("language", "english"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hello stranger, how are you doing?")));
     }
@@ -113,7 +113,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
                 .param("name", "Marcel")
                 .param("language", "english"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
                 .andExpect(jsonPath("$.greeting", is("Hello Marcel, how are you doing?")));
     }
@@ -123,7 +123,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
         mockMvc.perform(get("/api/hello/greet")
                 .param("language", "unknown"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].field", is("language")))
                 .andExpect(jsonPath("$.errors[0].code", is("invalid")));

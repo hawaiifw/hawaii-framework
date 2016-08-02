@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,19 +29,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.hawaiiframework.sample.Application;
 import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
 import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author Marcel Overdijk
  */
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 public class RecipeControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void listShouldReturnRecipes() throws Exception {
         mockMvc.perform(get(RECIPES_LIST_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].created_date", is("2016-02-15")))
                 .andExpect(jsonPath("$[0].name", is("Marcel")))
@@ -126,7 +126,7 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
     public void getShouldReturnRecipe() throws Exception {
         mockMvc.perform(get(RECIPES_GET_PATH, 1))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.created_date", is("2016-02-15")))
                 .andExpect(jsonPath("$.name", is("Marcel")))
