@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Marcel Overdijk
  */
 @RestController
-@RequestMapping(path = "/rest/hello")
+@RequestMapping(path = "/api/hello")
 public class HelloController {
 
     private static Logger logger = LoggerFactory.getLogger(HelloController.class);

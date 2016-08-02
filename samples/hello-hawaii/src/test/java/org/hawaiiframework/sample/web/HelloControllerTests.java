@@ -55,7 +55,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
     @Test
     public void greetWithoutNameAndLanguageShouldReturnHawaiianGreetingWithoutName()
             throws Exception {
-        mockMvc.perform(get("/rest/hello/greet"))
+        mockMvc.perform(get("/api/hello/greet"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.timestamp", is(now.format(ISO_OFFSET_DATE_TIME))))
@@ -65,7 +65,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
     @Test
     public void greetWithNameButWithoutLanguageShouldReturnHawaiianGreetingWithName()
             throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
+        mockMvc.perform(get("/api/hello/greet")
                 .param("name", "Marcel"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
@@ -76,7 +76,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
     @Test
     public void greetWithoutNameButWithDutchLanguageShouldReturnDutchGreetingWithoutName()
             throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
+        mockMvc.perform(get("/api/hello/greet")
                 .param("language", "dutch"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
@@ -86,7 +86,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void greetWithNameAndDutchLanguageShouldReturnDutchGreetingWithName() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
+        mockMvc.perform(get("/api/hello/greet")
                 .param("name", "Marcel")
                 .param("language", "dutch"))
                 .andExpect(status().isOk())
@@ -98,7 +98,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
     @Test
     public void greetWithoutNameButWithEnglishLanguageShouldReturnEnglishGreetingWithoutName()
             throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
+        mockMvc.perform(get("/api/hello/greet")
                 .param("language", "english"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
@@ -109,7 +109,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
     @Test
     public void greetWithNameAndEnglishLanguageShouldReturnEnglishGreetingWithName()
             throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
+        mockMvc.perform(get("/api/hello/greet")
                 .param("name", "Marcel")
                 .param("language", "english"))
                 .andExpect(status().isOk())
@@ -120,7 +120,7 @@ public class HelloControllerTests extends AbstractMockMvcTest {
 
     @Test
     public void greetWithInvalidLanguageShouldReturnError() throws Exception {
-        mockMvc.perform(get("/rest/hello/greet")
+        mockMvc.perform(get("/api/hello/greet")
                 .param("language", "unknown"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON))

@@ -8,7 +8,7 @@ buildscript {
         maven { url "http://repo.spring.io/snapshot" }
     }
     dependencies {
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.7.RELEASE")
+        classpath("io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE")
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
@@ -17,22 +17,22 @@ buildscript {
 
 ext {
     javaVersion = "1.8"
-    dependencyManagementPluginVersion = "0.5.7.RELEASE"
-    springPlatformVersion = "2.0.5.RELEASE"
+    dependencyManagementPluginVersion = "0.6.0.RELEASE"
+    springPlatformVersion = "Athens-RC1"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.4/",
         "http://docs.oracle.com/javase/8/docs/api/",
         "http://docs.oracle.com/javaee/7/api/",
-        "http://docs.spring.io/spring/docs/4.2.4.RELEASE/javadoc-api/",
-        "http://docs.spring.io/spring-boot/docs/1.3.2.RELEASE/api/",
-        "http://docs.spring.io/spring-data/commons/docs/1.11.2.RELEASE/api/",
-        "http://docs.spring.io/spring-security/site/docs/4.0.3.RELEASE/apidocs/",
-        "http://docs.spring.io/spring-session/docs/1.0.2.RELEASE/api/",
-        "http://fasterxml.github.io/jackson-core/javadoc/2.6/",
-        "http://fasterxml.github.io/jackson-databind/javadoc/2.6/",
-        "http://fasterxml.github.io/jackson-databind/javadoc/2.6/",
-        "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.6/",
-        "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.6/",
+        "http://docs.spring.io/spring/docs/4.3.2.RELEASE/javadoc-api/",
+        "http://docs.spring.io/spring-boot/docs/1.4.0.RELEASE/api/",
+        "http://docs.spring.io/spring-data/commons/docs/1.12.2.RELEASE/api/",
+        "http://docs.spring.io/spring-security/site/docs/4.1.1.RELEASE/apidocs/",
+        "http://docs.spring.io/spring-session/docs/1.2.1.RELEASE/api/",
+        "http://fasterxml.github.io/jackson-core/javadoc/2.8/",
+        "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
+        "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
+        "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
+        "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.8/",
         "http://hamcrest.org/JavaHamcrest/javadoc/1.3/"
     ] as String[]
 }
@@ -184,6 +184,7 @@ project("hawaii-autoconfigure") {
         compile project(":hawaii-core")
         compile "org.springframework.boot:spring-boot"
         compile "org.springframework.boot:spring-boot-autoconfigure"
+        compile "org.springframework.boot:spring-boot-test"
         compile "org.yaml:snakeyaml"
         optional "com.fasterxml.jackson.core:jackson-databind"
         optional "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"

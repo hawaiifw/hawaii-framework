@@ -21,7 +21,7 @@ package org.hawaiiframework.sample.web;
  */
 public class Paths {
 
-    public static final String BASE_PATH = "/rest";
+    public static final String BASE_PATH = "/api";
 
     public static final String RECIPES_BASE_PATH = BASE_PATH + "/recipes";
     public static final String RECIPES_LIST_PATH = RECIPES_BASE_PATH;
