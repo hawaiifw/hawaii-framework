@@ -320,7 +320,7 @@ configure(rootProject) {
 
     task docsZip(type: Zip, dependsOn: "docs") {
         group = "Distribution"
-        baseName = "hawaii-framework"
+        baseName = rootProject.name
         classifier = "docs"
         description = "Builds -${classifier} archive containing Javadoc API and reference documentation."
 
@@ -340,7 +340,7 @@ configure(rootProject) {
 
     task distZip(type: Zip, dependsOn: "docsZip") {
         group = "Distribution"
-        baseName = "hawaii-framework"
+        baseName = rootProject.name
         classifier = "dist"
         description = "Builds -${classifier} archive containing all jars and documentation."
 
