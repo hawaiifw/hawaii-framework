@@ -30,7 +30,6 @@ ext {
         "http://docs.spring.io/spring-session/docs/1.2.1.RELEASE/api/",
         "http://fasterxml.github.io/jackson-core/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
-        "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.8/",
         "http://hamcrest.org/JavaHamcrest/javadoc/1.3/"
