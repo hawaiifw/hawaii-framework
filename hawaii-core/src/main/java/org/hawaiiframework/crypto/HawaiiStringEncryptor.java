@@ -18,6 +18,7 @@ package org.hawaiiframework.crypto;
 
 import java.security.GeneralSecurityException;
 import java.security.Security;
+import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -52,8 +53,8 @@ public class HawaiiStringEncryptor implements StringEncryptor {
      * @param initVector the init vector used for encryption/decryption
      */
     public HawaiiStringEncryptor(String key, String initVector) {
-        this.key = key;
-        this.initVector = initVector;
+        this.key = Objects.requireNonNull(key);
+        this.initVector = Objects.requireNonNull(initVector);
     }
 
     /**
