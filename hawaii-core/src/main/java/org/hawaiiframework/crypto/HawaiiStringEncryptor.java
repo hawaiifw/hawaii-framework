@@ -30,8 +30,8 @@ import org.hawaiiframework.exception.HawaiiException;
 import org.jasypt.encryption.StringEncryptor;
 
 /**
- * Implementation of Jasypt's StringEncryptor interface. This class registers the Bouncy Castle JCE
- * Provider.
+ * Implementation of Jasypt's {@code StringEncryptor} interface. This class registers the Bouncy
+ * Castle JCE Provider.
  *
  * @author Wouter Eerdekens
  * @see org.jasypt.encryption.StringEncryptor
@@ -48,7 +48,7 @@ public class HawaiiStringEncryptor implements StringEncryptor {
     private String initVector;
 
     /**
-     * Creates a new HawaiiStringEncryptor with the given key and init vector.
+     * Creates a new {@code HawaiiStringEncryptor} with the given key and init vector.
      * 
      * @param key the key used for encryption/decryption
      * @param initVector the init vector used for encryption/decryption
@@ -59,7 +59,7 @@ public class HawaiiStringEncryptor implements StringEncryptor {
     }
 
     /**
-     * Encrypt the input message
+     * Encrypt the input message.
      *
      * @param message the message to be encrypted
      * @return the result of encryption
@@ -77,7 +77,7 @@ public class HawaiiStringEncryptor implements StringEncryptor {
     }
 
     /**
-     * Decrypt the encrypted input message
+     * Decrypt the encrypted input message.
      *
      * @param encryptedMessage the message to be decrypted
      * @return the result of decryption
