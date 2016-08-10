@@ -16,11 +16,11 @@ buildscript {
 }
 
 ext {
-    javaVersion = "1.8"
+    bouncycastleVersion               = "1.54"
     dependencyManagementPluginVersion = "0.6.0.RELEASE"
-    springPlatformVersion = "Athens-RC1"
-    jasyptVersion = "1.9.2"
-    bouncyCastleVersion = "1.54"
+    javaVersion                       = "1.8"
+    jasyptVersion                     = "1.9.2"
+    springPlatformVersion             = "Athens-RC1"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.4/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -205,7 +205,7 @@ project("hawaii-core") {
         compile "org.hamcrest:hamcrest-core"
         compile "org.hamcrest:hamcrest-library"
         compile "org.jasypt:jasypt:${jasyptVersion}"
-        compile "org.bouncycastle:bcprov-jdk15on:${bouncyCastleVersion}"
+        compile "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
         optional "com.fasterxml.jackson.core:jackson-databind"
         optional "javax.servlet:javax.servlet-api"
         optional "org.aspectj:aspectjweaver"
