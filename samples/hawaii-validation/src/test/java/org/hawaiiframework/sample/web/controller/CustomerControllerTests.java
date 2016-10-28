@@ -16,19 +16,7 @@
 
 package org.hawaiiframework.sample.web.controller;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hawaiiframework.sample.Application;
 import org.hawaiiframework.sample.web.input.AddressInput;
 import org.hawaiiframework.sample.web.input.AddressType;
@@ -40,7 +28,13 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author Marcel Overdijk

@@ -16,19 +16,17 @@
 
 package org.hawaiiframework.sample.web.input;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.hawaiiframework.sample.validator.EmailValidator;
+import org.hawaiiframework.validation.ValidationResult;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hawaiiframework.sample.validator.EmailValidator;
-import org.hawaiiframework.validation.ValidationResult;
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Marcel Overdijk

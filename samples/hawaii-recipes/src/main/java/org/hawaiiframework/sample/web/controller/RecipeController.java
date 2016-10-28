@@ -16,16 +16,6 @@
 
 package org.hawaiiframework.sample.web.controller;
 
-import static java.util.Objects.requireNonNull;
-import static org.hawaiiframework.sample.web.Paths.RECIPES_CREATE_PATH;
-import static org.hawaiiframework.sample.web.Paths.RECIPES_DELETE_PATH;
-import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
-import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
-import static org.hawaiiframework.sample.web.Paths.RECIPES_UPDATE_PATH;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.util.List;
-
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.sample.repository.RecipeRepository;
 import org.hawaiiframework.sample.web.input.RecipeInput;
@@ -45,6 +35,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+import static org.hawaiiframework.sample.web.Paths.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @author Marcel Overdijk

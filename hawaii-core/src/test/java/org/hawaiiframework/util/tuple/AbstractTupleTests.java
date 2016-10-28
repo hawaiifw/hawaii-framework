@@ -43,33 +43,53 @@ public abstract class AbstractTupleTests {
     protected Object9 other9 = new Object9();
     protected Object10 other10 = new Object10();
 
+
     protected class Object1 {
+
     }
+
 
     protected class Object2 {
+
     }
+
 
     protected class Object3 {
+
     }
+
 
     protected class Object4 {
+
     }
+
 
     protected class Object5 {
+
     }
+
 
     protected class Object6 {
+
     }
+
 
     protected class Object7 {
+
     }
+
 
     protected class Object8 {
+
     }
+
 
     protected class Object9 {
+
     }
 
+
     protected class Object10 {
+
     }
 }

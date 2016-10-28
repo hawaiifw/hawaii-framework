@@ -16,14 +16,14 @@
 
 package org.hawaiiframework.sql;
 
+import org.hawaiiframework.exception.HawaiiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.hawaiiframework.exception.HawaiiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Convenient base class for {@link SqlQueryResolver} implementations. Caches sql queries once
@@ -145,15 +145,15 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
 
     /**
      * Set the number of seconds to cache a loaded query.
-     *
+     * <p>
      * After the cache seconds have expired, {@link #doRefreshQueryHolder(String, QueryHolder)}
      * will be called, so even if refreshing a once loaded query is enabled,
      * it is up to the subclass to define the refresh mechanism.
-     *
+     * <p>
      * Note, setting this to anything other than -1 only makes
      * sense if the queries are loaded from a source other than
      * the classpath.
-     *
+     * <p>
      * <ul>
      * <li>Default is "-1", indicating to cache forever.
      * <li>A positive number will cache a query for the given
@@ -169,7 +169,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * Provides functionality to clear the cache for a certain sql query.
      *
      * @param sqlQueryName the sql query name for which the cached sql query (if any) needs to be
-     *        removed
+     *                     removed
      */
     public void removeFromCache(String sqlQueryName) {
         if (!isCache()) {
@@ -273,12 +273,12 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * Subclasses may override this method to implement their own expiry
      * mechanism. The default implementation does nothing,
      * i.e. once a query is cached it will never be updated.
-     *
+     * <p>
      * This method is only called when the current thread has a lock on the
      * QueryHolder, so subclasses need not deal with thread-safety.
      *
      * @param sqlQueryName the name of the query to refresh
-     * @param queryHolder the cached QueryHolder to check
+     * @param queryHolder  the cached QueryHolder to check
      */
     protected void doRefreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
         // do nothing
@@ -289,14 +289,15 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * cached by this {@code SqlQueryResolver} base class.
      *
      * @param sqlQueryName the name of the sql query to retrieve
-     * @param queryHolder the QueryHolder to populate
+     * @param queryHolder  the QueryHolder to populate
      * @return the sql query, or {@code null} if not found (optional, to allow for {@code
      * SqlQueryResolver} chaining)
      * @throws HawaiiException if the sql query could not be resolved (typically in case of problems
-     *         resolving the sql query)
+     *                         resolving the sql query)
      * @see #resolveSqlQuery
      */
-    protected abstract String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder) throws HawaiiException;
+    protected abstract String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder)
+            throws HawaiiException;
 
     /**
      * QueryHolder for caching. Stores the timestamp of the last refresh
@@ -307,6 +308,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * loading it from the file system will.
      */
     protected class QueryHolder {
+
         private String sqlQuery;
         private volatile long refreshTimestamp = -2;
         private long queryTimestamp = -1;

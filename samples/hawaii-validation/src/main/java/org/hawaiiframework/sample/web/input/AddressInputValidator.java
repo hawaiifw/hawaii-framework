@@ -16,16 +16,16 @@
 
 package org.hawaiiframework.sample.web.input;
 
-import static org.hamcrest.Matchers.greaterThan;
+import org.apache.commons.lang3.StringUtils;
+import org.hawaiiframework.validation.ValidationResult;
+import org.hawaiiframework.validation.Validator;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hawaiiframework.validation.ValidationResult;
-import org.hawaiiframework.validation.Validator;
-import org.springframework.stereotype.Component;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * @author Marcel Overdijk

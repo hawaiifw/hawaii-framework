@@ -16,20 +16,7 @@
 
 package org.hawaiiframework.time;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.MonthDay;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Objects;
+import java.time.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -185,7 +172,7 @@ public class HawaiiTime {
      * Sets a fixed clock to be used.
      *
      * @param instant the fixed instant, not null
-     * @param zone the fixed zone, not null
+     * @param zone    the fixed zone, not null
      */
     protected void useFixedClock(Instant instant, ZoneId zone) {
         requireNonNull(instant, "'instant' must not be null");

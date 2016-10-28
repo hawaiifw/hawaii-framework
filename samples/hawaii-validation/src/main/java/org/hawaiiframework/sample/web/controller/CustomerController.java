@@ -16,8 +16,6 @@
 
 package org.hawaiiframework.sample.web.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import org.hawaiiframework.sample.web.input.CustomerInput;
 import org.hawaiiframework.sample.web.input.CustomerInputValidator;
 import org.hawaiiframework.web.annotation.Post;
@@ -26,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @author Marcel Overdijk

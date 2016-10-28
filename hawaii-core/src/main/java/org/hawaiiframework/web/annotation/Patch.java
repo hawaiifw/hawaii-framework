@@ -16,16 +16,16 @@
 
 package org.hawaiiframework.web.annotation;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.web.bind.annotation.RequestMapping;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 
 /**
  * @author Marcel Overdijk

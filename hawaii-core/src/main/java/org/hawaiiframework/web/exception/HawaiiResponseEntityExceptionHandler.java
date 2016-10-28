@@ -16,12 +16,6 @@
 
 package org.hawaiiframework.web.exception;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
@@ -38,6 +32,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * This class creates proper HTTP response bodies for exceptions.
@@ -60,11 +59,11 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     /**
      * Handles {@code HttpException} instances.
-     *
+     * <p>
      * Each {@code HttpException} has an associated {@code HttpStatus} that is used as the response
      * status.
      *
-     * @param e the exception
+     * @param e       the exception
      * @param request the current request
      * @return a response entity reflecting the current exception
      */
@@ -77,10 +76,10 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     /**
      * Handles {@code ValidationException} instances.
-     *
+     * <p>
      * The response status is: 400 Bad Request.
      *
-     * @param e the exception
+     * @param e       the exception
      * @param request the current request
      * @return a response entity reflecting the current exception
      */
@@ -99,7 +98,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     /**
      * Handles {@code Throwable} instances. This method acts as a fallback handler.
      *
-     * @param t the exception
+     * @param t       the exception
      * @param request the current request
      * @return a response entity reflecting the current exception
      */
@@ -120,8 +119,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     /**
      * Builds a meaningful response body for the given throwable, HTTP status and request.
      *
-     * @param t the exception
-     * @param status the HTTP status
+     * @param t       the exception
+     * @param status  the HTTP status
      * @param request the current request
      * @return an error response
      */
@@ -137,7 +136,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     /**
      * Add servlet request information to the {@code ErrorResponseResource} instance.
      *
-     * @param request the current request
+     * @param request  the current request
      * @param resource the current error response resource
      */
     private void addRequestInfo(WebRequest request, ErrorResponseResource resource) {
@@ -155,7 +154,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     /**
      * Add HTTP status information to the {@code ErrorResponseResource} instance.
      *
-     * @param status the current HTTP status
+     * @param status   the current HTTP status
      * @param resource the current error response resource
      */
     private void addHttpStatus(HttpStatus status, ErrorResponseResource resource) {
@@ -165,8 +164,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     /**
      * Add the exception message to the {@code ErrorResponseResource} instance.
-     * 
-     * @param t the current exception
+     *
+     * @param t        the current exception
      * @param resource the current error response resource
      */
     private void addErrorMessage(Throwable t, ErrorResponseResource resource) {

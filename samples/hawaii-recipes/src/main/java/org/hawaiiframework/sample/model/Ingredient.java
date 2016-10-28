@@ -16,16 +16,11 @@
 
 package org.hawaiiframework.sample.model;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import javax.persistence.*;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /**
  * @author Marcel Overdijk

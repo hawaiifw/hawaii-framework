@@ -50,7 +50,7 @@ public interface Validator<T> {
     /**
      * Validates the supplied object.
      *
-     * @param object the object to validate
+     * @param object           the object to validate
      * @param validationResult the contextual state about the validation process
      */
     void validate(T object, ValidationResult validationResult);
@@ -69,7 +69,7 @@ public interface Validator<T> {
     /**
      * Validates the supplied object.
      *
-     * @param object the object to validate
+     * @param object           the object to validate
      * @param validationResult the contextual state about the validation process
      * @throws ValidationException if the validation fails
      */

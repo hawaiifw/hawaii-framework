@@ -16,8 +16,6 @@
 
 package org.hawaiiframework.sample.web;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.sample.service.HelloService;
@@ -34,6 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @author Marcel Overdijk

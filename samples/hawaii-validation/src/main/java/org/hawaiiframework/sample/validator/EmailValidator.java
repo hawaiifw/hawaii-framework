@@ -16,11 +16,11 @@
 
 package org.hawaiiframework.sample.validator;
 
-import java.util.regex.Pattern;
-
 import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.validation.Validator;
 import org.springframework.stereotype.Component;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Marcel Overdijk

@@ -1,19 +1,19 @@
 package org.hawaiiframework.sql;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.concurrent.*;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResourceLoader;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.concurrent.*;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for ResourceSqlQueryResolver.
@@ -22,6 +22,7 @@ import org.springframework.core.io.FileSystemResourceLoader;
  * @since 2.0.0
  */
 public class ResourceSqlQueryResolverTests {
+
     private ResourceSqlQueryResolver queryResolver;
     private String sqlFileName;
     private File sqlFile;
@@ -128,6 +129,7 @@ public class ResourceSqlQueryResolverTests {
      * handled correctly.
      */
     private class LongUpdatingQueryResolver extends ResourceSqlQueryResolver {
+
         private int waitMillis;
 
         private LongUpdatingQueryResolver(int waitMillis) {

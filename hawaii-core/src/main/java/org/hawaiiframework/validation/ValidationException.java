@@ -16,10 +16,9 @@
 
 package org.hawaiiframework.validation;
 
-import java.util.List;
-import java.util.Objects;
-
 import org.hawaiiframework.exception.HawaiiException;
+
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 

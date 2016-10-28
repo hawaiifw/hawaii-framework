@@ -16,18 +16,17 @@
 
 package org.hawaiiframework.crypto;
 
-import java.security.GeneralSecurityException;
-import java.security.Security;
-import java.util.Objects;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.hawaiiframework.exception.HawaiiException;
 import org.jasypt.encryption.StringEncryptor;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.GeneralSecurityException;
+import java.security.Security;
+import java.util.Objects;
 
 /**
  * Implementation of Jasypt's {@code StringEncryptor} interface. This class registers the Bouncy
@@ -49,8 +48,8 @@ public class HawaiiStringEncryptor implements StringEncryptor {
 
     /**
      * Creates a new {@code HawaiiStringEncryptor} with the given key and init vector.
-     * 
-     * @param key the key used for encryption/decryption
+     *
+     * @param key        the key used for encryption/decryption
      * @param initVector the init vector used for encryption/decryption
      */
     public HawaiiStringEncryptor(String key, String initVector) {

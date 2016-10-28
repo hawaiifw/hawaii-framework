@@ -16,9 +16,9 @@
 
 package org.hawaiiframework.context;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.context.ApplicationContext;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Marcel Overdijk

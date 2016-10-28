@@ -16,13 +16,13 @@
 
 package org.hawaiiframework.sample.web.input;
 
-import static java.util.Objects.requireNonNull;
-import static org.hamcrest.Matchers.greaterThan;
-
 import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static java.util.Objects.requireNonNull;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * @author Marcel Overdijk

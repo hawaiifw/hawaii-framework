@@ -20,8 +20,8 @@ public class HawaiiStringEncryptorTests {
     /**
      * The key and init vector used in this test were obtained by
      * running the following openssl command:
-     *
-     *  <pre>
+     * <p>
+     * <pre>
      *      openssl enc -aes-128-cbc -k supersecret -P -md sha1
      *
      *      salt=17E0643BA7B6B022

@@ -16,12 +16,6 @@
 
 package org.hawaiiframework.boot.autoconfigure.env;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Properties;
-import java.util.Set;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnumerableCompositePropertySource;
 import org.springframework.boot.env.EnvironmentPostProcessor;
@@ -35,6 +29,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * An {@link EnvironmentPostProcessor} that configures the default Hawaii properties. Note these

@@ -1,4 +1,3 @@
-
 package org.hawaiiframework.sample.config;
 
 import org.hawaiiframework.sample.Application;
@@ -17,4 +16,5 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 @Configuration
 @EntityScan(basePackageClasses = {Application.class, Jsr310JpaConverters.class})
 public class DataConfig {
+
 }

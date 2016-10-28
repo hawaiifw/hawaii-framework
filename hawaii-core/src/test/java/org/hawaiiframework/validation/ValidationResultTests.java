@@ -16,20 +16,14 @@
 
 package org.hawaiiframework.validation;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.emptyIterable;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for {@link ValidationResult}.
@@ -87,7 +81,8 @@ public class ValidationResultTests {
             validationResult.popNestedPath();
             fail();
         } catch (IllegalStateException e) {
-            assertThat(e.getMessage(), is(equalTo("Cannot pop nested path: no nested path on stack")));
+            assertThat(e.getMessage(),
+                    is(equalTo("Cannot pop nested path: no nested path on stack")));
         }
     }
 
@@ -112,7 +107,8 @@ public class ValidationResultTests {
         validationResult.pushNestedPath("order_line[5]");
         validationResult.rejectValue("quantity", "required");
         assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
-        assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("order_line[5].quantity")));
+        assertThat(validationResult.getErrors().get(0).getField(),
+                is(equalTo("order_line[5].quantity")));
         assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("required")));
     }
 

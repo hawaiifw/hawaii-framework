@@ -16,8 +16,6 @@
 
 package org.hawaiiframework.test.mockmvc;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
 import org.hawaiiframework.time.HawaiiTime;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -27,6 +25,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 /**
  * @author Marcel Overdijk

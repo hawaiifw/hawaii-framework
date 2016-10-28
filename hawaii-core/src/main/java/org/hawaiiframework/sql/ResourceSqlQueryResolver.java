@@ -16,12 +16,6 @@
 
 package org.hawaiiframework.sql;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Scanner;
-
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +23,12 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Scanner;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic
@@ -136,12 +136,14 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
                         loadSqlQuery(sqlQueryName, queryHolder);
                     } else {
                         if (logger.isDebugEnabled()) {
-                            logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
+                            logger.debug("Query file {} unchanged - not reloading",
+                                    resource.getFilename());
                         }
                     }
                 } catch (IOException e) {
                     // Can't really happen as we already checked that the resource has a filename
-                    throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
+                    throw new HawaiiException(
+                            String.format("Error accessing '%s'", resource.getFilename()), e);
                 }
             }
         } else {
@@ -152,7 +154,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     }
 
     @Override
-    protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder) throws HawaiiException {
+    protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder)
+            throws HawaiiException {
         String location = getPrefix() + sqlQueryName + getSuffix();
         Resource resource = this.resourceLoader.getResource(location);
         String query = null;

@@ -16,18 +16,13 @@
 
 package org.hawaiiframework.validation;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
-
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hamcrest.Matcher;
+
+import java.util.*;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /**
  * Stores validation errors for a specific object.
