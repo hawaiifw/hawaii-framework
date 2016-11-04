@@ -10,7 +10,9 @@ fi
 
 # Deploy jar artifacts to Sonatype OSSRH
 
-./gradlew uploadArchives
+openssl aes-256-cbc -pass pass:$SIGNING_PASSWORD -in secring.gpg.enc -out secring.gpg -d
+
+./gradlew -Psigning.keyId="$SIGNING_KEY" -Psigning.password="$SIGNING_PASSWORD" -Psigning.secretKeyRingFile="${TRAVIS_BUILD_DIR}/secring.gpg" uploadArchives
 
 # Deploy api and reference documentation to gh-pages
 

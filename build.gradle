@@ -46,6 +46,7 @@ configure(allprojects) { project ->
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
     apply plugin: "maven"
+    apply plugin: "signing"
     apply plugin: "propdeps"
     apply plugin: "propdeps-maven"
     apply plugin: "propdeps-idea"
@@ -134,9 +135,17 @@ configure(subprojects) { subproject ->
         archives javadocJar
     }
 
+    signing {
+        required { gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
     uploadArchives {
         repositories {
             mavenDeployer {
+
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
                 repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                     authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
                 }
