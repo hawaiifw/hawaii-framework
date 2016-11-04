@@ -1,7 +1,6 @@
 #!/bin/bash
 
-set -e
-set +x
+echo "Publishing..."
 
 # Do not deploy archives when building pull request
 if [ "$TRAVIS_BRANCH" != "master" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
@@ -10,11 +9,15 @@ fi
 
 # Deploy jar artifacts to Sonatype OSSRH
 
+echo "Publishing archives..."
+
 openssl aes-256-cbc -pass pass:$SIGNING_PASSWORD -in secring.gpg.enc -out secring.gpg -d
 
 ./gradlew -Psigning.keyId="$SIGNING_KEY" -Psigning.password="$SIGNING_PASSWORD" -Psigning.secretKeyRingFile="${TRAVIS_BUILD_DIR}/secring.gpg" uploadArchives
 
 # Deploy api and reference documentation to gh-pages
+
+echo "Publishing Documentation..."
 
 HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
 GH_PAGES_DIR=.gh-pages
