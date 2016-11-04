@@ -13,6 +13,8 @@ echo "Publishing archives..."
 
 openssl aes-256-cbc -pass pass:$SIGNING_PASSWORD -in secring.gpg.enc -out secring.gpg -d
 
+gpg --keyserver keyserver.ubuntu.com --recv-key $SIGNING_KEY
+
 ./gradlew -Psigning.keyId="$SIGNING_KEY" -Psigning.password="$SIGNING_PASSWORD" -Psigning.secretKeyRingFile="${TRAVIS_BUILD_DIR}/secring.gpg" uploadArchives
 
 # Deploy api and reference documentation to gh-pages
