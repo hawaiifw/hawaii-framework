@@ -2,7 +2,8 @@
 [appendix]
 === Hawaii application properties
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent neque mi, lobortis non sagittis vitae, porttitor ac dolor. Morbi facilisis porta vestibulum. Donec id risus scelerisque, dictum leo et, mattis ante. Praesent ac viverra nisi, ac cursus lectus. Ut vel tellus sit amet libero efficitur tristique. Aenean id massa pulvinar, imperdiet sapien et, tempus dui. Sed imperdiet porttitor iaculis. Vivamus mattis sit amet nisi nec dictum.
+Various properties can be specified inside your `application.properties/application.yml` file or as command line switches.
+This section provides a list of available Hawaii application properties.
 
 [source%nowrap,properties,indent=0,subs="verbatim,attributes,macros"]
 ----
