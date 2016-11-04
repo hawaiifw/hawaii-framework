@@ -1,4 +1,4 @@
 [[getting-started]]
 == Getting Started with Hawaii
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hendrerit ipsum quis est elementum, ut lacinia metus fringilla. Aliquam ullamcorper a enim sed luctus. Aliquam cursus dolor nec aliquet auctor. Vestibulum eget lectus posuere, ullamcorper arcu at, lobortis erat. Aenean feugiat enim enim, et ultrices lacus ornare sagittis. Nunc quis odio sed felis semper semper bibendum pulvinar tortor. Duis sollicitudin aliquet ligula, a suscipit leo pulvinar a. Praesent enim sem, fringilla eget purus vel, auctor ornare nisl. In eu malesuada lorem, vel sodales nulla. Aenean suscipit, est eget mattis congue, leo ex laoreet purus, quis fringilla ante mi a massa.
+TODO.
