@@ -48,8 +48,7 @@ public class CustomerController {
         customerInputValidator.validateAndThrow(customerInput);
 
         // Do something with the customer input
-        // E.g use a org.hawaiiframework.web.input.InputConverter to convert the customer input
-        // object to a customer domain object
+        // E.g use a org.hawaiiframework.web.input.InputConverter to convert the customer input object to a customer domain object
         // (note in case of a validation error a ValidationException would have been thrown)
 
         // Return empty 200 to client

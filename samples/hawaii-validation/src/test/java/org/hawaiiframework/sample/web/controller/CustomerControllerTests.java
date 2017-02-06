@@ -24,7 +24,7 @@ import org.hawaiiframework.sample.web.input.CustomerInput;
 import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -33,49 +33,46 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author Marcel Overdijk
  */
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 public class CustomerControllerTests extends AbstractMockMvcTest {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    public void createWithValidCustomerInputShouldReturn200()
-            throws Exception {
+    public void createWithValidCustomerInputShouldReturn200() throws Exception {
         CustomerInput customerInput = createBaseCustomerInput();
         String json = objectMapper.writeValueAsString(customerInput);
-        mockMvc.perform(post("/rest/customers")
+        mockMvc.perform(post("/api/customers")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(json))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void createWithInvalidCustomerInputShouldReturn400WithErrors()
-            throws Exception {
+    public void createWithInvalidCustomerInputShouldReturn400WithErrors() throws Exception {
         CustomerInput customerInput = new CustomerInput();
         AddressInput addressInput = new AddressInput();
         customerInput.getAddresses().add(addressInput);
         String json = objectMapper.writeValueAsString(customerInput);
-        mockMvc.perform(post("/rest/customers")
+        mockMvc.perform(post("/api/customers")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.method", is(equalTo("POST"))))
-                .andExpect(jsonPath("$.uri", is(equalTo("/rest/customers"))))
+                .andExpect(jsonPath("$.uri", is(equalTo("/api/customers"))))
                 .andExpect(jsonPath("$.query", is(nullValue())))
-                .andExpect(
-                        jsonPath("$.content_type", is(equalTo(MediaType.APPLICATION_JSON_VALUE))))
+                .andExpect(jsonPath("$.content_type", is(equalTo(MediaType.APPLICATION_JSON_VALUE))))
                 .andExpect(jsonPath("$.status_code", is(equalTo(HttpStatus.BAD_REQUEST.value()))))
-                .andExpect(jsonPath("$.status_message",
-                        is(equalTo(HttpStatus.BAD_REQUEST.getReasonPhrase()))))
+                .andExpect(jsonPath("$.status_message", is(equalTo(HttpStatus.BAD_REQUEST.getReasonPhrase()))))
                 .andExpect(jsonPath("$.error_message", is(nullValue())))
                 .andExpect(jsonPath("$.errors", hasSize(10)))
                 .andExpect(jsonPath("$.errors[0].field", is("first_name")))

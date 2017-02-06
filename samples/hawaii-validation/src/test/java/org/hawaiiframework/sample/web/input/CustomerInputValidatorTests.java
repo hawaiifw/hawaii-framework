@@ -42,8 +42,7 @@ public class CustomerInputValidatorTests {
     public void setUp() {
         this.emailValidator = new EmailValidator();
         this.addressInputValidator = new AddressInputValidator();
-        this.customerInputValidator =
-                new CustomerInputValidator(emailValidator, addressInputValidator);
+        this.customerInputValidator = new CustomerInputValidator(emailValidator, addressInputValidator);
         this.validationResult = new ValidationResult();
     }
 
@@ -103,8 +102,7 @@ public class CustomerInputValidatorTests {
         customerInput.getAddresses().add(addressInput2);
         customerInputValidator.validate(customerInput, validationResult);
         assertThat(validationResult.getErrors(), hasSize(1));
-        assertThat(validationResult.getErrors().get(0).getField(),
-                is(equalTo("addresses[1].street_name")));
+        assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("addresses[1].street_name")));
         assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("required")));
     }
 
@@ -116,8 +114,7 @@ public class CustomerInputValidatorTests {
         customerInputValidator.validate(customerInput, validationResult);
         assertThat(validationResult.getErrors(), hasSize(1));
         assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("addresses")));
-        assertThat(validationResult.getErrors().get(0).getCode(),
-                is(equalTo("only_1_primary_address_allowed")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("only_1_primary_address_allowed")));
     }
 
     @Test
@@ -129,13 +126,11 @@ public class CustomerInputValidatorTests {
         addressInput3.setType(AddressType.ALTERNATIVE);
         AddressInput addressInput4 = createBaseAddressInput();
         addressInput4.setType(AddressType.ALTERNATIVE);
-        customerInput.getAddresses()
-                .addAll(Arrays.asList(addressInput2, addressInput3, addressInput4));
+        customerInput.getAddresses().addAll(Arrays.asList(addressInput2, addressInput3, addressInput4));
         customerInputValidator.validate(customerInput, validationResult);
         assertThat(validationResult.getErrors(), hasSize(1));
         assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("addresses")));
-        assertThat(validationResult.getErrors().get(0).getCode(),
-                is(equalTo("max_array_length_exceeded")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("max_array_length_exceeded")));
     }
 
     private CustomerInput createBaseCustomerInput() {

@@ -56,15 +56,11 @@ public class RecipeController {
     private final HawaiiTime hawaiiTime;
 
     @Autowired
-    public RecipeController(final RecipeRepository recipeRepository,
-            final RecipeResourceAssembler recipeResourceAssembler,
+    public RecipeController(final RecipeRepository recipeRepository, final RecipeResourceAssembler recipeResourceAssembler,
             final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
-        this.recipeRepository =
-                requireNonNull(recipeRepository, "'recipeRepository' must not be null");
-        this.recipeResourceAssembler = requireNonNull(recipeResourceAssembler,
-                "'recipeResourceAssembler' must not be null");
-        this.recipeInputValidator =
-                requireNonNull(recipeInputValidator, "'recipeInputValidator' must not be null");
+        this.recipeRepository = requireNonNull(recipeRepository, "'recipeRepository' must not be null");
+        this.recipeResourceAssembler = requireNonNull(recipeResourceAssembler, "'recipeResourceAssembler' must not be null");
+        this.recipeInputValidator = requireNonNull(recipeInputValidator, "'recipeInputValidator' must not be null");
         this.hawaiiTime = requireNonNull(hawaiiTime, "'hawaiiTime' must not be null");
     }
 
@@ -79,8 +75,7 @@ public class RecipeController {
         return ResponseEntity.ok().body(resources);
     }
 
-    @Post(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE,
-            produces = APPLICATION_JSON_VALUE)
+    @Post(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody RecipeInput recipeInput) {
         logger.info("create called with input: {}", recipeInput);
         // Validate recipe input; and throw validation exception in case of validation errors
@@ -106,8 +101,7 @@ public class RecipeController {
         return ResponseEntity.ok().body(resource);
     }
 
-    @Put(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE,
-            produces = APPLICATION_JSON_VALUE)
+    @Put(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@PathVariable("id") Long id,
             @RequestBody RecipeInput recipeInput) {
         logger.info("update called with id: {}, input: {}", id, recipeInput);

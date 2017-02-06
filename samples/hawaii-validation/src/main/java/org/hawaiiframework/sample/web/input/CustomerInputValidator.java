@@ -37,8 +37,7 @@ public class CustomerInputValidator implements Validator<CustomerInput> {
     private final AddressInputValidator addressInputValidator;
 
     @Autowired
-    public CustomerInputValidator(final EmailValidator emailValidator,
-            final AddressInputValidator addressInputValidator) {
+    public CustomerInputValidator(final EmailValidator emailValidator, final AddressInputValidator addressInputValidator) {
         this.emailValidator = emailValidator;
         this.addressInputValidator = addressInputValidator;
     }
@@ -51,8 +50,7 @@ public class CustomerInputValidator implements Validator<CustomerInput> {
         if (StringUtils.isBlank(firstName)) {
             validationResult.rejectValue("first_name", "required");
         } else {
-            validationResult.rejectValueIf(firstName.length(), greaterThan(25), "first_name",
-                    "max_length_exceeded");
+            validationResult.rejectValueIf(firstName.length(), greaterThan(25), "first_name", "max_length_exceeded");
         }
 
         // lastName validation
@@ -60,8 +58,7 @@ public class CustomerInputValidator implements Validator<CustomerInput> {
         if (StringUtils.isBlank(lastName)) {
             validationResult.rejectValue("last_name", "required");
         } else {
-            validationResult.rejectValueIf(lastName.length(), greaterThan(25), "last_name",
-                    "max_length_exceeded");
+            validationResult.rejectValueIf(lastName.length(), greaterThan(25), "last_name", "max_length_exceeded");
         }
 
         // email validation

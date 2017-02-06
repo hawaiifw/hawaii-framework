@@ -61,8 +61,7 @@ public class AddressInputValidatorTests {
         addressInputValidator.validate(addressInput, validationResult);
         assertThat(validationResult.getErrors(), hasSize(1));
         assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("street_name")));
-        assertThat(validationResult.getErrors().get(0).getCode(),
-                is(equalTo("max_length_exceeded")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("max_length_exceeded")));
     }
 
     @Test
@@ -72,8 +71,7 @@ public class AddressInputValidatorTests {
         addressInputValidator.validate(addressInput, validationResult);
         assertThat(validationResult.getErrors(), hasSize(1));
         assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("postal_code")));
-        assertThat(validationResult.getErrors().get(0).getCode(),
-                is(equalTo("invalid_postal_code")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("invalid_postal_code")));
     }
 
     @Test
@@ -92,8 +90,7 @@ public class AddressInputValidatorTests {
         addressInputValidator.validate(addressInput, validationResult);
         assertThat(validationResult.getErrors(), hasSize(1));
         assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("country_code")));
-        assertThat(validationResult.getErrors().get(0).getCode(),
-                is(equalTo("invalid_country_code")));
+        assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("invalid_country_code")));
     }
 
     private AddressInput createBaseAddressInput() {

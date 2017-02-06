@@ -34,8 +34,7 @@ public class RecipeInputValidator implements Validator<RecipeInput> {
 
     @Autowired
     public RecipeInputValidator(final IngredientInputValidator ingredientInputValidator) {
-        this.ingredientInputValidator = requireNonNull(ingredientInputValidator,
-                "'ingredientInputValidator' must not be null");
+        this.ingredientInputValidator = requireNonNull(ingredientInputValidator, "'ingredientInputValidator' must not be null");
     }
 
     @Override
@@ -43,21 +42,18 @@ public class RecipeInputValidator implements Validator<RecipeInput> {
         if (recipe.getName() == null) {
             validationResult.rejectValue("name", "required");
         } else {
-            validationResult.rejectValueIf(recipe.getName().length(), greaterThan(100), "name",
-                    "length");
+            validationResult.rejectValueIf(recipe.getName().length(), greaterThan(100), "name", "length");
         }
         if (recipe.getEmail() == null) {
             validationResult.rejectValue("email", "required");
         } else {
-            validationResult.rejectValueIf(recipe.getEmail().length(), greaterThan(100), "email",
-                    "length");
+            validationResult.rejectValueIf(recipe.getEmail().length(), greaterThan(100), "email", "length");
             // TODO validate email
         }
         if (recipe.getDescription() == null) {
             validationResult.rejectValue("description", "required");
         } else {
-            validationResult.rejectValueIf(recipe.getDescription().length(), greaterThan(100),
-                    "description", "length");
+            validationResult.rejectValueIf(recipe.getDescription().length(), greaterThan(100), "description", "length");
         }
         // TODO
     }

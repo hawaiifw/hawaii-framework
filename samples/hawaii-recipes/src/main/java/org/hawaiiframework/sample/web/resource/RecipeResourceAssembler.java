@@ -33,8 +33,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
 
     @Autowired
     public RecipeResourceAssembler(final IngredientResourceAssembler ingredientResourceAssembler) {
-        this.ingredientResourceAssembler = requireNonNull(ingredientResourceAssembler,
-                "'ingredientResourceAssembler' must not be null");
+        this.ingredientResourceAssembler = requireNonNull(ingredientResourceAssembler, "'ingredientResourceAssembler' must not be null");
     }
 
     @Override

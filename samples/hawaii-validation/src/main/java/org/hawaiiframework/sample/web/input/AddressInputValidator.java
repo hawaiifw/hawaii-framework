@@ -53,8 +53,7 @@ public class AddressInputValidator implements Validator<AddressInput> {
         if (StringUtils.isBlank(streetName)) {
             validationResult.rejectValue("street_name", "required");
         } else {
-            validationResult.rejectValueIf(streetName.length(), greaterThan(25), "street_name",
-                    "max_length_exceeded");
+            validationResult.rejectValueIf(streetName.length(), greaterThan(25), "street_name", "max_length_exceeded");
         }
 
         // streetName validation
@@ -62,8 +61,7 @@ public class AddressInputValidator implements Validator<AddressInput> {
         if (StringUtils.isBlank(houseNumber)) {
             validationResult.rejectValue("house_number", "required");
         } else {
-            validationResult.rejectValueIf(houseNumber.length(), greaterThan(10), "house_number",
-                    "max_length_exceeded");
+            validationResult.rejectValueIf(houseNumber.length(), greaterThan(10), "house_number", "max_length_exceeded");
         }
 
         // postalCode validation
@@ -86,8 +84,7 @@ public class AddressInputValidator implements Validator<AddressInput> {
         if (StringUtils.isBlank(city)) {
             validationResult.rejectValue("city", "required");
         } else {
-            validationResult.rejectValueIf(city.length(), greaterThan(25), "city",
-                    "max_length_exceeded");
+            validationResult.rejectValueIf(city.length(), greaterThan(25), "city", "max_length_exceeded");
         }
 
         // countryCode validation
