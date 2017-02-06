@@ -52,13 +52,11 @@ public class ValidationErrorResourceAssembler
 
     /**
      * Converts the given property name (field name or error code) using the application defined
-     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in
-     * responses. The naming strategy is defined in application.yml via the
-     * 'spring.jackson.property-naming-strategy' property.
+     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in responses. The naming strategy is defined in
+     * {@code application.yml} via the {@code spring.jackson.property-naming-strategy} property.
      * <p>
-     * For example, if the
-     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy}
-     * is defined, the following field names and error codes will be translated as following:
+     * For example, if the {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy} is defined,
+     * the following field names and error codes will be translated as following:
      * <ol>
      * <li>description -> description</li>
      * <li>price -> price</li>
@@ -71,10 +69,8 @@ public class ValidationErrorResourceAssembler
         if (objectMapper == null || propertyName == null || propertyName.length() == 0) {
             return propertyName;
         }
-        // retrieve the application defined property naming strategy from the object mapper's
-        // serialization config
-        PropertyNamingStrategy propertyNamingStrategy =
-                objectMapper.getSerializationConfig().getPropertyNamingStrategy();
+        // retrieve the application defined property naming strategy from the object mapper's serialization config
+        PropertyNamingStrategy propertyNamingStrategy = objectMapper.getSerializationConfig().getPropertyNamingStrategy();
         if (propertyNamingStrategy == null) {
             return propertyName;
         }

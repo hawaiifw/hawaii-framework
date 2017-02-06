@@ -29,8 +29,7 @@ import java.security.Security;
 import java.util.Objects;
 
 /**
- * Implementation of Jasypt's {@code StringEncryptor} interface. This class registers the Bouncy
- * Castle JCE Provider.
+ * Implementation of Jasypt's {@code StringEncryptor} interface. This class registers the Bouncy Castle JCE Provider.
  *
  * @author Wouter Eerdekens
  * @see org.jasypt.encryption.StringEncryptor
@@ -118,8 +117,7 @@ public class HawaiiStringEncryptor implements StringEncryptor {
             int high = hexToBin(s.charAt(i));
             int low = hexToBin(s.charAt(i + 1));
             if (high == -1 || low == -1) {
-                throw new IllegalArgumentException(
-                        "contains illegal character for hexBinary: " + s);
+                throw new IllegalArgumentException("contains illegal character for hexBinary: " + s);
             }
 
             out[i / 2] = (byte) (high * 16 + low);

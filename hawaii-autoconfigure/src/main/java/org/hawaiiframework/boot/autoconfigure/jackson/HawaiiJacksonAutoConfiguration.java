@@ -31,8 +31,7 @@ import org.springframework.context.annotation.Configuration;
 public class HawaiiJacksonAutoConfiguration {
 
     /**
-     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects with
-     * {@link ObjectMapper}.
+     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects with {@link ObjectMapper}.
      */
     @Bean
     public JavaTimeModule javaTimeModule() {
@@ -40,8 +39,7 @@ public class HawaiiJacksonAutoConfiguration {
     }
 
     /**
-     * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with
-     * {@link ObjectMapper}.
+     * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with {@link ObjectMapper}.
      */
     @Bean
     public JsonOrgModule jsonOrgModule() {

@@ -31,8 +31,7 @@ import java.util.Scanner;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic
- * {@link ResourceLoader} mechanism.
+ * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic {@link ResourceLoader} mechanism.
  *
  * @author Marcel Overdijk
  * @author Paul Klos
@@ -136,14 +135,12 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
                         loadSqlQuery(sqlQueryName, queryHolder);
                     } else {
                         if (logger.isDebugEnabled()) {
-                            logger.debug("Query file {} unchanged - not reloading",
-                                    resource.getFilename());
+                            logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
                         }
                     }
                 } catch (IOException e) {
                     // Can't really happen as we already checked that the resource has a filename
-                    throw new HawaiiException(
-                            String.format("Error accessing '%s'", resource.getFilename()), e);
+                    throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
                 }
             }
         } else {

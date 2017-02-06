@@ -16,7 +16,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests for ResourceSqlQueryResolver.
+ * Unit tests for {@link ResourceSqlQueryResolver}.
  *
  * @author Paul Klos
  * @since 2.0.0

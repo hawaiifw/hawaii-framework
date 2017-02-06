@@ -21,15 +21,13 @@ import java.time.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This class provides a application wide {@link Clock} reference to instantiate new {@code
- * java.time} date and time objects.
+ * This class provides a application wide {@link Clock} reference to instantiate new {@code java.time} date and time objects.
  * <p>
- * It provides convenient methods to use a fixed date time which is particular useful for unit
- * testing but also to change the date time in a running application to test how it behaves on a
- * given date or time.
+ * It provides convenient methods to use a fixed date time which is particular useful for unit testing but also to change the date time in
+ * a running application to test how it behaves on a given date or time.
  * <p>
- * Be aware that third-party libraries being used by the application do obviously not use {@code
- * HawaiiTime} and probably instantiate date and time objects based on the {@code System} time.
+ * Be aware that third-party libraries being used by the application do obviously not use {@code HawaiiTime} and probably instantiate date
+ * and time objects based on the {@code System} time.
  *
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -62,8 +60,7 @@ public class HawaiiTime {
     }
 
     /**
-     * Constructs a new {@code HawaiiTime} with the supplied clock. Also the {@code ZoneId} is
-     * derived from the supplied clock.
+     * Constructs a new {@code HawaiiTime} with the supplied clock. Also the {@code ZoneId} is derived from the supplied clock.
      *
      * @param clock the clock, not null
      */

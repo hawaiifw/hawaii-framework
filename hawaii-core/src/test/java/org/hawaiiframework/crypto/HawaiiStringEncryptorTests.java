@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests for HawaiiStringEncryptor.
+ * Unit tests for {@link HawaiiStringEncryptor}.
  *
  * @author Wouter Eerdekens
  * @since 2.0.0
@@ -18,8 +18,7 @@ public class HawaiiStringEncryptorTests {
     private HawaiiStringEncryptor hawaiiStringEncryptor;
 
     /**
-     * The key and init vector used in this test were obtained by
-     * running the following openssl command:
+     * The key and init vector used in this test were obtained by running the following openssl command:
      * <p>
      * <pre>
      *      openssl enc -aes-128-cbc -k supersecret -P -md sha1

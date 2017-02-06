@@ -24,12 +24,10 @@ import static java.util.Objects.requireNonNull;
 /**
  * Interface for components that convert an object into a resource.
  * <p>
- * The object to convert can be any type, but typically this will be a domain object widely used by
- * the application.
+ * The object to convert can be any type, but typically this will be a domain object widely used by the application.
  * <p>
- * The resource should be a type that is only used in the REST layer of the application and which
- * represents the data to be send to the consumer. This is typically a POJO containing Jackson
- * annotations if needed.
+ * The resource should be a type that is only used in the REST layer of the application and which represents the data to be send to the
+ * consumer. This is typically a POJO containing Jackson annotations if needed.
  *
  * @param <T> the type of the object to convert
  * @param <D> the type of the resource

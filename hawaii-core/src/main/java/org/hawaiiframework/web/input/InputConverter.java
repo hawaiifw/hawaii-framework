@@ -19,9 +19,8 @@ package org.hawaiiframework.web.input;
 /**
  * Interface for components that convert input data into a domain object.
  * <p>
- * The input should be a type that is only used in the REST layer of the application and which
- * represents the data structure to be send by the consumer. This is typically a POJO containing
- * Jackson annotations if needed.
+ * The input should be a type that is only used in the REST layer of the application and which represents the data structure to be send by
+ * the consumer. This is typically a POJO containing Jackson annotations if needed.
  *
  * @param <T> the type of the input object
  * @param <D> the type of the domain object

@@ -23,8 +23,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
- * {@link ApplicationListener} that binds the {@link ApplicationContext} to the Hawaii
- * {@link ApplicationContextHolder}.
+ * {@link ApplicationListener} that binds the {@link ApplicationContext} to the Hawaii {@link ApplicationContextHolder}.
  *
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -37,8 +36,7 @@ public class ApplicationContextBinderApplicationListener implements ApplicationL
             if (ApplicationContextHolder.getApplicationContext() != null) {
                 ApplicationContextHolder.release();
             }
-            ApplicationContext applicationContext =
-                    ((ContextRefreshedEvent) event).getApplicationContext();
+            ApplicationContext applicationContext = ((ContextRefreshedEvent) event).getApplicationContext();
             ApplicationContextHolder.bind(applicationContext);
         } else if (event instanceof ContextClosedEvent) {
             ApplicationContextHolder.release();

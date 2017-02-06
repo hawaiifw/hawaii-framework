@@ -27,9 +27,8 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 /**
  * Stores validation errors for a specific object.
  * <p>
- * This class is heavily inspired on Spring's {@link org.springframework.validation.Errors}
- * interface. The main difference is that Hawaii's {@link ValidationResult} does not bind or require
- * the target object being validated.
+ * This class is heavily inspired on Spring's {@link org.springframework.validation.Errors} interface. The main difference is that Hawaii's
+ * {@link ValidationResult} does not bind or require the target object being validated.
  *
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -40,8 +39,7 @@ public class ValidationResult {
     private final List<ValidationError> errors = new LinkedList<>();
 
     /**
-     * The separator between path elements in a nested path, for example in "name" or
-     * "address.street".
+     * The separator between path elements in a nested path, for example in "name" or "address.street".
      */
     public String NESTED_PATH_SEPARATOR = ".";
     public String NESTED_PATH_INDEX_PREFIX = "[";

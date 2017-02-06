@@ -46,7 +46,6 @@ public abstract class AbstractMockMvcTest {
 
     @Before
     public void setUpMockMvc() {
-        mockMvc =
-                MockMvcBuilders.webAppContextSetup(webApplicationContext).alwaysDo(print()).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).alwaysDo(print()).build();
     }
 }

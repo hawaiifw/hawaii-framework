@@ -29,14 +29,13 @@ public interface SqlQueryResolver {
     /**
      * Resolve the given sql query by name.
      * <p>
-     * To allow for {@code SqlQueryResolver} chaining, a {@code ViewResolver} should return
-     * {@code null} if a sql query with the given name is not defined in it.
+     * To allow for {@code SqlQueryResolver} chaining, a {@code ViewResolver} should return {@code null} if a sql query with the given name
+     * is not defined in it.
      *
      * @param sqlQueryName name of the sql query to resolve
      * @return the sql query, or {@code null} if not found (optional, to allow for {@code
      * SqlQueryResolver} chaining)
-     * @throws HawaiiException if the sql query could not be resolved (typically in case of problems
-     *                         resolving the sql query)
+     * @throws HawaiiException if the sql query could not be resolved (typically in case of problems resolving the sql query)
      */
     String resolveSqlQuery(String sqlQueryName) throws HawaiiException;
 }

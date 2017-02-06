@@ -51,17 +51,15 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public HawaiiResponseEntityExceptionHandler(
-            ValidationErrorResourceAssembler validationErrorResourceAssembler) {
-        this.validationErrorResourceAssembler = requireNonNull(validationErrorResourceAssembler,
-                "'validationErrorResourceAssembler' must not be null");
+    public HawaiiResponseEntityExceptionHandler(ValidationErrorResourceAssembler validationErrorResourceAssembler) {
+        this.validationErrorResourceAssembler =
+                requireNonNull(validationErrorResourceAssembler, "'validationErrorResourceAssembler' must not be null");
     }
 
     /**
      * Handles {@code HttpException} instances.
      * <p>
-     * Each {@code HttpException} has an associated {@code HttpStatus} that is used as the response
-     * status.
+     * Each {@code HttpException} has an associated {@code HttpStatus} that is used as the response status.
      *
      * @param e       the exception
      * @param request the current request
@@ -111,8 +109,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,
-            HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status,
+            WebRequest request) {
         return ResponseEntity.status(status).body(buildErrorResponseBody(ex, status, request));
     }
 
@@ -124,8 +122,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * @param request the current request
      * @return an error response
      */
-    protected ErrorResponseResource buildErrorResponseBody(Throwable t, HttpStatus status,
-            WebRequest request) {
+    protected ErrorResponseResource buildErrorResponseBody(Throwable t, HttpStatus status, WebRequest request) {
         ErrorResponseResource resource = new ErrorResponseResource();
         addRequestInfo(request, resource);
         addHttpStatus(status, resource);
@@ -142,8 +139,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     private void addRequestInfo(WebRequest request, ErrorResponseResource resource) {
         if (request instanceof ServletWebRequest) {
             ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-            HttpServletRequest httpServletRequest =
-                    (HttpServletRequest) servletWebRequest.getNativeRequest();
+            HttpServletRequest httpServletRequest = (HttpServletRequest) servletWebRequest.getNativeRequest();
             resource.setUri(httpServletRequest.getRequestURI());
             resource.setQuery(httpServletRequest.getQueryString());
             resource.setMethod(httpServletRequest.getMethod());

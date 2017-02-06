@@ -81,8 +81,7 @@ public class ValidationResultTests {
             validationResult.popNestedPath();
             fail();
         } catch (IllegalStateException e) {
-            assertThat(e.getMessage(),
-                    is(equalTo("Cannot pop nested path: no nested path on stack")));
+            assertThat(e.getMessage(), is(equalTo("Cannot pop nested path: no nested path on stack")));
         }
     }
 
@@ -107,8 +106,7 @@ public class ValidationResultTests {
         validationResult.pushNestedPath("order_line[5]");
         validationResult.rejectValue("quantity", "required");
         assertThat(validationResult.getErrors(), hasSize(equalTo(1)));
-        assertThat(validationResult.getErrors().get(0).getField(),
-                is(equalTo("order_line[5].quantity")));
+        assertThat(validationResult.getErrors().get(0).getField(), is(equalTo("order_line[5].quantity")));
         assertThat(validationResult.getErrors().get(0).getCode(), is(equalTo("required")));
     }
 

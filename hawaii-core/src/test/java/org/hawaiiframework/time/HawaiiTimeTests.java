@@ -32,8 +32,7 @@ import static org.junit.Assert.assertThat;
  */
 public class HawaiiTimeTests {
 
-    private static final Clock FIXED_EPOCH_CLOCK =
-            Clock.fixed(Instant.EPOCH, HawaiiTime.DEFAULT_ZONE);
+    private static final Clock FIXED_EPOCH_CLOCK = Clock.fixed(Instant.EPOCH, HawaiiTime.DEFAULT_ZONE);
     private static final ZoneId EUROPE_AMSTERDAM_ZONE_ID = ZoneId.of("Europe/Amsterdam");
 
     private HawaiiTime hawaiiTime;
