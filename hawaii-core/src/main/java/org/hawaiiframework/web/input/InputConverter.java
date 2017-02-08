@@ -16,22 +16,42 @@
 
 package org.hawaiiframework.web.input;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * Interface for components that convert input data into a domain object.
  * <p>
  * The input should be a type that is only used in the REST layer of the application and which represents the data structure to be send by
  * the consumer. This is typically a POJO containing Jackson annotations if needed.
  *
- * @param <T> the type of the input object
- * @param <D> the type of the domain object
+ * @param <S> the type of the input object
+ * @param <T> the type of the domain object
  * @author Wouter Eerdekens
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public interface InputConverter<T, D> {
+public interface InputConverter<S, T> {
 
     /**
-     * Converts the given input into a domain object.
+     * Converts the given input object into a domain object.
      */
-    D convert(T input);
+    T convert(S input);
+
+    /**
+     * Converts all given input objects into domain objects.
+     *
+     * @param objects must not be {@literal null}.
+     * @see #convert(Object)
+     */
+    default List<T> convert(Iterable<? extends S> objects) {
+        requireNonNull(objects, "'objects' must not be null");
+        List<T> result = new ArrayList<T>();
+        for (S object : objects) {
+            result.add(convert(object));
+        }
+        return result;
+    }
 }

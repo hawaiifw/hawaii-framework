@@ -29,17 +29,17 @@ import static java.util.Objects.requireNonNull;
  * The resource should be a type that is only used in the REST layer of the application and which represents the data to be send to the
  * consumer. This is typically a POJO containing Jackson annotations if needed.
  *
- * @param <T> the type of the object to convert
- * @param <D> the type of the resource
+ * @param <S> the type of the object to convert
+ * @param <T> the type of the resource
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public interface ResourceAssembler<T, D> {
+public interface ResourceAssembler<S, T> {
 
     /**
      * Converts the given object into a resource.
      */
-    D toResource(T object);
+    T toResource(S object);
 
     /**
      * Converts all given objects into resources.
@@ -47,10 +47,10 @@ public interface ResourceAssembler<T, D> {
      * @param objects must not be {@literal null}.
      * @see #toResource(Object)
      */
-    default List<D> toResources(Iterable<? extends T> objects) {
+    default List<T> toResources(Iterable<? extends S> objects) {
         requireNonNull(objects, "'objects' must not be null");
-        List<D> result = new ArrayList<D>();
-        for (T object : objects) {
+        List<T> result = new ArrayList<T>();
+        for (S object : objects) {
             result.add(toResource(object));
         }
         return result;
