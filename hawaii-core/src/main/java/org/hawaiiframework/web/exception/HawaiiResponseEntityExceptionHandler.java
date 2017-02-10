@@ -88,7 +88,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         ErrorResponseResource body = buildErrorResponseBody(e, status, request);
         List<ValidationError> errors = e.getValidationResult().getErrors();
         if (errors != null && !errors.isEmpty()) {
-            body.setErrors(validationErrorResourceAssembler.toResources(errors));
+            body.setErrors(validationErrorResourceAssembler.assemble(errors));
         }
         return ResponseEntity.status(status).body(body);
     }
