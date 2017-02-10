@@ -19,6 +19,7 @@ package org.hawaiiframework.validation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hamcrest.Matcher;
+import org.hawaiiframework.validation.field.FieldRejection;
 
 import java.util.*;
 
@@ -155,6 +156,12 @@ public class ValidationResult {
     public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String field, String code) {
         rejectValueIf(matcher.matches(actual), field, code);
     }
+
+
+    public <T> FieldRejection<T> rejectField(String code, T actual) {
+        return new FieldRejection(this, code, actual);
+    }
+
 
     /**
      * Adds the supplied {@link ValidationError} to this {@link ValidationResult}.
