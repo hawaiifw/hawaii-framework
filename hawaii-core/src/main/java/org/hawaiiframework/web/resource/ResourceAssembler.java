@@ -16,7 +16,7 @@
 
 package org.hawaiiframework.web.resource;
 
-import org.hawaiiframework.util.ModelAssembler;
+import org.hawaiiframework.util.ModelConverter;
 
 /**
  * Interface for components that convert an object into a resource.
@@ -32,6 +32,6 @@ import org.hawaiiframework.util.ModelAssembler;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public interface ResourceAssembler<S, T> extends ModelAssembler<S, T> {
+public interface ResourceAssembler<S, T> extends ModelConverter<S, T> {
 
 }

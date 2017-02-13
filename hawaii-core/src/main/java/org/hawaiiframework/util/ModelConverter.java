@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public interface ModelAssembler<S, T> {
+public interface ModelConverter<S, T> {
 
     /**
      * Converts the given object into a resource.
@@ -39,14 +39,14 @@ public interface ModelAssembler<S, T> {
      * The default implementation will return {@literal null} for a {@literal null} input.
      *
      * @param source The source to convert.
-     * @see #doAssemble(Object)
+     * @see #doConvert(Object)
      */
-    default T assemble(S source) {
+    default T convert(S source) {
         if (source == null) {
             return null;
         }
 
-        return doAssemble(source);
+        return doConvert(source);
     }
 
     /**
@@ -55,19 +55,19 @@ public interface ModelAssembler<S, T> {
      * @param source must not be {@literal null}.
      * @return The converted target.
      */
-    T doAssemble(S source);
+    T doConvert(S source);
 
     /**
      * Converts all given objects into resources.
      *
      * @param sources must not be {@literal null}.
-     * @see #assemble(Object)
+     * @see #convert(Object)
      */
-    default List<T> assemble(Iterable<? extends S> sources) {
+    default List<T> convert(Iterable<? extends S> sources) {
         requireNonNull(sources, "'sources' must not be null");
         List<T> result = new ArrayList<>();
         for (S source : sources) {
-            result.add(assemble(source));
+            result.add(convert(source));
         }
 
         return result;

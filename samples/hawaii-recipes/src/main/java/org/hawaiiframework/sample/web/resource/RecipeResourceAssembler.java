@@ -37,7 +37,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
     }
 
     @Override
-    public RecipeResource toResource(Recipe recipe) {
+    public RecipeResource doConvert(Recipe recipe) {
         RecipeResource resource = new RecipeResource();
         resource.setId(recipe.getId());
         resource.setCreatedDate(recipe.getCreatedDate());
@@ -46,7 +46,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
         resource.setPreparationTime(recipe.getPreparationTime());
         resource.setCookTime(recipe.getCookTime());
         resource.setReadyTime(recipe.getReadyTime());
-        resource.setIngredients(ingredientResourceAssembler.toResources(recipe.getIngredients()));
+        resource.setIngredients(ingredientResourceAssembler.convert(recipe.getIngredients()));
         resource.setInstructions(recipe.getInstructions());
         return resource;
     }

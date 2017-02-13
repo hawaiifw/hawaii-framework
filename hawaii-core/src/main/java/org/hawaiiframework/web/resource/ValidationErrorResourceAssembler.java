@@ -40,13 +40,13 @@ public class ValidationErrorResourceAssembler
     }
 
     @Override
-    public ValidationErrorResource assemble(ValidationError validationError) {
+    public ValidationErrorResource convert(ValidationError validationError) {
         requireNonNull(validationError, "'validationError' must not be null");
-        return doAssemble(validationError);
+        return doConvert(validationError);
     }
 
     @Override
-    public ValidationErrorResource doAssemble(final ValidationError validationError) {
+    public ValidationErrorResource doConvert(final ValidationError validationError) {
         String field = convertProperty(validationError.getField());
         String code = convertProperty(validationError.getCode());
         ValidationErrorResource resource = new ValidationErrorResource();

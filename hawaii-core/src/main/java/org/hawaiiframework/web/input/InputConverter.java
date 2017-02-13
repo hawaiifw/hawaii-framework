@@ -16,7 +16,7 @@
 
 package org.hawaiiframework.web.input;
 
-import org.hawaiiframework.util.ModelAssembler;
+import org.hawaiiframework.util.ModelConverter;
 
 /**
  * Interface for components that convert input data into a domain object.
@@ -31,6 +31,6 @@ import org.hawaiiframework.util.ModelAssembler;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public interface InputConverter<S, T> extends ModelAssembler<S, T> {
+public interface InputConverter<S, T> extends ModelConverter<S, T> {
 
 }
