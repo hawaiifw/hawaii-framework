@@ -7,6 +7,10 @@ if [ "$TRAVIS_BRANCH" != "master" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; the
   exit 0
 fi
 
+# Decrypt secring.gpg
+
+openssl aes-256-cbc -K $encrypted_d349fd801c84_key -iv $encrypted_d349fd801c84_iv -in secring.gpg.enc -out secring.gpg -d
+
 # Deploy jar artifacts to Sonatype OSSRH
 
 echo "Publishing archives..."
