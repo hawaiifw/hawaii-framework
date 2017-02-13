@@ -147,21 +147,25 @@ public class ValidationResult {
         }
     }
 
-    public void rejectValueIf(boolean expr, String field, String code) {
-        if (expr) {
-            rejectValue(field, code);
-        }
+    /**
+     * Reject a <code>field</code> with value <code>actual</code> in a fluent manner.
+     *
+     * For instance:
+     * <blockquote>
+     *     validationResult.rejectField("houseNumber", "13-a")
+     *                          .whenNull()
+     *                          .orWhen(containsString("a"))
+     *                          .orWhen(h -> h.length() > 4);
+     * </blockquote>
+     *
+     * @param field The field name to evaluate.
+     * @param actual The value to evaluate.
+     * @param <T> The type of the value.
+     * @return a new field rejection.
+     */
+    public <T> FieldRejection<T> rejectField(String field, T actual) {
+        return new FieldRejection(this, field, actual);
     }
-
-    public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String field, String code) {
-        rejectValueIf(matcher.matches(actual), field, code);
-    }
-
-
-    public <T> FieldRejection<T> rejectField(String code, T actual) {
-        return new FieldRejection(this, code, actual);
-    }
-
 
     /**
      * Adds the supplied {@link ValidationError} to this {@link ValidationResult}.
