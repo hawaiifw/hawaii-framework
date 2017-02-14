@@ -70,7 +70,7 @@ public class RecipeController {
         // Retrieve all recipes
         List<Recipe> recipes = recipeRepository.findAll();
         // Convert retrieved recipes to resources to be returned to client
-        List<RecipeResource> resources = recipeResourceAssembler.toResources(recipes);
+        List<RecipeResource> resources = recipeResourceAssembler.convert(recipes);
         // Return resources to client
         return ResponseEntity.ok().body(resources);
     }
@@ -96,7 +96,7 @@ public class RecipeController {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
         // Convert retrieved recipe to resource to be returned to client
-        RecipeResource resource = recipeResourceAssembler.toResource(recipe);
+        RecipeResource resource = recipeResourceAssembler.convert(recipe);
         // Return resource to client
         return ResponseEntity.ok().body(resource);
     }

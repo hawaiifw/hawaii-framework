@@ -28,7 +28,7 @@ public class IngredientResourceAssembler
         implements ResourceAssembler<Ingredient, IngredientResource> {
 
     @Override
-    public IngredientResource toResource(Ingredient ingredient) {
+    public IngredientResource doConvert(Ingredient ingredient) {
         // Note: we are on purpose not including the technical ingredient.id in the resource
         IngredientResource resource = new IngredientResource();
         resource.setQuantity(ingredient.getQuantity());
