@@ -546,9 +546,8 @@ It provides an application wide <code>java.time.Clock</code> reference which is 
 <div class="paragraph">
 <p>It is similar to Joda&#8217;s <code>DateTimeUtils</code> which also allows setting a fixed current time.
 However it is important to note that Joda&#8217;s <code>DateTimeUtils</code> uses a static variable to store the current time.
-<code>HawaiiTime</code> does not take this approach. Instead the <code>HawaiiTime</code> bean needs to be injected in any class that needs to
-instantiate new date and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be
-run in parallel. See example usage below.</p>
+<code>HawaiiTime</code> does not take this approach. Instead the <code>HawaiiTime</code> bean needs to be injected in any class that needs to instantiate new date
+and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be run in parallel. See example usage below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -556,7 +555,7 @@ run in parallel. See example usage below.</p>
 
 	private HawaiiTime hawaiiTime;
 
-	public MyClass(HawaiiTime hawaiiTime) {  <i class="conum" data-value="1"></i><b>(1)</b>
+	public MyClass(HawaiiTime hawaiiTime) { <i class="conum" data-value="1"></i><b>(1)</b>
 		this.hawaiiTime = hawaiiTime;
 	}
 
@@ -598,8 +597,8 @@ public class MyClassTests {
 </table>
 </div>
 <div class="paragraph">
-<p>Another benefit of using <code>HawaiiTime</code> is that a fixed time can be used in a running application
-to test how it behaves on a given date or time.</p>
+<p>Another benefit of using <code>HawaiiTime</code> is that a fixed time can be used in a running application to test how it behaves on a given date or
+time.</p>
 </div>
 <div class="admonitionblock caution">
 <table>
@@ -608,16 +607,16 @@ to test how it behaves on a given date or time.</p>
 <i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-Third-party libraries being used by the application do not use <code>HawaiiTime</code> and probably
-instantiate date and time objects based on the <code>System</code> time.
+Third-party libraries being used by the application do not use <code>HawaiiTime</code> and probably instantiate date and time objects based on
+the <code>System</code> time.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Hawaii uses <code>UTC</code> as default timezone but this can be changed by setting the <code>hawaii.time.timezone</code>
-configuration property. The provided value will be parsed by <code>java.time.ZoneId#of(String zoneId)</code>
-and supports different timezone formats like <code>UTC</code>, <code>Europe/Amsterdam</code> and <code>GMT+1</code>.</p>
+<p>Hawaii uses <code>UTC</code> as default timezone but this can be changed by setting the <code>hawaii.time.timezone</code> configuration property. The provided
+value will be parsed by <code>java.time.ZoneId#of(String zoneId)</code> and supports different timezone formats like <code>UTC</code>, <code>Europe/Amsterdam</code> and
+<code>GMT+1</code>.</p>
 </div>
 <div class="paragraph">
 <p>The creation of the <code>HawaiiTime</code> bean can also be disabled by setting <code>hawaii.time.enabled</code> to <code>false</code>.</p>
@@ -626,7 +625,214 @@ and supports different timezone formats like <code>UTC</code>, <code>Europe/Amst
 <div class="sect2">
 <h3 id="features-validation"><a class="anchor" href="#features-validation"></a>3.5. Validation</h3>
 <div class="paragraph">
-<p>TODO.</p>
+<p>Hawaii&#8217;s validation mechanism can be used to validate any object. It basically validates values, collects validation errors and stores them
+in a validation result. These validation errors are simple field / error code combinations.</p>
+</div>
+<div class="paragraph">
+<p>Hawaii&#8217;s <code>Validator</code> is inspired on Spring&#8217;s <code>org.springframework.validation.Validator</code> mechanism. However Hawaii&#8217;s validator mechanism
+uses it&#8217;s own <code>ValidationResult</code> instead of Spring&#8217;s <code>org.springframework.validation.Errors</code>. The main difference is that Hawaii&#8217;s
+<code>ValidationResult</code> does not bind directly the object being validated. This also gives the possibility to add errors for specific keys that
+are not direct properties of the object being validated.</p>
+</div>
+<div class="paragraph">
+<p>Hawaii&#8217;s validation mechanism also provides additional sugar like Hamcrest matcher support to write human readable validating code,
+the capability to validate and automatically throw a <code>ValidationException</code> in case of errors etc.</p>
+</div>
+<div class="paragraph">
+<p>Like Spring&#8217;s validation mechanism the Hawaii validation mechanism also supports the notion of nested error paths which also stimulates to
+re-use validators.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s take an example. Imagine a <code>Customer</code> object with common name, e-mail, and address fields. A validation result could for example
+contain the following field / error code combinations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code class="language-properties" data-lang="properties">first_name = required <i class="conum" data-value="1"></i><b>(1)</b>
+last_name = max_length_exceeded
+email = invalid
+addresses = primary_address_required <i class="conum" data-value="2"></i><b>(2)</b>
+addresses[0].type = invalid <i class="conum" data-value="3"></i><b>(3)</b>
+addresses[0].street_name = max_length_exceeded
+addresses[0].postal_code = invalid
+addresses[0].city = max_length_exceeded
+addresses[0].country_code = required</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The field <code>first_name</code> has an <code>required</code> error code.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The field <code>adresses</code> (an array in this case) has <code>primary_address_required</code> error code.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The field <code>type</code> of the first address in the <code>addresses</code> array has a <code>invalid</code> error code.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The example demonstrates simple field errors (like <code>first_name</code>) but also storing errors for arrays and nested paths (<code>addresses[0].type</code>).
+In theory a field could also have multiple error codes if needed.</p>
+</div>
+<div class="paragraph">
+<p>Implementors should typically only implement the <code>org.hawaiiframework.sample.validator.Validator#validate(Object, ValidationResult)</code> method
+as the other methods in the interface are already implemented using the interface&#8217;s default methods.</p>
+</div>
+<div class="paragraph">
+<p>A generic <code>EmailValidator</code> would look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import org.hawaiiframework.validation.ValidationResult;
+import org.hawaiiframework.validation.Validator;
+import org.springframework.stereotype.Component;
+
+import java.util.regex.Pattern;
+
+@Component
+public class EmailValidator implements Validator&lt;String&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+
+    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    private Pattern pattern;
+
+    public EmailValidator() {
+        this.pattern = Pattern.compile(EMAIL_PATTERN);
+    }
+
+    @Override
+    public void validate(String email, ValidationResult validationResult) { <i class="conum" data-value="2"></i><b>(2)</b>
+        if (!pattern.matcher(email).matches()) {
+            validationResult.rejectValue("invalid"); <i class="conum" data-value="3"></i><b>(3)</b>
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Implement the <code>Validator</code> (in this case a <code>String</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Override the <code>Validator#validate(Object, ValidationResult)</code> method.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>In case the e-mail is invalid, reject the value with error code <code>invalid</code> and store it in the validation result.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>CustomerValidator</code> would look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import org.apache.commons.lang3.StringUtils;
+import org.hawaiiframework.sample.validator.EmailValidator;
+import org.hawaiiframework.validation.ValidationResult;
+import org.hawaiiframework.validation.Validator;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.greaterThan;
+
+@Component
+public class CustomerInputValidator implements Validator&lt;CustomerInput&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+
+    private final EmailValidator emailValidator;
+    private final AddressValidator addressValidator;
+
+    public CustomerInputValidator(final EmailValidator emailValidator,
+            final AddressValidator addressValidator) { <i class="conum" data-value="2"></i><b>(2)</b>
+        this.emailValidator = emailValidator;
+        this.addressValidator = addressValidator;
+    }
+
+    @Override
+    public void validate(CustomerInput customer, ValidationResult validationResult) { <i class="conum" data-value="3"></i><b>(3)</b>
+
+        // first name validation
+        String firstName = customer.getFirstName();
+        if (StringUtils.isBlank(firstName)) {
+            validationResult.rejectValue("first_name", "required");
+        } else {
+            validationResult.rejectValueIf(firstName.length(), greaterThan(25), "first_name",
+                    "max_length_exceeded");
+        }
+
+        // last name validation
+        String lastName = customer.getLastName();
+        if (StringUtils.isBlank(lastName)) {
+            validationResult.rejectValue("last_name", "required");
+        } else {
+            validationResult.rejectValueIf(lastName.length(), greaterThan(25), "last_name",
+                    "max_length_exceeded");
+        }
+
+        // e-mail validation
+        String email = customer.getEmail();
+        if (StringUtils.isBlank(email)) {
+            validationResult.rejectValue("email", "required");
+        } else if (email.length() &gt; 100) {
+            validationResult.rejectValue("email", "max_length_exceeded");
+        } else {
+            validationResult.pushNestedPath("email");
+            emailValidator.validate(email, validationResult);
+            validationResult.popNestedPath();
+        }
+
+        // adresses validation
+        List&lt;Address&gt; addresses = customer.getAddresses();
+        if (addresses == null || addresses.size() == 0) {
+            validationResult.rejectValue("addresses", "required");
+        } else {
+            // addresses array validations
+            long primaries = addresses.stream()
+                    .filter(address -&gt; address.getType() == AddressType.PRIMARY)
+                    .count();
+            if (primaries == 0) {
+                validationResult.rejectValue("addresses", "primary_address_required");
+            } else if (primaries &gt; 1) {
+                validationResult.rejectValue("addresses", "only_1_primary_address_allowed");
+            }
+            if (addresses.size() &gt; 3) {
+                validationResult.rejectValue("addresses", "max_array_length_exceeded");
+            }
+            // address validations
+            for (int i = 0; i &lt; addresses.size(); i++) {
+                validationResult.pushNestedPath("addresses", i);
+                addressValidator.validate(addresses.get(i), validationResult);
+                validationResult.popNestedPath();
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Implement the <code>Validator</code> (in this case a <code>Customer</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject other validators (<code>EmailValidator</code>, <code>AddressValidator</code>) to be re-used.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Override the <code>Validator#validate(Object, ValidationResult)</code> method.</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -760,7 +966,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2017-02-14 07:44:50 UTC
+Last updated 2017-03-14 15:34:36 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
