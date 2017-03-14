@@ -35,15 +35,16 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  */
 public class ValidationResult {
 
-    private final Deque<String> nestedPathStack = new ArrayDeque<>();
-    private final List<ValidationError> errors = new LinkedList<>();
-
     /**
      * The separator between path elements in a nested path, for example in "name" or "address.street".
      */
-    public String NESTED_PATH_SEPARATOR = ".";
-    public String NESTED_PATH_INDEX_PREFIX = "[";
-    public String NESTED_PATH_INDEX_SUFFIX = "]";
+    public static final String NESTED_PATH_SEPARATOR = ".";
+
+    public static final String NESTED_PATH_INDEX_PREFIX = "[";
+    public static final String NESTED_PATH_INDEX_SUFFIX = "]";
+
+    private final Deque<String> nestedPathStack = new ArrayDeque<>();
+    private final List<ValidationError> errors = new LinkedList<>();
 
     /**
      * Returns the current nested path of this {@link ValidationResult}.
@@ -51,20 +52,20 @@ public class ValidationResult {
      * @return the current nested path
      */
     public String getNestedPath() {
-        String nestedPath = this.nestedPathStack.peek();
+        final String nestedPath = this.nestedPathStack.peek();
         return StringUtils.defaultString(nestedPath);
     }
 
-    public void pushNestedPath(String path) {
+    public void pushNestedPath(final String path) {
         doPushNestedPath(path, null);
     }
 
-    public void pushNestedPath(String path, int index) {
+    public void pushNestedPath(final String path, final int index) {
         doPushNestedPath(path, index);
     }
 
-    private void doPushNestedPath(String path, Integer index) {
-        StringBuilder nestedPathBuilder = new StringBuilder(getNestedPath());
+    private void doPushNestedPath(final String path, final Integer index) {
+        final StringBuilder nestedPathBuilder = new StringBuilder(getNestedPath());
         if (nestedPathBuilder.length() > 0) {
             nestedPathBuilder.append(NESTED_PATH_SEPARATOR);
         }
@@ -81,7 +82,7 @@ public class ValidationResult {
         try {
             this.nestedPathStack.pop();
         } catch (NoSuchElementException e) {
-            throw new IllegalStateException("Cannot pop nested path: no nested path on stack");
+            throw new IllegalStateException("Cannot pop nested path: no nested path on stack", e);
         }
     }
 
@@ -103,36 +104,26 @@ public class ValidationResult {
         return Collections.unmodifiableList(this.errors);
     }
 
-    public void reject(String code) {
+    public void reject(final String code) {
         addError(new ValidationError(code));
     }
 
-    public void rejectIf(boolean expr, String code) {
+    public void rejectIf(final boolean expr, final String code) {
         if (expr) {
             reject(code);
         }
     }
 
-    public <T> void rejectIf(T actual, Matcher<? super T> matcher, String code) {
+    public <T> void rejectIf(final T actual, final Matcher<? super T> matcher, final String code) {
         rejectIf(matcher.matches(actual), code);
     }
 
-    public void rejectValue(String code) {
+    public void rejectValue(final String code) {
         rejectValue(null, code);
     }
 
-    public void rejectValueIf(boolean expr, String code) {
-        if (expr) {
-            rejectValue(code);
-        }
-    }
-
-    public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String code) {
-        rejectValueIf(matcher.matches(actual), code);
-    }
-
-    public void rejectValue(String field, String code) {
-        StringBuilder fieldBuilder = new StringBuilder(getNestedPath());
+    public void rejectValue(final String field, final String code) {
+        final StringBuilder fieldBuilder = new StringBuilder(getNestedPath());
         if (StringUtils.isNotBlank(field)) {
             if (fieldBuilder.length() > 0) {
                 fieldBuilder.append(NESTED_PATH_SEPARATOR);
@@ -146,13 +137,23 @@ public class ValidationResult {
         }
     }
 
-    public void rejectValueIf(boolean expr, String field, String code) {
+    public void rejectValueIf(final boolean expr, final String code) {
+        if (expr) {
+            rejectValue(code);
+        }
+    }
+
+    public <T> void rejectValueIf(final T actual, final Matcher<? super T> matcher, final String code) {
+        rejectValueIf(matcher.matches(actual), code);
+    }
+
+    public void rejectValueIf(final boolean expr, final String field, final String code) {
         if (expr) {
             rejectValue(field, code);
         }
     }
 
-    public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String field, String code) {
+    public <T> void rejectValueIf(final T actual, final Matcher<? super T> matcher, final String field, final String code) {
         rejectValueIf(matcher.matches(actual), field, code);
     }
 
@@ -161,7 +162,7 @@ public class ValidationResult {
      *
      * @param error the validation error
      */
-    public void addError(ValidationError error) {
+    public void addError(final ValidationError error) {
         this.errors.add(error);
     }
 
@@ -170,7 +171,7 @@ public class ValidationResult {
      *
      * @param errors the validation errors
      */
-    public void addAllErrors(List<ValidationError> errors) {
+    public void addAllErrors(final List<ValidationError> errors) {
         this.errors.addAll(errors);
     }
 
@@ -179,7 +180,7 @@ public class ValidationResult {
      *
      * @param validationResult the validation result to merge in
      */
-    public void addAllErrors(ValidationResult validationResult) {
+    public void addAllErrors(final ValidationResult validationResult) {
         this.errors.addAll(validationResult.getErrors());
     }
 

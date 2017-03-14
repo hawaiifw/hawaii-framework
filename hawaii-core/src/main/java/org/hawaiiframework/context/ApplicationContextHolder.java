@@ -24,12 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ApplicationContextHolder {
+public final class ApplicationContextHolder {
 
-    private static final ConcurrentHashMap<ClassLoader, ApplicationContext> contextMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ClassLoader, ApplicationContext> CONTEXT_MAP = new ConcurrentHashMap<>();
+
+    private ApplicationContextHolder() {
+    }
 
     public static ApplicationContext getRequiredApplicationContext() {
-        ApplicationContext context = getApplicationContext();
+        final ApplicationContext context = getApplicationContext();
         if (context == null) {
             throw new IllegalStateException("No ApplicationContext found");
         }
@@ -39,7 +42,7 @@ public class ApplicationContextHolder {
     public static ApplicationContext getApplicationContext() {
         ClassLoader classLoader = getContextClassLoader();
         while (classLoader != null) {
-            ApplicationContext applicationContext = contextMap.get(classLoader);
+            final ApplicationContext applicationContext = CONTEXT_MAP.get(classLoader);
             if (applicationContext != null) {
                 return applicationContext;
             }
@@ -53,8 +56,8 @@ public class ApplicationContextHolder {
      *
      * @param context the application context to bind
      */
-    public static void bind(ApplicationContext context) {
-        Object old = contextMap.putIfAbsent(getContextClassLoader(), context);
+    public static void bind(final ApplicationContext context) {
+        final Object old = CONTEXT_MAP.putIfAbsent(getContextClassLoader(), context);
         if (old != null) {
             throw new IllegalStateException("ApplicationContext already bound to the class loader of the current thread");
         }
@@ -64,11 +67,11 @@ public class ApplicationContextHolder {
      * Releases the {@link ApplicationContext} associated with the current context class loader.
      */
     public static void release() {
-        contextMap.remove(getContextClassLoader());
+        CONTEXT_MAP.remove(getContextClassLoader());
     }
 
     private static ClassLoader getContextClassLoader() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             throw new IllegalStateException("Unable to get the class loader for the current thread");
         }

@@ -26,6 +26,7 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple1<T1> implements Tuple, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +36,7 @@ public class Tuple1<T1> implements Tuple, Serializable {
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple1(T1 element1) {
+    public Tuple1(final T1 element1) {
         this.element1 = element1;
     }
 
@@ -51,7 +52,7 @@ public class Tuple1<T1> implements Tuple, Serializable {
     /**
      * Sets the 1st element of this tuple.
      */
-    public void setElement1(T1 element1) {
+    public void setElement1(final T1 element1) {
         this.element1 = element1;
     }
 
@@ -61,14 +62,14 @@ public class Tuple1<T1> implements Tuple, Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Tuple1 other = (Tuple1) o;
+        final Tuple1 other = (Tuple1) o;
         return Objects.equals(this.element1, other.element1);
     }
 

@@ -24,19 +24,31 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  */
 public class ResourceNotFoundException extends HttpException {
 
+    /**
+     * Constructs a new {@code ResourceNotFoundException}.
+     */
     public ResourceNotFoundException() {
         super(NOT_FOUND);
     }
 
-    public ResourceNotFoundException(String message) {
+    /**
+     * Constructs a new {@code ResourceNotFoundException} with the supplied message.
+     */
+    public ResourceNotFoundException(final String message) {
         super(message, NOT_FOUND);
     }
 
-    public ResourceNotFoundException(String message, Throwable cause) {
+    /**
+     * Constructs a new {@code ResourceNotFoundException} with the supplied message and {@link Throwable}.
+     */
+    public ResourceNotFoundException(final String message, final Throwable cause) {
         super(message, cause, NOT_FOUND);
     }
 
-    public ResourceNotFoundException(Throwable cause) {
+    /**
+     * Constructs a new {@code ResourceNotFoundException} with the supplied {@link Throwable}.
+     */
+    public ResourceNotFoundException(final Throwable cause) {
         super(cause, NOT_FOUND);
     }
 }

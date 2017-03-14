@@ -24,19 +24,31 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
  */
 public class BadRequestException extends HttpException {
 
+    /**
+     * Constructs a new {@code BadRequestException}.
+     */
     public BadRequestException() {
         super(BAD_REQUEST);
     }
 
-    public BadRequestException(String message) {
+    /**
+     * Constructs a new {@code BadRequestException} with the supplied message.
+     */
+    public BadRequestException(final String message) {
         super(message, BAD_REQUEST);
     }
 
-    public BadRequestException(String message, Throwable cause) {
+    /**
+     * Constructs a new {@code BadRequestException} with the supplied message and {@link Throwable}.
+     */
+    public BadRequestException(final String message, final Throwable cause) {
         super(message, cause, BAD_REQUEST);
     }
 
-    public BadRequestException(Throwable cause) {
+    /**
+     * Constructs a new {@code BadRequestException} with the supplied {@link Throwable}.
+     */
+    public BadRequestException(final Throwable cause) {
         super(cause, BAD_REQUEST);
     }
 }

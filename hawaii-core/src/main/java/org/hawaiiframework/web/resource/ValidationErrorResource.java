@@ -33,7 +33,7 @@ public class ValidationErrorResource {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(final String code) {
         this.code = code;
     }
 
@@ -41,7 +41,7 @@ public class ValidationErrorResource {
         return field;
     }
 
-    public void setField(String field) {
+    public void setField(final String field) {
         this.field = field;
     }
 

@@ -32,6 +32,7 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@SuppressWarnings({"checkstyle:ClassTypeParameterName", "checkstyle:ParameterNumber", "PMD.GenericsNaming"})
 public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple7<T1, T2, T3, T4, T5, T6, T7> {
 
     private static final long serialVersionUID = 1L;
@@ -41,8 +42,8 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple7<T1, T2, T3, T
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple8(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6,
-            T7 element7, T8 element8) {
+    public Tuple8(final T1 element1, final T2 element2, final T3 element3, final T4 element4, final T5 element5, final T6 element6,
+            final T7 element7, final T8 element8) {
         super(element1, element2, element3, element4, element5, element6, element7);
         this.element8 = element8;
     }
@@ -59,7 +60,7 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple7<T1, T2, T3, T
     /**
      * Sets the 8th element of this tuple.
      */
-    public void setElement8(T8 element8) {
+    public void setElement8(final T8 element8) {
         this.element8 = element8;
     }
 
@@ -69,7 +70,7 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple7<T1, T2, T3, T
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -79,7 +80,7 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple7<T1, T2, T3, T
         if (!super.equals(o)) {
             return false;
         }
-        Tuple8 other = (Tuple8) o;
+        final Tuple8 other = (Tuple8) o;
         return Objects.equals(this.element8, other.element8);
     }
 

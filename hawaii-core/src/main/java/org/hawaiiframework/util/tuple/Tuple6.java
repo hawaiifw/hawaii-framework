@@ -30,6 +30,7 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple5<T1, T2, T3, T4, T5> {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +40,7 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple5<T1, T2, T3, T4, T5> {
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple6(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6) {
+    public Tuple6(final T1 element1, final T2 element2, final T3 element3, final T4 element4, final T5 element5, final T6 element6) {
         super(element1, element2, element3, element4, element5);
         this.element6 = element6;
     }
@@ -56,7 +57,7 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple5<T1, T2, T3, T4, T5> {
     /**
      * Sets the 6th element of this tuple.
      */
-    public void setElement6(T6 element6) {
+    public void setElement6(final T6 element6) {
         this.element6 = element6;
     }
 
@@ -66,7 +67,7 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple5<T1, T2, T3, T4, T5> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -76,7 +77,7 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple5<T1, T2, T3, T4, T5> {
         if (!super.equals(o)) {
             return false;
         }
-        Tuple6 other = (Tuple6) o;
+        final Tuple6 other = (Tuple6) o;
         return Objects.equals(this.element6, other.element6);
     }
 

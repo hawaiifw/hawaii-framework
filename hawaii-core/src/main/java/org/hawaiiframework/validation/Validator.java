@@ -41,7 +41,7 @@ public interface Validator<T> {
      * @return the validation result
      */
     default ValidationResult validate(T object) {
-        ValidationResult validationResult = new ValidationResult();
+        final ValidationResult validationResult = new ValidationResult();
         validate(object, validationResult);
         return validationResult;
     }
@@ -61,7 +61,7 @@ public interface Validator<T> {
      * @throws ValidationException if the validation fails
      */
     default void validateAndThrow(T object) throws ValidationException {
-        ValidationResult validationResult = new ValidationResult();
+        final ValidationResult validationResult = new ValidationResult();
         validateAndThrow(object, validationResult);
     }
 

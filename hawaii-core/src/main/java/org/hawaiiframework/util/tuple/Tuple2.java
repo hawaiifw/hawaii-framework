@@ -26,6 +26,7 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple2<T1, T2> extends Tuple1<T1> {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +36,7 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple2(T1 element1, T2 element2) {
+    public Tuple2(final T1 element1, final T2 element2) {
         super(element1);
         this.element2 = element2;
     }
@@ -52,7 +53,7 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
     /**
      * Sets the 2nd element of this tuple.
      */
-    public void setElement2(T2 element2) {
+    public void setElement2(final T2 element2) {
         this.element2 = element2;
     }
 
@@ -62,7 +63,7 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -72,7 +73,7 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
         if (!super.equals(o)) {
             return false;
         }
-        Tuple2 other = (Tuple2) o;
+        final Tuple2 other = (Tuple2) o;
         return Objects.equals(this.element2, other.element2);
     }
 

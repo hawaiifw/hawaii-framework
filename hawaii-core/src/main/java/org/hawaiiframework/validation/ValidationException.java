@@ -43,7 +43,7 @@ public class ValidationException extends HawaiiException {
      *
      * @param validationResult the validation result, not null
      */
-    public ValidationException(ValidationResult validationResult) {
+    public ValidationException(final ValidationResult validationResult) {
         requireNonNull(validationResult, "'validationResult' must not be null");
         this.validationResult = validationResult;
     }
@@ -53,7 +53,7 @@ public class ValidationException extends HawaiiException {
      *
      * @param validationError the validation error, not null
      */
-    public ValidationException(ValidationError validationError) {
+    public ValidationException(final ValidationError validationError) {
         this();
         requireNonNull(validationError, "'validationError' must not be null");
         validationResult.addError(validationError);
@@ -64,7 +64,7 @@ public class ValidationException extends HawaiiException {
      *
      * @param validationErrors the validation errors, not null
      */
-    public ValidationException(List<ValidationError> validationErrors) {
+    public ValidationException(final List<ValidationError> validationErrors) {
         this();
         requireNonNull(validationErrors, "'validationErrors' must not be null");
         validationResult.addAllErrors(validationErrors);

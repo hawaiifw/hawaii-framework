@@ -33,6 +33,7 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@SuppressWarnings({"checkstyle:ClassTypeParameterName", "checkstyle:ParameterNumber", "PMD.GenericsNaming"})
 public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
         extends Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> {
 
@@ -43,8 +44,8 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple9(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6,
-            T7 element7, T8 element8, T9 element9) {
+    public Tuple9(final T1 element1, final T2 element2, final T3 element3, final T4 element4, final T5 element5, final T6 element6,
+            final T7 element7, final T8 element8, final T9 element9) {
         super(element1, element2, element3, element4, element5, element6, element7, element8);
         this.element9 = element9;
     }
@@ -61,7 +62,7 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
     /**
      * Sets the 9th element of this tuple.
      */
-    public void setElement9(T9 element9) {
+    public void setElement9(final T9 element9) {
         this.element9 = element9;
     }
 
@@ -71,7 +72,7 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -81,7 +82,7 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>
         if (!super.equals(o)) {
             return false;
         }
-        Tuple9 other = (Tuple9) o;
+        final Tuple9 other = (Tuple9) o;
         return Objects.equals(this.element9, other.element9);
     }
 

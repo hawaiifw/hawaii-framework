@@ -26,9 +26,8 @@ It provides an application wide `java.time.Clock` reference which is particular 
 
 It is similar to Joda's `DateTimeUtils` which also allows setting a fixed current time.
 However it is important to note that Joda's `DateTimeUtils` uses a static variable to store the current time.
-`HawaiiTime` does not take this approach. Instead the `HawaiiTime` bean needs to be injected in any class that needs to
-instantiate new date and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be
-run in parallel. See example usage below.
+`HawaiiTime` does not take this approach. Instead the `HawaiiTime` bean needs to be injected in any class that needs to instantiate new date
+and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be run in parallel. See example usage below.
 
 [source,java,indent=0]
 ----
@@ -36,7 +35,7 @@ run in parallel. See example usage below.
 
 		private HawaiiTime hawaiiTime;
 
-		public MyClass(HawaiiTime hawaiiTime) {  # <1>
+		public MyClass(HawaiiTime hawaiiTime) { # <1>
 			this.hawaiiTime = hawaiiTime;
 		}
 
@@ -53,7 +52,7 @@ run in parallel. See example usage below.
 		public void testDoSomethingWithDate() {
 		    long millis = System.currentTimeMillis();
 			HawaiiTime hawaiiTime = new HawaiiTime();
-			hawaiiTime.useFixedClock(millis); <3>
+			hawaiiTime.useFixedClock(millis); # <3>
 			MyClass myClass = new MyClass(hawaiiTime);
 			myClass.doSomethingWithDate();
 			// ...
@@ -64,22 +63,187 @@ run in parallel. See example usage below.
 <2> Use the injected `HawaiiTime` bean to instantiate new date and time objects.
 <3> In unit tests a fixed clock can be used to manipulate and predict the exact current time.
 
-Another benefit of using `HawaiiTime` is that a fixed time can be used in a running application
-to test how it behaves on a given date or time.
+Another benefit of using `HawaiiTime` is that a fixed time can be used in a running application to test how it behaves on a given date or
+time.
 
-CAUTION: Third-party libraries being used by the application do not use `HawaiiTime` and probably
-instantiate date and time objects based on the `System` time.
+CAUTION: Third-party libraries being used by the application do not use `HawaiiTime` and probably instantiate date and time objects based on
+the `System` time.
 
-Hawaii uses `UTC` as default timezone but this can be changed by setting the `hawaii.time.timezone`
-configuration property. The provided value will be parsed by `java.time.ZoneId#of(String zoneId)`
-and supports different timezone formats like `UTC`, `Europe/Amsterdam` and `GMT+1`.
+Hawaii uses `UTC` as default timezone but this can be changed by setting the `hawaii.time.timezone` configuration property. The provided
+value will be parsed by `java.time.ZoneId#of(String zoneId)` and supports different timezone formats like `UTC`, `Europe/Amsterdam` and
+`GMT+1`.
 
 The creation of the `HawaiiTime` bean can also be disabled by setting `hawaii.time.enabled` to `false`.
 
 [[features-validation]]
 === Validation
 
-TODO.
+Hawaii's validation mechanism can be used to validate any object. It basically validates values, collects validation errors and stores them
+in a validation result. These validation errors are simple field / error code combinations.
+
+Hawaii's `Validator` is inspired on Spring's `org.springframework.validation.Validator` mechanism. However Hawaii's validator mechanism
+uses it's own `ValidationResult` instead of Spring's `org.springframework.validation.Errors`. The main difference is that Hawaii's
+`ValidationResult` does not bind directly the object being validated. This also gives the possibility to add errors for specific keys that
+are not direct properties of the object being validated.
+
+Hawaii's validation mechanism also provides additional sugar like Hamcrest matcher support to write human readable validating code,
+the capability to validate and automatically throw a `ValidationException` in case of errors etc.
+
+Like Spring's validation mechanism the Hawaii validation mechanism also supports the notion of nested error paths which also stimulates to
+re-use validators.
+
+Let's take an example. Imagine a `Customer` object with common name, e-mail, and address fields. A validation result could for example
+contain the following field / error code combinations:
+
+[source%nowrap,properties,indent=0,subs="verbatim,attributes,macros"]
+----
+first_name = required # <1>
+last_name = max_length_exceeded
+email = invalid
+addresses = primary_address_required # <2>
+addresses[0].type = invalid # <3>
+addresses[0].street_name = max_length_exceeded
+addresses[0].postal_code = invalid
+addresses[0].city = max_length_exceeded
+addresses[0].country_code = required
+
+----
+<1> The field `first_name` has an `required` error code.
+<2> The field `adresses` (an array in this case) has `primary_address_required` error code.
+<3> The field `type` of the first address in the `addresses` array has a `invalid` error code.
+
+The example demonstrates simple field errors (like `first_name`) but also storing errors for arrays and nested paths (`addresses[0].type`).
+In theory a field could also have multiple error codes if needed.
+
+Implementors should typically only implement the `org.hawaiiframework.sample.validator.Validator#validate(Object, ValidationResult)` method
+as the other methods in the interface are already implemented using the interface's default methods.
+
+A generic `EmailValidator` would look like:
+
+[source,java,indent=0]
+----
+    import org.hawaiiframework.validation.ValidationResult;
+    import org.hawaiiframework.validation.Validator;
+    import org.springframework.stereotype.Component;
+
+    import java.util.regex.Pattern;
+
+    @Component
+    public class EmailValidator implements Validator<String> { # <1>
+
+        public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+        private Pattern pattern;
+
+        public EmailValidator() {
+            this.pattern = Pattern.compile(EMAIL_PATTERN);
+        }
+
+        @Override
+        public void validate(String email, ValidationResult validationResult) { # <2>
+            if (!pattern.matcher(email).matches()) {
+                validationResult.rejectValue("invalid"); # <3>
+            }
+        }
+    }
+----
+<1> Implement the `Validator` (in this case a `String`).
+<2> Override the `Validator#validate(Object, ValidationResult)` method.
+<3> In case the e-mail is invalid, reject the value with error code `invalid` and store it in the validation result.
+
+The `CustomerValidator` would look like:
+
+[source,java,indent=0]
+----
+    import org.apache.commons.lang3.StringUtils;
+    import org.hawaiiframework.sample.validator.EmailValidator;
+    import org.hawaiiframework.validation.ValidationResult;
+    import org.hawaiiframework.validation.Validator;
+    import org.springframework.stereotype.Component;
+
+    import java.util.List;
+
+    import static org.hamcrest.Matchers.greaterThan;
+
+    @Component
+    public class CustomerInputValidator implements Validator<CustomerInput> { # <1>
+
+        private final EmailValidator emailValidator;
+        private final AddressValidator addressValidator;
+
+        public CustomerInputValidator(final EmailValidator emailValidator,
+                final AddressValidator addressValidator) { # <2>
+            this.emailValidator = emailValidator;
+            this.addressValidator = addressValidator;
+        }
+
+        @Override
+        public void validate(CustomerInput customer, ValidationResult validationResult) { # <3>
+
+            // first name validation
+            String firstName = customer.getFirstName();
+            if (StringUtils.isBlank(firstName)) {
+                validationResult.rejectValue("first_name", "required");
+            } else {
+                validationResult.rejectValueIf(firstName.length(), greaterThan(25), "first_name",
+                        "max_length_exceeded");
+            }
+
+            // last name validation
+            String lastName = customer.getLastName();
+            if (StringUtils.isBlank(lastName)) {
+                validationResult.rejectValue("last_name", "required");
+            } else {
+                validationResult.rejectValueIf(lastName.length(), greaterThan(25), "last_name",
+                        "max_length_exceeded");
+            }
+
+            // e-mail validation
+            String email = customer.getEmail();
+            if (StringUtils.isBlank(email)) {
+                validationResult.rejectValue("email", "required");
+            } else if (email.length() > 100) {
+                validationResult.rejectValue("email", "max_length_exceeded");
+            } else {
+                validationResult.pushNestedPath("email");
+                emailValidator.validate(email, validationResult);
+                validationResult.popNestedPath();
+            }
+
+            // adresses validation
+            List<Address> addresses = customer.getAddresses();
+            if (addresses == null || addresses.size() == 0) {
+                validationResult.rejectValue("addresses", "required");
+            } else {
+                // addresses array validations
+                long primaries = addresses.stream()
+                        .filter(address -> address.getType() == AddressType.PRIMARY)
+                        .count();
+                if (primaries == 0) {
+                    validationResult.rejectValue("addresses", "primary_address_required");
+                } else if (primaries > 1) {
+                    validationResult.rejectValue("addresses", "only_1_primary_address_allowed");
+                }
+                if (addresses.size() > 3) {
+                    validationResult.rejectValue("addresses", "max_array_length_exceeded");
+                }
+                // address validations
+                for (int i = 0; i < addresses.size(); i++) {
+                    validationResult.pushNestedPath("addresses", i);
+                    addressValidator.validate(addresses.get(i), validationResult);
+                    validationResult.popNestedPath();
+                }
+            }
+        }
+    }
+----
+<1> Implement the `Validator` (in this case a `Customer`).
+<2> Inject other validators (`EmailValidator`, `AddressValidator`) to be re-used.
+<3> Override the `Validator#validate(Object, ValidationResult)` method.
+
+
+// TODO
+
 
 [[features-web]]
 === Web

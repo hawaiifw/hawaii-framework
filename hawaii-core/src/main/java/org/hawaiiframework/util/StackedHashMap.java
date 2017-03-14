@@ -38,7 +38,8 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      * Constructs a new {@code StackedHashMap}.
      */
     public StackedHashMap() {
-        clearStack();
+        this.stack = new ArrayDeque<>();
+        this.stack.add(new HashMap());
     }
 
     /**
@@ -46,9 +47,9 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      *
      * @param m the map whose mappings are to be placed in this stacked map
      */
-    public StackedHashMap(Map<? extends K, ? extends V> m) {
+    public StackedHashMap(final Map<? extends K, ? extends V> m) {
         this();
-        if (m.size() > 0) {
+        if (!m.isEmpty()) {
             peek().putAll(m);
         }
     }
@@ -57,7 +58,7 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      * Pushes a new element ({@code HashMap}) onto the stack.
      */
     public void push() {
-        HashMap<K, V> m = new HashMap<>(peek());
+        final HashMap<K, V> m = new HashMap<>(peek());
         this.stack.push(m);
     }
 
@@ -67,6 +68,7 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      * @return the top element of the stack
      * @throws IllegalStateException if there is only {@code 1} element on the stack
      */
+    @SuppressWarnings({"PMD.LooseCoupling", "PMD.AvoidLiteralsInIfCondition"})
     public HashMap<K, V> pop() {
         if (stackSize() > 1) {
             return this.stack.pop();
@@ -79,6 +81,7 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      *
      * @return the top element of the stack
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public HashMap<K, V> peek() {
         return this.stack.peek();
     }
@@ -101,7 +104,7 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    public V put(K key, V value) {
+    public V put(final K key, final V value) {
         return peek().put(key, value);
     }
 

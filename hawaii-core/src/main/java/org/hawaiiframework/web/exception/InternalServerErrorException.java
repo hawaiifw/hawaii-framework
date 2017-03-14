@@ -24,19 +24,31 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  */
 public class InternalServerErrorException extends HttpException {
 
+    /**
+     * Constructs a new {@code InternalServerErrorException}.
+     */
     public InternalServerErrorException() {
         super(INTERNAL_SERVER_ERROR);
     }
 
-    public InternalServerErrorException(String message) {
+    /**
+     * Constructs a new {@code InternalServerErrorException} with the supplied message.
+     */
+    public InternalServerErrorException(final String message) {
         super(message, INTERNAL_SERVER_ERROR);
     }
 
-    public InternalServerErrorException(String message, Throwable cause) {
+    /**
+     * Constructs a new {@code InternalServerErrorException} with the supplied message and {@link Throwable}.
+     */
+    public InternalServerErrorException(final String message, final Throwable cause) {
         super(message, cause, INTERNAL_SERVER_ERROR);
     }
 
-    public InternalServerErrorException(Throwable cause) {
+    /**
+     * Constructs a new {@code InternalServerErrorException} with the supplied {@link Throwable}.
+     */
+    public InternalServerErrorException(final Throwable cause) {
         super(cause, INTERNAL_SERVER_ERROR);
     }
 }

@@ -51,7 +51,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public HawaiiResponseEntityExceptionHandler(ValidationErrorResourceAssembler validationErrorResourceAssembler) {
+    public HawaiiResponseEntityExceptionHandler(final ValidationErrorResourceAssembler validationErrorResourceAssembler) {
         this.validationErrorResourceAssembler =
                 requireNonNull(validationErrorResourceAssembler, "'validationErrorResourceAssembler' must not be null");
     }
@@ -67,8 +67,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(HttpException.class)
     @ResponseBody
-    public ResponseEntity handleHttpException(HttpException e, WebRequest request) {
-        HttpStatus status = e.getHttpStatus();
+    public ResponseEntity handleHttpException(final HttpException e, final WebRequest request) {
+        final HttpStatus status = e.getHttpStatus();
         return ResponseEntity.status(status).body(buildErrorResponseBody(e, status, request));
     }
 
@@ -83,10 +83,10 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(ValidationException.class)
     @ResponseBody
-    public ResponseEntity handleValidationException(ValidationException e, WebRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponseResource body = buildErrorResponseBody(e, status, request);
-        List<ValidationError> errors = e.getValidationResult().getErrors();
+    public ResponseEntity handleValidationException(final ValidationException e, final WebRequest request) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        final ErrorResponseResource body = buildErrorResponseBody(e, status, request);
+        final List<ValidationError> errors = e.getValidationResult().getErrors();
         if (errors != null && !errors.isEmpty()) {
             body.setErrors(validationErrorResourceAssembler.toResources(errors));
         }
@@ -102,15 +102,15 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(Throwable.class)
     @ResponseBody
-    public ResponseEntity handleThrowable(Throwable t, WebRequest request) {
+    public ResponseEntity handleThrowable(final Throwable t, final WebRequest request) {
         logger.error("", t);
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status,
-            WebRequest request) {
+    protected ResponseEntity<Object> handleExceptionInternal(final Exception ex, final Object body, final HttpHeaders headers,
+            final HttpStatus status, final WebRequest request) {
         return ResponseEntity.status(status).body(buildErrorResponseBody(ex, status, request));
     }
 
@@ -122,8 +122,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * @param request the current request
      * @return an error response
      */
-    protected ErrorResponseResource buildErrorResponseBody(Throwable t, HttpStatus status, WebRequest request) {
-        ErrorResponseResource resource = new ErrorResponseResource();
+    protected ErrorResponseResource buildErrorResponseBody(final Throwable t, final HttpStatus status, final WebRequest request) {
+        final ErrorResponseResource resource = new ErrorResponseResource();
         addRequestInfo(request, resource);
         addHttpStatus(status, resource);
         addErrorMessage(t, resource);
@@ -136,10 +136,10 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * @param request  the current request
      * @param resource the current error response resource
      */
-    private void addRequestInfo(WebRequest request, ErrorResponseResource resource) {
+    private void addRequestInfo(final WebRequest request, final ErrorResponseResource resource) {
         if (request instanceof ServletWebRequest) {
-            ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-            HttpServletRequest httpServletRequest = (HttpServletRequest) servletWebRequest.getNativeRequest();
+            final ServletWebRequest servletWebRequest = (ServletWebRequest) request;
+            final HttpServletRequest httpServletRequest = (HttpServletRequest) servletWebRequest.getNativeRequest();
             resource.setUri(httpServletRequest.getRequestURI());
             resource.setQuery(httpServletRequest.getQueryString());
             resource.setMethod(httpServletRequest.getMethod());
@@ -153,7 +153,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * @param status   the current HTTP status
      * @param resource the current error response resource
      */
-    private void addHttpStatus(HttpStatus status, ErrorResponseResource resource) {
+    private void addHttpStatus(final HttpStatus status, final ErrorResponseResource resource) {
         resource.setStatusCode(status.value());
         resource.setStatusMessage(status.getReasonPhrase());
     }
@@ -164,8 +164,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * @param t        the current exception
      * @param resource the current error response resource
      */
-    private void addErrorMessage(Throwable t, ErrorResponseResource resource) {
-        String message = t.getMessage();
+    private void addErrorMessage(final Throwable t, final ErrorResponseResource resource) {
+        final String message = t.getMessage();
         if (!StringUtils.isEmpty(message)) {
             resource.setErrorMessage(message);
         }

@@ -40,9 +40,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver implements Ordered {
 
     /**
-     * Default charset for retrieving sql query resources: UTF_8
+     * Default charset for retrieving sql query resources ({@code UTF_8}).
      */
     public static final Charset DEFAULT_CHARSET = UTF_8;
+
+    private static Logger logger = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
 
     private final ResourceLoader resourceLoader;
 
@@ -53,13 +55,11 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
-    private static Logger logger = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
-
     public ResourceSqlQueryResolver() {
         this(new DefaultResourceLoader());
     }
 
-    public ResourceSqlQueryResolver(ResourceLoader resourceLoader) {
+    public ResourceSqlQueryResolver(final ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
@@ -73,7 +73,7 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     /**
      * Set the {@code Charset} for retrieving sql query resources.
      */
-    public void setCharset(Charset charset) {
+    public void setCharset(final Charset charset) {
         this.charset = charset;
     }
 
@@ -87,8 +87,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     /**
      * Set the prefix that gets prepended to sql query names when building the resource location.
      */
-    public void setPrefix(String prefix) {
-        this.prefix = (prefix != null ? prefix : "");
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix != null ? prefix : "";
     }
 
     /**
@@ -101,8 +101,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     /**
      * Set the suffix that gets appended to sql query names when building the resource location.
      */
-    public void setSuffix(String suffix) {
-        this.suffix = (suffix != null ? suffix : "");
+    public void setSuffix(final String suffix) {
+        this.suffix = suffix != null ? suffix : "";
     }
 
     /**
@@ -116,19 +116,19 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     /**
      * Set the order in which this {@link SqlQueryResolver} is evaluated.
      */
-    public void setOrder(int order) {
+    public void setOrder(final int order) {
         this.order = order;
     }
 
     @Override
-    protected void doRefreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
-        String location = getPrefix() + sqlQueryName + getSuffix();
-        Resource resource = this.resourceLoader.getResource(location);
+    protected void doRefreshQueryHolder(final String sqlQueryName, final QueryHolder queryHolder) {
+        final String location = getPrefix() + sqlQueryName + getSuffix();
+        final Resource resource = this.resourceLoader.getResource(location);
         if (resource.exists()) {
             if (resource.getFilename() != null) {
                 // This is an actual file
-                long checkpoint = queryHolder.getQueryTimestamp();
-                long lastModified;
+                final long checkpoint = queryHolder.getQueryTimestamp();
+                final long lastModified;
                 try {
                     lastModified = resource.lastModified();
                     if (lastModified > checkpoint) {
@@ -151,15 +151,13 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     }
 
     @Override
-    protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder)
-            throws HawaiiException {
-        String location = getPrefix() + sqlQueryName + getSuffix();
-        Resource resource = this.resourceLoader.getResource(location);
+    protected String loadSqlQuery(final String sqlQueryName, final QueryHolder queryHolder) throws HawaiiException {
+        final String location = getPrefix() + sqlQueryName + getSuffix();
+        final Resource resource = this.resourceLoader.getResource(location);
         String query = null;
         if (resource.exists()) {
             try {
-                query = new Scanner(resource.getInputStream(), this.charset.name())
-                        .useDelimiter("\\Z").next();
+                query = new Scanner(resource.getInputStream(), this.charset.name()).useDelimiter("\\Z").next();
                 if (queryHolder != null && resource.getFilename() != null) {
                     if (logger.isTraceEnabled()) {
                         logger.trace("Updating query {}", resource.getFilename());

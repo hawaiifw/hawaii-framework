@@ -42,6 +42,7 @@ public abstract class AbstractMockMvcTest {
     @Autowired
     protected WebApplicationContext webApplicationContext;
 
+
     protected MockMvc mockMvc;
 
     @Before

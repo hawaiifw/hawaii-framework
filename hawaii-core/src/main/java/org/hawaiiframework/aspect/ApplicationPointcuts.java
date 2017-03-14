@@ -24,6 +24,7 @@ import org.aspectj.lang.annotation.Pointcut;
  * @since 2.0.0
  */
 @Aspect
+@SuppressWarnings("PMD.UncommentedEmptyMethodBody")
 public class ApplicationPointcuts {
 
     @Pointcut("execution(public * *(..))")

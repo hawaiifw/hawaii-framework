@@ -20,7 +20,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnumerableCompositePropertySource;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -44,7 +43,7 @@ import java.util.Set;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order
 public class HawaiiPropertyDefaultsPostProcessor implements EnvironmentPostProcessor {
 
     private static final String DEFAULT_HAWAII_PROPERTIES = "defaultHawaiiProperties";
@@ -52,29 +51,29 @@ public class HawaiiPropertyDefaultsPostProcessor implements EnvironmentPostProce
 
     private static final String HAWAII_BANNER_LOCATION_PROPERTY_VALUE = "hawaii-banner.txt";
 
-    private YamlPropertySourceLoader propertySourceLoader = new YamlPropertySourceLoader();
+    private final YamlPropertySourceLoader propertySourceLoader = new YamlPropertySourceLoader();
 
     @Override
-    public void postProcessEnvironment(ConfigurableEnvironment environment,
-            SpringApplication application) {
+    public void postProcessEnvironment(final ConfigurableEnvironment environment, final SpringApplication application) {
         // Get the active profiles.
-        Set<String> profiles = new LinkedHashSet<>();
+        final Set<String> profiles = new LinkedHashSet<>();
         profiles.addAll(Arrays.asList(environment.getActiveProfiles()));
 
         // The default profile is represented as null.
         // It is added as last as active profiles will take precedence then.
         profiles.add(null);
 
-        EnumerableCompositePropertySource hawaiiDefaultsPropertySource = new EnumerableCompositePropertySource(DEFAULT_HAWAII_PROPERTIES);
-        Resource hawaiiDefaultsResource = new ClassPathResource(DEFAULT_HAWAII_PROPERTIES_LOCATION);
+        final EnumerableCompositePropertySource hawaiiDefaultsPropertySource =
+                new EnumerableCompositePropertySource(DEFAULT_HAWAII_PROPERTIES);
+        final Resource hawaiiDefaultsResource = new ClassPathResource(DEFAULT_HAWAII_PROPERTIES_LOCATION);
 
         // Load default Hawaii properties
-        for (String profile : profiles) {
+        for (final String profile : profiles) {
             try {
                 // Load default Hawaii properties for given profile.
                 // Can return null if e.g. the given profile is not defined in the the default Hawaii properties.
-                String name = DEFAULT_HAWAII_PROPERTIES + "[profile=" + (profile == null ? "" : profile) + "]";
-                PropertySource<?> propertySource = propertySourceLoader.load(name, hawaiiDefaultsResource, profile);
+                final String name = DEFAULT_HAWAII_PROPERTIES + "[profile=" + (profile == null ? "" : profile) + "]";
+                final PropertySource<?> propertySource = propertySourceLoader.load(name, hawaiiDefaultsResource, profile);
                 if (propertySource != null) {
                     hawaiiDefaultsPropertySource.add(propertySource);
                 }
@@ -86,12 +85,12 @@ public class HawaiiPropertyDefaultsPostProcessor implements EnvironmentPostProce
         // If the banner location is not explicitly defined and the default banner does not exists,
         // then configure the banner location to use the default Hawaii banner.
         if (environment.getProperty(SpringApplication.BANNER_LOCATION_PROPERTY) == null) {
-            ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource banner = resourceLoader.getResource(SpringApplication.BANNER_LOCATION_PROPERTY_VALUE);
+            final ResourceLoader resourceLoader = new DefaultResourceLoader();
+            final Resource banner = resourceLoader.getResource(SpringApplication.BANNER_LOCATION_PROPERTY_VALUE);
             if (!banner.exists()) {
-                Properties properties = new Properties();
+                final Properties properties = new Properties();
                 properties.setProperty(SpringApplication.BANNER_LOCATION_PROPERTY, HAWAII_BANNER_LOCATION_PROPERTY_VALUE);
-                String name = DEFAULT_HAWAII_PROPERTIES + "[hawaiiBanner]";
+                final String name = DEFAULT_HAWAII_PROPERTIES + "[hawaiiBanner]";
                 hawaiiDefaultsPropertySource.add(new PropertiesPropertySource(name, properties));
             }
         }

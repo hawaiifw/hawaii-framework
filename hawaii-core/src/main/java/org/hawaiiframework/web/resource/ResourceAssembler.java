@@ -47,10 +47,10 @@ public interface ResourceAssembler<S, T> {
      * @param objects must not be {@literal null}.
      * @see #toResource(Object)
      */
-    default List<T> toResources(Iterable<? extends S> objects) {
+    default List<T> toResources(final Iterable<? extends S> objects) {
         requireNonNull(objects, "'objects' must not be null");
-        List<T> result = new ArrayList<T>();
-        for (S object : objects) {
+        final List<T> result = new ArrayList<T>();
+        for (final S object : objects) {
             result.add(toResource(object));
         }
         return result;

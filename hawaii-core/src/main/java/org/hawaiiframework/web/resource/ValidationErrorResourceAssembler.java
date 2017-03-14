@@ -31,20 +31,16 @@ public class ValidationErrorResourceAssembler
 
     private final ObjectMapper objectMapper;
 
-    public ValidationErrorResourceAssembler() {
-        this.objectMapper = null;
-    }
-
-    public ValidationErrorResourceAssembler(ObjectMapper objectMapper) {
+    public ValidationErrorResourceAssembler(final ObjectMapper objectMapper) {
         this.objectMapper = requireNonNull(objectMapper, "'objectMapper' must not be null");
     }
 
     @Override
-    public ValidationErrorResource toResource(ValidationError validationError) {
+    public ValidationErrorResource toResource(final ValidationError validationError) {
         requireNonNull(validationError, "'validationError' must not be null");
-        String field = convertProperty(validationError.getField());
-        String code = convertProperty(validationError.getCode());
-        ValidationErrorResource resource = new ValidationErrorResource();
+        final String field = convertProperty(validationError.getField());
+        final String code = convertProperty(validationError.getCode());
+        final ValidationErrorResource resource = new ValidationErrorResource();
         resource.setField(field);
         resource.setCode(code);
         return resource;
@@ -65,15 +61,19 @@ public class ValidationErrorResourceAssembler
      * <li>InvalidLength -> invalid_length</li>
      * </ol>
      */
-    protected String convertProperty(String propertyName) {
+    protected String convertProperty(final String propertyName) {
+        final String name;
         if (objectMapper == null || propertyName == null || propertyName.length() == 0) {
-            return propertyName;
+            name = propertyName;
+        } else {
+            // retrieve the application defined property naming strategy from the object mapper's serialization config
+            final PropertyNamingStrategy propertyNamingStrategy = objectMapper.getSerializationConfig().getPropertyNamingStrategy();
+            if (propertyNamingStrategy == null) {
+                name = propertyName;
+            } else {
+                name = propertyNamingStrategy.nameForField(null, null, propertyName);
+            }
         }
-        // retrieve the application defined property naming strategy from the object mapper's serialization config
-        PropertyNamingStrategy propertyNamingStrategy = objectMapper.getSerializationConfig().getPropertyNamingStrategy();
-        if (propertyNamingStrategy == null) {
-            return propertyName;
-        }
-        return propertyNamingStrategy.nameForField(null, null, propertyName);
+        return name;
     }
 }

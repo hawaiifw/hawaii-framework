@@ -39,7 +39,7 @@ public class ValidationError {
      *
      * @param code the error code
      */
-    public ValidationError(String code) {
+    public ValidationError(final String code) {
         this(null, code);
     }
 
@@ -49,7 +49,7 @@ public class ValidationError {
      * @param field the field name
      * @param code  the error code
      */
-    public ValidationError(String field, String code) {
+    public ValidationError(final String field, final String code) {
         this.field = field;
         this.code = requireNonNull(code, "'code' must not be null");
     }

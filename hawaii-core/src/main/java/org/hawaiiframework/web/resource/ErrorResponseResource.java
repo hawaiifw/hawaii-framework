@@ -53,7 +53,7 @@ public class ErrorResponseResource {
      *
      * @param method the HTTP method
      */
-    public void setMethod(String method) {
+    public void setMethod(final String method) {
         this.method = method;
     }
 
@@ -71,7 +71,7 @@ public class ErrorResponseResource {
      *
      * @param uri the request URI
      */
-    public void setUri(String uri) {
+    public void setUri(final String uri) {
         this.uri = uri;
     }
 
@@ -89,7 +89,7 @@ public class ErrorResponseResource {
      *
      * @param query the query string
      */
-    public void setQuery(String query) {
+    public void setQuery(final String query) {
         this.query = query;
     }
 
@@ -107,7 +107,7 @@ public class ErrorResponseResource {
      *
      * @param contentType the content type.
      */
-    public void setContentType(String contentType) {
+    public void setContentType(final String contentType) {
         this.contentType = contentType;
     }
 
@@ -125,7 +125,7 @@ public class ErrorResponseResource {
      *
      * @param statusCode the response status code.
      */
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(final int statusCode) {
         this.statusCode = statusCode;
     }
 
@@ -143,12 +143,12 @@ public class ErrorResponseResource {
      *
      * @param statusMessage the response status message
      */
-    public void setStatusMessage(String statusMessage) {
+    public void setStatusMessage(final String statusMessage) {
         this.statusMessage = statusMessage;
     }
 
     /**
-     * Returns the error message ({@code Throwable#getMessage()})
+     * Returns the error message ({@code Throwable#getMessage()}).
      *
      * @return the error message
      */
@@ -161,7 +161,7 @@ public class ErrorResponseResource {
      *
      * @param errorMessage the error message.
      */
-    public void setErrorMessage(String errorMessage) {
+    public void setErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -179,7 +179,7 @@ public class ErrorResponseResource {
      *
      * @param errors the validation errors
      */
-    public void setErrors(List<ValidationErrorResource> errors) {
+    public void setErrors(final List<ValidationErrorResource> errors) {
         this.errors = errors;
     }
 

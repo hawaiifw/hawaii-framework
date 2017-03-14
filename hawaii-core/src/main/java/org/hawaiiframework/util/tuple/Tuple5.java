@@ -29,6 +29,7 @@ import java.util.Objects;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
     private static final long serialVersionUID = 1L;
@@ -38,7 +39,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
     /**
      * Constructs a new {@code Tuple} with the supplied elements.
      */
-    public Tuple5(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5) {
+    public Tuple5(final T1 element1, final T2 element2, final T3 element3, final T4 element4, final T5 element5) {
         super(element1, element2, element3, element4);
         this.element5 = element5;
     }
@@ -55,7 +56,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
     /**
      * Sets the 5th element of this tuple.
      */
-    public void setElement5(T5 element5) {
+    public void setElement5(final T5 element5) {
         this.element5 = element5;
     }
 
@@ -65,7 +66,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -75,7 +76,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
         if (!super.equals(o)) {
             return false;
         }
-        Tuple5 other = (Tuple5) o;
+        final Tuple5 other = (Tuple5) o;
         return Objects.equals(this.element5, other.element5);
     }
 

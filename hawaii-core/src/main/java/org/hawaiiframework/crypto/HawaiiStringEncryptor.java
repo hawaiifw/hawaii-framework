@@ -24,6 +24,7 @@ import org.jasypt.encryption.StringEncryptor;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.Security;
 import java.util.Objects;
@@ -42,8 +43,8 @@ public class HawaiiStringEncryptor implements StringEncryptor {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    private String key;
-    private String initVector;
+    private final String key;
+    private final String initVector;
 
     /**
      * Creates a new {@code HawaiiStringEncryptor} with the given key and init vector.
@@ -51,7 +52,7 @@ public class HawaiiStringEncryptor implements StringEncryptor {
      * @param key        the key used for encryption/decryption
      * @param initVector the init vector used for encryption/decryption
      */
-    public HawaiiStringEncryptor(String key, String initVector) {
+    public HawaiiStringEncryptor(final String key, final String initVector) {
         this.key = Objects.requireNonNull(key);
         this.initVector = Objects.requireNonNull(initVector);
     }
@@ -64,10 +65,10 @@ public class HawaiiStringEncryptor implements StringEncryptor {
      * @throws org.hawaiiframework.exception.HawaiiException when an error occurs.
      */
     @Override
-    public String encrypt(String message) {
+    public String encrypt(final String message) {
         try {
-            Cipher cipher = initCipher(Cipher.ENCRYPT_MODE, key, initVector);
-            byte[] encrypted = cipher.doFinal(message.getBytes());
+            final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE, key, initVector);
+            final byte[] encrypted = cipher.doFinal(message.getBytes(Charset.defaultCharset()));
             return Base64.toBase64String(encrypted);
         } catch (GeneralSecurityException e) {
             throw new HawaiiException("Error encrypting message", e);
@@ -82,28 +83,28 @@ public class HawaiiStringEncryptor implements StringEncryptor {
      * @throws org.hawaiiframework.exception.HawaiiException when an error occurs.
      */
     @Override
-    public String decrypt(String encryptedMessage) {
+    public String decrypt(final String encryptedMessage) {
         try {
-            Cipher cipher = initCipher(Cipher.DECRYPT_MODE, key, initVector);
-            byte[] decrypted = cipher.doFinal(Base64.decode(encryptedMessage));
-            return new String(decrypted);
+            final Cipher cipher = initCipher(Cipher.DECRYPT_MODE, key, initVector);
+            final byte[] decrypted = cipher.doFinal(Base64.decode(encryptedMessage));
+            return new String(decrypted, Charset.defaultCharset());
         } catch (GeneralSecurityException e) {
             throw new HawaiiException("Error decrypting message", e);
         }
     }
 
-    private Cipher initCipher(int mode, String key, String initVector)
+    private Cipher initCipher(final int mode, final String key, final String initVector)
             throws GeneralSecurityException {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+        final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
 
-        SecretKeySpec secretKeySpec = new SecretKeySpec(hexStringToByteArray(key), "AES");
-        IvParameterSpec initVectorSpec = new IvParameterSpec(hexStringToByteArray(initVector));
+        final SecretKeySpec secretKeySpec = new SecretKeySpec(hexStringToByteArray(key), "AES");
+        final IvParameterSpec initVectorSpec = new IvParameterSpec(hexStringToByteArray(initVector));
         cipher.init(mode, secretKeySpec, initVectorSpec);
 
         return cipher;
     }
 
-    private byte[] hexStringToByteArray(String s) {
+    private byte[] hexStringToByteArray(final String s) {
         final int len = s.length();
 
         // "111" is not a valid hex encoding.
@@ -111,11 +112,11 @@ public class HawaiiStringEncryptor implements StringEncryptor {
             throw new IllegalArgumentException("hexBinary needs to be even-length: " + s);
         }
 
-        byte[] out = new byte[len / 2];
+        final byte[] out = new byte[len / 2];
 
         for (int i = 0; i < len; i += 2) {
-            int high = hexToBin(s.charAt(i));
-            int low = hexToBin(s.charAt(i + 1));
+            final int high = hexToBin(s.charAt(i));
+            final int low = hexToBin(s.charAt(i + 1));
             if (high == -1 || low == -1) {
                 throw new IllegalArgumentException("contains illegal character for hexBinary: " + s);
             }
@@ -126,16 +127,17 @@ public class HawaiiStringEncryptor implements StringEncryptor {
         return out;
     }
 
-    private int hexToBin(char ch) {
+    private int hexToBin(final char ch) {
+        final int bin;
         if ('0' <= ch && ch <= '9') {
-            return ch - '0';
+            bin = ch - '0';
+        } else if ('A' <= ch && ch <= 'F') {
+            bin = ch - 'A' + 10;
+        } else if ('a' <= ch && ch <= 'f') {
+            bin = ch - 'a' + 10;
+        } else {
+            bin = -1;
         }
-        if ('A' <= ch && ch <= 'F') {
-            return ch - 'A' + 10;
-        }
-        if ('a' <= ch && ch <= 'f') {
-            return ch - 'a' + 10;
-        }
-        return -1;
+        return bin;
     }
 }

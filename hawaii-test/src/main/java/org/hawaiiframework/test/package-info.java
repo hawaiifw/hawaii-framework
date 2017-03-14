@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
+/**
+ * Hawaii's test support.
+ */
 package org.hawaiiframework.test;

@@ -12,15 +12,16 @@ buildscript {
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+        classpath "ru.vyarus:gradle-quality-plugin:2.1.0"
     }
 }
 
 ext {
-    bouncycastleVersion               = "1.55"
-    dependencyManagementPluginVersion = "0.6.0.RELEASE"
+    bouncycastleVersion               = "1.56"
+    dependencyManagementPluginVersion = "1.0.0.RELEASE"
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
-    springPlatformVersion             = "Brussels-RC1"
+    springPlatformVersion             = "Brussels-RELEASE"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -48,6 +49,7 @@ configure(allprojects) { project ->
     apply plugin: "propdeps-maven"
     apply plugin: "propdeps-idea"
     apply plugin: "propdeps-eclipse"
+    apply plugin: "ru.vyarus.quality"
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -91,6 +93,13 @@ configure(allprojects) { project ->
         testLogging {
             events "passed", "skipped", "failed"
         }
+    }
+
+    quality {
+        configDir = "${rootProject.projectDir}/src/quality/config/"
+        checkstyle = true
+        findbugs = true
+        pmd = true
     }
 }
 

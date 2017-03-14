@@ -1,7 +1,21 @@
 spring:
+  profiles.active: dev
   h2.console.enabled: true
   jpa.show-sql: true
 logging:
   level:
     org.hawaiiframework: DEBUG
 hawaii.time.timzezone: Europe/Amsterdam
+
+---
+spring:
+  profiles: dev
+logging:
+  level:
+    org.hawaiiframework: DEBUG
+---
+spring:
+  profiles: test
+logging:
+  level:
+    org.hawaiiframework: INFO

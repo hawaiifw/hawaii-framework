@@ -31,12 +31,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 public class ApplicationContextBinderApplicationListener implements ApplicationListener {
 
     @Override
-    public void onApplicationEvent(ApplicationEvent event) {
+    public void onApplicationEvent(final ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
             if (ApplicationContextHolder.getApplicationContext() != null) {
                 ApplicationContextHolder.release();
             }
-            ApplicationContext applicationContext = ((ContextRefreshedEvent) event).getApplicationContext();
+            final ApplicationContext applicationContext = ((ContextRefreshedEvent) event).getApplicationContext();
             ApplicationContextHolder.bind(applicationContext);
         } else if (event instanceof ContextClosedEvent) {
             ApplicationContextHolder.release();

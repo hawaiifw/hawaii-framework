@@ -22,18 +22,31 @@ package org.hawaiiframework.exception;
  */
 public class HawaiiException extends RuntimeException {
 
+    /**
+     * Constructs a new {@code HawaiiException}.
+     */
     public HawaiiException() {
+        // This constructor is intentionally empty. Nothing special is needed here.
     }
 
-    public HawaiiException(String message) {
+    /**
+     * Constructs a new {@code HawaiiException} with the supplied message.
+     */
+    public HawaiiException(final String message) {
         super(message);
     }
 
-    public HawaiiException(String message, Throwable cause) {
+    /**
+     * Constructs a new {@code HawaiiException} with the supplied message and {@link Throwable}.
+     */
+    public HawaiiException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public HawaiiException(Throwable cause) {
+    /**
+     * Constructs a new {@code HawaiiException} with the supplied {@link Throwable}.
+     */
+    public HawaiiException(final Throwable cause) {
         super(cause);
     }
 }

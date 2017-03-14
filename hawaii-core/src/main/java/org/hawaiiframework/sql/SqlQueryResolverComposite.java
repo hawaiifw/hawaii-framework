@@ -46,7 +46,7 @@ public class SqlQueryResolverComposite implements SqlQueryResolver, Ordered {
     /**
      * Set the list of {@link SqlQueryResolver}s to delegate to.
      */
-    public void setSqlQueryResolvers(List<SqlQueryResolver> sqlQueryResolvers) {
+    public void setSqlQueryResolvers(final List<SqlQueryResolver> sqlQueryResolvers) {
         this.sqlQueryResolvers.clear();
         if (!CollectionUtils.isEmpty(sqlQueryResolvers)) {
             this.sqlQueryResolvers.addAll(sqlQueryResolvers);
@@ -58,14 +58,14 @@ public class SqlQueryResolverComposite implements SqlQueryResolver, Ordered {
         return this.order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(final int order) {
         this.order = order;
     }
 
     @Override
-    public String resolveSqlQuery(String sqlQueryName) throws HawaiiException {
-        for (SqlQueryResolver sqlQueryResolver : this.sqlQueryResolvers) {
-            String sqlQuery = sqlQueryResolver.resolveSqlQuery(sqlQueryName);
+    public String resolveSqlQuery(final String sqlQueryName) throws HawaiiException {
+        for (final SqlQueryResolver sqlQueryResolver : this.sqlQueryResolvers) {
+            final String sqlQuery = sqlQueryResolver.resolveSqlQuery(sqlQueryName);
             if (sqlQuery != null) {
                 return sqlQuery;
             }

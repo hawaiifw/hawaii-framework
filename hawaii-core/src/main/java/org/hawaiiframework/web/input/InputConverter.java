@@ -46,10 +46,10 @@ public interface InputConverter<S, T> {
      * @param objects must not be {@literal null}.
      * @see #convert(Object)
      */
-    default List<T> convert(Iterable<? extends S> objects) {
+    default List<T> convert(final Iterable<? extends S> objects) {
         requireNonNull(objects, "'objects' must not be null");
-        List<T> result = new ArrayList<T>();
-        for (S object : objects) {
+        final List<T> result = new ArrayList<T>();
+        for (final S object : objects) {
             result.add(convert(object));
         }
         return result;

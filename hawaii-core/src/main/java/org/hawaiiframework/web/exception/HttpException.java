@@ -29,21 +29,33 @@ public class HttpException extends HawaiiException {
 
     private final HttpStatus httpStatus;
 
-    public HttpException(HttpStatus httpStatus) {
+    /**
+     * Constructs a new {@code HttpException} with the supplied {@link HttpStatus}.
+     */
+    public HttpException(final HttpStatus httpStatus) {
         this.httpStatus = requireNonNull(httpStatus);
     }
 
-    public HttpException(String message, HttpStatus httpStatus) {
+    /**
+     * Constructs a new {@code HttpException} with the supplied message and {@link HttpStatus}.
+     */
+    public HttpException(final String message, final HttpStatus httpStatus) {
         super(message);
         this.httpStatus = requireNonNull(httpStatus);
     }
 
-    public HttpException(String message, Throwable cause, HttpStatus httpStatus) {
+    /**
+     * Constructs a new {@code HttpException} with the supplied message, {@link Throwable} and {@link HttpStatus}.
+     */
+    public HttpException(final String message, final Throwable cause, final HttpStatus httpStatus) {
         super(message, cause);
         this.httpStatus = requireNonNull(httpStatus);
     }
 
-    public HttpException(Throwable cause, HttpStatus httpStatus) {
+    /**
+     * Constructs a new {@code HttpException} with the supplied {@link Throwable} and {@link HttpStatus}.
+     */
+    public HttpException(final Throwable cause, final HttpStatus httpStatus) {
         super(cause);
         this.httpStatus = requireNonNull(httpStatus);
     }
