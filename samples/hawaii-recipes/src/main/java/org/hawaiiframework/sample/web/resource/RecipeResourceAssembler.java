@@ -17,7 +17,7 @@
 package org.hawaiiframework.sample.web.resource;
 
 import org.hawaiiframework.sample.model.Recipe;
-import org.hawaiiframework.web.resource.ResourceAssembler;
+import org.hawaiiframework.web.resource.AbstractResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  * @author Marcel Overdijk
  */
 @Component
-public class RecipeResourceAssembler implements ResourceAssembler<Recipe, RecipeResource> {
+public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, RecipeResource> {
 
     private final IngredientResourceAssembler ingredientResourceAssembler;
 
@@ -37,7 +37,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Recipe
     }
 
     @Override
-    public RecipeResource toResource(Recipe recipe) {
+    public RecipeResource doAssemble(Recipe recipe) {
         RecipeResource resource = new RecipeResource();
         resource.setId(recipe.getId());
         resource.setCreatedDate(recipe.getCreatedDate());

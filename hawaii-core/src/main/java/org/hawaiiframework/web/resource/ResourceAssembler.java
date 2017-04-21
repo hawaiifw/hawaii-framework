@@ -16,10 +16,7 @@
 
 package org.hawaiiframework.web.resource;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Interface for components that convert an object into a resource.
@@ -32,27 +29,24 @@ import static java.util.Objects.requireNonNull;
  * @param <S> the type of the object to convert
  * @param <T> the type of the resource
  * @author Marcel Overdijk
+ * @author Rutger Lubbers
  * @since 2.0.0
  */
 public interface ResourceAssembler<S, T> {
 
     /**
      * Converts the given object into a resource.
+     *
+     * @param object the object
+     * @return the resource
      */
     T toResource(S object);
 
     /**
      * Converts all given objects into resources.
      *
-     * @param objects must not be {@literal null}.
-     * @see #toResource(Object)
+     * @param objects the object, must not be {@literal null}.
+     * @return the resources
      */
-    default List<T> toResources(final Iterable<? extends S> objects) {
-        requireNonNull(objects, "'objects' must not be null");
-        final List<T> result = new ArrayList<T>();
-        for (final S object : objects) {
-            result.add(toResource(object));
-        }
-        return result;
-    }
+    List<T> toResources(Iterable<? extends S> objects);
 }

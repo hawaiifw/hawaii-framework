@@ -16,10 +16,7 @@
 
 package org.hawaiiframework.web.input;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Interface for components that convert input data into a domain object.
@@ -31,27 +28,24 @@ import static java.util.Objects.requireNonNull;
  * @param <T> the type of the domain object
  * @author Wouter Eerdekens
  * @author Marcel Overdijk
+ * @author Rutger Lubbers
  * @since 2.0.0
  */
 public interface InputConverter<S, T> {
 
     /**
      * Converts the given input object into a domain object.
+     *
+     * @param input the input
+     * @return the domain object
      */
     T convert(S input);
 
     /**
      * Converts all given input objects into domain objects.
      *
-     * @param objects must not be {@literal null}.
-     * @see #convert(Object)
+     * @param objects the object, must not be {@literal null}.
+     * @return the domain objects
      */
-    default List<T> convert(final Iterable<? extends S> objects) {
-        requireNonNull(objects, "'objects' must not be null");
-        final List<T> result = new ArrayList<T>();
-        for (final S object : objects) {
-            result.add(convert(object));
-        }
-        return result;
-    }
+    List<T> convert(Iterable<? extends S> objects);
 }

@@ -26,8 +26,7 @@ import static java.util.Objects.requireNonNull;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ValidationErrorResourceAssembler
-        implements ResourceAssembler<ValidationError, ValidationErrorResource> {
+public class ValidationErrorResourceAssembler extends AbstractResourceAssembler<ValidationError, ValidationErrorResource> {
 
     private final ObjectMapper objectMapper;
 
@@ -36,7 +35,7 @@ public class ValidationErrorResourceAssembler
     }
 
     @Override
-    public ValidationErrorResource toResource(final ValidationError validationError) {
+    public ValidationErrorResource doAssemble(final ValidationError validationError) {
         requireNonNull(validationError, "'validationError' must not be null");
         final String field = convertProperty(validationError.getField());
         final String code = convertProperty(validationError.getCode());
