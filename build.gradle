@@ -21,13 +21,13 @@ ext {
     dependencyManagementPluginVersion = "1.0.0.RELEASE"
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
-    springPlatformVersion             = "Brussels-RELEASE"
+    springPlatformVersion             = "Brussels-SR1"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
         "http://docs.oracle.com/javaee/7/api/",
-        "http://docs.spring.io/spring/docs/4.3.6.RELEASE/javadoc-api/",
-        "http://docs.spring.io/spring-boot/docs/1.5.1.RELEASE/api/",
+        "http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/",
+        "http://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/api/",
         "http://fasterxml.github.io/jackson-core/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
@@ -35,6 +35,9 @@ ext {
         "http://hamcrest.org/JavaHamcrest/javadoc/1.3/"
     ] as String[]
 }
+
+ext.coreprojects = subprojects.findAll { project -> !project.name.startsWith("hawaii-samples") }
+ext.sampleprojects = subprojects.findAll { project -> project.name.startsWith("hawaii-samples") }
 
 configure(allprojects) { project ->
 
@@ -103,7 +106,7 @@ configure(allprojects) { project ->
     }
 }
 
-configure(subprojects) { subproject ->
+configure(subprojects - sampleprojects) { subproject ->
 
     jar {
         manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -316,7 +319,7 @@ configure(rootProject) {
         title = "${rootProject.description} ${version} API"
 
         dependsOn {
-            subprojects.collect {
+            coreprojects.collect {
                 it.tasks.getByName("jar")
             }
         }
@@ -329,11 +332,11 @@ configure(rootProject) {
         options.links(javadocLinks)
         options.addStringOption("Xdoclint:none", "-quiet")
 
-        source subprojects.collect { project ->
+        source coreprojects.collect { project ->
             project.sourceSets.main.allJava
         }
 
-        classpath += files(subprojects.collect { it.sourceSets.main.compileClasspath })
+        classpath += files(coreprojects.collect { it.sourceSets.main.compileClasspath })
         destinationDir = new File(buildDir, "api")
         maxMemory = "1024m"
     }
@@ -379,7 +382,7 @@ configure(rootProject) {
             into "docs"
         }
 
-        subprojects.each { subproject ->
+        coreprojects.each { subproject ->
             into ("libs") {
                 from subproject.jar
                 if (subproject.tasks.findByPath("sourcesJar")) {
@@ -399,6 +402,6 @@ configure(rootProject) {
 
     task wrapper(type: Wrapper) {
         description = "Generates gradlew[.bat] scripts"
-        gradleVersion = "3.3"
+        gradleVersion = "3.5"
     }
 }

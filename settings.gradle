@@ -12,10 +12,23 @@ def String[] starters = [
         "hawaii-starter-test"
 ]
 
+def String[] samples = [
+        "hawaii-recipes",
+        "hawaii-validation",
+        "hello-hawaii"
+]
+
 include modules
 include starters
+include samples
 
 starters.each { name ->
     def p = findProject(":${name}")
     p.projectDir = new File(settingsDir, "hawaii-starters/${name}");
+}
+
+samples.each { name ->
+    def p = findProject(":${name}")
+    p.projectDir = new File(settingsDir, "samples/${name}");
+    p.name = "hawaii-samples-${name}"
 }
