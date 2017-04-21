@@ -8,10 +8,9 @@ buildscript {
         maven { url "http://repo.spring.io/snapshot" }
     }
     dependencies {
-        classpath("io.spring.gradle:dependency-management-plugin:1.0.0.RELEASE")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE")
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
-        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
-        classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15")
         classpath "ru.vyarus:gradle-quality-plugin:2.1.0"
     }
 }
@@ -46,13 +45,6 @@ configure(allprojects) { project ->
     apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
-    apply plugin: "maven"
-    apply plugin: "signing"
-    apply plugin: "propdeps"
-    apply plugin: "propdeps-maven"
-    apply plugin: "propdeps-idea"
-    apply plugin: "propdeps-eclipse"
-    apply plugin: "ru.vyarus.quality"
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -97,16 +89,13 @@ configure(allprojects) { project ->
             events "passed", "skipped", "failed"
         }
     }
-
-    quality {
-        configDir = "${rootProject.projectDir}/src/quality/config/"
-        checkstyle = true
-        findbugs = true
-        pmd = true
-    }
 }
 
 configure(subprojects - sampleprojects) { subproject ->
+
+    apply plugin: "maven"
+    apply plugin: "signing"
+    apply plugin: "ru.vyarus.quality"
 
     jar {
         manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -149,6 +138,13 @@ configure(subprojects - sampleprojects) { subproject ->
     artifacts {
         archives sourcesJar
         archives javadocJar
+    }
+
+    quality {
+        configDir = "${rootProject.projectDir}/src/quality/config/"
+        checkstyle = true
+        findbugs = true
+        pmd = true
     }
 
     signing {
@@ -212,10 +208,10 @@ project("hawaii-autoconfigure") {
         compile "org.springframework.boot:spring-boot-autoconfigure"
         compile "org.springframework.boot:spring-boot-test"
         compile "org.yaml:snakeyaml"
-        optional "com.fasterxml.jackson.core:jackson-databind"
-        optional "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
-        optional "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-        optional "javax.servlet:javax.servlet-api"
+        compileOnly "com.fasterxml.jackson.core:jackson-databind"
+        compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        compileOnly "javax.servlet:javax.servlet-api"
         testCompile("org.hamcrest:hamcrest-core")
         testCompile("org.hamcrest:hamcrest-library")
     }
@@ -231,14 +227,15 @@ project("hawaii-core") {
         compile "org.hamcrest:hamcrest-library"
         compile "org.jasypt:jasypt:${jasyptVersion}"
         compile "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
-        optional "com.fasterxml.jackson.core:jackson-databind"
-        optional "javax.servlet:javax.servlet-api"
-        optional "org.aspectj:aspectjweaver"
-        optional "org.springframework:spring-aop"
-        optional "org.springframework:spring-core"
-        optional "org.springframework:spring-context"
-        optional "org.springframework:spring-web"
-        optional "org.springframework:spring-webmvc"
+        compileOnly "com.fasterxml.jackson.core:jackson-databind"
+        compileOnly "javax.servlet:javax.servlet-api"
+        compileOnly "org.aspectj:aspectjweaver"
+        compileOnly "org.springframework:spring-aop"
+        compileOnly "org.springframework:spring-core"
+        compileOnly "org.springframework:spring-context"
+        compileOnly "org.springframework:spring-web"
+        compileOnly "org.springframework:spring-webmvc"
+        testCompile "org.springframework:spring-core"
     }
 }
 
