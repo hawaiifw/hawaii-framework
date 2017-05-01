@@ -38,6 +38,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @see #loadSqlQuery
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.AccessorMethodGeneration")
 public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolver {
 
     /**
