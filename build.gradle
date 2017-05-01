@@ -20,13 +20,13 @@ ext {
     dependencyManagementPluginVersion = "1.0.0.RELEASE"
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
-    springPlatformVersion             = "Brussels-SR1"
+    springPlatformVersion             = "Brussels-SR2"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
         "http://docs.oracle.com/javaee/7/api/",
-        "http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/",
-        "http://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/api/",
+        "http://docs.spring.io/spring/docs/4.3.8.RELEASE/javadoc-api/",
+        "http://docs.spring.io/spring-boot/docs/1.5.3.RELEASE/api/",
         "http://fasterxml.github.io/jackson-core/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
