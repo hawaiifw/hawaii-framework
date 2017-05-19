@@ -32,24 +32,16 @@ public class ValidatorTests {
 
     @Test
     public void testValidateAndThrowReturnsVoidWhenNoValidationErrors() {
-        Validator validator = new Validator() {
-
-            @Override
-            public void validate(Object object, ValidationResult validationResult) {
-                // no validation errors
-            }
+        Validator<Object> validator = (object, validationResult) -> {
+            // no validation errors
         };
         validator.validateAndThrow(object);
     }
 
     @Test
     public void testValidateAndThrowWithValidationResultReturnsVoidWhenNoValidationErrors() {
-        Validator validator = new Validator() {
-
-            @Override
-            public void validate(Object object, ValidationResult validationResult) {
-                // no validation errors
-            }
+        Validator<Object> validator = (object, validationResult) -> {
+            // no validation errors
         };
         ValidationResult validationResult = new ValidationResult();
         validator.validateAndThrow(object, validationResult);
@@ -57,26 +49,18 @@ public class ValidatorTests {
 
     @Test(expected = ValidationException.class)
     public void testValidateAndThrowThrowsExceptionWhenValidationErrors() {
-        Validator validator = new Validator() {
-
-            @Override
-            public void validate(Object object, ValidationResult validationResult) {
-                // force validation error
-                validationResult.reject("error");
-            }
+        Validator<Object> validator = (object, validationResult) -> {
+            // force validation error
+            validationResult.reject("error");
         };
         validator.validateAndThrow(object);
     }
 
     @Test(expected = ValidationException.class)
     public void testValidateAndThrowWithValidationResultThrowsExceptionWhenValidationErrors() {
-        Validator validator = new Validator() {
-
-            @Override
-            public void validate(Object object, ValidationResult validationResult) {
-                // force validation error
-                validationResult.reject("error");
-            }
+        Validator<Object> validator = (object, validationResult) -> {
+            // force validation error
+            validationResult.reject("error");
         };
         ValidationResult validationResult = new ValidationResult();
         validator.validateAndThrow(object, validationResult);
@@ -84,25 +68,17 @@ public class ValidatorTests {
 
     @Test
     public void testIsValidReturnsTrueWhenNoValidationErrors() {
-        Validator validator = new Validator() {
-
-            @Override
-            public void validate(Object object, ValidationResult validationResult) {
-                // no validation errors
-            }
+        Validator<Object> validator = (object, validationResult) -> {
+            // no validation errors
         };
         assertThat(validator.isValid(object), is(true));
     }
 
     @Test
     public void testIsValidReturnsFalseWhenValidationErrors() {
-        Validator validator = new Validator() {
-
-            @Override
-            public void validate(Object object, ValidationResult validationResult) {
-                // force validation error
-                validationResult.reject("error");
-            }
+        Validator<Object> validator = (object, validationResult) -> {
+            // force validation error
+            validationResult.reject("error");
         };
         assertThat(validator.isValid(object), is(false));
     }
