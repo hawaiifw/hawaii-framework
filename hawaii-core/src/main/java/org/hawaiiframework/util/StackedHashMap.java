@@ -39,7 +39,7 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      */
     public StackedHashMap() {
         this.stack = new ArrayDeque<>();
-        this.stack.add(new HashMap());
+        this.stack.add(new HashMap<>());
     }
 
     /**
@@ -100,7 +100,7 @@ public class StackedHashMap<K, V> extends AbstractMap<K, V> {
      */
     public void clearStack() {
         this.stack = new ArrayDeque<>();
-        this.stack.add(new HashMap());
+        this.stack.add(new HashMap<>());
     }
 
     @Override
