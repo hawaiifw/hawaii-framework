@@ -1,7 +1,6 @@
 buildscript {
     ext {
         springBootVersion = "1.5.3.RELEASE"
-        springLoadedVersion = "1.2.7.RELEASE"
     }
     repositories {
         jcenter()
@@ -10,7 +9,6 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "org.springframework:springloaded:${springLoadedVersion}"
     }
 }
 
