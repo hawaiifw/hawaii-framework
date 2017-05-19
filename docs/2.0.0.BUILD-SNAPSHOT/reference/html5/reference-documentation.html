@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.4">
+<meta name="generator" content="Asciidoctor 1.5.5">
 <meta name="author" content="Marcel Overdijk">
 <title>Hawaii Framework Reference Documentation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -18,7 +18,6 @@ audio:not([controls]){display:none;height:0}
 [hidden],template{display:none}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
 a{background:transparent}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
@@ -53,7 +52,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -65,7 +64,6 @@ img{-ms-interpolation-mode:bicubic}
 .text-center{text-align:center!important}
 .text-justify{text-align:justify!important}
 .hide{display:none}
-body{-webkit-font-smoothing:antialiased}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
@@ -120,13 +118,16 @@ table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
-body{tab-size:4}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
 .clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
 .clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
 pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
@@ -417,7 +418,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body class="book">
 <div id="header">
@@ -475,7 +476,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction"><a class="anchor" href="#introduction"></a>1. Introduction to Hawaii</h2>
+<h2 id="introduction"><a class="anchor" href="#introduction"></a><a class="link" href="#introduction">1. Introduction to Hawaii</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Hawaii Framework is a Java framework for developing Spring based applications.</p>
@@ -488,7 +489,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 enterprise customers.</p>
 </div>
 <div class="sect2">
-<h3 id="introduction-spring-boot"><a class="anchor" href="#introduction-spring-boot"></a>1.1. Spring Boot</h3>
+<h3 id="introduction-spring-boot"><a class="anchor" href="#introduction-spring-boot"></a><a class="link" href="#introduction-spring-boot">1.1. Spring Boot</a></h3>
 <div class="paragraph">
 <p>Combining <a href="http://projects.spring.io/spring-boot">Spring Boot</a> and the Hawaii production-ready features and auto
 configuration brings even more power and simplicity to developers, without sacrificing flexibility.</p>
@@ -506,7 +507,7 @@ application&#8217;s context.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="getting-started"><a class="anchor" href="#getting-started"></a>2. Getting Started with Hawaii</h2>
+<h2 id="getting-started"><a class="anchor" href="#getting-started"></a><a class="link" href="#getting-started">2. Getting Started with Hawaii</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>TODO.</p>
@@ -514,31 +515,31 @@ application&#8217;s context.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="features"><a class="anchor" href="#features"></a>3. Hawaii Features</h2>
+<h2 id="features"><a class="anchor" href="#features"></a><a class="link" href="#features">3. Hawaii Features</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 <div class="sect2">
-<h3 id="features-environments"><a class="anchor" href="#features-environments"></a>3.1. Environments</h3>
+<h3 id="features-environments"><a class="anchor" href="#features-environments"></a><a class="link" href="#features-environments">3.1. Environments</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-configuration-properties"><a class="anchor" href="#features-configuration-properties"></a>3.2. Configuration properties</h3>
+<h3 id="features-configuration-properties"><a class="anchor" href="#features-configuration-properties"></a><a class="link" href="#features-configuration-properties">3.2. Configuration properties</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-logging"><a class="anchor" href="#features-logging"></a>3.3. Logging</h3>
+<h3 id="features-logging"><a class="anchor" href="#features-logging"></a><a class="link" href="#features-logging">3.3. Logging</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-hawaii-time"><a class="anchor" href="#features-hawaii-time"></a>3.4. Hawaii Time</h3>
+<h3 id="features-hawaii-time"><a class="anchor" href="#features-hawaii-time"></a><a class="link" href="#features-hawaii-time">3.4. Hawaii Time</a></h3>
 <div class="paragraph">
 <p><code>HawaiiTime</code> is not merely a convenient wrapper to instantiate new <code>java.time</code> date and time objects.
 It provides an application wide <code>java.time.Clock</code> reference which is particular useful for unit testing.</p>
@@ -546,9 +547,8 @@ It provides an application wide <code>java.time.Clock</code> reference which is 
 <div class="paragraph">
 <p>It is similar to Joda&#8217;s <code>DateTimeUtils</code> which also allows setting a fixed current time.
 However it is important to note that Joda&#8217;s <code>DateTimeUtils</code> uses a static variable to store the current time.
-<code>HawaiiTime</code> does not take this approach. Instead the <code>HawaiiTime</code> bean needs to be injected in any class that needs to
-instantiate new date and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be
-run in parallel. See example usage below.</p>
+<code>HawaiiTime</code> does not take this approach. Instead the <code>HawaiiTime</code> bean needs to be injected in any class that needs to instantiate new date
+and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be run in parallel. See example usage below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -556,7 +556,7 @@ run in parallel. See example usage below.</p>
 
 	private HawaiiTime hawaiiTime;
 
-	public MyClass(HawaiiTime hawaiiTime) {  <i class="conum" data-value="1"></i><b>(1)</b>
+	public MyClass(HawaiiTime hawaiiTime) { <i class="conum" data-value="1"></i><b>(1)</b>
 		this.hawaiiTime = hawaiiTime;
 	}
 
@@ -598,8 +598,8 @@ public class MyClassTests {
 </table>
 </div>
 <div class="paragraph">
-<p>Another benefit of using <code>HawaiiTime</code> is that a fixed time can be used in a running application
-to test how it behaves on a given date or time.</p>
+<p>Another benefit of using <code>HawaiiTime</code> is that a fixed time can be used in a running application to test how it behaves on a given date or
+time.</p>
 </div>
 <div class="admonitionblock caution">
 <table>
@@ -608,48 +608,255 @@ to test how it behaves on a given date or time.</p>
 <i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-Third-party libraries being used by the application do not use <code>HawaiiTime</code> and probably
-instantiate date and time objects based on the <code>System</code> time.
+Third-party libraries being used by the application do not use <code>HawaiiTime</code> and probably instantiate date and time objects based on
+the <code>System</code> time.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Hawaii uses <code>UTC</code> as default timezone but this can be changed by setting the <code>hawaii.time.timezone</code>
-configuration property. The provided value will be parsed by <code>java.time.ZoneId#of(String zoneId)</code>
-and supports different timezone formats like <code>UTC</code>, <code>Europe/Amsterdam</code> and <code>GMT+1</code>.</p>
+<p>Hawaii uses <code>UTC</code> as default timezone but this can be changed by setting the <code>hawaii.time.timezone</code> configuration property. The provided
+value will be parsed by <code>java.time.ZoneId#of(String zoneId)</code> and supports different timezone formats like <code>UTC</code>, <code>Europe/Amsterdam</code> and
+<code>GMT+1</code>.</p>
 </div>
 <div class="paragraph">
 <p>The creation of the <code>HawaiiTime</code> bean can also be disabled by setting <code>hawaii.time.enabled</code> to <code>false</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-validation"><a class="anchor" href="#features-validation"></a>3.5. Validation</h3>
+<h3 id="features-validation"><a class="anchor" href="#features-validation"></a><a class="link" href="#features-validation">3.5. Validation</a></h3>
 <div class="paragraph">
-<p>TODO.</p>
+<p>Hawaii&#8217;s validation mechanism can be used to validate any object. It basically validates values, collects validation errors and stores them
+in a validation result. These validation errors are simple field / error code combinations.</p>
+</div>
+<div class="paragraph">
+<p>Hawaii&#8217;s <code>Validator</code> is inspired on Spring&#8217;s <code>org.springframework.validation.Validator</code> mechanism. However Hawaii&#8217;s validator mechanism
+uses it&#8217;s own <code>ValidationResult</code> instead of Spring&#8217;s <code>org.springframework.validation.Errors</code>. The main difference is that Hawaii&#8217;s
+<code>ValidationResult</code> does not bind directly the object being validated. This also gives the possibility to add errors for specific keys that
+are not direct properties of the object being validated.</p>
+</div>
+<div class="paragraph">
+<p>Hawaii&#8217;s validation mechanism also provides additional sugar like Hamcrest matcher support to write human readable validating code,
+the capability to validate and automatically throw a <code>ValidationException</code> in case of errors etc.</p>
+</div>
+<div class="paragraph">
+<p>Like Spring&#8217;s validation mechanism the Hawaii validation mechanism also supports the notion of nested error paths which also stimulates to
+re-use validators.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s take an example. Imagine a <code>Customer</code> object with common name, e-mail, and address fields. A validation result could for example
+contain the following field / error code combinations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code class="language-properties" data-lang="properties">first_name = required <i class="conum" data-value="1"></i><b>(1)</b>
+last_name = max_length_exceeded
+email = invalid
+addresses = primary_address_required <i class="conum" data-value="2"></i><b>(2)</b>
+addresses[0].type = invalid <i class="conum" data-value="3"></i><b>(3)</b>
+addresses[0].street_name = max_length_exceeded
+addresses[0].postal_code = invalid
+addresses[0].city = max_length_exceeded
+addresses[0].country_code = required</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The field <code>first_name</code> has an <code>required</code> error code.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The field <code>adresses</code> (an array in this case) has <code>primary_address_required</code> error code.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The field <code>type</code> of the first address in the <code>addresses</code> array has a <code>invalid</code> error code.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The example demonstrates simple field errors (like <code>first_name</code>) but also storing errors for arrays and nested paths (<code>addresses[0].type</code>).
+In theory a field could also have multiple error codes if needed.</p>
+</div>
+<div class="paragraph">
+<p>Implementors should typically only implement the <code>org.hawaiiframework.sample.validator.Validator#validate(Object, ValidationResult)</code> method
+as the other methods in the interface are already implemented using the interface&#8217;s default methods.</p>
+</div>
+<div class="paragraph">
+<p>A generic <code>EmailValidator</code> would look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import org.hawaiiframework.validation.ValidationResult;
+import org.hawaiiframework.validation.Validator;
+import org.springframework.stereotype.Component;
+
+import java.util.regex.Pattern;
+
+@Component
+public class EmailValidator implements Validator&lt;String&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+
+    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    private Pattern pattern;
+
+    public EmailValidator() {
+        this.pattern = Pattern.compile(EMAIL_PATTERN);
+    }
+
+    @Override
+    public void validate(String email, ValidationResult validationResult) { <i class="conum" data-value="2"></i><b>(2)</b>
+        if (!pattern.matcher(email).matches()) {
+            validationResult.rejectValue("invalid"); <i class="conum" data-value="3"></i><b>(3)</b>
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Implement the <code>Validator</code> (in this case a <code>String</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Override the <code>Validator#validate(Object, ValidationResult)</code> method.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>In case the e-mail is invalid, reject the value with error code <code>invalid</code> and store it in the validation result.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>CustomerValidator</code> would look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import org.apache.commons.lang3.StringUtils;
+import org.hawaiiframework.sample.validator.EmailValidator;
+import org.hawaiiframework.validation.ValidationResult;
+import org.hawaiiframework.validation.Validator;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.greaterThan;
+
+@Component
+public class CustomerInputValidator implements Validator&lt;CustomerInput&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+
+    private final EmailValidator emailValidator;
+    private final AddressValidator addressValidator;
+
+    public CustomerInputValidator(final EmailValidator emailValidator,
+            final AddressValidator addressValidator) { <i class="conum" data-value="2"></i><b>(2)</b>
+        this.emailValidator = emailValidator;
+        this.addressValidator = addressValidator;
+    }
+
+    @Override
+    public void validate(CustomerInput customer, ValidationResult validationResult) { <i class="conum" data-value="3"></i><b>(3)</b>
+
+        // first name validation
+        String firstName = customer.getFirstName();
+        if (StringUtils.isBlank(firstName)) {
+            validationResult.rejectValue("first_name", "required");
+        } else {
+            validationResult.rejectValueIf(firstName.length(), greaterThan(25), "first_name",
+                    "max_length_exceeded");
+        }
+
+        // last name validation
+        String lastName = customer.getLastName();
+        if (StringUtils.isBlank(lastName)) {
+            validationResult.rejectValue("last_name", "required");
+        } else {
+            validationResult.rejectValueIf(lastName.length(), greaterThan(25), "last_name",
+                    "max_length_exceeded");
+        }
+
+        // e-mail validation
+        String email = customer.getEmail();
+        if (StringUtils.isBlank(email)) {
+            validationResult.rejectValue("email", "required");
+        } else if (email.length() &gt; 100) {
+            validationResult.rejectValue("email", "max_length_exceeded");
+        } else {
+            validationResult.pushNestedPath("email");
+            emailValidator.validate(email, validationResult);
+            validationResult.popNestedPath();
+        }
+
+        // adresses validation
+        List&lt;Address&gt; addresses = customer.getAddresses();
+        if (addresses == null || addresses.size() == 0) {
+            validationResult.rejectValue("addresses", "required");
+        } else {
+            // addresses array validations
+            long primaries = addresses.stream()
+                    .filter(address -&gt; address.getType() == AddressType.PRIMARY)
+                    .count();
+            if (primaries == 0) {
+                validationResult.rejectValue("addresses", "primary_address_required");
+            } else if (primaries &gt; 1) {
+                validationResult.rejectValue("addresses", "only_1_primary_address_allowed");
+            }
+            if (addresses.size() &gt; 3) {
+                validationResult.rejectValue("addresses", "max_array_length_exceeded");
+            }
+            // address validations
+            for (int i = 0; i &lt; addresses.size(); i++) {
+                validationResult.pushNestedPath("addresses", i);
+                addressValidator.validate(addresses.get(i), validationResult);
+                validationResult.popNestedPath();
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Implement the <code>Validator</code> (in this case a <code>Customer</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject other validators (<code>EmailValidator</code>, <code>AddressValidator</code>) to be re-used.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Override the <code>Validator#validate(Object, ValidationResult)</code> method.</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="features-web"><a class="anchor" href="#features-web"></a>3.6. Web</h3>
+<h3 id="features-web"><a class="anchor" href="#features-web"></a><a class="link" href="#features-web">3.6. Web</a></h3>
 <div class="sect3">
-<h4 id="features-web-global-exception-handler"><a class="anchor" href="#features-web-global-exception-handler"></a>3.6.1. Global Exception Handler</h4>
+<h4 id="features-web-global-exception-handler"><a class="anchor" href="#features-web-global-exception-handler"></a><a class="link" href="#features-web-global-exception-handler">3.6.1. Global Exception Handler</a></h4>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="features-web-rest-representations"><a class="anchor" href="#features-web-rest-representations"></a>3.6.2. REST Representations</h4>
+<h4 id="features-web-rest-representations"><a class="anchor" href="#features-web-rest-representations"></a><a class="link" href="#features-web-rest-representations">3.6.2. REST Representations</a></h4>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 <div class="sect4">
-<h5 id="features-web-rest-representations-input-converter"><a class="anchor" href="#features-web-rest-representations-input-converter"></a>Input Converter</h5>
+<h5 id="features-web-rest-representations-input-converter"><a class="anchor" href="#features-web-rest-representations-input-converter"></a><a class="link" href="#features-web-rest-representations-input-converter">Input Converter</a></h5>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="features-web-rest-representations-resource-assembler"><a class="anchor" href="#features-web-rest-representations-resource-assembler"></a>Resource Assembler</h5>
+<h5 id="features-web-rest-representations-resource-assembler"><a class="anchor" href="#features-web-rest-representations-resource-assembler"></a><a class="link" href="#features-web-rest-representations-resource-assembler">Resource Assembler</a></h5>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
@@ -659,25 +866,25 @@ and supports different timezone formats like <code>UTC</code>, <code>Europe/Amst
 </div>
 </div>
 <div class="sect1">
-<h2 id="starters"><a class="anchor" href="#starters"></a>4. Hawaii Starters</h2>
+<h2 id="starters"><a class="anchor" href="#starters"></a><a class="link" href="#starters">4. Hawaii Starters</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 <div class="sect2">
-<h3 id="starters-hawaii-starter"><a class="anchor" href="#starters-hawaii-starter"></a>4.1. hawaii-starter</h3>
+<h3 id="starters-hawaii-starter"><a class="anchor" href="#starters-hawaii-starter"></a><a class="link" href="#starters-hawaii-starter">4.1. hawaii-starter</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="starters-hawaii-starter-rest"><a class="anchor" href="#starters-hawaii-starter-rest"></a>4.2. hawaii-starter-rest</h3>
+<h3 id="starters-hawaii-starter-rest"><a class="anchor" href="#starters-hawaii-starter-rest"></a><a class="link" href="#starters-hawaii-starter-rest">4.2. hawaii-starter-rest</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="starters-hawaii-starter-test"><a class="anchor" href="#starters-hawaii-starter-test"></a>4.3. hawaii-starter-test</h3>
+<h3 id="starters-hawaii-starter-test"><a class="anchor" href="#starters-hawaii-starter-test"></a><a class="link" href="#starters-hawaii-starter-test">4.3. hawaii-starter-test</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
@@ -685,7 +892,7 @@ and supports different timezone formats like <code>UTC</code>, <code>Europe/Amst
 </div>
 </div>
 <div class="sect1">
-<h2 id="deployment"><a class="anchor" href="#deployment"></a>5. Deployment</h2>
+<h2 id="deployment"><a class="anchor" href="#deployment"></a><a class="link" href="#deployment">5. Deployment</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>TODO.</p>
@@ -693,10 +900,10 @@ and supports different timezone formats like <code>UTC</code>, <code>Europe/Amst
 </div>
 </div>
 <div class="sect1">
-<h2 id="appendix"><a class="anchor" href="#appendix"></a>Appendices</h2>
+<h2 id="appendix"><a class="anchor" href="#appendix"></a><a class="link" href="#appendix">Appendices</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="appendix-hawaii-application-properties"><a class="anchor" href="#appendix-hawaii-application-properties"></a>Appendix A: Hawaii application properties</h3>
+<h3 id="appendix-hawaii-application-properties"><a class="anchor" href="#appendix-hawaii-application-properties"></a><a class="link" href="#appendix-hawaii-application-properties">Appendix A: Hawaii application properties</a></h3>
 <div class="paragraph">
 <p>Various properties can be specified inside your <code>application.properties/application.yml</code> file or as command line switches.
 This section provides a list of available Hawaii application properties.</p>
@@ -760,7 +967,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2016-11-04 13:34:55 UTC
+Last updated 2017-05-19 09:28:22 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
