@@ -58,7 +58,7 @@ public class ResourceSqlQueryResolverTests {
 
     @Test
     public void testFileIsReadOk() throws Exception {
-        FileUtils.writeStringToFile(sqlFile, "QUERY1");
+        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
         String query = queryResolver.resolveSqlQuery(sqlFileName);
         assertThat(query, is(equalTo("QUERY1")));
     }
@@ -72,10 +72,10 @@ public class ResourceSqlQueryResolverTests {
     @Test
     public void testOldContentsAreReturnedWithinCacheTime() throws Exception {
         queryResolver.setCacheSeconds(20);
-        FileUtils.writeStringToFile(sqlFile, "QUERY1");
+        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
         String query = queryResolver.resolveSqlQuery(sqlFileName);
         assertThat(query, is(equalTo("QUERY1")));
-        FileUtils.writeStringToFile(sqlFile, "QUERY2");
+        FileUtils.writeStringToFile(sqlFile, "QUERY2", "UTF-8");
         query = queryResolver.resolveSqlQuery(sqlFileName);
         assertThat(query, is(equalTo("QUERY1")));
     }
@@ -83,12 +83,12 @@ public class ResourceSqlQueryResolverTests {
     @Test
     public void testNewContentsAreReturnedAfterCacheTime() throws Exception {
         queryResolver.setCacheSeconds(1);
-        FileUtils.writeStringToFile(sqlFile, "QUERY1");
+        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
         String query = queryResolver.resolveSqlQuery(sqlFileName);
         assertThat(query, is(equalTo("QUERY1")));
         // make sure the file timestamp will be at least a second higher
         TimeUnit.SECONDS.sleep(1);
-        FileUtils.writeStringToFile(sqlFile, "QUERY2");
+        FileUtils.writeStringToFile(sqlFile, "QUERY2", "UTF-8");
         query = queryResolver.resolveSqlQuery(sqlFileName);
         assertThat(query, is(equalTo("QUERY2")));
     }
@@ -103,12 +103,12 @@ public class ResourceSqlQueryResolverTests {
         queryResolver.setCacheSeconds(0);
 
         // Setup initial query
-        FileUtils.writeStringToFile(sqlFile, "QUERY1");
+        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
         assertThat(queryResolver.resolveSqlQuery(sqlFileName), is(equalTo("QUERY1")));
 
         // make sure the file timestamp will be at least a second higher
         TimeUnit.SECONDS.sleep(1);
-        FileUtils.writeStringToFile(sqlFile, "QUERY2");
+        FileUtils.writeStringToFile(sqlFile, "QUERY2", "UTF-8");
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
