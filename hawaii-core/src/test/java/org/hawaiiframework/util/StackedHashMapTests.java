@@ -20,9 +20,14 @@ import org.junit.Test;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
-import java.util.Properties;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -39,12 +44,11 @@ public class StackedHashMapTests {
         map = new StackedHashMap<>();
         assertThat(map.size(), is(equalTo(0)));
         assertThat(map.stackSize(), is(equalTo(1)));
-
     }
 
     @Test
     public void testConstructorWithInitialMap() {
-        Map initial = new Properties();
+        Map<Object, Object> initial = new StackedHashMap<>();
         initial.put("foo", "bar");
         map = new StackedHashMap<>(initial);
         assertThat(map, hasEntry("foo", "bar"));
@@ -121,10 +125,11 @@ public class StackedHashMapTests {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEntrySet() {
         map = new StackedHashMap<>();
         map.put("foo", "bar");
         assertThat(map.entrySet(), hasSize(equalTo(1)));
-        assertThat(map.entrySet(), contains(new SimpleEntry("foo", "bar")));
+        assertThat(map.entrySet(), contains(new SimpleEntry<Object, Object>("foo", "bar")));
     }
 }
