@@ -19,6 +19,7 @@ package org.hawaiiframework.sample.web.controller;
 import org.hawaiiframework.sample.model.Recipe;
 import org.hawaiiframework.sample.repository.RecipeRepository;
 import org.hawaiiframework.sample.web.input.RecipeInput;
+import org.hawaiiframework.sample.web.input.RecipeInputConverter;
 import org.hawaiiframework.sample.web.input.RecipeInputValidator;
 import org.hawaiiframework.sample.web.resource.RecipeResource;
 import org.hawaiiframework.sample.web.resource.RecipeResourceAssembler;
@@ -36,10 +37,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
-import static org.hawaiiframework.sample.web.Paths.*;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_CREATE_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_DELETE_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_UPDATE_PATH;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -52,85 +58,127 @@ public class RecipeController {
 
     private final RecipeRepository recipeRepository;
     private final RecipeResourceAssembler recipeResourceAssembler;
+    private final RecipeInputConverter recipeInputConverter;
     private final RecipeInputValidator recipeInputValidator;
     private final HawaiiTime hawaiiTime;
 
     @Autowired
     public RecipeController(final RecipeRepository recipeRepository, final RecipeResourceAssembler recipeResourceAssembler,
-            final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
+            final RecipeInputConverter recipeInputConverter, final RecipeInputValidator recipeInputValidator, final HawaiiTime hawaiiTime) {
         this.recipeRepository = requireNonNull(recipeRepository, "'recipeRepository' must not be null");
         this.recipeResourceAssembler = requireNonNull(recipeResourceAssembler, "'recipeResourceAssembler' must not be null");
+        this.recipeInputConverter = requireNonNull(recipeInputConverter, "'recipeInputConverter' must not be null");
         this.recipeInputValidator = requireNonNull(recipeInputValidator, "'recipeInputValidator' must not be null");
         this.hawaiiTime = requireNonNull(hawaiiTime, "'hawaiiTime' must not be null");
     }
 
     @Get(path = RECIPES_LIST_PATH, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list() {
+
         logger.info("list called");
-        // Retrieve all recipes
+
+        // Retrieve all recipes from repository
         List<Recipe> recipes = recipeRepository.findAll();
-        // Convert retrieved recipes to resources to be returned to client
-        List<RecipeResource> resources = recipeResourceAssembler.toResources(recipes);
-        // Return resources to client
-        return ResponseEntity.ok().body(resources);
+
+        // Convert retrieved recipes to recipe resources to be returned to client
+        List<RecipeResource> recipeResources = recipeResourceAssembler.toResources(recipes);
+
+        // Return recipe resources to client
+        return ResponseEntity.ok().body(recipeResources);
     }
 
     @Post(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody RecipeInput recipeInput) {
+
         logger.info("create called with input: {}", recipeInput);
+
         // Validate recipe input; and throw validation exception in case of validation errors
         recipeInputValidator.validateAndThrow(recipeInput);
-        // TODO
-        Object resource = null;
-        // Return created resource to client
-        return ResponseEntity.ok().body(resource);
+
+        // Convert recipe input to recipe
+        Recipe recipe = recipeInputConverter.convert(recipeInput);
+        recipe.setCreatedDate(hawaiiTime.localDate());
+
+        // Save recipe to repository
+        recipeRepository.save(recipe);
+
+        // Convert saved recipe to recipe resource to be returned to client
+        RecipeResource recipeResource = recipeResourceAssembler.toResource(recipe);
+
+        // Return recipe resource to client
+        return ResponseEntity.ok().body(recipeResource);
     }
 
     @Get(path = RECIPES_GET_PATH, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
+
         logger.info("get called with id: ", id);
-        // Retrieve recipe by id
+
+        // Retrieve recipe from repository
         Recipe recipe = recipeRepository.findOne(id);
-        // If recipe not found by id throw resource not found exception
+
+        // If recipe not found throw resource not found exception
         if (recipe == null) {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
-        // Convert retrieved recipe to resource to be returned to client
-        RecipeResource resource = recipeResourceAssembler.toResource(recipe);
-        // Return resource to client
-        return ResponseEntity.ok().body(resource);
+
+        // Convert recipe to recipe resource to be returned to client
+        RecipeResource recipeRsource = recipeResourceAssembler.toResource(recipe);
+
+        // Return recipe resource to client
+        return ResponseEntity.ok().body(recipeRsource);
     }
 
     @Put(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@PathVariable("id") Long id,
             @RequestBody RecipeInput recipeInput) {
+
         logger.info("update called with id: {}, input: {}", id, recipeInput);
-        // Retrieve recipe by id
+
+        // Retrieve recipe from repository
         Recipe recipe = recipeRepository.findOne(id);
-        // If recipe not found by id throw resource not found exception
+
+        // If recipe not found throw resource not found exception
         if (recipe == null) {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
+
         // Validate recipe input; and throw validation exception in case of validation errors
         recipeInputValidator.validateAndThrow(recipeInput);
+
         // TODO verify if it is allowed to update recipe
-        Object resource = null;
-        // Return updated resource to client
-        return ResponseEntity.ok().body(resource);
+
+        // Convert recipe input to recipe
+        recipeInputConverter.convert(recipeInput, recipe);
+
+        // Save recipe to repository
+        recipeRepository.save(recipe);
+
+        // Convert saved recipe to recipe resource to be returned to client
+        RecipeResource recipeResource = recipeResourceAssembler.toResource(recipe);
+
+        // Return recipe resource to client
+        return ResponseEntity.ok().body(recipeResource);
     }
 
     @Delete(path = RECIPES_DELETE_PATH)
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+
         logger.info("delete called with id: {}", id);
-        // Retrieve recipe by id
+
+        // Retrieve recipe from repository
         Recipe recipe = recipeRepository.findOne(id);
-        // If recipe not found by id throw resource not found exception
+
+        // If recipe not found throw resource not found exception
         if (recipe == null) {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
+
         // TODO verify if it is allowed to delete recipe
-        // Delete recipe
+
+        // Delete recipe from repository
         recipeRepository.delete(id);
+
         // Return no content response to client
         return ResponseEntity.noContent().build();
     }

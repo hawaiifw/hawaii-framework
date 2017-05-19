@@ -16,24 +16,44 @@
 
 package org.hawaiiframework.sample.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hawaiiframework.sample.Application;
+import org.hawaiiframework.sample.web.input.IngredientInput;
+import org.hawaiiframework.sample.web.input.RecipeInput;
 import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_CREATE_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_DELETE_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
+import static org.hawaiiframework.sample.web.Paths.RECIPES_UPDATE_PATH;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Marcel Overdijk
  */
 @SpringBootTest(classes = Application.class)
 public class RecipeControllerTests extends AbstractMockMvcTest {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void listShouldReturnRecipes() throws Exception {
@@ -109,6 +129,51 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
     }
 
     @Test
+    public void createShouldCreateAndReturnRecipe() throws Exception {
+        RecipeInput recipeInput = new RecipeInput();
+        recipeInput.setName("Marcel");
+        recipeInput.setEmail("marcel.overdijk@qnh.nl");
+        recipeInput.setDescription("Kalua Pig in a Slow Cooker");
+        recipeInput.setPreparationTime(10F);
+        recipeInput.setCookTime(1200F);
+        recipeInput.setReadyTime(1210F);
+        recipeInput.setIngredients(Arrays.asList(
+                new IngredientInput(1F, "(6 pound) pork butt roast"),
+                new IngredientInput(1.5F, "tablespoons Hawaiian sea salt"),
+                new IngredientInput(1F, "tablespoon liquid smoke flavoring")
+        ));
+        recipeInput.setInstructions(
+                "<p>Pierce pork all over with a carving fork. Rub salt then liquid smoke over meat. Place roast in a slow cooker.</p>" +
+                        "<p>Cover, and cook on Low for 16 to 20 hours, turning once during cooking time.</p>" +
+                        "<p>Remove meat from slow cooker, and shred, adding drippings as needed to moisten.</p>");
+
+        LocalDateTime now = LocalDateTime.now();
+        hawaiiTime.useFixedClock(now);
+
+        mockMvc.perform(post(RECIPES_CREATE_PATH)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(recipeInput)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(notNullValue())))
+                .andExpect(jsonPath("$.created_date", is(now.toLocalDate().toString())))
+                .andExpect(jsonPath("$.name", is("Marcel")))
+                .andExpect(jsonPath("$.description", is("Kalua Pig in a Slow Cooker")))
+                .andExpect(jsonPath("$.preparation_time", is(10.0)))
+                .andExpect(jsonPath("$.cook_time", is(1200.0)))
+                .andExpect(jsonPath("$.ready_time", is(1210.0)))
+                .andExpect(jsonPath("$.ingredients", hasSize(3)))
+                .andExpect(jsonPath("$.ingredients[0].quantity", is(1.0)))
+                .andExpect(jsonPath("$.ingredients[0].description", is("(6 pound) pork butt roast")))
+                .andExpect(jsonPath("$.ingredients[1].quantity", is(1.5)))
+                .andExpect(jsonPath("$.ingredients[1].description", is("tablespoons Hawaiian sea salt")))
+                .andExpect(jsonPath("$.ingredients[2].quantity", is(1.0)))
+                .andExpect(jsonPath("$.ingredients[2].description", is("tablespoon liquid smoke flavoring")))
+                .andExpect(jsonPath("$.instructions",
+                        is("<p>Pierce pork all over with a carving fork. Rub salt then liquid smoke over meat. Place roast in a slow cooker.</p><p>Cover, and cook on Low for 16 to 20 hours, turning once during cooking time.</p><p>Remove meat from slow cooker, and shred, adding drippings as needed to moisten.</p>")));
+    }
+
+    @Test
     public void getShouldReturnRecipe() throws Exception {
         mockMvc.perform(get(RECIPES_GET_PATH, 1))
                 .andExpect(status().isOk())
@@ -143,5 +208,56 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
                 .andExpect(jsonPath("$.ingredients[9].description", is("cup packed brown sugar")))
                 .andExpect(jsonPath("$.instructions",
                         is("<p>Preheat oven to 400 degrees F (200 degrees C).</p><p>Arrange chicken pieces in a single layer in a well greased 9x13 inch baking dish. In a small bowl mix together the ginger, paprika, onion powder and garlic salt. Add the vinegar and mix well. Divide this mixture. Brush 1/2 over the chicken pieces and bake in the preheated oven for 15 minutes.</p><p>Turn the chicken pieces, baste with the remaining 1/2 of the vinegar mixture and bake for 15 minutes longer. Meanwhile, in a medium bowl combine the ketchup, soy sauce, pineapple and brown sugar. When chicken baking time is up, spoon the pineapple/soy mixture over the chicken. Bake for another 30 minutes. Serve while still hot.</p>")));
+    }
+
+    @Test
+    public void updateShouldUpdateAndReturnRecipe() throws Exception {
+        RecipeInput recipeInput = new RecipeInput();
+        recipeInput.setName("Marcel");
+        recipeInput.setEmail("marcel.overdijk@qnh.nl");
+        recipeInput.setDescription("Kalua Pig in a Slow Cooker");
+        recipeInput.setPreparationTime(10F);
+        recipeInput.setCookTime(1200F);
+        recipeInput.setReadyTime(1210F);
+        recipeInput.setIngredients(Arrays.asList(
+                new IngredientInput(1F, "(6 pound) pork butt roast"),
+                new IngredientInput(1.5F, "tablespoons Hawaiian sea salt"),
+                new IngredientInput(1F, "tablespoon liquid smoke flavoring")
+        ));
+        recipeInput.setInstructions(
+                "<p>Pierce pork all over with a carving fork. Rub salt then liquid smoke over meat. Place roast in a slow cooker.</p>" +
+                        "<p>Cover, and cook on Low for 16 to 20 hours, turning once during cooking time.</p>" +
+                        "<p>Remove meat from slow cooker, and shred, adding drippings as needed to moisten.</p>");
+
+        LocalDateTime now = LocalDateTime.now();
+        hawaiiTime.useFixedClock(now);
+
+        mockMvc.perform(put(RECIPES_UPDATE_PATH, 1)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(recipeInput)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(notNullValue())))
+                .andExpect(jsonPath("$.created_date", is("2016-02-15")))
+                .andExpect(jsonPath("$.name", is("Marcel")))
+                .andExpect(jsonPath("$.description", is("Kalua Pig in a Slow Cooker")))
+                .andExpect(jsonPath("$.preparation_time", is(10.0)))
+                .andExpect(jsonPath("$.cook_time", is(1200.0)))
+                .andExpect(jsonPath("$.ready_time", is(1210.0)))
+                .andExpect(jsonPath("$.ingredients", hasSize(3)))
+                .andExpect(jsonPath("$.ingredients[0].quantity", is(1.0)))
+                .andExpect(jsonPath("$.ingredients[0].description", is("(6 pound) pork butt roast")))
+                .andExpect(jsonPath("$.ingredients[1].quantity", is(1.5)))
+                .andExpect(jsonPath("$.ingredients[1].description", is("tablespoons Hawaiian sea salt")))
+                .andExpect(jsonPath("$.ingredients[2].quantity", is(1.0)))
+                .andExpect(jsonPath("$.ingredients[2].description", is("tablespoon liquid smoke flavoring")))
+                .andExpect(jsonPath("$.instructions",
+                        is("<p>Pierce pork all over with a carving fork. Rub salt then liquid smoke over meat. Place roast in a slow cooker.</p><p>Cover, and cook on Low for 16 to 20 hours, turning once during cooking time.</p><p>Remove meat from slow cooker, and shred, adding drippings as needed to moisten.</p>")));
+    }
+
+    @Test
+    public void deleteShouldDeleteRecipe() throws Exception {
+        mockMvc.perform(delete(RECIPES_DELETE_PATH, 1))
+                .andExpect(status().isNoContent());
     }
 }

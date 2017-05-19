@@ -28,6 +28,14 @@ public class IngredientInput {
     private Float quantity;
     private String description;
 
+    public IngredientInput() {
+    }
+
+    public IngredientInput(Float quantity, String description) {
+        this.quantity = quantity;
+        this.description = description;
+    }
+
     public Float getQuantity() {
         return quantity;
     }

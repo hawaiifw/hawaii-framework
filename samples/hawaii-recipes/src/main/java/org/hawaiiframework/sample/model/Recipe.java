@@ -18,7 +18,14 @@ package org.hawaiiframework.sample.model;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +63,8 @@ public class Recipe {
     @Column(nullable = false)
     private Float readyTime;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "recipe_id", nullable = false)
     private List<Ingredient> ingredients = new ArrayList<>();
 
     @Column(nullable = false, length = 5000)

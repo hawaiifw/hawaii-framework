@@ -18,7 +18,12 @@ package org.hawaiiframework.sample.model;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
@@ -32,9 +37,6 @@ public class Ingredient {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Recipe recipe;
-
     @Column(nullable = false)
     private Float quantity;
 
@@ -47,14 +49,6 @@ public class Ingredient {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
     }
 
     public Float getQuantity() {
