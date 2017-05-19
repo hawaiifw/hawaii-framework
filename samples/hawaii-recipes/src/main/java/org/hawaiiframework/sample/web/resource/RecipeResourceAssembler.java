@@ -33,12 +33,12 @@ public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, R
 
     @Autowired
     public RecipeResourceAssembler(final IngredientResourceAssembler ingredientResourceAssembler) {
+        super(RecipeResource.class);
         this.ingredientResourceAssembler = requireNonNull(ingredientResourceAssembler, "'ingredientResourceAssembler' must not be null");
     }
 
     @Override
-    public RecipeResource doAssemble(Recipe recipe) {
-        RecipeResource resource = new RecipeResource();
+    public void toResource(Recipe recipe, RecipeResource resource) {
         resource.setId(recipe.getId());
         resource.setCreatedDate(recipe.getCreatedDate());
         resource.setName(recipe.getName());
@@ -48,6 +48,5 @@ public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, R
         resource.setReadyTime(recipe.getReadyTime());
         resource.setIngredients(ingredientResourceAssembler.toResources(recipe.getIngredients()));
         resource.setInstructions(recipe.getInstructions());
-        return resource;
     }
 }

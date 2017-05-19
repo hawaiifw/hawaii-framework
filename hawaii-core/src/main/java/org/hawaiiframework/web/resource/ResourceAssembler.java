@@ -30,6 +30,7 @@ import java.util.List;
  * @param <T> the type of the resource
  * @author Marcel Overdijk
  * @author Rutger Lubbers
+ * @author Paul Klos
  * @since 2.0.0
  */
 public interface ResourceAssembler<S, T> {
@@ -41,6 +42,14 @@ public interface ResourceAssembler<S, T> {
      * @return the resource
      */
     T toResource(S object);
+
+    /**
+     * Converts the given object into the target resource.
+     *
+     * @param object the object
+     * @param target the target
+     */
+    void toResource(S object, T target);
 
     /**
      * Converts all given objects into resources.

@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.input;
 
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,17 +31,24 @@ import static java.util.Objects.requireNonNull;
  * @author Wouter Eerdekens
  * @author Marcel Overdijk
  * @author Rutger Lubbers
+ * @author Paul Klos
  * @since 2.0.0
  */
 public abstract class AbstractInputConverter<S, T> implements InputConverter<S, T> {
 
     /**
-     * This method does the actual conversion.
-     *
-     * @param input the input, must not be {@literal null}.
-     * @return the domain object.
+     * The domain type.
      */
-    protected abstract T doConvert(S input);
+    private final Class<T> domainType;
+
+    /**
+     * Constructs a {@link AbstractInputConverter}.
+     *
+     * @param domainType the resource type
+     */
+    public AbstractInputConverter(final Class<T> domainType) {
+        this.domainType = requireNonNull(domainType, "'domainType' must not be null");
+    }
 
     /**
      * {@inheritDoc}
@@ -49,7 +58,9 @@ public abstract class AbstractInputConverter<S, T> implements InputConverter<S, 
         if (input == null) {
             return null;
         }
-        return doConvert(input);
+        final T domainObject = instantiateDomainObject(input);
+        convert(input, domainObject);
+        return domainObject;
     }
 
     /**
@@ -63,5 +74,15 @@ public abstract class AbstractInputConverter<S, T> implements InputConverter<S, 
             result.add(convert(object));
         }
         return result;
+    }
+
+    /**
+     * Instantiates the domain object.
+     *
+     * @param input the input
+     * @return the domain object
+     */
+    protected T instantiateDomainObject(final S input) {
+        return BeanUtils.instantiateClass(domainType);
     }
 }

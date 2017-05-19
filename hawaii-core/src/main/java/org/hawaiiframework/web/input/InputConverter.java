@@ -29,6 +29,7 @@ import java.util.List;
  * @author Wouter Eerdekens
  * @author Marcel Overdijk
  * @author Rutger Lubbers
+ * @author Paul Klos
  * @since 2.0.0
  */
 public interface InputConverter<S, T> {
@@ -40,6 +41,14 @@ public interface InputConverter<S, T> {
      * @return the domain object
      */
     T convert(S input);
+
+    /**
+     * Converts the given input object into the target object.
+     *
+     * @param input the input
+     * @param target the target
+     */
+    void convert(S input, T target);
 
     /**
      * Converts all given input objects into domain objects.

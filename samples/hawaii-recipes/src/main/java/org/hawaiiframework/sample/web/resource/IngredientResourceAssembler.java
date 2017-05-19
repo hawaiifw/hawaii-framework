@@ -18,7 +18,6 @@ package org.hawaiiframework.sample.web.resource;
 
 import org.hawaiiframework.sample.model.Ingredient;
 import org.hawaiiframework.web.resource.AbstractResourceAssembler;
-import org.hawaiiframework.web.resource.ResourceAssembler;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,12 +26,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class IngredientResourceAssembler extends AbstractResourceAssembler<Ingredient, IngredientResource> {
 
+    public IngredientResourceAssembler() {
+        super(IngredientResource.class);
+    }
+
     @Override
-    public IngredientResource doAssemble(Ingredient ingredient) {
-        // Note: we are on purpose not including the technical ingredient.id in the resource
-        IngredientResource resource = new IngredientResource();
+    public void toResource(Ingredient ingredient, IngredientResource resource) {
         resource.setQuantity(ingredient.getQuantity());
         resource.setDescription(ingredient.getDescription());
-        return resource;
     }
 }

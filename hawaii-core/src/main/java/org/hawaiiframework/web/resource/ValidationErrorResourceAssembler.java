@@ -31,18 +31,17 @@ public class ValidationErrorResourceAssembler extends AbstractResourceAssembler<
     private final ObjectMapper objectMapper;
 
     public ValidationErrorResourceAssembler(final ObjectMapper objectMapper) {
+        super(ValidationErrorResource.class);
         this.objectMapper = requireNonNull(objectMapper, "'objectMapper' must not be null");
     }
 
     @Override
-    public ValidationErrorResource doAssemble(final ValidationError validationError) {
+    public void toResource(final ValidationError validationError, final ValidationErrorResource resource) {
         requireNonNull(validationError, "'validationError' must not be null");
         final String field = convertProperty(validationError.getField());
         final String code = convertProperty(validationError.getCode());
-        final ValidationErrorResource resource = new ValidationErrorResource();
         resource.setField(field);
         resource.setCode(code);
-        return resource;
     }
 
     /**

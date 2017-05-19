@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.resource;
 
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +30,24 @@ import static java.util.Objects.requireNonNull;
  * @param <T> the type of the resource
  * @author Marcel Overdijk
  * @author Rutger Lubbers
+ * @author Paul Klos
  * @since 2.0.0
  */
 public abstract class AbstractResourceAssembler<S, T> implements ResourceAssembler<S, T> {
 
     /**
-     * This method does the actual assembling.
-     *
-     * @param object the object, must not be {@literal null}.
-     * @return the resource.
+     * The resource type.
      */
-    protected abstract T doAssemble(S object);
+    private final Class<T> resourceType;
+
+    /**
+     * Constructs a {@link AbstractResourceAssembler}.
+     *
+     * @param resourceType the resource type
+     */
+    public AbstractResourceAssembler(final Class<T> resourceType) {
+        this.resourceType = requireNonNull(resourceType, "'resourceType' must not be null");
+    }
 
     /**
      * {@inheritDoc}
@@ -48,7 +57,9 @@ public abstract class AbstractResourceAssembler<S, T> implements ResourceAssembl
         if (object == null) {
             return null;
         }
-        return doAssemble(object);
+        final T target = instantiateResource(object);
+        toResource(object, target);
+        return target;
     }
 
     /**
@@ -62,5 +73,15 @@ public abstract class AbstractResourceAssembler<S, T> implements ResourceAssembl
             result.add(toResource(object));
         }
         return result;
+    }
+
+    /**
+     * Instantiates the resource.
+     *
+     * @param object the object
+     * @return the resource
+     */
+    protected T instantiateResource(final S object) {
+        return BeanUtils.instantiateClass(resourceType);
     }
 }
