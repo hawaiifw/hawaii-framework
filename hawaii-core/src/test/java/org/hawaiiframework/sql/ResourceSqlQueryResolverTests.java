@@ -41,7 +41,7 @@ public class ResourceSqlQueryResolverTests {
         suffix = ".sql";
         sqlFile = File.createTempFile("junit-test", suffix);
         // We're using a path outside the VM working dir, so prefix starts with file://
-        prefix = "file://" + sqlFile.getParent() + '/';
+        prefix = "file:" + sqlFile.getParent() + '/';
         sqlFileName = FilenameUtils.getBaseName(sqlFile.getName());
 
         queryResolver.setPrefix(prefix);
