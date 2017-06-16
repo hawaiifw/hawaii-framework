@@ -49,4 +49,38 @@ public class HawaiiException extends RuntimeException {
     public HawaiiException(final Throwable cause) {
         super(cause);
     }
+
+    /**
+     * Returns the first {@link HawaiiException} encountered in the chain of exception causes,
+     * or the original throwable if no {@link HawaiiException} can be found.
+     *
+     * @param throwable the Throwable to examine
+     * @return a HawaiiException, or throwable
+     */
+    public static Throwable getCausingHawaiiException(final Throwable throwable) {
+        Throwable cause = getCause(throwable.getCause());
+        if (cause == null) {
+            cause = throwable;
+        }
+        return cause;
+    }
+
+    /**
+     * Recursive method to find the cause of a Throwable, if that is a {@link HawaiiException}.
+     *
+     * @param throwable the throwable
+     * @return throwable, or null
+     */
+    private static Throwable getCause(final Throwable throwable) {
+        final Throwable cause;
+        if (throwable == null) {
+            cause = null;
+        } else if (throwable instanceof HawaiiException) {
+            cause = throwable;
+        } else {
+            cause = getCause(throwable.getCause());
+        }
+        return cause;
+    }
+
 }

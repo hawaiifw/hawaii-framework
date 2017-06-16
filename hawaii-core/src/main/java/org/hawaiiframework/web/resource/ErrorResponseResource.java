@@ -18,8 +18,6 @@ package org.hawaiiframework.web.resource;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import java.util.List;
-
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /**
@@ -37,7 +35,6 @@ public class ErrorResponseResource {
     private int statusCode;
     private String statusMessage;
     private String errorMessage;
-    private List<ValidationErrorResource> errors;
 
     /**
      * Returns the HTTP method.
@@ -163,24 +160,6 @@ public class ErrorResponseResource {
      */
     public void setErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    /**
-     * Returns the validation errors.
-     *
-     * @return the validation errors
-     */
-    public List<ValidationErrorResource> getErrors() {
-        return errors;
-    }
-
-    /**
-     * Sets the validation errors.
-     *
-     * @param errors the validation errors
-     */
-    public void setErrors(final List<ValidationErrorResource> errors) {
-        this.errors = errors;
     }
 
     @Override

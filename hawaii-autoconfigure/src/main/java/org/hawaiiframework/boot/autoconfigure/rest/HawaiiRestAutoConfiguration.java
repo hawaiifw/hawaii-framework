@@ -17,6 +17,8 @@
 package org.hawaiiframework.boot.autoconfigure.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hawaiiframework.web.exception.DefaultExceptionResponseFactory;
+import org.hawaiiframework.web.exception.ExceptionResponseFactory;
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,13 @@ public class HawaiiRestAutoConfiguration {
     }
 
     @Bean
-    public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler() {
-        return new HawaiiResponseEntityExceptionHandler(validationErrorResourceAssembler());
+    public ExceptionResponseFactory exceptionResponseFactory() {
+        return new DefaultExceptionResponseFactory();
     }
+
+    @Bean
+    public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler() {
+        return new HawaiiResponseEntityExceptionHandler(validationErrorResourceAssembler(), exceptionResponseFactory());
+    }
+
 }

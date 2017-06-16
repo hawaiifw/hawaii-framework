@@ -16,44 +16,66 @@
 
 package org.hawaiiframework.web.exception;
 
-import org.hawaiiframework.validation.ValidationError;
+import org.hawaiiframework.exception.ApiException;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * This class creates proper HTTP response bodies for exceptions.
  *
+ * In this implementation, the response enrichers are stored in a map, with the class name as key. This means that any enricher can
+ * be stored only once. Also, enrichers are not ordered. Subclasses may implement another mechanism if required. This would mean that
+ * the following methods would need to be overwritten:
+ * <ul>
+ *     <li>{@link #addResponseEnricher(ErrorResponseEnricher)}</li>
+ *     <li>{@link #removeResponseEnricher(ErrorResponseEnricher)} (optionally)</li>
+ *     <li>{@link #configureResponseEnrichers()}</li>
+ *     <li>{@link #getResponseEnrichers()}</li>
+ * </ul>
  * @author Marcel Overdijk
  * @author Ivan Melotte
+ * @author Paul Klos
  * @since 2.0.0
  */
 @ControllerAdvice
-public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler implements InitializingBean {
 
-    private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public HawaiiResponseEntityExceptionHandler(final ValidationErrorResourceAssembler validationErrorResourceAssembler) {
+    private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
+    private final ExceptionResponseFactory exceptionResponseFactory;
+    private final Map<String, ErrorResponseEnricher> errorResponseEnrichers = new ConcurrentHashMap<>();
+
+    public HawaiiResponseEntityExceptionHandler(
+            final ValidationErrorResourceAssembler validationErrorResourceAssembler,
+            final ExceptionResponseFactory exceptionResponseFactory) {
         this.validationErrorResourceAssembler =
                 requireNonNull(validationErrorResourceAssembler, "'validationErrorResourceAssembler' must not be null");
+        this.exceptionResponseFactory =
+                requireNonNull(exceptionResponseFactory, "'exceptionResponseFactory' must not be null");
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        configureResponseEnrichers();
     }
 
     /**
@@ -69,7 +91,12 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity handleHttpException(final HttpException e, final WebRequest request) {
         final HttpStatus status = e.getHttpStatus();
-        return ResponseEntity.status(status).body(buildErrorResponseBody(e, status, request));
+        return handleExceptionInternal(
+                e, 
+                buildErrorResponseBody(e, status, request),
+                null, 
+                status, 
+                request);
     }
 
     /**
@@ -85,12 +112,23 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity handleValidationException(final ValidationException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        final ErrorResponseResource body = buildErrorResponseBody(e, status, request);
-        final List<ValidationError> errors = e.getValidationResult().getErrors();
-        if (errors != null && !errors.isEmpty()) {
-            body.setErrors(validationErrorResourceAssembler.toResources(errors));
-        }
-        return ResponseEntity.status(status).body(body);
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), null, status, request);
+    }
+
+    /**
+     * Handles {@code ValidationException} instances.
+     * <p>
+     * The response status is: 400 Bad Request.
+     *
+     * @param e       the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
+    @ExceptionHandler(ApiException.class)
+    @ResponseBody
+    public ResponseEntity handleApiException(final ApiException e, final WebRequest request) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), null, status, request);
     }
 
     /**
@@ -111,63 +149,76 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(final Exception ex, final Object body, final HttpHeaders headers,
             final HttpStatus status, final WebRequest request) {
-        return ResponseEntity.status(status).body(buildErrorResponseBody(ex, status, request));
+        return ResponseEntity.status(status).headers(headers).body(body);
     }
 
     /**
      * Builds a meaningful response body for the given throwable, HTTP status and request.
      *
-     * @param t       the exception
-     * @param status  the HTTP status
-     * @param request the current request
+     * This method constructs an {@link ErrorResponseResource} using {@link #exceptionResponseFactory} and then applies
+     * the error response enrichers returned from {@link #getResponseEnrichers()} to complete the response.
+     *
+     * @param throwable         the exception
+     * @param status            the HTTP status
+     * @param request           the current request
      * @return an error response
      */
-    protected ErrorResponseResource buildErrorResponseBody(final Throwable t, final HttpStatus status, final WebRequest request) {
-        final ErrorResponseResource resource = new ErrorResponseResource();
-        addRequestInfo(request, resource);
-        addHttpStatus(status, resource);
-        addErrorMessage(t, resource);
+    protected ErrorResponseResource buildErrorResponseBody(
+            final Throwable throwable,
+            final HttpStatus status,
+            final WebRequest request) {
+        final ErrorResponseResource resource = exceptionResponseFactory.create(throwable);
+        getResponseEnrichers().forEach(enricher -> enricher.enrich(resource, throwable, request, status));
         return resource;
     }
 
     /**
-     * Add servlet request information to the {@code ErrorResponseResource} instance.
+     * Registers a {@link ErrorResponseEnricher}.
      *
-     * @param request  the current request
-     * @param resource the current error response resource
+     * @param errorResponseEnricher the error response enricher
      */
-    private void addRequestInfo(final WebRequest request, final ErrorResponseResource resource) {
-        if (request instanceof ServletWebRequest) {
-            final ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-            final HttpServletRequest httpServletRequest = (HttpServletRequest) servletWebRequest.getNativeRequest();
-            resource.setUri(httpServletRequest.getRequestURI());
-            resource.setQuery(httpServletRequest.getQueryString());
-            resource.setMethod(httpServletRequest.getMethod());
-            resource.setContentType(httpServletRequest.getContentType());
-        }
+    protected void addResponseEnricher(final ErrorResponseEnricher errorResponseEnricher) {
+        errorResponseEnrichers.put(errorResponseEnricher.getClass().getName(), errorResponseEnricher);
     }
 
     /**
-     * Add HTTP status information to the {@code ErrorResponseResource} instance.
+     * De-registers a {@link ErrorResponseEnricher}.
      *
-     * @param status   the current HTTP status
-     * @param resource the current error response resource
+     * @param errorResponseEnricher the error response enricher
      */
-    private void addHttpStatus(final HttpStatus status, final ErrorResponseResource resource) {
-        resource.setStatusCode(status.value());
-        resource.setStatusMessage(status.getReasonPhrase());
+    protected void removeResponseEnricher(final ErrorResponseEnricher errorResponseEnricher) {
+        errorResponseEnrichers.remove(errorResponseEnricher.getClass().getName());
     }
 
     /**
-     * Add the exception message to the {@code ErrorResponseResource} instance.
+     * Configures the error response enrichers.
      *
-     * @param t        the current exception
-     * @param resource the current error response resource
+     * <p>Subclasses may override this method to remove existing or add additional listeners,
+     * using {@link #addResponseEnricher(ErrorResponseEnricher)} and {@link #removeResponseEnricher(ErrorResponseEnricher)}.</p>
+     *
+     * The default implementation adds the following listeners:
+     * <ul>
+     *     <li>{@link ErrorResponseStatusEnricher}</li>
+     *     <li>{@link ErrorMessageResponseEnricher}</li>
+     *     <li>{@link RequestInfoErrorResponseEnricher}</li>
+     *     <li>{@link ValidationErrorResponseEnricher}</li>
+     *     <li>{@link ApiErrorResponseEnricher}</li>
+     * </ul>
      */
-    private void addErrorMessage(final Throwable t, final ErrorResponseResource resource) {
-        final String message = t.getMessage();
-        if (!StringUtils.isEmpty(message)) {
-            resource.setErrorMessage(message);
-        }
+    protected void configureResponseEnrichers() {
+        addResponseEnricher(new ErrorResponseStatusEnricher());
+        addResponseEnricher(new ErrorMessageResponseEnricher());
+        addResponseEnricher(new RequestInfoErrorResponseEnricher());
+        addResponseEnricher(new ValidationErrorResponseEnricher(validationErrorResourceAssembler));
+        addResponseEnricher(new ApiErrorResponseEnricher());
+    }
+
+    /**
+     * Returns a collection of registered response enrichers.
+     *
+     * @return the response enrichers
+     */
+    protected Collection<ErrorResponseEnricher> getResponseEnrichers() {
+        return errorResponseEnrichers.values();
     }
 }

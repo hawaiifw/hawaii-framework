@@ -275,7 +275,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * base class.
      *
      * @param sqlQueryName the name of the sql query to retrieve
-     * @param queryHolder  the QueryHolder to populate
+     * @param queryHolder  the QueryHolder to enrich
      * @return the sql query, or {@code null} if not found (optional, to allow for {@code
      * SqlQueryResolver} chaining)
      * @throws HawaiiException if the sql query could not be resolved (typically in case of problems resolving the sql query)
