@@ -54,7 +54,7 @@ public class HawaiiException extends RuntimeException {
      * Returns the first {@link HawaiiException} encountered in the chain of exception causes,
      * or the original throwable if no {@link HawaiiException} can be found.
      *
-     * @param throwable the Throwable to examine
+     * @param throwable the Throwable to examine, must not be <code>null</code>
      * @return a HawaiiException, or throwable
      */
     public static Throwable getCausingHawaiiException(final Throwable throwable) {
