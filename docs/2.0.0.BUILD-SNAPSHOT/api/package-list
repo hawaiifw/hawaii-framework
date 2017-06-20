@@ -5,6 +5,7 @@ org.hawaiiframework.boot.autoconfigure.jackson
 org.hawaiiframework.boot.autoconfigure.rest
 org.hawaiiframework.boot.autoconfigure.time
 org.hawaiiframework.context
+org.hawaiiframework.converter
 org.hawaiiframework.crypto
 org.hawaiiframework.exception
 org.hawaiiframework.sql
@@ -15,5 +16,4 @@ org.hawaiiframework.util.tuple
 org.hawaiiframework.validation
 org.hawaiiframework.web.annotation
 org.hawaiiframework.web.exception
-org.hawaiiframework.web.input
 org.hawaiiframework.web.resource
