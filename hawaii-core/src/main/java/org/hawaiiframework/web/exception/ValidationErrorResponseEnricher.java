@@ -61,7 +61,7 @@ public class ValidationErrorResponseEnricher implements ErrorResponseEnricher {
             final ValidationErrorResponseResource resource = (ValidationErrorResponseResource) errorResponseResource;
             final List<ValidationError> errors = getErrors(validationException);
             if (errors != null && !errors.isEmpty()) {
-                resource.setErrors(validationErrorResourceAssembler.toResources(errors));
+                resource.setErrors(validationErrorResourceAssembler.convert(errors));
             }
         }
     }

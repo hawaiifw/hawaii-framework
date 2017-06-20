@@ -14,51 +14,52 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.web.resource;
-
-import org.springframework.beans.BeanUtils;
+package org.hawaiiframework.converter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
+
 import static java.util.Objects.requireNonNull;
 
 /**
- * Abstract {@link ResourceAssembler} implementation.
+ * Abstract {@link ModelConverter} implementation.
  *
- * @param <S> the type of the object to convert
- * @param <T> the type of the resource
+ * @param <S> the type of the input object
+ * @param <T> the type of the domain object
+ * @author Wouter Eerdekens
  * @author Marcel Overdijk
  * @author Rutger Lubbers
  * @author Paul Klos
  * @since 2.0.0
  */
-public abstract class AbstractResourceAssembler<S, T> implements ResourceAssembler<S, T> {
+public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, T> {
 
     /**
-     * The resource type.
+     * The domain type.
      */
-    private final Class<T> resourceType;
+    private final Class<T> targetType;
 
     /**
-     * Constructs a {@link AbstractResourceAssembler}.
+     * Constructs a {@link AbstractModelConverter}.
      *
-     * @param resourceType the resource type
+     * @param targetType the target type
      */
-    public AbstractResourceAssembler(final Class<T> resourceType) {
-        this.resourceType = requireNonNull(resourceType, "'resourceType' must not be null");
+    public AbstractModelConverter(final Class<T> targetType) {
+        this.targetType = requireNonNull(targetType, "'targetType' must not be null");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public T toResource(final S object) {
-        if (object == null) {
+    public T convert(final S source) {
+        if (source == null) {
             return null;
         }
-        final T target = instantiateResource(object);
-        toResource(object, target);
+        final T target = instantiateTargetObject(source);
+        convert(source, target);
         return target;
     }
 
@@ -66,22 +67,22 @@ public abstract class AbstractResourceAssembler<S, T> implements ResourceAssembl
      * {@inheritDoc}
      */
     @Override
-    public List<T> toResources(final Iterable<? extends S> objects) {
+    public List<T> convert(final Iterable<? extends S> objects) {
         requireNonNull(objects, "'objects' must not be null");
-        final List<T> result = new ArrayList<T>();
+        final List<T> result = new ArrayList<>();
         for (final S object : objects) {
-            result.add(toResource(object));
+            result.add(convert(object));
         }
         return result;
     }
 
     /**
-     * Instantiates the resource.
+     * Instantiates the domain object.
      *
-     * @param object the object
-     * @return the resource
+     * @param source the source
+     * @return the target object
      */
-    protected T instantiateResource(final S object) {
-        return BeanUtils.instantiateClass(resourceType);
+    protected T instantiateTargetObject(final S source) {
+        return BeanUtils.instantiateClass(targetType);
     }
 }

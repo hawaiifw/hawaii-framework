@@ -14,47 +14,44 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.web.input;
+package org.hawaiiframework.converter;
 
 import java.util.List;
 
 /**
- * Interface for components that convert input data into a domain object.
- * <p>
- * The input should be a type that is only used in the REST layer of the application and which represents the data structure to be send by
- * the consumer. This is typically a POJO containing Jackson annotations if needed.
+ * Converter interface for converting between two types.
  *
- * @param <S> the type of the input object
- * @param <T> the type of the domain object
+ * @param <S> the source type
+ * @param <T> the target type
  * @author Wouter Eerdekens
  * @author Marcel Overdijk
  * @author Rutger Lubbers
  * @author Paul Klos
  * @since 2.0.0
  */
-public interface InputConverter<S, T> {
+public interface ModelConverter<S, T> {
 
     /**
-     * Converts the given input object into a domain object.
+     * Converts the given source object into a new instance of target object.
      *
-     * @param input the input
-     * @return the domain object
+     * @param source the source object
+     * @return the target object
      */
-    T convert(S input);
+    T convert(S source);
 
     /**
-     * Converts the given input object into the target object.
+     * Converts the given source object into the target object.
      *
-     * @param input the input
-     * @param target the target
+     * @param source the source object
+     * @param target the target object
      */
-    void convert(S input, T target);
+    void convert(S source, T target);
 
     /**
-     * Converts all given input objects into domain objects.
+     * Converts all given source objects into target objects.
      *
      * @param objects the object, must not be {@literal null}.
-     * @return the domain objects
+     * @return the target objects
      */
     List<T> convert(Iterable<? extends S> objects);
 }

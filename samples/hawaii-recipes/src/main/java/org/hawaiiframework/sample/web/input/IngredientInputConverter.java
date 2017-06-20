@@ -17,14 +17,14 @@
 package org.hawaiiframework.sample.web.input;
 
 import org.hawaiiframework.sample.model.Ingredient;
-import org.hawaiiframework.web.input.AbstractInputConverter;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Marcel Overdijk
  */
 @Component
-public class IngredientInputConverter extends AbstractInputConverter<IngredientInput, Ingredient> {
+public class IngredientInputConverter extends org.hawaiiframework.converter.AbstractModelConverter<IngredientInput,Ingredient>
+        implements org.hawaiiframework.converter.ModelConverter<IngredientInput,Ingredient> {
 
 
     public IngredientInputConverter() {

@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -81,7 +80,7 @@ public class RecipeController {
         List<Recipe> recipes = recipeRepository.findAll();
 
         // Convert retrieved recipes to recipe resources to be returned to client
-        List<RecipeResource> recipeResources = recipeResourceAssembler.toResources(recipes);
+        List<RecipeResource> recipeResources = recipeResourceAssembler.convert(recipes);
 
         // Return recipe resources to client
         return ResponseEntity.ok().body(recipeResources);
@@ -103,7 +102,7 @@ public class RecipeController {
         recipeRepository.save(recipe);
 
         // Convert saved recipe to recipe resource to be returned to client
-        RecipeResource recipeResource = recipeResourceAssembler.toResource(recipe);
+        RecipeResource recipeResource = recipeResourceAssembler.convert(recipe);
 
         // Return recipe resource to client
         return ResponseEntity.ok().body(recipeResource);
@@ -123,7 +122,7 @@ public class RecipeController {
         }
 
         // Convert recipe to recipe resource to be returned to client
-        RecipeResource recipeRsource = recipeResourceAssembler.toResource(recipe);
+        RecipeResource recipeRsource = recipeResourceAssembler.convert(recipe);
 
         // Return recipe resource to client
         return ResponseEntity.ok().body(recipeRsource);
@@ -155,7 +154,7 @@ public class RecipeController {
         recipeRepository.save(recipe);
 
         // Convert saved recipe to recipe resource to be returned to client
-        RecipeResource recipeResource = recipeResourceAssembler.toResource(recipe);
+        RecipeResource recipeResource = recipeResourceAssembler.convert(recipe);
 
         // Return recipe resource to client
         return ResponseEntity.ok().body(recipeResource);
