@@ -16,22 +16,22 @@
 
 package org.hawaiiframework.sample.web.resource;
 
+import org.hawaiiframework.converter.AbstractModelConverter;
 import org.hawaiiframework.sample.model.Ingredient;
-import org.hawaiiframework.web.resource.AbstractResourceAssembler;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Marcel Overdijk
  */
 @Component
-public class IngredientResourceAssembler extends AbstractResourceAssembler<Ingredient, IngredientResource> {
+public class IngredientResourceAssembler extends AbstractModelConverter<Ingredient, IngredientResource> {
 
     public IngredientResourceAssembler() {
         super(IngredientResource.class);
     }
 
     @Override
-    public void toResource(Ingredient ingredient, IngredientResource resource) {
+    public void convert(Ingredient ingredient, IngredientResource resource) {
         resource.setQuantity(ingredient.getQuantity());
         resource.setDescription(ingredient.getDescription());
     }

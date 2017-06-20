@@ -16,8 +16,8 @@
 
 package org.hawaiiframework.sample.web.resource;
 
+import org.hawaiiframework.converter.AbstractModelConverter;
 import org.hawaiiframework.sample.model.Recipe;
-import org.hawaiiframework.web.resource.AbstractResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  * @author Marcel Overdijk
  */
 @Component
-public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, RecipeResource> {
+public class RecipeResourceAssembler extends AbstractModelConverter<Recipe, RecipeResource> {
 
     private final IngredientResourceAssembler ingredientResourceAssembler;
 
@@ -38,7 +38,7 @@ public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, R
     }
 
     @Override
-    public void toResource(Recipe recipe, RecipeResource resource) {
+    public void convert(Recipe recipe, RecipeResource resource) {
         resource.setId(recipe.getId());
         resource.setCreatedDate(recipe.getCreatedDate());
         resource.setName(recipe.getName());
@@ -46,7 +46,7 @@ public class RecipeResourceAssembler extends AbstractResourceAssembler<Recipe, R
         resource.setPreparationTime(recipe.getPreparationTime());
         resource.setCookTime(recipe.getCookTime());
         resource.setReadyTime(recipe.getReadyTime());
-        resource.setIngredients(ingredientResourceAssembler.toResources(recipe.getIngredients()));
+        resource.setIngredients(ingredientResourceAssembler.convert(recipe.getIngredients()));
         resource.setInstructions(recipe.getInstructions());
     }
 }

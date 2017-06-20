@@ -16,9 +16,11 @@
 
 package org.hawaiiframework.web.resource;
 
+import org.hawaiiframework.converter.AbstractModelConverter;
+import org.hawaiiframework.validation.ValidationError;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import org.hawaiiframework.validation.ValidationError;
 
 import static java.util.Objects.requireNonNull;
 
@@ -26,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ValidationErrorResourceAssembler extends AbstractResourceAssembler<ValidationError, ValidationErrorResource> {
+public class ValidationErrorResourceAssembler extends AbstractModelConverter<ValidationError, ValidationErrorResource> {
 
     private final ObjectMapper objectMapper;
 
@@ -36,7 +38,7 @@ public class ValidationErrorResourceAssembler extends AbstractResourceAssembler<
     }
 
     @Override
-    public void toResource(final ValidationError validationError, final ValidationErrorResource resource) {
+    public void convert(final ValidationError validationError, final ValidationErrorResource resource) {
         requireNonNull(validationError, "'validationError' must not be null");
         final String field = convertProperty(validationError.getField());
         final String code = convertProperty(validationError.getCode());
