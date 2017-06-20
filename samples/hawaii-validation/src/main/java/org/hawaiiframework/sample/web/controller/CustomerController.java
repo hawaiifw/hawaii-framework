@@ -18,9 +18,9 @@ package org.hawaiiframework.sample.web.controller;
 
 import org.hawaiiframework.sample.web.input.CustomerInput;
 import org.hawaiiframework.sample.web.input.CustomerInputValidator;
-import org.hawaiiframework.web.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +41,7 @@ public class CustomerController {
         this.customerInputValidator = customerInputValidator;
     }
 
-    @Post(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody CustomerInput customerInput) {
 
         // Validate recipe input; and throw validation exception in case of validation errors
