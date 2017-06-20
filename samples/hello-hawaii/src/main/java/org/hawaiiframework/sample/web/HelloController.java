@@ -23,12 +23,12 @@ import org.hawaiiframework.sample.service.Language;
 import org.hawaiiframework.time.HawaiiTime;
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
-import org.hawaiiframework.web.annotation.Get;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +53,7 @@ public class HelloController {
         this.hawaiiTime = hawaiiTime;
     }
 
-    @Get(path = "/greet", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/greet", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> greet(@RequestParam(required = false) String name, @RequestParam(required = false) String language) {
 
         logger.info("greet called with name: {}, language: {}", name, language);

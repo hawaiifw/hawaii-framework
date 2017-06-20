@@ -24,16 +24,16 @@ import org.hawaiiframework.sample.web.input.RecipeInputValidator;
 import org.hawaiiframework.sample.web.resource.RecipeResource;
 import org.hawaiiframework.sample.web.resource.RecipeResourceAssembler;
 import org.hawaiiframework.time.HawaiiTime;
-import org.hawaiiframework.web.annotation.Delete;
-import org.hawaiiframework.web.annotation.Get;
-import org.hawaiiframework.web.annotation.Post;
-import org.hawaiiframework.web.annotation.Put;
 import org.hawaiiframework.web.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -71,7 +71,7 @@ public class RecipeController {
         this.hawaiiTime = requireNonNull(hawaiiTime, "'hawaiiTime' must not be null");
     }
 
-    @Get(path = RECIPES_LIST_PATH, produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = RECIPES_LIST_PATH, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list() {
 
         logger.info("list called");
@@ -86,7 +86,7 @@ public class RecipeController {
         return ResponseEntity.ok().body(recipeResources);
     }
 
-    @Post(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = RECIPES_CREATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody RecipeInput recipeInput) {
 
         logger.info("create called with input: {}", recipeInput);
@@ -108,7 +108,7 @@ public class RecipeController {
         return ResponseEntity.ok().body(recipeResource);
     }
 
-    @Get(path = RECIPES_GET_PATH, produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = RECIPES_GET_PATH, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
 
         logger.info("get called with id: ", id);
@@ -128,7 +128,7 @@ public class RecipeController {
         return ResponseEntity.ok().body(recipeRsource);
     }
 
-    @Put(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @PutMapping(path = RECIPES_UPDATE_PATH, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@PathVariable("id") Long id,
             @RequestBody RecipeInput recipeInput) {
 
@@ -160,7 +160,7 @@ public class RecipeController {
         return ResponseEntity.ok().body(recipeResource);
     }
 
-    @Delete(path = RECIPES_DELETE_PATH)
+    @DeleteMapping(path = RECIPES_DELETE_PATH)
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 
         logger.info("delete called with id: {}", id);
