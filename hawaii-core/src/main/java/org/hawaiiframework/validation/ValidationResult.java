@@ -180,7 +180,7 @@ public class ValidationResult {
      * @param <T> The type of the value.
      * @return a new field rejection.
      */
-    public <T> FieldRejection<T> rejectField(String field, T actual) {
+    public <T> FieldRejection<T> rejectField(final String field, final T actual) {
         return new FieldRejection<>(this, field, actual);
     }
 

@@ -43,8 +43,8 @@ import static org.hamcrest.Matchers.*;
  *              .orWhen(h -> h.length() > 10);
  * </blockquote>
  *
- * The rejections without <code>code</code> parameters have the value <literal>invalid</literal>, except the
- * <code>whenNull()</code>, this has the <literal>required</literal> code value.
+ * The rejections without <code>code</code> parameters have the value <code>invalid</code>, except the
+ * <code>whenNull()</code>, this has the <code>required</code> code value.
  *
  * The chain will stop evaluating the rejection clauses after the first matching clause. In the examples above
  * the chain will not evaluate the length of the house number.
@@ -53,6 +53,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @param <T> The type of the value to evaluate.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class FieldRejection<T> {
 
     public static final String REQUIRED = "required";
@@ -76,12 +77,10 @@ public class FieldRejection<T> {
         this.actual = actual;
     }
 
-    private FieldRejection<T> _when(final Matcher<?> matcher, final String code) {
-        if (mustEvaluate) {
-            if (matcher.matches(actual)) {
-                mustEvaluate = false;
-                validationResult.rejectValue(field, code);
-            }
+    private FieldRejection<T> evaluate(final Matcher<?> matcher, final String code) {
+        if (mustEvaluate && matcher.matches(actual)) {
+            mustEvaluate = false;
+            validationResult.rejectValue(field, code);
         }
 
         return this;
@@ -97,29 +96,8 @@ public class FieldRejection<T> {
     }
 
     /**
-     * Rejects the field when the <code>actual</code> is <literal>null</literal>. This will reject the field with the error
-     * code <literal>required</literal>.
-     *
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> whenNull() {
-        return whenNull(REQUIRED);
-    }
-
-    /**
-     * Rejects the field when the <code>actual</code> is <literal>null</literal>. This will reject the field
-     * with supplied the error code <code>code</code>.
-     *
-     * @param code The error code to set if the actual value is <literal>null</literal>.
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> whenNull(final String code) {
-        return _when(nullValue(), code);
-    }
-
-    /**
      * Rejects the field when the <code>matcher</code> matches the <code>actual</code> value. This will reject the field with the error
-     * code <literal>invalid</literal>.
+     * code <code>invalid</code>.
      *
      * @param matcher The matcher to use.
      * @return The current field rejection.
@@ -129,19 +107,86 @@ public class FieldRejection<T> {
     }
 
     /**
-     * Rejects the field when the <code>matcher</code> matches the <code>actual</code> value. This will reject the field with the error
-     * code <literal>invalid</literal>.
+     * Rejects the field when the <code>matcher</code> matches the <code>actual</code> value. This will reject the field
+     * with supplied the error code <code>code</code>.
      *
      * @param matcher The matcher to use.
      * @return The current field rejection.
      */
-    public FieldRejection<T> orWhen(final Matcher<T> matcher) {
-        return when(matcher);
+    public FieldRejection<T> or(final Matcher<T> matcher, final String code) {
+        return when(matcher, code);
+    }
+
+    /**
+     * Rejects the field when the <code>predicate</code> evaluates to <code>true</code>. This will reject the field with the error
+     * code <code>invalid</code>.
+     *
+     * @param predicate The predicate to use.
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> or(final Predicate<T> predicate) {
+        return when(predicate);
+    }
+
+    /**
+     * Rejects the field when the <code>predicate</code> evaluates to <code>true</code>. This will reject the field
+     * with supplied the error code <code>code</code>.
+     *
+     * @param predicate The predicate to use.
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> or(final Predicate<T> predicate, final String code) {
+        return when(predicate, code);
+    }
+
+    /**
+     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
+     * This will reject the field with the error code <code>invalid</code>.
+     *
+     * @param function The function to apply to the <code>actual</code> value.
+     * @param matcher The matcher to use against the return value of the <code>function</code>.
+     * @return The current field rejection.
+     */
+    public <R> FieldRejection<T> or(final Function<T, R> function, final Matcher<R> matcher) {
+        return when(function, matcher, INVALID);
+    }
+
+    /**
+     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
+     * This will reject the field with supplied the error code <code>code</code>.
+     *
+     * @param function The function to apply to the <code>actual</code> value.
+     * @param matcher The matcher to use against the return value of the <code>function</code>.
+     * @return The current field rejection.
+     */
+    public <R> FieldRejection<T> or(final Function<T, R> function, final Matcher<R> matcher, final String code) {
+        return when(function, matcher, code);
+    }
+
+    /**
+     * Rejects the field when the <code>actual</code> is <code>null</code>. This will reject the field with the error
+     * code <code>required</code>.
+     *
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> whenNull() {
+        return whenNull(REQUIRED);
+    }
+
+    /**
+     * Rejects the field when the <code>actual</code> is <code>null</code>. This will reject the field
+     * with supplied the error code <code>code</code>.
+     *
+     * @param code The error code to set if the actual value is <code>null</code>.
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> whenNull(final String code) {
+        return evaluate(nullValue(), code);
     }
 
     /**
      * Rejects the field when the <code>matcher</code> matches the <code>actual</code> value. This will reject the field with the error
-     * code <literal>invalid</literal>.
+     * code <code>invalid</code>.
      *
      * @param matcher The matcher to use.
      * @return The current field rejection.
@@ -157,8 +202,70 @@ public class FieldRejection<T> {
      * @param matcher The matcher to use.
      * @return The current field rejection.
      */
-    public FieldRejection<T> or(final Matcher<T> matcher, final String code) {
-        return when(matcher, code);
+    public FieldRejection<T> when(final Matcher<T> matcher, final String code) {
+        return evaluate(matcher, code);
+    }
+
+    /**
+     * Rejects the field when the <code>predicate</code> evaluates to <code>true</code>. This will reject the field with the error
+     * code <code>invalid</code>.
+     *
+     * @param predicate The predicate to use.
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> when(final Predicate<T> predicate) {
+        return when(predicate, INVALID);
+    }
+
+    /**
+     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
+     * This will reject the field with the error code <code>invalid</code>.
+     *
+     * @param function The function to apply to the <code>actual</code> value.
+     * @param matcher The matcher to use against the return value of the <code>function</code>.
+     * @return The current field rejection.
+     */
+    public <R> FieldRejection<T> when(final Function<T, R> function, final Matcher<R> matcher) {
+        return when(function, matcher, INVALID);
+    }
+
+    /**
+     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
+     * This will reject the field with supplied the error code <code>code</code>.
+     *
+     * @param function The function to apply to the <code>actual</code> value.
+     * @param matcher The matcher to use against the return value of the <code>function</code>.
+     * @return The current field rejection.
+     */
+    public <R> FieldRejection<T> when(final Function<T, R> function, final Matcher<R> matcher, final String code) {
+        return when(v -> matcher.matches(function.apply(v)), code);
+    }
+
+    /**
+     * Rejects the field when the <code>predicate</code> evaluates to <code>true</code>. This will reject the field
+     * with supplied the error code <code>code</code>.
+     *
+     * @param predicate The predicate to use.
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> when(final Predicate<T> predicate, final String code) {
+        if (mustEvaluate && predicate.test(actual)) {
+            mustEvaluate = false;
+            validationResult.rejectValue(field, code);
+        }
+
+        return this;
+    }
+
+    /**
+     * Rejects the field when the <code>matcher</code> matches the <code>actual</code> value. This will reject the field with the error
+     * code <code>invalid</code>.
+     *
+     * @param matcher The matcher to use.
+     * @return The current field rejection.
+     */
+    public FieldRejection<T> orWhen(final Matcher<T> matcher) {
+        return when(matcher);
     }
 
     /**
@@ -173,30 +280,8 @@ public class FieldRejection<T> {
     }
 
     /**
-     * Rejects the field when the <code>matcher</code> matches the <code>actual</code> value. This will reject the field
-     * with supplied the error code <code>code</code>.
-     *
-     * @param matcher The matcher to use.
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> when(final Matcher<T> matcher, final String code) {
-        return _when(matcher, code);
-    }
-
-    /**
-     * Rejects the field when the <code>predicate</code> evaluates to <literal>true</literal>. This will reject the field with the error
-     * code <literal>invalid</literal>.
-     *
-     * @param predicate The predicate to use.
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> or(final Predicate<T> predicate) {
-        return when(predicate);
-    }
-
-    /**
-     * Rejects the field when the <code>predicate</code> evaluates to <literal>true</literal>. This will reject the field with the error
-     * code <literal>invalid</literal>.
+     * Rejects the field when the <code>predicate</code> evaluates to <code>true</code>. This will reject the field with the error
+     * code <code>invalid</code>.
      *
      * @param predicate The predicate to use.
      * @return The current field rejection.
@@ -206,29 +291,7 @@ public class FieldRejection<T> {
     }
 
     /**
-     * Rejects the field when the <code>predicate</code> evaluates to <literal>true</literal>. This will reject the field with the error
-     * code <literal>invalid</literal>.
-     *
-     * @param predicate The predicate to use.
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> when(final Predicate<T> predicate) {
-        return when(predicate, INVALID);
-    }
-
-    /**
-     * Rejects the field when the <code>predicate</code> evaluates to <literal>true</literal>. This will reject the field
-     * with supplied the error code <code>code</code>.
-     *
-     * @param predicate The predicate to use.
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> or(final Predicate<T> predicate, final String code) {
-        return when(predicate, code);
-    }
-
-    /**
-     * Rejects the field when the <code>predicate</code> evaluates to <literal>true</literal>. This will reject the field
+     * Rejects the field when the <code>predicate</code> evaluates to <code>true</code>. This will reject the field
      * with supplied the error code <code>code</code>.
      *
      * @param predicate The predicate to use.
@@ -239,56 +302,14 @@ public class FieldRejection<T> {
     }
 
     /**
-     * Rejects the field when the <code>predicate</code> evaluates to <literal>true</literal>. This will reject the field
-     * with supplied the error code <code>code</code>.
-     *
-     * @param predicate The predicate to use.
-     * @return The current field rejection.
-     */
-    public FieldRejection<T> when(final Predicate<T> predicate, final String code) {
-        if (mustEvaluate) {
-            if (predicate.test(actual)) {
-                mustEvaluate = false;
-                validationResult.rejectValue(field, code);
-            }
-        }
-
-        return this;
-    }
-
-    /**
      * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
-     * This will reject the field with the error code <literal>invalid</literal>.
+     * This will reject the field with the error code <code>invalid</code>.
      *
      * @param function The function to apply to the <code>actual</code> value.
      * @param matcher The matcher to use against the return value of the <code>function</code>.
      * @return The current field rejection.
      */
-    public <R> FieldRejection<T> or(Function<T, R> function, final Matcher<R> matcher) {
-        return when(function, matcher, INVALID);
-    }
-
-    /**
-     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
-     * This will reject the field with the error code <literal>invalid</literal>.
-     *
-     * @param function The function to apply to the <code>actual</code> value.
-     * @param matcher The matcher to use against the return value of the <code>function</code>.
-     * @return The current field rejection.
-     */
-    public <R> FieldRejection<T> orWhen(Function<T, R> function, final Matcher<R> matcher) {
-        return when(function, matcher, INVALID);
-    }
-
-    /**
-     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
-     * This will reject the field with the error code <literal>invalid</literal>.
-     *
-     * @param function The function to apply to the <code>actual</code> value.
-     * @param matcher The matcher to use against the return value of the <code>function</code>.
-     * @return The current field rejection.
-     */
-    public <R> FieldRejection<T> when(Function<T, R> function, final Matcher<R> matcher) {
+    public <R> FieldRejection<T> orWhen(final Function<T, R> function, final Matcher<R> matcher) {
         return when(function, matcher, INVALID);
     }
 
@@ -300,32 +321,8 @@ public class FieldRejection<T> {
      * @param matcher The matcher to use against the return value of the <code>function</code>.
      * @return The current field rejection.
      */
-    public <R> FieldRejection<T> or(Function<T, R> function, final Matcher<R> matcher, final String code) {
+    public <R> FieldRejection<T> orWhen(final Function<T, R> function, final Matcher<R> matcher, final String code) {
         return when(function, matcher, code);
-    }
-
-    /**
-     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
-     * This will reject the field with supplied the error code <code>code</code>.
-     *
-     * @param function The function to apply to the <code>actual</code> value.
-     * @param matcher The matcher to use against the return value of the <code>function</code>.
-     * @return The current field rejection.
-     */
-    public <R> FieldRejection<T> orWhen(Function<T, R> function, final Matcher<R> matcher, final String code) {
-        return when(function, matcher, code);
-    }
-
-    /**
-     * Rejects the field when the <code>matcher</code> matches the result of the <code>function</code>.
-     * This will reject the field with supplied the error code <code>code</code>.
-     *
-     * @param function The function to apply to the <code>actual</code> value.
-     * @param matcher The matcher to use against the return value of the <code>function</code>.
-     * @return The current field rejection.
-     */
-    public <R> FieldRejection<T> when(Function<T, R> function, final Matcher<R> matcher, final String code) {
-        return when(v -> matcher.matches(function.apply(v)), code);
     }
 
 }
