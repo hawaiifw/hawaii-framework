@@ -19,8 +19,14 @@ package org.hawaiiframework.validation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hamcrest.Matcher;
+import org.hawaiiframework.validation.field.FieldRejection;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
@@ -31,6 +37,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  * {@link ValidationResult} does not bind or require the target object being validated.
  *
  * @author Marcel Overdijk
+ * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class ValidationResult {
@@ -155,6 +162,26 @@ public class ValidationResult {
 
     public <T> void rejectValueIf(final T actual, final Matcher<? super T> matcher, final String field, final String code) {
         rejectValueIf(matcher.matches(actual), field, code);
+    }
+
+    /**
+     * Reject a <code>field</code> with value <code>actual</code> in a fluent manner.
+     *
+     * For instance:
+     * <blockquote>
+     *     validationResult.rejectField("houseNumber", "13-a")
+     *                          .whenNull()
+     *                          .orWhen(containsString("a"))
+     *                          .orWhen(h -> h.length() > 4);
+     * </blockquote>
+     *
+     * @param field The field name to evaluate.
+     * @param actual The value to evaluate.
+     * @param <T> The type of the value.
+     * @return a new field rejection.
+     */
+    public <T> FieldRejection<T> rejectField(String field, T actual) {
+        return new FieldRejection<>(this, field, actual);
     }
 
     /**

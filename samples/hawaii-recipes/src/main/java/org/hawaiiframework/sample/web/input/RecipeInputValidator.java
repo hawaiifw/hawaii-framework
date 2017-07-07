@@ -39,22 +39,17 @@ public class RecipeInputValidator implements Validator<RecipeInput> {
 
     @Override
     public void validate(RecipeInput recipe, ValidationResult validationResult) {
-        if (recipe.getName() == null) {
-            validationResult.rejectValue("name", "required");
-        } else {
-            validationResult.rejectValueIf(recipe.getName().length(), greaterThan(100), "name", "length");
-        }
-        if (recipe.getEmail() == null) {
-            validationResult.rejectValue("email", "required");
-        } else {
-            validationResult.rejectValueIf(recipe.getEmail().length(), greaterThan(100), "email", "length");
+        validationResult.rejectField("name", recipe.getName())
+                .whenNull()
+                .orWhen(n -> n.length() > 100, "length");
+
+        validationResult.rejectField("email", recipe.getEmail())
+                .whenNull()
+                .orWhen(String::length, greaterThan(100), "length");
             // TODO validate email
-        }
-        if (recipe.getDescription() == null) {
-            validationResult.rejectValue("description", "required");
-        } else {
-            validationResult.rejectValueIf(recipe.getDescription().length(), greaterThan(100), "description", "length");
-        }
-        // TODO
+
+        validationResult.rejectField("description", recipe.getDescription())
+                .whenNull()
+                .orWhen(d -> d.length() > 1000, "length");
     }
 }
