@@ -14,5 +14,6 @@ org.hawaiiframework.time
 org.hawaiiframework.util
 org.hawaiiframework.util.tuple
 org.hawaiiframework.validation
+org.hawaiiframework.validation.field
 org.hawaiiframework.web.exception
 org.hawaiiframework.web.resource
