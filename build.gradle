@@ -292,6 +292,16 @@ project("hawaii-test") {
         compile "org.springframework:spring-web"
     }
 }
+project("hawaii-logging") {
+
+    description = "Hawaii Logging"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile "org.springframework:spring-web"
+    }
+
+}
 
 configure(rootProject) {
 

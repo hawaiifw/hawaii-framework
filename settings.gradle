@@ -3,7 +3,8 @@ rootProject.name = "hawaii"
 def String[] modules = [
         "hawaii-autoconfigure",
         "hawaii-core",
-        "hawaii-test"
+        "hawaii-test",
+        "hawaii-logging"
 ]
 
 def String[] starters = [
