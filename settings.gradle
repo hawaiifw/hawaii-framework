@@ -4,13 +4,15 @@ def String[] modules = [
         "hawaii-autoconfigure",
         "hawaii-core",
         "hawaii-test",
-        "hawaii-logging"
+        "hawaii-logging",
+        "hawaii-async"
 ]
 
 def String[] starters = [
         "hawaii-starter",
         "hawaii-starter-rest",
-        "hawaii-starter-test"
+        "hawaii-starter-test",
+        "hawaii-starter-async"
 ]
 
 def String[] samples = [
