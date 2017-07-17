@@ -114,7 +114,7 @@ public class AbortableTaskDecorator implements TaskDecorator {
      */
     private void createTimeoutGuardTask(final MdcContext currentMdc, final SharedTaskContext sharedTaskContext) {
         final Integer timeout = sharedTaskContext.getTimeout();
-        LOGGER.debug("Setting timeout of '{}' for task '{}' with id '{}'.", timeout, sharedTaskContext.getTaskName(),
+        LOGGER.debug("Setting timeout of '{}' second(s) for task '{}' with id '{}'.", timeout, sharedTaskContext.getTaskName(),
                 sharedTaskContext.getTaskId());
 
         final TimeoutGuardTask timeoutGuardTask = new TimeoutGuardTask(currentMdc, sharedTaskContext);
