@@ -433,7 +433,7 @@ configure(rootProject) {
         }
 
         from (asciidoctor) {
-            include "html5/index.html"
+            include "html5/**/*.*"
             include "pdf/index.pdf"
             into "reference"
             rename { filename ->
