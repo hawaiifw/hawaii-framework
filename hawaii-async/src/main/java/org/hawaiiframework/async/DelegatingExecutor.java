@@ -17,11 +17,13 @@
 package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
+import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * Task executor that delegates to the task executor configured for a task.
@@ -42,9 +44,9 @@ public class DelegatingExecutor implements TaskExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DelegatingExecutor.class);
 
     /**
-     * The delegate {@link TaskExecutor}.
+     * The delegate {@link ThreadPoolTaskExecutor}.
      */
-    private final TaskExecutor delegate;
+    private final ThreadPoolTaskExecutor delegate;
 
     /**
      * The configuration properties.
@@ -57,6 +59,11 @@ public class DelegatingExecutor implements TaskExecutor {
     private final String taskName;
 
     /**
+     * This executor's statistics.
+     */
+    private final ExecutorStatistics executorStatistics;
+
+    /**
      * Constructor.
      *
      * @param delegate                        the delegate
@@ -64,12 +71,13 @@ public class DelegatingExecutor implements TaskExecutor {
      * @param taskName                        the task name
      */
     public DelegatingExecutor(
-            final TaskExecutor delegate,
+            final ThreadPoolTaskExecutor delegate,
             final ExecutorConfigurationProperties executorConfigurationProperties,
             final String taskName) {
         this.delegate = delegate;
         this.executorConfigurationProperties = executorConfigurationProperties;
         this.taskName = taskName;
+        this.executorStatistics = new ExecutorStatistics(delegate);
     }
 
     /**
@@ -79,8 +87,12 @@ public class DelegatingExecutor implements TaskExecutor {
      */
     @Override
     public void execute(final Runnable task) {
-        final SharedTaskContext sharedTaskContext = new SharedTaskContext(taskName, executorConfigurationProperties);
+        final SharedTaskContext sharedTaskContext = new SharedTaskContext(taskName, executorConfigurationProperties, executorStatistics);
         LOGGER.info("Scheduling task '{}' with id '{}'.", sharedTaskContext.getTaskName(), sharedTaskContext.getTaskId());
+        LOGGER.info("Executor '{}' has '{}/{}' threads, '{}' queued entries, '{}' total executions and '{}' aborted executions.", taskName,
+                executorStatistics.getPoolSize(), executorStatistics.getMaxPoolSize(), executorStatistics.getQueueSize(),
+                executorStatistics.getCompletedTaskCount(), executorStatistics.getAbortedTaskCount());
+
         SharedTaskContextHolder.register(sharedTaskContext);
         delegate.execute(task);
     }
