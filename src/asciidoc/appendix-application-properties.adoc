@@ -35,6 +35,8 @@ This section provides a list of available Hawaii application properties.
 	  time:
 	    enabled: true # Enable creation of the `HawaiiTime` bean.
 	    timezone: UTC # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
+      async:
+        configuration: ./config/async-config.yml # location of the Hawaii async configuration file
 
 	---
 
