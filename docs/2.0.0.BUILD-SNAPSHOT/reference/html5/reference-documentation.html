@@ -1106,6 +1106,8 @@ hawaii:
   time:
     enabled: true # Enable creation of the `HawaiiTime` bean.
     timezone: UTC # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
+     async:
+       configuration: ./config/async-config.yml # location of the Hawaii async configuration file
 
 ---
 
@@ -1135,7 +1137,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2017-07-17 10:36:06 UTC
+Last updated 2017-07-17 13:00:00 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
