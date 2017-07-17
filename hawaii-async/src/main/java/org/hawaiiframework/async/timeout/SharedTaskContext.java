@@ -18,6 +18,7 @@ package org.hawaiiframework.async.timeout;
 
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.TaskStatistics;
+import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,10 +74,14 @@ public class SharedTaskContext {
     private final ExecutorConfigurationProperties executorConfigurationProperties;
 
     /**
+     * The executors statistics.
+     */
+    private final ExecutorStatistics executorStatistics;
+
+    /**
      * Flag to indicate that the task has been aborted.
      */
     private boolean aborted;
-
     /**
      * The task's statistics.
      */
@@ -89,11 +94,13 @@ public class SharedTaskContext {
      * @param executorConfigurationProperties the executor configuration properties
      */
     public SharedTaskContext(final String taskName,
-            final ExecutorConfigurationProperties executorConfigurationProperties) {
+            final ExecutorConfigurationProperties executorConfigurationProperties,
+            final ExecutorStatistics executorStatistics) {
         this.taskName = taskName;
         this.executorConfigurationProperties = executorConfigurationProperties;
         this.taskId = UUID.randomUUID().toString();
         this.taskStatistics = new TaskStatistics();
+        this.executorStatistics = executorStatistics;
     }
 
     /**
@@ -213,5 +220,9 @@ public class SharedTaskContext {
 
     public void startExecution() {
         taskStatistics.startExecution();
+        if (isAborted()) {
+            executorStatistics.incrementAbortedTaskCount();
+        }
     }
+
 }
