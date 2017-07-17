@@ -17,6 +17,7 @@
 package org.hawaiiframework.async.timeout;
 
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
+import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +28,9 @@ import java.util.UUID;
  * <p>
  * This class is called shared since it is shared by the guarded task and the guard task in order to communicate the task abort strategy.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class SharedTaskContext {
 
@@ -78,6 +78,11 @@ public class SharedTaskContext {
     private boolean aborted;
 
     /**
+     * The task's statistics.
+     */
+    private final TaskStatistics taskStatistics;
+
+    /**
      * Construct an instance.
      *
      * @param taskName                        the task name
@@ -88,6 +93,7 @@ public class SharedTaskContext {
         this.taskName = taskName;
         this.executorConfigurationProperties = executorConfigurationProperties;
         this.taskId = UUID.randomUUID().toString();
+        this.taskStatistics = new TaskStatistics();
     }
 
     /**
@@ -198,5 +204,14 @@ public class SharedTaskContext {
         if (!isAborted()) {
             timeoutGuardTaskRemoveStrategy.invoke();
         }
+        taskStatistics.stopExecution();
+    }
+
+    public TaskStatistics getTaskStatistics() {
+        return taskStatistics;
+    }
+
+    public void startExecution() {
+        taskStatistics.startExecution();
     }
 }

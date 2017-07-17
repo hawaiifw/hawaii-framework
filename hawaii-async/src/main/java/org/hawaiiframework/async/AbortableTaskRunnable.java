@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.async;
 
+import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.logging.model.MdcContext;
@@ -30,10 +31,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * Delegating Runnable that copies the MDC to the executing thread before running the delegate.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class AbortableTaskRunnable implements Runnable {
 
@@ -60,9 +60,9 @@ public class AbortableTaskRunnable implements Runnable {
     /**
      * Construct a new instance.
      *
-     * @param mdcContext                     the MDC context (of the calling thread).
-     * @param delegate                       the delegate to run.
-     * @param sharedTaskContext              the abort strategy to set.
+     * @param mdcContext        the MDC context (of the calling thread).
+     * @param delegate          the delegate to run.
+     * @param sharedTaskContext the abort strategy to set.
      */
     public AbortableTaskRunnable(@NotNull final MdcContext mdcContext, @NotNull final Runnable delegate,
             @NotNull final SharedTaskContext sharedTaskContext) {
@@ -77,6 +77,7 @@ public class AbortableTaskRunnable implements Runnable {
     @Override
     public void run() {
         mdcContext.populateMdc();
+        sharedTaskContext.startExecution();
 
         final String taskId = sharedTaskContext.getTaskId();
         MDC.put("task_id", taskId);
@@ -87,6 +88,10 @@ public class AbortableTaskRunnable implements Runnable {
             delegate.run();
         } finally {
             sharedTaskContext.finish();
+            final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
+            LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).", sharedTaskContext.getTaskName(),
+                    taskId, taskStatistics.getTotalTime() / 1E6, taskStatistics.getQueueTime() / 1E6,
+                    taskStatistics.getExecutionTime() / 1E6);
             MDC.clear();
             SharedTaskContextHolder.remove();
         }
