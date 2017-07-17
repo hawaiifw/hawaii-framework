@@ -2,9 +2,12 @@ language: java
 sudo: false
 jdk:
 - oraclejdk8
+addons:
+  apt:
+    packages:
+    - graphviz
 before_install:
-- sudo apt-get -qq update
-- sudo apt-get -y install graphviz
+-
 after_success:
 - "./.travis-deploy-artifacts.sh"
 cache:
