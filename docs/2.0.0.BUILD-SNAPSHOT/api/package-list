@@ -1,5 +1,10 @@
 org.hawaiiframework.aspect
+org.hawaiiframework.async
+org.hawaiiframework.async.http
+org.hawaiiframework.async.model
+org.hawaiiframework.async.timeout
 org.hawaiiframework.boot.autoconfigure
+org.hawaiiframework.boot.autoconfigure.async
 org.hawaiiframework.boot.autoconfigure.env
 org.hawaiiframework.boot.autoconfigure.jackson
 org.hawaiiframework.boot.autoconfigure.rest
@@ -8,6 +13,7 @@ org.hawaiiframework.context
 org.hawaiiframework.converter
 org.hawaiiframework.crypto
 org.hawaiiframework.exception
+org.hawaiiframework.logging.model
 org.hawaiiframework.sql
 org.hawaiiframework.test.mockmvc
 org.hawaiiframework.time
