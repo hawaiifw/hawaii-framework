@@ -77,7 +77,6 @@ public class AbortableTaskRunnable implements Runnable {
     @Override
     public void run() {
         mdcContext.populateMdc();
-        LOGGER.info("Starting task..");
         sharedTaskContext.startExecution();
 
         final String taskId = sharedTaskContext.getTaskId();
