@@ -209,6 +209,7 @@ project("hawaii-autoconfigure") {
         compile "org.springframework.boot:spring-boot-autoconfigure"
         compile "org.springframework.boot:spring-boot-test"
         compile "org.yaml:snakeyaml"
+        compileOnly project(":hawaii-async")
         compileOnly "com.fasterxml.jackson.core:jackson-databind"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"

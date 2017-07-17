@@ -32,16 +32,14 @@ import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.boot.bind.YamlConfigurationFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -68,6 +66,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * @author Paul Klos
  */
 @Configuration
+@EnableAsync
 public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostProcessor, AsyncConfigurer, EnvironmentAware {
 
     /**
@@ -110,9 +109,9 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
     private TaskExecutor defaultExecutor;
 
     /**
-     * The name of the configuration file that holds the async configuration.
+     * The loader for the async configuration.
      */
-    private String configFile;
+    private AsyncPropertiesLoader asyncPropertiesLoader;
 
     /**
      * {@inheritDoc}
@@ -215,7 +214,7 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
      */
     @Override
     public void setEnvironment(final Environment environment) {
-        configFile = environment.getProperty("hawaii.async.configuration");
+        asyncPropertiesLoader = new AsyncPropertiesLoader(environment.getProperty("hawaii.async.configuration"));
     }
 
     /**
@@ -321,29 +320,9 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
      */
     private ExecutorConfigurationProperties getProperties() {
         if (properties == null) {
-            properties = loadProperties();
+            properties = asyncPropertiesLoader.loadProperties();
         }
         return properties;
-    }
-
-    /**
-     * Load the properties from the configuration file.
-     *
-     * @return the properties
-     */
-    // getObject() throws Exception
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    private ExecutorConfigurationProperties loadProperties() {
-        try {
-            final YamlConfigurationFactory<ExecutorConfigurationProperties> yamlConfigurationFactory =
-                    new YamlConfigurationFactory<>(ExecutorConfigurationProperties.class);
-            yamlConfigurationFactory.setYaml(new String(Files.readAllBytes(Paths.get(configFile)), "UTF-8"));
-
-            return yamlConfigurationFactory.getObject();
-        } catch (Exception e) {
-            LOGGER.error("Unable to load async configuration file");
-            throw new HawaiiException(e);
-        }
     }
 
     /**
