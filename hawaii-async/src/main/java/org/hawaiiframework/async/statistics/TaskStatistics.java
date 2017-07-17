@@ -20,6 +20,9 @@ package org.hawaiiframework.async.statistics;
  * Statistics about a task.
  * <p>
  * It registers, in nano-seconds, the queue time, the execution time and the total time (queue time + execution time).
+ *
+ * @author Rutger Lubbers
+ * @since 2.0.0
  */
 public final class TaskStatistics {
 
