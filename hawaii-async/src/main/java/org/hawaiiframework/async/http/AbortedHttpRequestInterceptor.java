@@ -36,7 +36,6 @@ public class AbortedHttpRequestInterceptor implements ClientHttpRequestIntercept
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
     @Override
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
             throws IOException {
