@@ -18,6 +18,7 @@ package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
+import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.slf4j.Logger;
@@ -95,5 +96,12 @@ public class DelegatingExecutor implements TaskExecutor {
 
         SharedTaskContextHolder.register(sharedTaskContext);
         delegate.execute(task);
+    }
+
+    /**
+     * Return the view on the statistics.
+     */
+    public ExecutorStatisticsView getExecutorStatistics() {
+        return new ExecutorStatisticsView(executorStatistics);
     }
 }
