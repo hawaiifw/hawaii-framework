@@ -70,8 +70,11 @@ public final class SharedTaskContextHolder {
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public static void setTaskAbortStrategy(final TaskAbortStrategy taskAbortStrategy) {
-        LOGGER.trace("Setting task abort strategy.");
-        get().setTaskAbortStrategy(taskAbortStrategy);
+        final SharedTaskContext sharedTaskContext = get();
+        if (sharedTaskContext != null) {
+            LOGGER.trace("Setting task abort strategy.");
+            sharedTaskContext.setTaskAbortStrategy(taskAbortStrategy);
+        }
     }
 
     /**
