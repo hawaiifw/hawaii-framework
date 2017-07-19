@@ -136,6 +136,7 @@ public class SharedTaskContext {
     public void abortBusinessTask() {
         if (taskAbortStrategy != null) {
             taskAbortStrategy.invoke();
+            executorStatistics.incrementAbortedTaskCount();
             aborted = true;
         }
     }
@@ -196,6 +197,7 @@ public class SharedTaskContext {
 
         final boolean isRemoved = taskRemoveStrategy.invoke();
         if (isRemoved) {
+            executorStatistics.incrementAbortedTaskCount();
             LOGGER.debug("Removed task '{}' from the executors queue.", getTaskId());
         }
 
@@ -214,15 +216,18 @@ public class SharedTaskContext {
         taskStatistics.stopExecution();
     }
 
+    /**
+     * Return the task's execution statistics.
+     */
     public TaskStatistics getTaskStatistics() {
         return taskStatistics;
     }
 
+    /**
+     * Signal the start of the task's execution.
+     */
     public void startExecution() {
         taskStatistics.startExecution();
-        if (isAborted()) {
-            executorStatistics.incrementAbortedTaskCount();
-        }
     }
 
 }
