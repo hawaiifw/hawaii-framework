@@ -149,6 +149,18 @@ public class ExecutorConfigurationProperties {
     }
 
     /**
+     * Convenience method to add properties for a single executor.
+     *
+     * @param executor the executor properties
+     */
+    public void addExecutor(final ExecutorProperties executor) {
+        if (executors == null) {
+            executors = new ArrayList<>();
+        }
+        executors.add(executor);
+    }
+
+    /**
      * Getter for the systems.
      *
      * @return the systems
@@ -166,6 +178,17 @@ public class ExecutorConfigurationProperties {
         this.systems = systems;
     }
 
+    /**
+     * Convenience method to add properties for a single system.
+     *
+     * @param system the system properties
+     */
+    public void addSystem(final SystemProperties system) {
+        if (systems == null) {
+            systems = new ArrayList<>();
+        }
+        systems.add(system);
+    }
     /**
      * Determine the timeout for a task.
      * <p>
@@ -208,4 +231,5 @@ public class ExecutorConfigurationProperties {
     public SystemProperties getSystemPropertiesForName(final String systemName) {
         return systems.stream().filter(systemProperties -> systemProperties.nameMatches(systemName)).findFirst().orElse(null);
     }
+
 }

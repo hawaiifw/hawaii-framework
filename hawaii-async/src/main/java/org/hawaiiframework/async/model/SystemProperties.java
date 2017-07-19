@@ -124,6 +124,17 @@ public class SystemProperties {
     }
 
     /**
+     * Convenience method to add properties for a single task.
+     *
+     * @param task the task
+     */
+    public void addTask(final TaskProperties task) {
+        if (tasks == null) {
+            tasks = new ArrayList<>();
+        }
+        tasks.add(task);
+    }
+    /**
      * Retrieve the properties for a named task.
      *
      * @param taskName the task name

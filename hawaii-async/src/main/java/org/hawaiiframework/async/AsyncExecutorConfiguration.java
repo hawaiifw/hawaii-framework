@@ -45,6 +45,8 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+
 /**
  * Configuration class to set up asynchronous executors.
  * <p>
@@ -214,7 +216,18 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
      */
     @Override
     public void setEnvironment(final Environment environment) {
-        asyncPropertiesLoader = new AsyncPropertiesLoader(environment.getProperty("hawaii.async.configuration"));
+        setAsyncPropertiesLoader(new AsyncPropertiesLoader(environment.getProperty("hawaii.async.configuration")));
+    }
+
+    /**
+     * Setter for the properties loaded.
+     *
+     * Added for testability.
+     *
+     * @param asyncPropertiesLoader the loader
+     */
+    public void setAsyncPropertiesLoader(final AsyncPropertiesLoader asyncPropertiesLoader) {
+        this.asyncPropertiesLoader = asyncPropertiesLoader;
     }
 
     /**
@@ -250,7 +263,7 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
 
             // This is the fallback if no executor is defined for a task
             final String systemExecutor = systemProperties.getDefaultExecutor();
-            if (!executorNames.contains(systemExecutor)) {
+            if (StringUtils.isNotBlank(systemExecutor) && !executorNames.contains(systemExecutor)) {
                 throw new HawaiiException(
                         String.format("Executor '%s' of system '%s' is not defined.", systemExecutor, systemName));
             }
@@ -269,8 +282,7 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
                     LOGGER.info("No executor defined for task '{}'. Falling back to default.", taskName, systemExecutor);
                 }
 
-                final String executor = StringUtils.isNotBlank(executorName) ? executorName : systemExecutor;
-
+                final String executor = defaultIfBlank(executorName, defaultIfBlank(systemExecutor, properties.getDefaultExecutor()));
                 createTaskExecutorDelegate(beanFactory, taskName, executor);
             }
         }
