@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.async.http;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -62,7 +63,10 @@ public class TaskIdSupplierHttpRequestInterceptor implements ClientHttpRequestIn
     @Override
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
             throws IOException {
-        request.getHeaders().add(headerName, SharedTaskContextHolder.getTaskId());
+        final String taskId = SharedTaskContextHolder.getTaskId();
+        if (StringUtils.isNotBlank(taskId)) {
+            request.getHeaders().add(headerName, taskId);
+        }
         return execution.execute(request, body);
     }
 
