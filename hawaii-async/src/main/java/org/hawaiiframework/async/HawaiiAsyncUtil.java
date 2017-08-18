@@ -17,6 +17,7 @@
 package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.exception.HawaiiTaskExecutionException;
+import org.hawaiiframework.exception.HawaiiException;
 
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Utility to retrieve the value from a {@link CompletableFuture}.
- *
+ * <p>
  * All exceptions are wrapped in a {@link HawaiiTaskExecutionException}.
  */
 public final class HawaiiAsyncUtil {
@@ -36,6 +37,7 @@ public final class HawaiiAsyncUtil {
     private HawaiiAsyncUtil() {
         // Private utility constructor.
     }
+
     /**
      * Delegates to {@link CompletableFuture#get()}.
      */
@@ -44,7 +46,7 @@ public final class HawaiiAsyncUtil {
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new HawaiiTaskExecutionException(e);
+            throw handleException(e);
         }
     }
 
@@ -59,8 +61,20 @@ public final class HawaiiAsyncUtil {
         try {
             return future.get(timeout, unit);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new HawaiiTaskExecutionException(e);
+            throw handleException(e);
         }
+    }
+
+    private static HawaiiException handleException(final Exception e) {
+        if (e instanceof ExecutionException) {
+            final Throwable cause = e.getCause();
+            if (cause instanceof HawaiiException) {
+                return (HawaiiException) cause;
+            }
+            return new HawaiiTaskExecutionException(cause);
+        }
+
+        return new HawaiiTaskExecutionException(e);
     }
 
     /**
