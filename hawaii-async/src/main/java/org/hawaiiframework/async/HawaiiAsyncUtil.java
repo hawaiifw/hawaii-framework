@@ -17,6 +17,7 @@
 package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.exception.HawaiiTaskExecutionException;
+import org.hawaiiframework.exception.HawaiiException;
 
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Utility to retrieve the value from a {@link CompletableFuture}.
- *
+ * <p>
  * All exceptions are wrapped in a {@link HawaiiTaskExecutionException}.
  */
 public final class HawaiiAsyncUtil {
@@ -36,6 +37,7 @@ public final class HawaiiAsyncUtil {
     private HawaiiAsyncUtil() {
         // Private utility constructor.
     }
+
     /**
      * Delegates to {@link CompletableFuture#get()}.
      */
@@ -43,8 +45,8 @@ public final class HawaiiAsyncUtil {
         requireNonNull(future);
         try {
             return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new HawaiiTaskExecutionException(e);
+        } catch (InterruptedException | ExecutionException exception) {
+            throw handleException(exception);
         }
     }
 
@@ -58,9 +60,25 @@ public final class HawaiiAsyncUtil {
         requireNonNull(unit);
         try {
             return future.get(timeout, unit);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new HawaiiTaskExecutionException(e);
+        } catch (InterruptedException | ExecutionException | TimeoutException exception) {
+            throw handleException(exception);
         }
+    }
+
+    private static HawaiiException handleException(final Exception exception) {
+        if (exception instanceof ExecutionException) {
+            return handleExecutionException(exception);
+        }
+
+        return new HawaiiTaskExecutionException(exception);
+    }
+
+    private static HawaiiException handleExecutionException(final Exception exception) {
+        final Throwable cause = exception.getCause();
+        if (cause instanceof HawaiiException) {
+            return (HawaiiException) cause;
+        }
+        return new HawaiiTaskExecutionException(cause);
     }
 
     /**

@@ -83,8 +83,11 @@ public class AbortableTaskDecorator implements TaskDecorator {
         final MdcContext currentMdc = MdcContext.getCurrentMdc();
 
         final SharedTaskContext sharedTaskContext = SharedTaskContextHolder.get();
-
-        return getRunnable(runnable, currentMdc, sharedTaskContext);
+        try {
+            return getRunnable(runnable, currentMdc, sharedTaskContext);
+        } finally {
+            SharedTaskContextHolder.remove();
+        }
     }
 
     private Runnable getRunnable(final Runnable runnable, final MdcContext currentMdc, final SharedTaskContext sharedTaskContext) {

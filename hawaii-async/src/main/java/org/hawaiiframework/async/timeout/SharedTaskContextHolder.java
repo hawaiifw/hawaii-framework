@@ -95,7 +95,11 @@ public final class SharedTaskContextHolder {
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public static String getTaskId() {
-        return get().getTaskId();
+        final SharedTaskContext sharedTaskContext = get();
+        if (sharedTaskContext == null) {
+            return null;
+        }
+        return sharedTaskContext.getTaskId();
     }
 
     /**

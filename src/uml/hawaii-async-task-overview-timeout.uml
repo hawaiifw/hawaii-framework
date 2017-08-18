@@ -16,9 +16,9 @@ participant guard as "TimeoutGuardTask" #99ccff
 participant guard_executor as "GuardTaskExecutor" #99ccff
 participant thread_local as "SharedTaskContextHolder" #99ccff
 
-control thread as "thread-<n>" #eee
+control thread as "thread-<n>" #ece
 
-control guard_thread as "guard-<n>" #eee
+control guard_thread as "guard-<n>" #99f
 
 activate svc
   svc -> proxy : getUser()
