@@ -45,8 +45,8 @@ public final class HawaiiAsyncUtil {
         requireNonNull(future);
         try {
             return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw handleException(e);
+        } catch (InterruptedException | ExecutionException exception) {
+            throw handleException(exception);
         }
     }
 
@@ -60,21 +60,25 @@ public final class HawaiiAsyncUtil {
         requireNonNull(unit);
         try {
             return future.get(timeout, unit);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw handleException(e);
+        } catch (InterruptedException | ExecutionException | TimeoutException exception) {
+            throw handleException(exception);
         }
     }
 
-    private static HawaiiException handleException(final Exception e) {
-        if (e instanceof ExecutionException) {
-            final Throwable cause = e.getCause();
-            if (cause instanceof HawaiiException) {
-                return (HawaiiException) cause;
-            }
-            return new HawaiiTaskExecutionException(cause);
+    private static HawaiiException handleException(final Exception exception) {
+        if (exception instanceof ExecutionException) {
+            return handleExecutionException(exception);
         }
 
-        return new HawaiiTaskExecutionException(e);
+        return new HawaiiTaskExecutionException(exception);
+    }
+
+    private static HawaiiException handleExecutionException(final Exception exception) {
+        final Throwable cause = exception.getCause();
+        if (cause instanceof HawaiiException) {
+            return (HawaiiException) cause;
+        }
+        return new HawaiiTaskExecutionException(cause);
     }
 
     /**
