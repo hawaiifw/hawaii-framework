@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath("io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE")
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
-        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.4.0'
+        classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.5.0'
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15")
         classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
     }
@@ -330,7 +330,6 @@ project("hawaii-async") {
 }
 
 configure(rootProject) {
-
     description = "Hawaii Framework"
 
     apply plugin: "org.asciidoctor.convert"
