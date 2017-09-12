@@ -168,7 +168,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
             final HttpStatus status,
             final WebRequest request) {
         final ErrorResponseResource resource = exceptionResponseFactory.create(throwable);
-        getResponseEnrichers().forEach(enricher -> enricher.enrich(resource, throwable, request, status));
+        getResponseEnrichers().forEach(enricher -> enricher.enrich(resource, request, status));
         return resource;
     }
 

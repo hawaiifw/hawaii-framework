@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.resource;
 
+import org.hawaiiframework.validation.ValidationException;
+
 import java.util.List;
 
 /**
@@ -30,6 +32,14 @@ public class ValidationErrorResponseResource extends ErrorResponseResource {
      * The validation errors.
      */
     private List<ValidationErrorResource> errors;
+
+    public ValidationErrorResponseResource() {
+        this(null);
+    }
+
+    public ValidationErrorResponseResource(final ValidationException validationException) {
+        super(validationException);
+    }
 
     /**
      * Returns the validation errors.

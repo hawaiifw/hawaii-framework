@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.web.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
@@ -35,6 +36,26 @@ public class ErrorResponseResource {
     private int statusCode;
     private String statusMessage;
     private String errorMessage;
+    /**
+     * The throwable this resource was created for.
+     */
+    private final Throwable throwable;
+
+    /**
+     * Default constructor.
+     */
+    public ErrorResponseResource() {
+        this(null);
+    }
+
+    /**
+     * Construct an error resource with a throwable.
+     *
+     * @param throwable the throwable
+     */
+    public ErrorResponseResource(final Throwable throwable) {
+        this.throwable = throwable;
+    }
 
     /**
      * Returns the HTTP method.
@@ -160,6 +181,16 @@ public class ErrorResponseResource {
      */
     public void setErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    /**
+     * Getter for throwable.
+     *
+     * @return the throwable
+     */
+    @JsonIgnore
+    public Throwable getThrowable() {
+        return throwable;
     }
 
     @Override

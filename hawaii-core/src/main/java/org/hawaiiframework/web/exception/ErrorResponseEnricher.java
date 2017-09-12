@@ -16,7 +16,6 @@
 
 package org.hawaiiframework.web.exception;
 
-import org.hawaiiframework.exception.HawaiiException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.WebRequest;
@@ -35,19 +34,17 @@ import org.springframework.web.context.request.WebRequest;
 public interface ErrorResponseEnricher {
 
     /**
-     * Default implementation that first translates the original throwable to the one that was used to determine the
-     * error response resource type, i.e. using @link {@link HawaiiException#getCausingHawaiiException(Throwable)} and
+     * Default implementation that first retrieves the original throwable stored in the error response resource, and
      * then calls {@link #doEnrich(ErrorResponseResource, Throwable, WebRequest, HttpStatus)}.
      *
      * Note that the http status is a given, it is assumed to be determined in the exception handler.
      *
      * @param errorResponseResource the error response resource
-     * @param throwable the exception that was raised
      * @param request the original web request
      * @param httpStatus the http status that will be returned
      */
-    default void enrich(ErrorResponseResource errorResponseResource, Throwable throwable, WebRequest request, HttpStatus httpStatus) {
-        doEnrich(errorResponseResource, HawaiiException.getCausingHawaiiException(throwable), request, httpStatus);
+    default void enrich(ErrorResponseResource errorResponseResource, WebRequest request, HttpStatus httpStatus) {
+        doEnrich(errorResponseResource, errorResponseResource.getThrowable(), request, httpStatus);
     }
 
     /**
@@ -61,6 +58,5 @@ public interface ErrorResponseEnricher {
      * @param httpStatus the http status that will be returned
      */
     void doEnrich(ErrorResponseResource errorResponseResource, Throwable throwable, WebRequest request, HttpStatus httpStatus);
-
 
 }

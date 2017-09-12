@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.resource;
 
+import org.hawaiiframework.exception.ApiException;
+
 /**
  * Response handler for API errors.
  *
@@ -33,6 +35,14 @@ public class ApiErrorResponseResource extends ErrorResponseResource {
      * The error reason.
      */
     private String apiErrorReason;
+
+    public ApiErrorResponseResource() {
+        this(null);
+    }
+
+    public ApiErrorResponseResource(final ApiException apiException) {
+        super(apiException);
+    }
 
     /**
      * Getter for error code.
