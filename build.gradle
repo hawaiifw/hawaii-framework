@@ -11,23 +11,22 @@ buildscript {
         classpath("io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE")
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.5.0'
-        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15")
+        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
     }
 }
 
 ext {
-    bouncycastleVersion               = "1.56"
-    dependencyManagementPluginVersion = "1.0.0.RELEASE"
+    bouncycastleVersion               = "1.58"
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
-    springPlatformVersion             = "Brussels-SR2"
+    springPlatformVersion             = "Brussels-SR5"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
         "http://docs.oracle.com/javaee/7/api/",
-        "http://docs.spring.io/spring/docs/4.3.8.RELEASE/javadoc-api/",
-        "http://docs.spring.io/spring-boot/docs/1.5.3.RELEASE/api/",
+        "http://docs.spring.io/spring/docs/4.3.11.RELEASE/javadoc-api/",
+        "http://docs.spring.io/spring-boot/docs/1.5.7.RELEASE/api/",
         "http://fasterxml.github.io/jackson-core/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-databind/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
@@ -334,23 +333,24 @@ configure(rootProject) {
 
     apply plugin: "org.asciidoctor.convert"
 
-    // Plugin so we can use Ruby gems when rendering documents.
-    apply plugin: 'com.github.jruby-gradle.base'
+    // Add plugin so we can use Ruby gems when rendering documents.
+    apply plugin: "com.github.jruby-gradle.base"
 
-    // don't publish the default jar for the root project
+    // Don't publish the default jar for the root project.
     configurations.archives.artifacts.clear()
 
     dependencies {
-        // gems dependency configuration is added by jruby-gradle-plugin. Here we define the gems we need in our build.
-        gems 'rubygems:asciidoctor-diagram:1.2.0'
+        // Gems dependency configuration is added by jruby-gradle-plugin. Here we define the gems we need in our build.
+        gems "rubygems:asciidoctor-diagram:1.2.0"
     }
 
     asciidoctorj {
         // We can change the AsciidoctorJ dependency version.
-        version = '1.5.4'
+        version = "1.5.4"
     }
 
     asciidoctor {
+
         // jrubyPrepareGems task is added by the JRuby plugin and will download
         // Ruby gems we have defined in the gems dependency configuration.
         dependsOn jrubyPrepare
@@ -377,14 +377,13 @@ configure(rootProject) {
 
         // Split resources in 'real' images and generated resources (by asciidoctor-diagram)
         // so we can ignore the generated once. Bundle in a single resources directory because
-        // the resources method takes a single CopySpec, which only has one target directory
+        // the resources method takes a single CopySpec, which only has one target directory.
         resources {
             from(project.file("src/asciidoc/resources")) {
-                include '**/*.svg'
-                include '**/*.png'
-                // exclude 'images/**/notThisOne.png'
+                include "**/*.svg"
+                include "**/*.png"
             }
-            into './resources'
+            into "./resources"
         }
     }
 
