@@ -119,8 +119,8 @@ configure(subprojects - sampleprojects) { subproject ->
         options.links(javadocLinks)
         options.addStringOption("Xdoclint:none", "-quiet")
 
-        // suppress warnings due to cross-module @see and @link references;
-        // note that global 'api' task does display all warnings.
+        // Suppress warnings due to cross-module @see and @link references;
+        // Note that global 'api' task does display all warnings.
         logging.captureStandardError LogLevel.INFO
         logging.captureStandardOutput LogLevel.INFO // suppress "## warnings" message
     }
@@ -369,11 +369,6 @@ configure(rootProject) {
         attributes  "revnumber": project.version,
                     "spring-version": "${dependencyManagement.importedProperties['spring.version']}",
                     "spring-boot-version": "${dependencyManagement.importedProperties['spring-boot.version']}"
-
-        def filesToCopy = copySpec{
-            from 'somefile.jar'
-            rename {String fileName -> 'anotherfile.jar'}
-        }
 
         // Split resources in 'real' images and generated resources (by asciidoctor-diagram)
         // so we can ignore the generated once. Bundle in a single resources directory because
