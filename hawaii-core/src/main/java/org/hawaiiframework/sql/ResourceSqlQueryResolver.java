@@ -124,28 +124,22 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     protected void doRefreshQueryHolder(final String sqlQueryName, final QueryHolder queryHolder) {
         final String location = getPrefix() + sqlQueryName + getSuffix();
         final Resource resource = this.resourceLoader.getResource(location);
-        if (resource.exists()) {
-            if (resource.getFilename() != null) {
-                // This is an actual file
-                final long checkpoint = queryHolder.getQueryTimestamp();
-                final long lastModified;
-                try {
-                    lastModified = resource.lastModified();
-                    if (lastModified > checkpoint) {
-                        loadSqlQuery(sqlQueryName, queryHolder);
-                    } else {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
-                        }
+        if (resource.exists() && resource.getFilename() != null) {
+            // This is an actual file
+            final long checkpoint = queryHolder.getQueryTimestamp();
+            final long lastModified;
+            try {
+                lastModified = resource.lastModified();
+                if (lastModified > checkpoint) {
+                    loadSqlQuery(sqlQueryName, queryHolder);
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
                     }
-                } catch (IOException e) {
-                    // Can't really happen as we already checked that the resource has a filename
-                    throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
                 }
-            }
-        } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Resource {} does not exist", resource.getFilename());
+            } catch (IOException e) {
+                // Can't really happen as we already checked that the resource has a filename
+                throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
             }
         }
     }
@@ -168,6 +162,10 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
                 }
             } catch (IOException e) {
                 throw new HawaiiException("Error reading resource: " + location, e);
+            }
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Resource {} does not exist", resource.getFilename());
             }
         }
         return query;
