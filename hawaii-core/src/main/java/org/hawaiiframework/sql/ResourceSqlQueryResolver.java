@@ -165,7 +165,7 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
             }
         } else {
             if (logger.isDebugEnabled()) {
-                logger.debug("Resource {} does not exist", resource.getFilename());
+                logger.debug("Resource {} does not exist", resource.getDescription());
             }
         }
         return query;
