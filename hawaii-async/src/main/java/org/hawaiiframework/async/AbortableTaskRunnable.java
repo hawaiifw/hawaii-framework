@@ -19,14 +19,19 @@ package org.hawaiiframework.async;
 import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.MdcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.validation.constraints.NotNull;
-
 import static java.util.Objects.requireNonNull;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogCallResultTypes.TIME_OUT;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogFieldNames.CALL_DURATION;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogFieldNames.CALL_ID;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogFieldNames.CALL_TYPE;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogTypeNames.CALL_END;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogTypeNames.CALL_START;
 
 /**
  * Delegating Runnable that copies the MDC to the executing thread before running the delegate.
@@ -41,6 +46,11 @@ public class AbortableTaskRunnable implements Runnable {
      * The logger to use.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbortableTaskRunnable.class);
+
+    /**
+     * The number of milliseconds (10E-3)per nanoseconds (1E-9).
+     */
+    private static final double MSEC_PER_NANOSEC = 1E6;
 
     /**
      * The MDC context that is set to the thread.
@@ -64,8 +74,8 @@ public class AbortableTaskRunnable implements Runnable {
      * @param delegate          the delegate to run.
      * @param sharedTaskContext the abort strategy to set.
      */
-    public AbortableTaskRunnable(@NotNull final MdcContext mdcContext, @NotNull final Runnable delegate,
-            @NotNull final SharedTaskContext sharedTaskContext) {
+    public AbortableTaskRunnable(final MdcContext mdcContext, final Runnable delegate,
+                                 final SharedTaskContext sharedTaskContext) {
         this.mdcContext = requireNonNull(mdcContext);
         this.delegate = requireNonNull(delegate);
         this.sharedTaskContext = requireNonNull(sharedTaskContext);
@@ -80,21 +90,42 @@ public class AbortableTaskRunnable implements Runnable {
         sharedTaskContext.startExecution();
 
         final String taskId = sharedTaskContext.getTaskId();
-        MDC.put("task_id", taskId);
+        KibanaLogFields.set(CALL_ID, taskId);
+        KibanaLogFields.set(CALL_TYPE, sharedTaskContext.getTaskName());
 
         SharedTaskContextHolder.register(sharedTaskContext);
         try {
-            LOGGER.trace("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), taskId);
+
+            /*
+             * Perform the task.
+             */
+            KibanaLogFields.setLogType(CALL_START);
+            LOGGER.info("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), taskId);
+            KibanaLogFields.unsetLogType();
+
             delegate.run();
         } finally {
             sharedTaskContext.finish();
-            final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
-            LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).", sharedTaskContext.getTaskName(),
-                    taskId, taskStatistics.getTotalTime() / 1E6, taskStatistics.getQueueTime() / 1E6,
-                    taskStatistics.getExecutionTime() / 1E6);
+            logStatistics(taskId, sharedTaskContext.getTaskStatistics());
             MDC.clear();
             SharedTaskContextHolder.remove();
         }
     }
 
+    private void logStatistics(final String taskId, final TaskStatistics taskStatistics) {
+        KibanaLogFields.setLogType(CALL_END);
+
+        final String duration = formatTime(taskStatistics.getTotalTime());
+        KibanaLogFields.set(CALL_DURATION, duration);
+        if (sharedTaskContext.isAborted()) {
+            KibanaLogFields.setCallResult(TIME_OUT);
+        }
+        LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).", sharedTaskContext.getTaskName(),
+                taskId, duration, formatTime(taskStatistics.getQueueTime()), formatTime(taskStatistics.getExecutionTime()));
+        KibanaLogFields.unsetLogType();
+    }
+
+    private String formatTime(final Long time) {
+        return String.format("%.2f", time / MSEC_PER_NANOSEC);
+    }
 }

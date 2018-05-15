@@ -21,6 +21,8 @@ ext {
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
     springPlatformVersion             = "Brussels-SR5"
+    logbackVersion                    = "1.1.5"
+    nimbusDsVersion                   = "4.27"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -198,23 +200,83 @@ configure(subprojects - sampleprojects) { subproject ->
     }
 }
 
+project("hawaii-async") {
+
+    description = "Hawaii Async"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile project(":hawaii-logging")
+        compile "org.springframework:spring-core"
+        compile "org.springframework.boot:spring-boot"
+        compile "org.springframework:spring-context"
+        compile "org.apache.httpcomponents:httpclient"
+        compile "javax.validation:validation-api"
+    }
+}
+
 project("hawaii-autoconfigure") {
 
     description = "Hawaii Autoconfigure"
 
     dependencies {
         compile project(":hawaii-core")
+        compileOnly project(":hawaii-async")
+        compileOnly project(":hawaii-cache-memcached")
+        compileOnly project(":hawaii-cache-redis")
+        compileOnly project(":hawaii-logging")
+        compile "org.hibernate:hibernate-validator"
         compile "org.springframework.boot:spring-boot"
         compile "org.springframework.boot:spring-boot-autoconfigure"
         compile "org.springframework.boot:spring-boot-test"
+        compile "org.springframework.data:spring-data-redis"
         compile "org.yaml:snakeyaml"
-        compileOnly project(":hawaii-async")
         compileOnly "com.fasterxml.jackson.core:jackson-databind"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compileOnly "javax.servlet:javax.servlet-api"
+        testCompile "com.fasterxml.jackson.core:jackson-databind"
+        testCompile "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        testCompile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        testCompile("org.springframework:spring-test")
         testCompile("org.hamcrest:hamcrest-core")
         testCompile("org.hamcrest:hamcrest-library")
+        testCompile "redis.clients:jedis"
+        testCompile project(":hawaii-logging")
+    }
+}
+
+project("hawaii-cache") {
+
+    description = "Hawaii Cache"
+
+    dependencies {
+        compile project(":hawaii-core")
+    }
+}
+
+project("hawaii-cache-memcached") {
+
+    description = "Hawaii Cache Memcached"
+
+    dependencies {
+        compile project(":hawaii-cache")
+        compileOnly project(":hawaii-logging")
+        compile 'net.spy:spymemcached:2.10.4'
+    }
+}
+
+project("hawaii-cache-redis") {
+
+    description = "Hawaii Cache Redis"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile project(":hawaii-cache")
+        compileOnly project(":hawaii-logging")
+        compile "javax.validation:validation-api"
+        compile "redis.clients:jedis"
+        compile "org.springframework.data:spring-data-redis"
     }
 }
 
@@ -237,6 +299,51 @@ project("hawaii-core") {
         compileOnly "org.springframework:spring-web"
         compileOnly "org.springframework:spring-webmvc"
         testCompile "org.springframework:spring-core"
+    }
+}
+
+project("hawaii-errors") {
+
+    description = "Hawaii Errors"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile "org.springframework:spring-web"
+    }
+}
+
+project("hawaii-logging") {
+
+    description = "Hawaii Logging"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile "org.springframework:spring-web"
+        compile "ch.qos.logback:logback-core:${logbackVersion}"
+        compile "ch.qos.logback:logback-classic:${logbackVersion}"
+        compile "javax.servlet:javax.servlet-api:3.1.0"
+        compile 'net.sourceforge.findbugs:annotations:1.3.2'
+    }
+}
+
+project("hawaii-security") {
+
+    description = "Hawaii Security"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile project(":hawaii-async")
+        compile project(":hawaii-cache")
+        compile project(":hawaii-errors")
+        compile "org.springframework:spring-web"
+        compile "org.springframework.boot:spring-boot-starter-security"
+        compile "org.springframework.security:spring-security-jwt"
+        compile("com.nimbusds:nimbus-jose-jwt:${nimbusDsVersion}")
+        compile "javax.servlet:javax.servlet-api:3.1.0"
+        compile "com.fasterxml.jackson.core:jackson-databind"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        compile "org.json:json"
     }
 }
 
@@ -284,6 +391,25 @@ project("hawaii-starter-async") {
     }
 }
 
+project("hawaii-starter-logging") {
+
+    description = "Hawaii Starter Logging"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile project(":hawaii-logging")
+    }
+}
+
+project("hawaii-stereotype") {
+
+    description = "Hawaii Stereotype"
+
+    dependencies {
+        compile "org.springframework:spring-context"
+    }
+}
+
 project("hawaii-test") {
 
     description = "Hawaii Test"
@@ -304,27 +430,16 @@ project("hawaii-test") {
     }
 }
 
-project("hawaii-logging") {
+project("hawaii-utils") {
 
     description = "Hawaii Logging"
 
     dependencies {
         compile project(":hawaii-core")
         compile "org.springframework:spring-web"
-    }
-}
-
-project("hawaii-async") {
-
-    description = "Hawaii Async"
-
-    dependencies {
-        compile project(":hawaii-logging")
-        compile "org.springframework:spring-core"
-        compile "org.springframework.boot:spring-boot"
-        compile "org.springframework:spring-context"
-        compile "org.apache.httpcomponents:httpclient"
-        compile "javax.validation:validation-api"
+        compile "ch.qos.logback:logback-core:${logbackVersion}"
+        compile "ch.qos.logback:logback-classic:${logbackVersion}"
+        compile "javax.servlet:javax.servlet-api:3.1.0"
     }
 }
 
