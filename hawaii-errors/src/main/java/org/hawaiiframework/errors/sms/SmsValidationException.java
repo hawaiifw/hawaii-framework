@@ -1,4 +1,4 @@
-package nl.vodafoneziggo.ponoi.common.sms.exception;
+package org.hawaiiframework.errors.sms;
 
 /**
  * An exception that is thrown when validation of @code{SmsMessage} fails.

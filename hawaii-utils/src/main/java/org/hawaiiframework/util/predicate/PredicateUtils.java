@@ -1,4 +1,4 @@
-package nl.vodafoneziggo.ponoi.common.predicates;
+package org.hawaiiframework.util.predicate;
 
 import java.util.function.Predicate;
 

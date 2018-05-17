@@ -1,6 +1,7 @@
-package nl.vodafoneziggo.ponoi.common.sms.exception;
+package org.hawaiiframework.errors.sms;
 
-import nl.vodafoneziggo.ponoi.exception.ErrorCode;
+
+import org.hawaiiframework.errors.ErrorCode;
 import org.hawaiiframework.exception.ApiException;
 
 /**
