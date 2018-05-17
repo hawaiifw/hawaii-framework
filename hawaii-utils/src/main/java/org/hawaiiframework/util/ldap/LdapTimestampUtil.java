@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 public final class LdapTimestampUtil {
 
 
+    private static final String YYYY_MMDD_HHMMSS_Z = "yyyyMMddHHmmss'Z'";
+
     private LdapTimestampUtil() {
         // private constructor for utility class.
     }
@@ -17,7 +19,7 @@ public final class LdapTimestampUtil {
      * Converts a LocalDateTime (expected to be in UTC) to a date time string for LDAP.
      */
     public static String getDateString(final LocalDateTime date) {
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss'Z'");
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(YYYY_MMDD_HHMMSS_Z);
         return date.format(dtf);
     }
 
@@ -25,7 +27,7 @@ public final class LdapTimestampUtil {
      * Converts a LocalDateTime (expected to be in UTC) to a date time string for LDAP.
      */
     public static LocalDateTime getDate(final String date) {
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss'Z'");
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(YYYY_MMDD_HHMMSS_Z);
         return LocalDateTime.parse(date, dtf);
     }
 }

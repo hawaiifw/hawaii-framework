@@ -24,12 +24,12 @@ public class SaltedSshaPasswordEncoder implements PasswordEncoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(SaltedSshaPasswordEncoder.class);
 
     /**
-     * the base64 encoder
+     * the base64 encoder.
      */
     private final Base64.Encoder encoder = Base64.getEncoder();
 
     /**
-     * the base64 decoder
+     * the base64 decoder.
      */
     private final Base64.Decoder decoder = Base64.getDecoder();
 
@@ -49,7 +49,7 @@ public class SaltedSshaPasswordEncoder implements PasswordEncoder {
     private final String header;
 
     /**
-     * the salt length
+     * the salt length.
      */
     private final int saltLength;
 
@@ -74,15 +74,6 @@ public class SaltedSshaPasswordEncoder implements PasswordEncoder {
      * {@inheritDoc}
      */
     @Override
-    public String encode(final CharSequence rawPassword) {
-        final String inputPassword = rawPassword.toString();
-        return encode(inputPassword, getSalt());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean matches(final CharSequence rawPassword, final String encodedPassword) {
         if (StringUtils.isEmpty(rawPassword) || StringUtils.isEmpty(encodedPassword)) {
             return false;
@@ -92,7 +83,7 @@ public class SaltedSshaPasswordEncoder implements PasswordEncoder {
         final byte[] hashAndSalt = decoder.decode(ssha256);
         final byte[] salt = Arrays.copyOfRange(hashAndSalt, digestLength, hashAndSalt.length);
 
-        final boolean matches =  encodedPassword.equals(encode(rawPassword.toString(), salt)) ;
+        final boolean matches = encodedPassword.equals(encode(rawPassword.toString(), salt));
         LOGGER.debug("PasswordMatcher '{}' matches: '{}'.", encodedPassword, matches);
         return matches;
     }
@@ -103,7 +94,16 @@ public class SaltedSshaPasswordEncoder implements PasswordEncoder {
         return salt.getBytes(UTF_8);
     }
 
-    private String encode(final String rawPassword, final byte[] salt)  {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String encode(final CharSequence rawPassword) {
+        final String inputPassword = rawPassword.toString();
+        return encode(inputPassword, getSalt());
+    }
+
+    private String encode(final String rawPassword, final byte[] salt) {
         try {
             final byte[] hash = digest(rawPassword.getBytes(UTF_8), salt);
             final byte[] hashAndSalt = Arrays.copyOf(hash, digestLength + salt.length);
@@ -125,7 +125,7 @@ public class SaltedSshaPasswordEncoder implements PasswordEncoder {
         return digest(alg, msg, salt);
     }
 
-    private byte[] digest(final MessageDigest alg , final byte[] msg, final byte[] salt) throws NoSuchAlgorithmException {
+    private byte[] digest(final MessageDigest alg, final byte[] msg, final byte[] salt) throws NoSuchAlgorithmException {
         final byte[] input = Arrays.copyOf(msg, msg.length + salt.length);
         System.arraycopy(salt, 0, input, msg.length, salt.length);
         return alg.digest(input);

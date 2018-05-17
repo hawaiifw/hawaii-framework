@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * A special password encoder that accepts an already encoded password as input and returns it as is.
- *
+ * <p>
  * The {@link PasswordEncoder#matches(CharSequence, String)} method will always throw an exception!
  */
 public class PassThroughPasswordEncoder implements PasswordEncoder {
@@ -14,7 +14,7 @@ public class PassThroughPasswordEncoder implements PasswordEncoder {
      */
     @Override
     public String encode(final CharSequence rawPassword) {
-       return rawPassword.toString();
+        return rawPassword.toString();
     }
 
     /**

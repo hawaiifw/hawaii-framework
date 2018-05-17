@@ -20,17 +20,17 @@ public class Ssha512PasswordEncoder extends SaltedSshaPasswordEncoder implements
     /**
      * The header to set in the ssha hash.
      */
-    public static final String HEADER = "{SSHA512}";
+    static public final String HEADER = "{SSHA512}";
 
     /**
-     * Construct an instance with the default salt length
+     * Construct an instance with the default salt length.
      */
     public Ssha512PasswordEncoder() {
         this(16);
     }
 
     /**
-     * Construct an instance with the given salt length
+     * Construct an instance with the given salt length.
      */
     public Ssha512PasswordEncoder(final int saltLength) {
         super(saltLength, HASH_ALGORITHM, HASH_LENGTH, HEADER);
