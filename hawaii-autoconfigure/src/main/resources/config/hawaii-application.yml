@@ -6,17 +6,49 @@ spring:
       indent-output: false
       write-dates-as-timestamps: false
       write-date-timestamps-as-nanoseconds: false
+
 logging:
   file: log/hawaii.log
   level:
     org.hawaiiframework: INFO
     org.springframework: INFO
+
 hawaii:
   time:
     enabled: true
     timezone: UTC
   async:
     configuration: ./config/async-config.yml
+  logging:
+    enabled: true
+    configuration:
+      fallbackToFile: false
+      directory: /tmp
+      maxLogsize: 1k
+      allowedContentTypes:
+        - application/json
+  redis:
+    enabled: true
+
+redis:
+    clusterMaster: redis-cluster-sso
+    sentinelHostsAndPorts:
+        - localhost:16379
+        - localhost:16479
+        - localhost:16579
+    defaultTimeOutInMinutes: 30
+    poolConfiguration:
+        blockWhenExhausted: true
+        maxTotal: 10
+        maxIdle: 1
+        minIdle: 1
+        maxWaitMillis: 1000
+        testOnBorrow: true
+        testOnReturn: false
+        testWhenIdle: false
+        timeBetweenEvictionRunsMillis: 60000
+        numTestsPerEvictionRun: 20
+        minEvictableIdleTimeMillis: 30000
 
 ---
 

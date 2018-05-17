@@ -1,18 +1,28 @@
 rootProject.name = "hawaii"
 
 def String[] modules = [
+        "hawaii-async",
         "hawaii-autoconfigure",
+        "hawaii-cache",
+        "hawaii-cache-memcached",
+        "hawaii-cache-redis",
         "hawaii-core",
-        "hawaii-test",
+        "hawaii-errors",
         "hawaii-logging",
-        "hawaii-async"
+        "hawaii-security",
+        "hawaii-stereotype",
+        "hawaii-test",
+        "hawaii-utils"
 ]
 
 def String[] starters = [
         "hawaii-starter",
+        "hawaii-starter-async",
+        "hawaii-starter-cache-memcached",
+        "hawaii-starter-cache-redis",
+        "hawaii-starter-logging",
         "hawaii-starter-rest",
-        "hawaii-starter-test",
-        "hawaii-starter-async"
+        "hawaii-starter-test"
 ]
 
 def String[] samples = [

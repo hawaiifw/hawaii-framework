@@ -16,14 +16,15 @@
 
 package org.hawaiiframework.async.timeout;
 
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.MdcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.validation.constraints.NotNull;
-
 import static java.util.Objects.requireNonNull;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogFieldNames.CALL_ID;
+import static org.hawaiiframework.logging.model.kibana.enums.HawaiiKibanaLogFieldNames.CALL_TYPE;
 
 /**
  * Task that stops another scheduled task if the scheduled task's timeout has been reached.
@@ -33,10 +34,9 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * For this the guarded task must register it's {@link TaskAbortStrategy} in the {@link SharedTaskContext}.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class TimeoutGuardTask implements Runnable {
 
@@ -60,7 +60,7 @@ public class TimeoutGuardTask implements Runnable {
      *
      * @param mdcContext The Logging context to set
      */
-    public TimeoutGuardTask(@NotNull final MdcContext mdcContext, final SharedTaskContext sharedTaskContext) {
+    public TimeoutGuardTask(final MdcContext mdcContext, final SharedTaskContext sharedTaskContext) {
         this.mdcContext = requireNonNull(mdcContext);
         this.sharedTaskContext = sharedTaskContext;
     }
@@ -74,7 +74,11 @@ public class TimeoutGuardTask implements Runnable {
     public void run() {
         mdcContext.populateMdc();
         SharedTaskContextHolder.register(sharedTaskContext);
-        MDC.put("task_id", sharedTaskContext.getTaskId());
+
+        final String taskId = sharedTaskContext.getTaskId();
+        KibanaLogFields.set(CALL_ID, taskId);
+        KibanaLogFields.set(CALL_TYPE, sharedTaskContext.getTaskName());
+
         LOGGER.trace("Executing guard task.");
 
         try {
