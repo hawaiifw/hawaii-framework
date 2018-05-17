@@ -437,9 +437,12 @@ project("hawaii-utils") {
     dependencies {
         compile project(":hawaii-core")
         compile "org.springframework:spring-web"
+        compile "org.springframework.security:spring-security-core"
         compile "ch.qos.logback:logback-core:${logbackVersion}"
         compile "ch.qos.logback:logback-classic:${logbackVersion}"
         compile "javax.servlet:javax.servlet-api:3.1.0"
+        compile "javax.mail:mail:1.4.7"
+        compile "com.nulab-inc:zxcvbn:1.2.3"
     }
 }
 
