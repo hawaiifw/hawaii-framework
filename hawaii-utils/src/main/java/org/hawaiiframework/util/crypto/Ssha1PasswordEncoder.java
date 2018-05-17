@@ -3,9 +3,14 @@ package org.hawaiiframework.util.crypto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * PasswordEncoder for salted SHA-1 passwords
+ * PasswordEncoder for salted SHA-1 passwords.
  */
 public class Ssha1PasswordEncoder extends SaltedSshaPasswordEncoder implements PasswordEncoder {
+
+    /**
+     * The header to set in the ssha hash.
+     */
+    public static final String HEADER = "{SSHA}";
 
     /**
      * The hashing algorithm to use.
@@ -16,11 +21,6 @@ public class Ssha1PasswordEncoder extends SaltedSshaPasswordEncoder implements P
      * the length of the hashed value.
      */
     private static final int HASH_LENGTH = 20;
-
-    /**
-     * The header to set in the ssha hash.
-     */
-    static public final String HEADER = "{SSHA}";
 
     /**
      * Construct an instance with the default salt length.

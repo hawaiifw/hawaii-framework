@@ -8,6 +8,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Ssha256PasswordEncoder extends SaltedSshaPasswordEncoder implements PasswordEncoder {
 
     /**
+     * The header to set in the ssha hash.
+     */
+    public static final String HEADER = "{SSHA256}";
+
+    /**
      * The hashing algorithm to use.
      */
     private static final String HASH_ALGORITHM = "SHA-256";
@@ -16,11 +21,6 @@ public class Ssha256PasswordEncoder extends SaltedSshaPasswordEncoder implements
      * the length of the hashed value.
      */
     private static final int HASH_LENGTH = 32;
-
-    /**
-     * The header to set in the ssha hash.
-     */
-    public static final String HEADER = "{SSHA256}";
 
     /**
      * Construct an instance with the default salt length.

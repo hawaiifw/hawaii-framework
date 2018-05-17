@@ -14,14 +14,14 @@ import java.util.Objects;
 public class UnixCryptPasswordEncoder implements PasswordEncoder {
 
     /**
+     * the header.
+     */
+    public static final String HEADER = "{CRYPT}";
+
+    /**
      * The logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UnixCryptPasswordEncoder.class);
-
-    /**
-     * the header.
-     */
-    static public final String HEADER = "{CRYPT}";
 
     /**
      * {@inheritDoc}
