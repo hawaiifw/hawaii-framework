@@ -3,7 +3,7 @@ package org.hawaiiframework.util.crypto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * PasswordEncoder for salted SHA-256 passwords
+ * PasswordEncoder for salted SHA-256 passwords.
  */
 public class Ssha256PasswordEncoder extends SaltedSshaPasswordEncoder implements PasswordEncoder {
 
@@ -23,14 +23,14 @@ public class Ssha256PasswordEncoder extends SaltedSshaPasswordEncoder implements
     public static final String HEADER = "{SSHA256}";
 
     /**
-     * Construct an instance with the default salt length
+     * Construct an instance with the default salt length.
      */
     public Ssha256PasswordEncoder() {
         this(4);
     }
 
     /**
-     * Construct an instance with the given salt length
+     * Construct an instance with the given salt length.
      */
     public Ssha256PasswordEncoder(final int saltLength) {
         super(saltLength, HASH_ALGORITHM, HASH_LENGTH, HEADER);

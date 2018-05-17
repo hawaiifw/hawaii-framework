@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Objects;
 
 /**
- * PasswordMatcher encoder for Unix Crypt passwords
+ * PasswordMatcher encoder for Unix Crypt passwords.
  */
 public class UnixCryptPasswordEncoder implements PasswordEncoder {
 
@@ -19,9 +19,9 @@ public class UnixCryptPasswordEncoder implements PasswordEncoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(UnixCryptPasswordEncoder.class);
 
     /**
-     * the header
+     * the header.
      */
-    public static final String HEADER = "{CRYPT}";
+    static public final String HEADER = "{CRYPT}";
 
     /**
      * {@inheritDoc}

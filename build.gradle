@@ -443,6 +443,7 @@ project("hawaii-utils") {
         compile "javax.servlet:javax.servlet-api:3.1.0"
         compile "javax.mail:mail:1.4.7"
         compile "com.nulab-inc:zxcvbn:1.2.3"
+        compile "commons-codec:commons-codec"
     }
 }
 

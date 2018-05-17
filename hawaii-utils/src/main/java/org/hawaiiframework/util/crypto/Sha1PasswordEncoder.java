@@ -13,21 +13,22 @@ import java.util.Objects;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * PasswordMatcher encoder for SHA passwords
+ * PasswordMatcher encoder for SHA passwords.
  */
 public class Sha1PasswordEncoder implements PasswordEncoder {
+
+    /**
+     * the header.
+     */
+    public static final String HEADER = "{SHA}";
+
     /**
      * The logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Sha1PasswordEncoder.class);
 
     /**
-     * the header
-     */
-    public static final String HEADER = "{SHA}";
-
-    /**
-     * the base64 encoder
+     * the base64 encoder.
      */
     private final Base64.Encoder encoder = Base64.getEncoder();
 
