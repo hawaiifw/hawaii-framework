@@ -37,6 +37,29 @@ This section provides a list of available Hawaii application properties.
 	    timezone: UTC # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
       async:
         configuration: ./config/async-config.yml # location of the Hawaii async configuration file
+      logging:
+        frontend-ip-header-name: X-Hawaii-Frontend-IP-Address # The request header that contains the client IP address. Use an empty value to disable the reading the header.
+        filters:
+          kibana:
+            enabled: true   # Each logging filter can be individually disabled by setting the `enabled` flag to `false`
+          request-duration:
+            enabled: true
+          request-id:
+            enabled: true
+          request-response:
+            enabled: true
+            fallbackToFile: true    # Log to file if response size exceeds `maxLogSize`
+            directory: /tmp         # Directory for file logging
+            maxLogSize: 50k
+            # For console logging, the allowed content types, empty means allow all.
+            allowedContentTypes:
+              - application/json
+              - text/plain
+              - text/xml
+          transaction-id:
+            enabled: true
+          user-details:
+            enabled: true
 
 	---
 
