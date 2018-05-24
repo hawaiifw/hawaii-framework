@@ -58,9 +58,9 @@ public class UserDetailsFilter extends OncePerRequestFilter {
             LOGGER.debug("Request called by '{}'.", principal);
             if (principal instanceof UserDetails) {
                 final UserDetails userDetails = (UserDetails) principal;
-                final String emailAddress = userDetails.getUsername();
-                KibanaLogFields.set(USER, emailAddress);
-                LOGGER.debug("User has email address '{}'.", emailAddress);
+                final String username = userDetails.getUsername();
+                KibanaLogFields.set(USER, username);
+                LOGGER.debug("User has user name '{}'.", username);
             }
         }
 

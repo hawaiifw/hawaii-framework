@@ -8,6 +8,47 @@ TODO.
 
 TODO.
 
+[[starters-hawaii-starter-logging]]
+=== hawaii-starter-logging
+The `hawaii-starter-logging` delivers a fully configured set of filters that are added to the filter chain in the configured order. The
+starter contains a default configuration, which can be overridden by adding properties to your configuration. The default configuration
+consists of the filters listed in the table below.
+
+[cols="3,2,2,4a", options="header"]
+.Default filter configuration
+|===
+|Filter|Enabled|Order|Additional properties
+|kibana-log|true|4|-
+|kibana-log-cleanup|true|2|-
+|request-duration|true|3|-
+|request-id|true|6|-
+|request-response|true|7|
+* fallbackToFile: write the response to a file if its size exceeds `maxLogSize`, default value is `true`
+* directory: the directory where files are written to, defaults to `/tmp`
+* maxLogSize: the maximum log size to write to the log, see `fallbackToFile`, default value is `50k`
+* allowedContentTypes: For console logging, the allowed content types, empty means allow all. Default value:
+** application/json
+** text/plain
+** text/xml
+
+|transaction-id:|true|5|-
+|user-details|true|110|-
+|===
+
+An example of the default configuration is available in <<appendix-hawaii-application-properties, the appendix>>.
+
+==== How to use
+In order to use Hawaii logging, you'll need to define an appender that uses the `KibanaLogEventEncoder`, for example:
+```
+    <appender name="kibana" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/idm-kibana.log</file>
+        <encoder class="org.hawaiiframework.logging.logback.KibanaLogEventEncoder"/>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${tomcat_logs}/hawaii-idm.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+    </appender>
+```
 [[starters-hawaii-starter-rest]]
 === hawaii-starter-rest
 

@@ -16,7 +16,52 @@ TODO.
 [[features-logging]]
 === Logging
 
-TODO.
+The Hawaii logging feature provides a number of filter beans which add information that can log information about requests.
+The Hawaii logging is only usable in a servlet environment, because all filters use HttpServletRequest and HttpServletResponse
+to obtain information.
+
+The main purpose of Hawaii logging is to write structured information into log lines, in such a way that it can be parsed by elastic search (Kibana). A
+specialized encoder is included to write out the log lines, as well as a bunch of filters that gather and, in some cases, create information to
+be included in each message. Hawaii logging currently only contains a logback-based encoder, so Hawaii logging is only usable if you use
+logback as your logging implementation.
+
+The next sections describe the individual filters contained in the Hawaii logging module. For more information on disabling and configuring
+individual filters, please refer to <<starters-hawaii-starter-logging, the Hawaii logging starter>>.
+
+[[features-logging-kibana]]
+==== Kibana
+The Kibana log filter gathers request data such as request method, uri and client ip address and stores it so it can be added to subsequent log
+messages.
+
+[[features-logging-kibana-cleanup]]
+==== Kibana cleanup
+The Kibana cleanup filter empties all Kibana-specific data after the rest of the filter chain has been processed. It is intended to be used
+early in the chain, such that the cleanup happens last.
+
+[[features-logging-request-duration]]
+==== Request duration
+This filter determines the duration of the request in milliseconds. It add the duration to the Kibana fields and logs it.
+
+[[features-logging-request-id]]
+==== Request id
+This filter generates a new request id, adds it to the Kibana fields and also writes it as a header on the response.
+
+[[features-logging-transaction-id]]
+==== Transaction id
+This filter reads an incoming transaction id from a request header, or generates a new one. The transaction id is written to a response header and
+added to the Kibana fields. The ability to read an incoming transaction id provides the ability to have multiple requests, spanning multiple systems
+within the same transaction.
+
+[[features-logging-user-details]]
+==== User details
+This filter retrieves the authenticated principal from the security context and stores the user name in the Kibana fields so that it gets
+included in each log message. This filter is only instantiated if Spring security is found on the class path.
+
+[[features-logging-request-response]]
+==== Request/response
+This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body. Optionally,
+the filter can log the response to a file if it exceeds a certain threshold size.
+
 
 [[features-hawaii-time]]
 === Hawaii Time

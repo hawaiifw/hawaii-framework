@@ -22,7 +22,6 @@ import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -87,7 +86,6 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
     /**
      * The constructor.
      */
-    @Autowired
     public RequestResponseLogFilter(final RequestResponseLogFilterConfiguration configuration,
             final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
         super();
