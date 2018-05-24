@@ -1319,18 +1319,26 @@ hawaii:
      async:
        configuration: ./config/async-config.yml # location of the Hawaii async configuration file
      logging:
-       frontend-ip-header-name: X-Hawaii-Frontend-IP-Address # The request header that contains the client IP address. Use an empty value to disable the reading the header.
        filters:
-         kibana:
-           enabled: true   # Each logging filter can be individually disabled by setting the `enabled` flag to `false`
+         kibana-log:
+           enabled: true
+           order: 4
+           http-header: X-Hawaii-Frontend-IP-Address
+         kibana-log-cleanup:
+           enabled: true
+           order: 2
          request-duration:
            enabled: true
+           order: 3
          request-id:
            enabled: true
+           order: 6
+           http-header: X-Hawaii-Request-Id
          request-response:
            enabled: true
-           fallbackToFile: true    # Log to file if response size exceeds `maxLogSize`
-           directory: /tmp         # Directory for file logging
+           order: 7
+           fallbackToFile: true
+           directory: /tmp
            maxLogSize: 50k
            # For console logging, the allowed content types, empty means allow all.
            allowedContentTypes:
@@ -1339,8 +1347,11 @@ hawaii:
              - text/xml
          transaction-id:
            enabled: true
+           order: 5
+           http-header: X-Hawaii-Tx-Id
          user-details:
            enabled: true
+           order: 110
 
 ---
 
@@ -1370,7 +1381,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-05-24 13:31:36 UTC
+Last updated 2018-05-24 14:47:06 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
