@@ -46,8 +46,8 @@ public class HawaiiLoggingConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
     public FilterRegistrationBean registerKibanaLogFilter() {
-        final Filter filter = new KibanaLogFilter(clientIpResolver());
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLog();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLog();
+        final Filter filter = new KibanaLogFilter(createClientIpResolver(filterProperties));
         return createFilterRegistrationBean(filter, filterProperties);
     }
 
@@ -70,8 +70,8 @@ public class HawaiiLoggingConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
     public FilterRegistrationBean registerRequestIdFilter() {
-        final Filter filter = new RequestIdFilter();
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestId();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestId();
+        final Filter filter = new RequestIdFilter(filterProperties.getHttpHeader());
         return createFilterRegistrationBean(filter, filterProperties);
     }
 
@@ -86,8 +86,8 @@ public class HawaiiLoggingConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled")
     public FilterRegistrationBean registerTransactionIdFilter() {
-        final Filter filter = new TransactionIdFilter();
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getTransactionId();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getTransactionId();
+        final Filter filter = new TransactionIdFilter(filterProperties.getHttpHeader());
         return createFilterRegistrationBean(filter, filterProperties);
     }
 
@@ -100,15 +100,13 @@ public class HawaiiLoggingConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
-    public ClientIpResolver clientIpResolver() {
-        return new ClientIpResolver();
-    }
-
-    @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
     public HttpRequestResponseLogUtil httpRequestResponseLogUtil() {
         return new HttpRequestResponseLogUtil();
+    }
+
+    private ClientIpResolver createClientIpResolver(final HttpHeaderLoggingFilterProperties filterProperties) {
+        return new ClientIpResolver(filterProperties.getHttpHeader());
     }
 
     private FilterRegistrationBean createFilterRegistrationBean(final Filter filter, final LoggingFilterProperties filterProperties) {

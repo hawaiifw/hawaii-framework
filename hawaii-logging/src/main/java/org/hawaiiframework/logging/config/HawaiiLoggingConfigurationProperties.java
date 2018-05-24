@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class HawaiiLoggingConfigurationProperties {
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties kibanaLog;
+    private HttpHeaderLoggingFilterProperties kibanaLog;
 
     @NestedConfigurationProperty
     private LoggingFilterProperties kibanaLogCleanup;
@@ -43,19 +43,19 @@ public class HawaiiLoggingConfigurationProperties {
     private RequestResponseLogFilterConfiguration requestResponse;
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties requestId;
+    private HttpHeaderLoggingFilterProperties requestId;
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties transactionId;
+    private HttpHeaderLoggingFilterProperties transactionId;
 
     @NestedConfigurationProperty
     private LoggingFilterProperties userDetails;
 
-    public LoggingFilterProperties getKibanaLog() {
+    public HttpHeaderLoggingFilterProperties getKibanaLog() {
         return kibanaLog;
     }
 
-    public void setKibanaLog(final LoggingFilterProperties kibanaLog) {
+    public void setKibanaLog(final HttpHeaderLoggingFilterProperties kibanaLog) {
         this.kibanaLog = kibanaLog;
     }
 
@@ -83,19 +83,19 @@ public class HawaiiLoggingConfigurationProperties {
         this.requestResponse = requestResponse;
     }
 
-    public LoggingFilterProperties getRequestId() {
+    public HttpHeaderLoggingFilterProperties getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(final LoggingFilterProperties requestId) {
+    public void setRequestId(final HttpHeaderLoggingFilterProperties requestId) {
         this.requestId = requestId;
     }
 
-    public LoggingFilterProperties getTransactionId() {
+    public HttpHeaderLoggingFilterProperties getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(final LoggingFilterProperties transactionId) {
+    public void setTransactionId(final HttpHeaderLoggingFilterProperties transactionId) {
         this.transactionId = transactionId;
     }
 

@@ -16,7 +16,6 @@
 package org.hawaiiframework.logging.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,8 +30,15 @@ public class ClientIpResolver {
     /**
      * The name of the request header that contains the client ip address.
      */
-    @Value("${hawaii.logging.frontend-ip-header-name}")
-    private String frontendIpHeader;
+    private final String frontendIpHeader;
+
+    /**
+     * Create a new instance of the ClientIpResolver.
+     * @param frontendIpHeader if present, this header's value will be used as the client IP address.
+     */
+    public ClientIpResolver(final String frontendIpHeader) {
+        this.frontendIpHeader = frontendIpHeader;
+    }
 
     /**
      * Extract the client IP address from the HttpServletRequest.

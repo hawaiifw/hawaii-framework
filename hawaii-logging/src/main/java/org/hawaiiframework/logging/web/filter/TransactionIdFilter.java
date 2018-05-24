@@ -41,19 +41,27 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
 public class TransactionIdFilter extends OncePerRequestFilter {
 
     /**
-     * String constant for incoming Hawaii transaction id header name.
-     */
-    public static final String X_HAWAII_TRANSACTION_ID_HEADER = "X-Hawaii-Tx-Id";
-
-    /**
      * The Logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionIdFilter.class);
 
     /**
+     * The incoming Hawaii transaction id header name.
+     */
+    private final String headerName;
+
+    /**
      * The UUID Resolver.
      */
     private final UuidResolver uuidResolver = new UuidResolver();
+
+    /**
+     * Constructor.
+     * @param headerName the headerName to use for the Hawaii transaction id.
+     */
+    public TransactionIdFilter(final String headerName) {
+        this.headerName = headerName;
+    }
 
     /**
      * {@inheritDoc}
@@ -62,7 +70,7 @@ public class TransactionIdFilter extends OncePerRequestFilter {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        final UUID uuid = uuidResolver.resolve(request, X_HAWAII_TRANSACTION_ID_HEADER);
+        final UUID uuid = uuidResolver.resolve(request, headerName);
 
         TransactionId.set(uuid);
         KibanaLogFields.set(TX_ID, TransactionId.get());
@@ -70,8 +78,8 @@ public class TransactionIdFilter extends OncePerRequestFilter {
         LOGGER.debug("Set '{}' with value '{};.", CALL_ID.getLogName(), uuid);
 
         try {
-            if (!response.containsHeader(X_HAWAII_TRANSACTION_ID_HEADER)) {
-                response.addHeader(X_HAWAII_TRANSACTION_ID_HEADER, TransactionId.get());
+            if (!response.containsHeader(headerName)) {
+                response.addHeader(headerName, TransactionId.get());
             }
             filterChain.doFilter(request, response);
         } finally {

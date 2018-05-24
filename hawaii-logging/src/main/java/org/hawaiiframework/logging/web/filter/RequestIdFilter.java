@@ -39,14 +39,22 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_ID;
 public class RequestIdFilter extends OncePerRequestFilter {
 
     /**
-     * String constant for incoming Hawaii transaction id header name.
-     */
-    private static final String X_HAWAII_REQUEST_ID_HEADER = "X-Hawaii-Request-Id";
-
-    /**
      * The Logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestIdFilter.class);
+
+    /**
+     * The incoming Hawaii request id header name.
+     */
+    private final String headerName;
+
+    /**
+     * Constructor.
+     * @param headerName the name of the header to store the Hawaii request id.
+     */
+    public RequestIdFilter(final String headerName) {
+        this.headerName = headerName;
+    }
 
     /**
      * {@inheritDoc}
@@ -63,8 +71,8 @@ public class RequestIdFilter extends OncePerRequestFilter {
         LOGGER.debug("Set '{}' with value '{};.", REQUEST_ID.getLogName(), uuid);
 
         try {
-            if (!response.containsHeader(X_HAWAII_REQUEST_ID_HEADER)) {
-                response.addHeader(X_HAWAII_REQUEST_ID_HEADER, RequestId.get());
+            if (!response.containsHeader(headerName)) {
+                response.addHeader(headerName, RequestId.get());
             }
             filterChain.doFilter(request, response);
         } finally {

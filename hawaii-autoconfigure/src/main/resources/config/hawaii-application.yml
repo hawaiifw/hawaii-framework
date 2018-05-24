@@ -18,11 +18,11 @@ hawaii:
   async:
     configuration: ./config/async-config.yml
   logging:
-    frontend-ip-header-name: X-Hawaii-Frontend-IP-Address
     filters:
       kibana-log:
         enabled: true
         order: 4
+        http-header: X-Hawaii-Frontend-IP-Address
       kibana-log-cleanup:
         enabled: true
         order: 2
@@ -32,6 +32,7 @@ hawaii:
       request-id:
         enabled: true
         order: 6
+        http-header: X-Hawaii-Request-Id
       request-response:
         enabled: true
         order: 7
@@ -46,6 +47,7 @@ hawaii:
       transaction-id:
         enabled: true
         order: 5
+        http-header: X-Hawaii-Tx-Id
       user-details:
         enabled: true
         order: 110
