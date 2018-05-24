@@ -452,7 +452,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#features-environments">3.1. Environments</a></li>
 <li><a href="#features-configuration-properties">3.2. Configuration properties</a></li>
-<li><a href="#features-logging">3.3. Logging</a></li>
+<li><a href="#features-logging">3.3. Logging</a>
+<ul class="sectlevel3">
+<li><a href="#features-logging-kibana">3.3.1. Kibana</a></li>
+<li><a href="#features-logging-kibana-cleanup">3.3.2. Kibana cleanup</a></li>
+<li><a href="#features-logging-request-duration">3.3.3. Request duration</a></li>
+<li><a href="#features-logging-request-id">3.3.4. Request id</a></li>
+<li><a href="#features-logging-transaction-id">3.3.5. Transaction id</a></li>
+<li><a href="#features-logging-user-details">3.3.6. User details</a></li>
+<li><a href="#features-logging-request-response">3.3.7. Request/response</a></li>
+</ul>
+</li>
 <li><a href="#features-hawaii-time">3.4. Hawaii Time</a></li>
 <li><a href="#features-validation">3.5. Validation</a></li>
 <li><a href="#features-web">3.6. Web</a>
@@ -466,15 +476,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#starters">4. Hawaii Starters</a>
 <ul class="sectlevel2">
 <li><a href="#starters-hawaii-starter">4.1. hawaii-starter</a></li>
-<li><a href="#starters-hawaii-starter-rest">4.2. hawaii-starter-rest</a></li>
-<li><a href="#starters-hawaii-starter-test">4.3. hawaii-starter-test</a></li>
-<li><a href="#starters-hawaii-starter-async">4.4. hawaii-starter-async</a>
+<li><a href="#starters-hawaii-starter-logging">4.2. hawaii-starter-logging</a>
 <ul class="sectlevel3">
-<li><a href="#starters-hawaii-starter-async-executor-configuration">4.4.1. Executor configuration</a></li>
-<li><a href="#starters-hawaii-starter-async-task-timeout">4.4.2. Task timeout</a></li>
-<li><a href="#starters-hawaii-starter-async-usage">4.4.3. Usage</a></li>
-<li><a href="#starters-hawaii-starter-async-components">4.4.4. Components</a></li>
-<li><a href="#starters-hawaii-starter-async-processing">4.4.5. Processing</a></li>
+<li><a href="#_how_to_use">4.2.1. How to use</a></li>
+</ul>
+</li>
+<li><a href="#starters-hawaii-starter-rest">4.3. hawaii-starter-rest</a></li>
+<li><a href="#starters-hawaii-starter-test">4.4. hawaii-starter-test</a></li>
+<li><a href="#starters-hawaii-starter-async">4.5. hawaii-starter-async</a>
+<ul class="sectlevel3">
+<li><a href="#starters-hawaii-starter-async-executor-configuration">4.5.1. Executor configuration</a></li>
+<li><a href="#starters-hawaii-starter-async-task-timeout">4.5.2. Task timeout</a></li>
+<li><a href="#starters-hawaii-starter-async-usage">4.5.3. Usage</a></li>
+<li><a href="#starters-hawaii-starter-async-components">4.5.4. Components</a></li>
+<li><a href="#starters-hawaii-starter-async-processing">4.5.5. Processing</a></li>
 </ul>
 </li>
 </ul>
@@ -556,7 +571,67 @@ application&#8217;s context.</p>
 <div class="sect2">
 <h3 id="features-logging"><a class="anchor" href="#features-logging"></a><a class="link" href="#features-logging">3.3. Logging</a></h3>
 <div class="paragraph">
-<p>TODO.</p>
+<p>The Hawaii logging feature provides a number of filter beans which add information that can log information about requests.
+The Hawaii logging is only usable in a servlet environment, because all filters use HttpServletRequest and HttpServletResponse
+to obtain information.</p>
+</div>
+<div class="paragraph">
+<p>The main purpose of Hawaii logging is to write structured information into log lines, in such a way that it can be parsed by elastic search (Kibana). A
+specialized encoder is included to write out the log lines, as well as a bunch of filters that gather and, in some cases, create information to
+be included in each message. Hawaii logging currently only contains a logback-based encoder, so Hawaii logging is only usable if you use
+logback as your logging implementation.</p>
+</div>
+<div class="paragraph">
+<p>The next sections describe the individual filters contained in the Hawaii logging module. For more information on disabling and configuring
+individual filters, please refer to <a href="#starters-hawaii-starter-logging">the Hawaii logging starter</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="features-logging-kibana"><a class="anchor" href="#features-logging-kibana"></a><a class="link" href="#features-logging-kibana">3.3.1. Kibana</a></h4>
+<div class="paragraph">
+<p>The Kibana log filter gathers request data such as request method, uri and client ip address and stores it so it can be added to subsequent log
+messages.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-kibana-cleanup"><a class="anchor" href="#features-logging-kibana-cleanup"></a><a class="link" href="#features-logging-kibana-cleanup">3.3.2. Kibana cleanup</a></h4>
+<div class="paragraph">
+<p>The Kibana cleanup filter empties all Kibana-specific data after the rest of the filter chain has been processed. It is intended to be used
+early in the chain, such that the cleanup happens last.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-request-duration"><a class="anchor" href="#features-logging-request-duration"></a><a class="link" href="#features-logging-request-duration">3.3.3. Request duration</a></h4>
+<div class="paragraph">
+<p>This filter determines the duration of the request in milliseconds. It add the duration to the Kibana fields and logs it.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-request-id"><a class="anchor" href="#features-logging-request-id"></a><a class="link" href="#features-logging-request-id">3.3.4. Request id</a></h4>
+<div class="paragraph">
+<p>This filter generates a new request id, adds it to the Kibana fields and also writes it as a header on the response.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-transaction-id"><a class="anchor" href="#features-logging-transaction-id"></a><a class="link" href="#features-logging-transaction-id">3.3.5. Transaction id</a></h4>
+<div class="paragraph">
+<p>This filter reads an incoming transaction id from a request header, or generates a new one. The transaction id is written to a response header and
+added to the Kibana fields. The ability to read an incoming transaction id provides the ability to have multiple requests, spanning multiple systems
+within the same transaction.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-user-details"><a class="anchor" href="#features-logging-user-details"></a><a class="link" href="#features-logging-user-details">3.3.6. User details</a></h4>
+<div class="paragraph">
+<p>This filter retrieves the authenticated principal from the security context and stores the user name in the Kibana fields so that it gets
+included in each log message. This filter is only instantiated if Spring security is found on the class path.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-request-response"><a class="anchor" href="#features-logging-request-response"></a><a class="link" href="#features-logging-request-response">3.3.7. Request/response</a></h4>
+<div class="paragraph">
+<p>This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body. Optionally,
+the filter can log the response to a file if it exceeds a certain threshold size.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -899,19 +974,149 @@ public class CustomerInputValidator implements Validator&lt;CustomerInput&gt; { 
 </div>
 </div>
 <div class="sect2">
-<h3 id="starters-hawaii-starter-rest"><a class="anchor" href="#starters-hawaii-starter-rest"></a><a class="link" href="#starters-hawaii-starter-rest">4.2. hawaii-starter-rest</a></h3>
+<h3 id="starters-hawaii-starter-logging"><a class="anchor" href="#starters-hawaii-starter-logging"></a><a class="link" href="#starters-hawaii-starter-logging">4.2. hawaii-starter-logging</a></h3>
+<div class="paragraph">
+<p>The <code>hawaii-starter-logging</code> delivers a fully configured set of filters that are added to the filter chain in the configured order. The
+starter contains a default configuration, which can be overridden by adding properties to your configuration. The default configuration
+consists of the filters listed in the table below.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Default filter configuration</caption>
+<colgroup>
+<col style="width: 27.2727%;">
+<col style="width: 18.1818%;">
+<col style="width: 18.1818%;">
+<col style="width: 36.3637%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Filter</th>
+<th class="tableblock halign-left valign-top">Enabled</th>
+<th class="tableblock halign-left valign-top">Order</th>
+<th class="tableblock halign-left valign-top">Additional properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log-cleanup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request-duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request-id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request-response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>fallbackToFile: write the response to a file if its size exceeds <code>maxLogSize</code>, default value is <code>true</code></p>
+</li>
+<li>
+<p>directory: the directory where files are written to, defaults to <code>/tmp</code></p>
+</li>
+<li>
+<p>maxLogSize: the maximum log size to write to the log, see <code>fallbackToFile</code>, default value is <code>50k</code></p>
+</li>
+<li>
+<p>allowedContentTypes: For console logging, the allowed content types, empty means allow all. Default value:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>application/json</p>
+</li>
+<li>
+<p>text/plain</p>
+</li>
+<li>
+<p>text/xml</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transaction-id:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user-details</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">110</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>An example of the default configuration is available in <a href="#appendix-hawaii-application-properties">the appendix</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="_how_to_use"><a class="anchor" href="#_how_to_use"></a><a class="link" href="#_how_to_use">4.2.1. How to use</a></h4>
+<div class="paragraph">
+<p>In order to use Hawaii logging, you&#8217;ll need to define an appender that uses the <code>KibanaLogEventEncoder</code>, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>    &lt;appender name="kibana" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+        &lt;file&gt;log/idm-kibana.log&lt;/file&gt;
+        &lt;encoder class="org.hawaiiframework.logging.logback.KibanaLogEventEncoder"/&gt;
+        &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;
+            &lt;fileNamePattern&gt;${tomcat_logs}/hawaii-idm.log.%d{yyyy-MM-dd}.gz&lt;/fileNamePattern&gt;
+            &lt;maxHistory&gt;10&lt;/maxHistory&gt;
+        &lt;/rollingPolicy&gt;
+    &lt;/appender&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="starters-hawaii-starter-rest"><a class="anchor" href="#starters-hawaii-starter-rest"></a><a class="link" href="#starters-hawaii-starter-rest">4.3. hawaii-starter-rest</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="starters-hawaii-starter-test"><a class="anchor" href="#starters-hawaii-starter-test"></a><a class="link" href="#starters-hawaii-starter-test">4.3. hawaii-starter-test</a></h3>
+<h3 id="starters-hawaii-starter-test"><a class="anchor" href="#starters-hawaii-starter-test"></a><a class="link" href="#starters-hawaii-starter-test">4.4. hawaii-starter-test</a></h3>
 <div class="paragraph">
 <p>TODO.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="starters-hawaii-starter-async"><a class="anchor" href="#starters-hawaii-starter-async"></a><a class="link" href="#starters-hawaii-starter-async">4.4. hawaii-starter-async</a></h3>
+<h3 id="starters-hawaii-starter-async"><a class="anchor" href="#starters-hawaii-starter-async"></a><a class="link" href="#starters-hawaii-starter-async">4.5. hawaii-starter-async</a></h3>
 <div class="paragraph">
 <p>The asynchronous request execution in Hawaii is built on top of the scheduling in Spring Framework, see the
 <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#scheduling-annotation-support">Spring documentation</a>
@@ -931,7 +1136,7 @@ for a baseline explanation.</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="starters-hawaii-starter-async-executor-configuration"><a class="anchor" href="#starters-hawaii-starter-async-executor-configuration"></a><a class="link" href="#starters-hawaii-starter-async-executor-configuration">4.4.1. Executor configuration</a></h4>
+<h4 id="starters-hawaii-starter-async-executor-configuration"><a class="anchor" href="#starters-hawaii-starter-async-executor-configuration"></a><a class="link" href="#starters-hawaii-starter-async-executor-configuration">4.5.1. Executor configuration</a></h4>
 <div class="paragraph">
 <p>The Hawaii async configuration allows the definition of executors. An executor can be viewed as a thread pool.
 An executor configuration looks something like this:</p>
@@ -993,7 +1198,7 @@ See <a href="#starters-hawaii-starter-async-task-timeout">task timeout</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="starters-hawaii-starter-async-task-timeout"><a class="anchor" href="#starters-hawaii-starter-async-task-timeout"></a><a class="link" href="#starters-hawaii-starter-async-task-timeout">4.4.2. Task timeout</a></h4>
+<h4 id="starters-hawaii-starter-async-task-timeout"><a class="anchor" href="#starters-hawaii-starter-async-task-timeout"></a><a class="link" href="#starters-hawaii-starter-async-task-timeout">4.5.2. Task timeout</a></h4>
 <div class="paragraph">
 <p>Another addition is automatically timing out tasks. For each task that is executed, the Hawaii async framework enqueues a
 cancellation task into a separate executor. If the timeout moment arrives, the timeout task is executed and will attempt to abort the
@@ -1002,7 +1207,7 @@ the timeout task will never be run.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="starters-hawaii-starter-async-usage"><a class="anchor" href="#starters-hawaii-starter-async-usage"></a><a class="link" href="#starters-hawaii-starter-async-usage">4.4.3. Usage</a></h4>
+<h4 id="starters-hawaii-starter-async-usage"><a class="anchor" href="#starters-hawaii-starter-async-usage"></a><a class="link" href="#starters-hawaii-starter-async-usage">4.5.3. Usage</a></h4>
 <div class="paragraph">
 <p>In practice, using the Hawaii asynchronous framework is not that different from using Spring&#8217;s: asynchronous execution must be
 enabled with <code>@EnableAsync</code> and methods that are to be executed asynchronously must be annotated with the <code>@Async</code> annotation,
@@ -1019,7 +1224,7 @@ take care of routing the execution to the correct <code>Executor</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="starters-hawaii-starter-async-components"><a class="anchor" href="#starters-hawaii-starter-async-components"></a><a class="link" href="#starters-hawaii-starter-async-components">4.4.4. Components</a></h4>
+<h4 id="starters-hawaii-starter-async-components"><a class="anchor" href="#starters-hawaii-starter-async-components"></a><a class="link" href="#starters-hawaii-starter-async-components">4.5.4. Components</a></h4>
 <div class="paragraph">
 <p>The following diagram shows the various components in the Hawaii async solution:</p>
 </div>
@@ -1043,7 +1248,7 @@ guarded task to remove the guard task upon completion, and for the guard task to
 </div>
 </div>
 <div class="sect3">
-<h4 id="starters-hawaii-starter-async-processing"><a class="anchor" href="#starters-hawaii-starter-async-processing"></a><a class="link" href="#starters-hawaii-starter-async-processing">4.4.5. Processing</a></h4>
+<h4 id="starters-hawaii-starter-async-processing"><a class="anchor" href="#starters-hawaii-starter-async-processing"></a><a class="link" href="#starters-hawaii-starter-async-processing">4.5.5. Processing</a></h4>
 <div class="paragraph">
 <p>The sequence below shows the components working together to execute a task.</p>
 </div>
@@ -1113,6 +1318,29 @@ hawaii:
     timezone: UTC # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
      async:
        configuration: ./config/async-config.yml # location of the Hawaii async configuration file
+     logging:
+       frontend-ip-header-name: X-Hawaii-Frontend-IP-Address # The request header that contains the client IP address. Use an empty value to disable the reading the header.
+       filters:
+         kibana:
+           enabled: true   # Each logging filter can be individually disabled by setting the `enabled` flag to `false`
+         request-duration:
+           enabled: true
+         request-id:
+           enabled: true
+         request-response:
+           enabled: true
+           fallbackToFile: true    # Log to file if response size exceeds `maxLogSize`
+           directory: /tmp         # Directory for file logging
+           maxLogSize: 50k
+           # For console logging, the allowed content types, empty means allow all.
+           allowedContentTypes:
+             - application/json
+             - text/plain
+             - text/xml
+         transaction-id:
+           enabled: true
+         user-details:
+           enabled: true
 
 ---
 
@@ -1142,7 +1370,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-05-24 10:48:56 UTC
+Last updated 2018-05-24 13:31:36 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

@@ -447,6 +447,136 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
+<h3 id="starters-hawaii-starter-logging">hawaii-starter-logging</h3>
+<div class="paragraph">
+<p>The <code>hawaii-starter-logging</code> delivers a fully configured set of filters that are added to the filter chain in the configured order. The
+starter contains a default configuration, which can be overridden by adding properties to your configuration. The default configuration
+consists of the filters listed in the table below.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Default filter configuration</caption>
+<colgroup>
+<col style="width: 27.2727%;">
+<col style="width: 18.1818%;">
+<col style="width: 18.1818%;">
+<col style="width: 36.3637%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Filter</th>
+<th class="tableblock halign-left valign-top">Enabled</th>
+<th class="tableblock halign-left valign-top">Order</th>
+<th class="tableblock halign-left valign-top">Additional properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log-cleanup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request-duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request-id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request-response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>fallbackToFile: write the response to a file if its size exceeds <code>maxLogSize</code>, default value is <code>true</code></p>
+</li>
+<li>
+<p>directory: the directory where files are written to, defaults to <code>/tmp</code></p>
+</li>
+<li>
+<p>maxLogSize: the maximum log size to write to the log, see <code>fallbackToFile</code>, default value is <code>50k</code></p>
+</li>
+<li>
+<p>allowedContentTypes: For console logging, the allowed content types, empty means allow all. Default value:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>application/json</p>
+</li>
+<li>
+<p>text/plain</p>
+</li>
+<li>
+<p>text/xml</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transaction-id:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user-details</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">110</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>An example of the default configuration is available in <a href="#appendix-hawaii-application-properties">the appendix</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="_how_to_use">How to use</h4>
+<div class="paragraph">
+<p>In order to use Hawaii logging, you&#8217;ll need to define an appender that uses the <code>KibanaLogEventEncoder</code>, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    &lt;appender name="kibana" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+        &lt;file&gt;log/idm-kibana.log&lt;/file&gt;
+        &lt;encoder class="org.hawaiiframework.logging.logback.KibanaLogEventEncoder"/&gt;
+        &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;
+            &lt;fileNamePattern&gt;${tomcat_logs}/hawaii-idm.log.%d{yyyy-MM-dd}.gz&lt;/fileNamePattern&gt;
+            &lt;maxHistory&gt;10&lt;/maxHistory&gt;
+        &lt;/rollingPolicy&gt;
+    &lt;/appender&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="starters-hawaii-starter-rest">hawaii-starter-rest</h3>
 <div class="paragraph">
 <p>TODO.</p>
@@ -616,7 +746,7 @@ guarded task to remove the guard task upon completion, and for the guard task to
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-05-24 10:48:56 UTC
+Last updated 2018-05-24 13:31:36 UTC
 </div>
 </div>
 </body>

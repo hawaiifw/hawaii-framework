@@ -455,7 +455,67 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="features-logging">Logging</h3>
 <div class="paragraph">
-<p>TODO.</p>
+<p>The Hawaii logging feature provides a number of filter beans which add information that can log information about requests.
+The Hawaii logging is only usable in a servlet environment, because all filters use HttpServletRequest and HttpServletResponse
+to obtain information.</p>
+</div>
+<div class="paragraph">
+<p>The main purpose of Hawaii logging is to write structured information into log lines, in such a way that it can be parsed by elastic search (Kibana). A
+specialized encoder is included to write out the log lines, as well as a bunch of filters that gather and, in some cases, create information to
+be included in each message. Hawaii logging currently only contains a logback-based encoder, so Hawaii logging is only usable if you use
+logback as your logging implementation.</p>
+</div>
+<div class="paragraph">
+<p>The next sections describe the individual filters contained in the Hawaii logging module. For more information on disabling and configuring
+individual filters, please refer to <a href="#starters-hawaii-starter-logging">the Hawaii logging starter</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="features-logging-kibana">Kibana</h4>
+<div class="paragraph">
+<p>The Kibana log filter gathers request data such as request method, uri and client ip address and stores it so it can be added to subsequent log
+messages.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-kibana-cleanup">Kibana cleanup</h4>
+<div class="paragraph">
+<p>The Kibana cleanup filter empties all Kibana-specific data after the rest of the filter chain has been processed. It is intended to be used
+early in the chain, such that the cleanup happens last.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-request-duration">Request duration</h4>
+<div class="paragraph">
+<p>This filter determines the duration of the request in milliseconds. It add the duration to the Kibana fields and logs it.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-request-id">Request id</h4>
+<div class="paragraph">
+<p>This filter generates a new request id, adds it to the Kibana fields and also writes it as a header on the response.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-transaction-id">Transaction id</h4>
+<div class="paragraph">
+<p>This filter reads an incoming transaction id from a request header, or generates a new one. The transaction id is written to a response header and
+added to the Kibana fields. The ability to read an incoming transaction id provides the ability to have multiple requests, spanning multiple systems
+within the same transaction.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-user-details">User details</h4>
+<div class="paragraph">
+<p>This filter retrieves the authenticated principal from the security context and stores the user name in the Kibana fields so that it gets
+included in each log message. This filter is only instantiated if Spring security is found on the class path.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="features-logging-request-response">Request/response</h4>
+<div class="paragraph">
+<p>This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body. Optionally,
+the filter can log the response to a file if it exceeds a certain threshold size.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -777,7 +837,7 @@ public class CustomerInputValidator implements Validator&lt;CustomerInput&gt; { 
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-05-24 10:48:56 UTC
+Last updated 2018-05-24 13:31:36 UTC
 </div>
 </div>
 </body>
