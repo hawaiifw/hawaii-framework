@@ -28,11 +28,21 @@ public class LoggingFilterProperties {
 
     private boolean enabled;
 
+    private int order;
+
     public boolean isEnabled() {
         return enabled;
     }
 
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(final int order) {
+        this.order = order;
     }
 }

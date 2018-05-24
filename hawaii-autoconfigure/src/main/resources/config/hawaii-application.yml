@@ -20,14 +20,21 @@ hawaii:
   logging:
     frontend-ip-header-name: X-Hawaii-Frontend-IP-Address
     filters:
-      kibana:
+      kibana-log:
         enabled: true
+        order: 4
+      kibana-log-cleanup:
+        enabled: true
+        order: 2
       request-duration:
         enabled: true
+        order: 3
       request-id:
         enabled: true
+        order: 6
       request-response:
         enabled: true
+        order: 7
         fallbackToFile: true
         directory: /tmp
         maxLogSize: 50k
@@ -38,8 +45,10 @@ hawaii:
           - text/xml
       transaction-id:
         enabled: true
+        order: 5
       user-details:
         enabled: true
+        order: 110
 
 ---
 

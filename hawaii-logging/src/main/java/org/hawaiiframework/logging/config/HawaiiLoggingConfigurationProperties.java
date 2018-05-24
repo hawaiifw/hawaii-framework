@@ -31,7 +31,10 @@ import org.springframework.stereotype.Component;
 public class HawaiiLoggingConfigurationProperties {
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties kibana;
+    private LoggingFilterProperties kibanaLog;
+
+    @NestedConfigurationProperty
+    private LoggingFilterProperties kibanaLogCleanup;
 
     @NestedConfigurationProperty
     private LoggingFilterProperties requestDuration;
@@ -48,12 +51,20 @@ public class HawaiiLoggingConfigurationProperties {
     @NestedConfigurationProperty
     private LoggingFilterProperties userDetails;
 
-    public LoggingFilterProperties getKibana() {
-        return kibana;
+    public LoggingFilterProperties getKibanaLog() {
+        return kibanaLog;
     }
 
-    public void setKibana(final LoggingFilterProperties kibana) {
-        this.kibana = kibana;
+    public void setKibanaLog(final LoggingFilterProperties kibanaLog) {
+        this.kibanaLog = kibanaLog;
+    }
+
+    public LoggingFilterProperties getKibanaLogCleanup() {
+        return kibanaLogCleanup;
+    }
+
+    public void setKibanaLogCleanup(final LoggingFilterProperties kibanaLogCleanup) {
+        this.kibanaLogCleanup = kibanaLogCleanup;
     }
 
     public LoggingFilterProperties getRequestDuration() {
