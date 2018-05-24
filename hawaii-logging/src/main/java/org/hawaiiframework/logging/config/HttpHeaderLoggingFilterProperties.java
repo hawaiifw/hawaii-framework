@@ -16,33 +16,26 @@
 package org.hawaiiframework.logging.config;
 
 /**
- * Base class for logging filter properties.
+ * Extension of basic LoggingFilterProperties that also holds the name of a HTTP header
+ * that the filter can use.
  *
- * If a filter requires additional properties, this class should be extended to model them.
+ * @see org.hawaiiframework.logging.web.filter.KibanaLogFilter
+ * @see org.hawaiiframework.logging.web.filter.RequestIdFilter
+ * @see org.hawaiiframework.logging.web.filter.TransactionIdFilter
  *
  * @author Paul Klos
  * @author Wouter Eerdekens
  * @since 2.0.0
  */
-public class LoggingFilterProperties {
+public class HttpHeaderLoggingFilterProperties extends LoggingFilterProperties {
 
-    private boolean enabled;
+    private String httpHeader;
 
-    private int order;
-
-    public boolean isEnabled() {
-        return enabled;
+    public String getHttpHeader() {
+        return httpHeader;
     }
 
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(final int order) {
-        this.order = order;
+    public void setHttpHeader(final String httpHeader) {
+        this.httpHeader = httpHeader;
     }
 }

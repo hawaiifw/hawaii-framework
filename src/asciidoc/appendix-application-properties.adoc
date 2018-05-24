@@ -38,18 +38,26 @@ This section provides a list of available Hawaii application properties.
       async:
         configuration: ./config/async-config.yml # location of the Hawaii async configuration file
       logging:
-        frontend-ip-header-name: X-Hawaii-Frontend-IP-Address # The request header that contains the client IP address. Use an empty value to disable the reading the header.
         filters:
-          kibana:
-            enabled: true   # Each logging filter can be individually disabled by setting the `enabled` flag to `false`
+          kibana-log:
+            enabled: true
+            order: 4
+            http-header: X-Hawaii-Frontend-IP-Address
+          kibana-log-cleanup:
+            enabled: true
+            order: 2
           request-duration:
             enabled: true
+            order: 3
           request-id:
             enabled: true
+            order: 6
+            http-header: X-Hawaii-Request-Id
           request-response:
             enabled: true
-            fallbackToFile: true    # Log to file if response size exceeds `maxLogSize`
-            directory: /tmp         # Directory for file logging
+            order: 7
+            fallbackToFile: true
+            directory: /tmp
             maxLogSize: 50k
             # For console logging, the allowed content types, empty means allow all.
             allowedContentTypes:
@@ -58,8 +66,11 @@ This section provides a list of available Hawaii application properties.
               - text/xml
           transaction-id:
             enabled: true
+            order: 5
+            http-header: X-Hawaii-Tx-Id
           user-details:
             enabled: true
+            order: 110
 
 	---
 

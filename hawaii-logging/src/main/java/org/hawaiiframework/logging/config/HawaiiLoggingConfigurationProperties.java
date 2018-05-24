@@ -31,7 +31,10 @@ import org.springframework.stereotype.Component;
 public class HawaiiLoggingConfigurationProperties {
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties kibana;
+    private HttpHeaderLoggingFilterProperties kibanaLog;
+
+    @NestedConfigurationProperty
+    private LoggingFilterProperties kibanaLogCleanup;
 
     @NestedConfigurationProperty
     private LoggingFilterProperties requestDuration;
@@ -40,20 +43,28 @@ public class HawaiiLoggingConfigurationProperties {
     private RequestResponseLogFilterConfiguration requestResponse;
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties requestId;
+    private HttpHeaderLoggingFilterProperties requestId;
 
     @NestedConfigurationProperty
-    private LoggingFilterProperties transactionId;
+    private HttpHeaderLoggingFilterProperties transactionId;
 
     @NestedConfigurationProperty
     private LoggingFilterProperties userDetails;
 
-    public LoggingFilterProperties getKibana() {
-        return kibana;
+    public HttpHeaderLoggingFilterProperties getKibanaLog() {
+        return kibanaLog;
     }
 
-    public void setKibana(final LoggingFilterProperties kibana) {
-        this.kibana = kibana;
+    public void setKibanaLog(final HttpHeaderLoggingFilterProperties kibanaLog) {
+        this.kibanaLog = kibanaLog;
+    }
+
+    public LoggingFilterProperties getKibanaLogCleanup() {
+        return kibanaLogCleanup;
+    }
+
+    public void setKibanaLogCleanup(final LoggingFilterProperties kibanaLogCleanup) {
+        this.kibanaLogCleanup = kibanaLogCleanup;
     }
 
     public LoggingFilterProperties getRequestDuration() {
@@ -72,19 +83,19 @@ public class HawaiiLoggingConfigurationProperties {
         this.requestResponse = requestResponse;
     }
 
-    public LoggingFilterProperties getRequestId() {
+    public HttpHeaderLoggingFilterProperties getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(final LoggingFilterProperties requestId) {
+    public void setRequestId(final HttpHeaderLoggingFilterProperties requestId) {
         this.requestId = requestId;
     }
 
-    public LoggingFilterProperties getTransactionId() {
+    public HttpHeaderLoggingFilterProperties getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(final LoggingFilterProperties transactionId) {
+    public void setTransactionId(final HttpHeaderLoggingFilterProperties transactionId) {
         this.transactionId = transactionId;
     }
 
