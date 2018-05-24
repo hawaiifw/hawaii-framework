@@ -21,6 +21,8 @@ ext {
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
     springPlatformVersion             = "Brussels-SR5"
+    logbackVersion                    = "1.1.5"
+    powerMockVersion                  = "1.7.1"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -284,6 +286,16 @@ project("hawaii-starter-async") {
     }
 }
 
+project("hawaii-starter-logging") {
+
+    description = "Hawaii Starter Logging"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile project(":hawaii-logging")
+    }
+}
+
 project("hawaii-test") {
 
     description = "Hawaii Test"
@@ -301,6 +313,7 @@ project("hawaii-test") {
         compile "org.springframework:spring-core"
         compile "org.springframework:spring-test"
         compile "org.springframework:spring-web"
+        compileOnly 'com.google.code.findbugs:annotations:3.0.1'
     }
 }
 
@@ -311,6 +324,17 @@ project("hawaii-logging") {
     dependencies {
         compile project(":hawaii-core")
         compile "org.springframework:spring-web"
+        compileOnly "org.springframework.security:spring-security-core"
+        compile "javax.servlet:javax.servlet-api:3.1.0"
+        compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
+        compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
+
+        compile "org.springframework.boot:spring-boot"
+        compile "org.springframework.boot:spring-boot-autoconfigure"
+
+        testCompile "org.springframework.security:spring-security-core"
+        testCompile("org.powermock:powermock-module-junit4:${powerMockVersion}")
+        testCompile("org.powermock:powermock-api-mockito:${powerMockVersion}")
     }
 }
 

@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.exception;
+package org.hawaiiframework.logging.util;
 
-public class TestApiException extends ApiException {
+/**
+ * Class that tries to mask a password in a string.
+ *
+ * The implementation tries to mask a field for a specific format, for instance JSON or XML.
+ *
+ * @author Rutger Lubbers
+ * @since 2.0.0
+ */
+public interface PasswordMasker {
 
-    private static final ApiError error = new ApiError() {
-
-        @Override
-        public String getErrorCode() {
-            return "100";
-        }
-
-        @Override
-        public String getReason() {
-            return "reason";
-        }
-    };
-
-    public TestApiException() {
-        this(null);
-    }
-
-    public TestApiException(Throwable orig) {
-        super(error, orig);
-    }
-
+    /**
+     * Did the masked find a match and could it be masked?
+     */
+    boolean matches(MaskedPasswordBuilder builder);
 }

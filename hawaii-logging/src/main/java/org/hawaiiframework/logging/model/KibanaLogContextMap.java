@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.hawaiiframework.logging.model;
 
 import org.slf4j.MDC;
@@ -21,49 +20,30 @@ import org.slf4j.MDC;
 import java.util.Map;
 
 /**
- * Utility to copy the MDC from one thread to another thread.
- *
- * <p>
- * An example of the usage of this class, for a parallel stream:
- * <pre>
- *  MdcContext context = MdcContext.getCurrentMdc();
- *
- *  // stream and set context:
- *  list.parallelStream().forEach(entry -> { mdcContext.populateMdc(); ... })
- *
- * </pre>
+ * Utility to copy the Kibana Log Fields.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public final class MdcContext {
+public final class KibanaLogContextMap {
 
     /**
      * The MDC map.
      */
     private final Map<String, String> contextMap;
 
+
     /**
      * Create a new instance, copying the MDC (context map).
      */
-    private MdcContext() {
+    public KibanaLogContextMap() {
         this.contextMap = MDC.getCopyOfContextMap();
     }
 
     /**
-     * Create a new instance.
+     * Returns the copied context map.
      */
-    public static MdcContext getCurrentMdc() {
-        return new MdcContext();
-    }
-
-    /**
-     * Set the copied MDC context map into the current thread's MDC.
-     */
-    public void populateMdc() {
-        MDC.clear();
-        if (contextMap != null) {
-            MDC.setContextMap(contextMap);
-        }
+    public Map<String, String> getContextMap() {
+        return contextMap;
     }
 }

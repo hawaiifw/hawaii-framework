@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.test.mockmvc;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.hawaiiframework.time.HawaiiTime;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -42,6 +43,9 @@ public abstract class AbstractMockMvcTest {
     @Autowired
     protected WebApplicationContext webApplicationContext;
 
+    @SuppressFBWarnings(
+            value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD",
+            justification = "The mockMvc property is used by subclasses in projects using the framework")
     protected MockMvc mockMvc;
 
     @Before

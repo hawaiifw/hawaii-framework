@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "first_name": "Donald",
+      "last_name": "Duck",
+      "credentials": {
+        "type": "password string",
+        "password": "{{PASSWORD}}",
+        "new_password": "{{PASSWORD}}",
+        "password_check": "{{PASSWORD}}"
+      }
+    },
+    {
+      "first_name": "Mickey",
+      "last_name": "Mouse"
+    }
+  ]
+}

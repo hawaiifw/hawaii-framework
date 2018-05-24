@@ -17,6 +17,29 @@ hawaii:
     timezone: UTC
   async:
     configuration: ./config/async-config.yml
+  logging:
+    frontend-ip-header-name: X-Hawaii-Frontend-IP-Address
+    filters:
+      kibana:
+        enabled: true
+      request-duration:
+        enabled: true
+      request-id:
+        enabled: true
+      request-response:
+        enabled: true
+        fallbackToFile: true
+        directory: /tmp
+        maxLogSize: 50k
+        # For console logging, the allowed content types, empty means allow all.
+        allowedContentTypes:
+          - application/json
+          - text/plain
+          - text/xml
+      transaction-id:
+        enabled: true
+      user-details:
+        enabled: true
 
 ---
 

@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.exception;
+package org.hawaiiframework.logging.config;
 
-public class TestApiException extends ApiException {
+/**
+ * Base class for logging filter properties.
+ *
+ * If a filter requires additional properties, this class should be extended to model them.
+ *
+ * @author Paul Klos
+ * @author Wouter Eerdekens
+ * @since 2.0.0
+ */
+public class LoggingFilterProperties {
 
-    private static final ApiError error = new ApiError() {
+    private boolean enabled;
 
-        @Override
-        public String getErrorCode() {
-            return "100";
-        }
-
-        @Override
-        public String getReason() {
-            return "reason";
-        }
-    };
-
-    public TestApiException() {
-        this(null);
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public TestApiException(Throwable orig) {
-        super(error, orig);
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
-
 }

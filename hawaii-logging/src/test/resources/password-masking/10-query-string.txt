@@ -1,0 +1,1 @@
+username=2e47b943-ee52-49c1-b4ed-8b79ecaa5f3a&grant_type=sms&password={{URI_ESCAPED_PASSWORD}}&some_random_other_stuff

@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.exception;
+package org.hawaiiframework.logging.util;
 
-public class TestApiException extends ApiException {
+/**
+ * LogUtil to indent data.
+ *
+ * @author Rutger Lubbers
+ * @since 2.0.0
+ */
+public final class LogUtil {
 
-    private static final ApiError error = new ApiError() {
+    /**
+     * The configured newline to look for.
+     */
+    private static final String NEW_LINE = System.getProperty("line.separator");
 
-        @Override
-        public String getErrorCode() {
-            return "100";
-        }
-
-        @Override
-        public String getReason() {
-            return "reason";
-        }
-    };
-
-    public TestApiException() {
-        this(null);
+    private LogUtil() {
+        // Utility constructor.
     }
 
-    public TestApiException(Throwable orig) {
-        super(error, orig);
+    /**
+     * Indent the @code{value} with the given @code{indent}.
+     */
+    public static String indent(final String value, final String indent) {
+        return value.replace(NEW_LINE, String.format("%n%s", indent));
     }
-
 }

@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.exception;
+package org.hawaiiframework.logging.logback;
 
-public class TestApiException extends ApiException {
+/**
+ * Constants for new lines and indentation used by the {@link KibanaLogEventEncoder}.
+ *
+ * @author Rutger Lubbers
+ * @since 2.0.0
+ */
+public final class CharacterConstants {
 
-    private static final ApiError error = new ApiError() {
+    /**
+     * The system's line separator.
+     */
+    public static final String NEW_LINE = System.lineSeparator();
 
-        @Override
-        public String getErrorCode() {
-            return "100";
-        }
+    /**
+     * The indentation for multi line log events.
+     */
+    public static final String INDENT = "\t";
 
-        @Override
-        public String getReason() {
-            return "reason";
-        }
-    };
-
-    public TestApiException() {
-        this(null);
+    /**
+     * The constructor.
+     */
+    private CharacterConstants() {
+        // Utility constructor.
     }
-
-    public TestApiException(Throwable orig) {
-        super(error, orig);
-    }
-
 }

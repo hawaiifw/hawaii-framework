@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header xmlns:ns="http://www.vodafone.com/nl/common/1.0" xmlns:v2="http://webservices.vodafone.nl/identitymanagement/v2"/>
+    <soapenv:Body xmlns:ns="http://www.vodafone.com/nl/common/1.0" xmlns:v2="http://webservices.vodafone.nl/identitymanagement/v2">
+        <v2:createOnlineUserV2>
+            <createOnlineUserV2Request>
+                <traceIdentifier>
+                    <ns:applicationID>11125</ns:applicationID>
+                    <ns:referenceID>11135</ns:referenceID>
+                </traceIdentifier>
+                <emailAddress>ciamdatapl116@mailinator.com</emailAddress>
+                <json>{
+                    "users": [
+                    {
+                    "first_name": "Donald",
+                    "last_name": "Duck",
+                    "credentials": {
+                    "type": "password string",
+                    "password": "{{XML_ESCAPED_PASSWORD}}",
+                    "new_password": "{{XML_ESCAPED_PASSWORD}}",
+                    "password_check": "{{XML_ESCAPED_PASSWORD}}"
+                    }
+                    },
+                    {
+                    "first_name": "Mickey",
+                    "last_name": "Mouse"
+                    }
+                    ]
+                    }
+                </json>
+            </createOnlineUserV2Request>
+        </v2:createOnlineUserV2>
+    </soapenv:Body>
+</soapenv:Envelope>

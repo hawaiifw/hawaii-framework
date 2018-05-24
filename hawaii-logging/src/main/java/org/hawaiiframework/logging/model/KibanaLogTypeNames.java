@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.exception;
+package org.hawaiiframework.logging.model;
 
-public class TestApiException extends ApiException {
-
-    private static final ApiError error = new ApiError() {
-
-        @Override
-        public String getErrorCode() {
-            return "100";
-        }
-
-        @Override
-        public String getReason() {
-            return "reason";
-        }
-    };
-
-    public TestApiException() {
-        this(null);
-    }
-
-    public TestApiException(Throwable orig) {
-        super(error, orig);
-    }
-
+/**
+ * Enumeration for values of the Kibana Log Field LOG_TYPE.
+ *
+ * @author Rutger Lubbers
+ * @since 2.0.0
+ */
+public enum KibanaLogTypeNames {
+    START,
+    END,
+    REQUEST_BODY,
+    RESPONSE_BODY,
+    CALL_START,
+    CALL_REQUEST_BODY,
+    CALL_RESPONSE_BODY,
+    CALL_END
 }
