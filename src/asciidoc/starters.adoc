@@ -18,10 +18,12 @@ consists of the filters listed in the table below.
 .Default filter configuration
 |===
 |Filter|Enabled|Order|Additional properties
-|kibana-log|true|4|-
+|kibana-log|true|4|
+* http-header: the header that contains the client ip address. Defaults to `X-Hawaii-Frontend-IP-Address`. If no such header is present, the filter uses the remote address from the request.
 |kibana-log-cleanup|true|2|-
 |request-duration|true|3|-
-|request-id|true|6|-
+|request-id|true|6|
+* http-header: the response header to which the request id will be writen. Defaults to `X-Hawaii-Request-Id`.
 |request-response|true|7|
 * fallbackToFile: write the response to a file if its size exceeds `maxLogSize`, default value is `true`
 * directory: the directory where files are written to, defaults to `/tmp`
@@ -30,8 +32,8 @@ consists of the filters listed in the table below.
 ** application/json
 ** text/plain
 ** text/xml
-
-|transaction-id:|true|5|-
+|transaction-id:|true|5|
+* http-header: the request header name that may contain an incoming transaction id, and the response header to which the transaction id is written. Defaults to X-Hawaii-Tx-Id`.
 |user-details|true|110|-
 |===
 
