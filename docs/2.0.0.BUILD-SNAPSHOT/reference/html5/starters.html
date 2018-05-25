@@ -474,8 +474,12 @@ consists of the filters listed in the table below.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>-</p>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>http-header: the header that contains the client ip address. Defaults to <code>X-Hawaii-Frontend-IP-Address</code>. If no such header is present, the filter uses the remote address from the request.</p>
+</li>
+</ul>
 </div></div></td>
 </tr>
 <tr>
@@ -498,8 +502,12 @@ consists of the filters listed in the table below.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">request-id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>-</p>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>http-header: the response header to which the request id will be writen. Defaults to <code>X-Hawaii-Request-Id</code>.</p>
+</li>
+</ul>
 </div></div></td>
 </tr>
 <tr>
@@ -540,8 +548,12 @@ consists of the filters listed in the table below.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">transaction-id:</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>-</p>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>http-header: the request header name that may contain an incoming transaction id, and the response header to which the transaction id is written. Defaults to X-Hawaii-Tx-Id`.</p>
+</li>
+</ul>
 </div></div></td>
 </tr>
 <tr>
@@ -746,7 +758,7 @@ guarded task to remove the guard task upon completion, and for the guard task to
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-05-24 14:47:06 UTC
+Last updated 2018-05-25 07:46:55 UTC
 </div>
 </div>
 </body>
