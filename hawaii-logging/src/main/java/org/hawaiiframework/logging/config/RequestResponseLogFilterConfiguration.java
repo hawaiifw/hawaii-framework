@@ -50,32 +50,56 @@ public class RequestResponseLogFilterConfiguration extends LoggingFilterProperti
      */
     private List<String> allowedContentTypes = new ArrayList<>();
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Getter for the fallback-to-file flag.
+     *
+     * @return the fallback-to-file flag
+     */
     public boolean isFallbackToFile() {
         return fallbackToFile;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Setter for the fallback-to-file flag.
+     *
+     * @param fallbackToFile the fallback-to-file flag
+     */
     public void setFallbackToFile(final boolean fallbackToFile) {
         this.fallbackToFile = fallbackToFile;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Getter for the logging directory.
+     *
+     * @return the logging directory
+     */
     public String getDirectory() {
         return directory;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Setter for the logging directory.
+     *
+     * @param directory the logging directory
+     */
     public void setDirectory(final String directory) {
         this.directory = directory;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Getter for the max log size.
+     *
+     * @return the max log size
+     */
     public String getMaxLogSize() {
         return maxLogSize;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Setter for the max log size.
+     *
+     * @param maxLogSize the max log size
+     */
     public void setMaxLogSize(final String maxLogSize) {
         this.maxLogSize = maxLogSize;
     }
@@ -105,12 +129,20 @@ public class RequestResponseLogFilterConfiguration extends LoggingFilterProperti
         return Long.parseLong(logSizeString) * multiplication;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Getter for the allowed content types.
+     *
+     * @return the allowed content types
+     */
     public List<String> getAllowedContentTypes() {
         return allowedContentTypes;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
+    /**
+     * Setter for the allowed content types.
+     *
+     * @param allowedContentTypes the allowed content types
+     */
     public void setAllowedContentTypes(final List<String> allowedContentTypes) {
         this.allowedContentTypes = allowedContentTypes;
     }

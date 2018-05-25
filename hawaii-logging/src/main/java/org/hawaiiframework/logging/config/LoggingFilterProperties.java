@@ -26,22 +26,49 @@ package org.hawaiiframework.logging.config;
  */
 public class LoggingFilterProperties {
 
+    /**
+     * Flag indicating if the filter is enabled.
+     */
     private boolean enabled;
 
+    /**
+     * The order of the filter in the filter chain.
+     */
     private int order;
 
+
+    /**
+     * Getter for the enabled flag.
+     *
+     * @return the enabled flag
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Setter for the enabled flag.
+     *
+     * @param enabled the enabled flag
+     */
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Getter for the order.
+     *
+     * @return the order
+     */
     public int getOrder() {
         return order;
     }
 
+    /**
+     * Setter for the order.
+     *
+     * @param order the order
+     */
     public void setOrder(final int order) {
         this.order = order;
     }

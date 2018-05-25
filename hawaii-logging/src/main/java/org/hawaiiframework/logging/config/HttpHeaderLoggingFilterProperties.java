@@ -29,12 +29,25 @@ package org.hawaiiframework.logging.config;
  */
 public class HttpHeaderLoggingFilterProperties extends LoggingFilterProperties {
 
+    /**
+     * The header name.
+     */
     private String httpHeader;
 
+    /**
+     * Getter for the header name.
+     *
+     * @return the header name
+     */
     public String getHttpHeader() {
         return httpHeader;
     }
 
+    /**
+     * Setter for the header name.
+     *
+     * @param httpHeader the header name
+     */
     public void setHttpHeader(final String httpHeader) {
         this.httpHeader = httpHeader;
     }
