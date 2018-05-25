@@ -13,6 +13,7 @@ buildscript {
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.5.0'
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
+        classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
     }
 }
 
@@ -47,6 +48,10 @@ configure(allprojects) { project ->
     apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -76,6 +81,7 @@ configure(allprojects) { project ->
         testCompile("junit:junit")
         testCompile("org.mockito:mockito-core")
         testCompile("org.springframework.boot:spring-boot-starter-logging")
+        optional "org.springframework.boot:spring-boot-configuration-processor"
     }
 
     idea {
@@ -91,6 +97,8 @@ configure(allprojects) { project ->
             events "passed", "skipped", "failed"
         }
     }
+
+    compileJava.dependsOn(processResources)
 }
 
 configure(subprojects - sampleprojects) { subproject ->
