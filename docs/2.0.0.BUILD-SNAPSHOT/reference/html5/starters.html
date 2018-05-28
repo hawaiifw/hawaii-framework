@@ -453,6 +453,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 starter contains a default configuration, which can be overridden by adding properties to your configuration. The default configuration
 consists of the filters listed in the table below.</p>
 </div>
+<div class="paragraph">
+<p>Filters with a negative order are added to the filter chain before any filters that modify or wrap the request and/or response.
+The UserDetailsFilter depends on Spring Security (it logs the authenticated Principal) and therefor has a higher order.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Default filter configuration</caption>
 <colgroup>
@@ -473,7 +477,7 @@ consists of the filters listed in the table below.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-108</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
@@ -485,7 +489,7 @@ consists of the filters listed in the table below.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">kibana-log-cleanup</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-110</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>-</p>
 </div></div></td>
@@ -493,7 +497,7 @@ consists of the filters listed in the table below.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">request-duration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-109</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>-</p>
 </div></div></td>
@@ -501,7 +505,7 @@ consists of the filters listed in the table below.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">request-id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-106</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
@@ -513,7 +517,7 @@ consists of the filters listed in the table below.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">request-response</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-105</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
@@ -547,7 +551,7 @@ consists of the filters listed in the table below.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">transaction-id:</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-107</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
@@ -758,7 +762,7 @@ guarded task to remove the guard task upon completion, and for the guard task to
 <div id="footer">
 <div id="footer-text">
 Version 2.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-05-25 09:21:57 UTC
+Last updated 2018-05-28 13:58:26 UTC
 </div>
 </div>
 </body>
