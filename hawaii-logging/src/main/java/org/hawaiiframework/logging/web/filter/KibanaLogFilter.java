@@ -18,7 +18,6 @@ package org.hawaiiframework.logging.web.filter;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,7 +34,7 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.START;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class KibanaLogFilter extends OncePerRequestFilter {
+public class KibanaLogFilter extends AbstractGenericFilterBean {
 
     /**
      * HostResolver for this class.

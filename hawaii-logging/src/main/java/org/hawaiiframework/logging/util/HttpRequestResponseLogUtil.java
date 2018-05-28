@@ -15,17 +15,15 @@
  */
 package org.hawaiiframework.logging.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.util.*;
 
 import static org.hawaiiframework.logging.util.LogUtil.indent;
 
@@ -41,19 +39,9 @@ import static org.hawaiiframework.logging.util.LogUtil.indent;
 public class HttpRequestResponseLogUtil {
 
     /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestResponseLogUtil.class);
-
-    /**
      * Masks passwords in json strings.
      */
     private static final PasswordMaskerUtil PASSWORD_MASKER = new PasswordMaskerUtil();
-
-    /**
-     * Constant for UTF-8 charset.
-     */
-    private static final String UTF_8 = "UTF-8";
 
     /**
      * The configured newline to look for.
@@ -61,7 +49,12 @@ public class HttpRequestResponseLogUtil {
     private static final String NEW_LINE = System.getProperty("line.separator");
 
     /**
-     * Create {@link HttpHeaders} for the @code{request}.
+     * The indent to use.
+     */
+    private static final String INDENT = "  ";
+
+    /**
+     * Create {@link HttpHeaders} for the {@code request}.
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public HttpHeaders getHeaders(final HttpServletRequest request) {
@@ -80,7 +73,7 @@ public class HttpRequestResponseLogUtil {
     }
 
     /**
-     * Create {@link HttpHeaders} for the @code{response}.
+     * Create {@link HttpHeaders} for the {@code response}.
      */
     public HttpHeaders getHeaders(final HttpServletResponse response) {
         final HttpHeaders headers = new HttpHeaders();
@@ -93,47 +86,145 @@ public class HttpRequestResponseLogUtil {
     }
 
     /**
-     * Create a log string for the given @code{headers} and @code{body}.
+     * Create a request line for the {@code requestUri} and {@code protocol}.
+     * <p>
+     * For example: {@code GET /doc/test.html HTTP/1.1}.
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public String createLogString(final HttpHeaders headers, final String body) throws IOException {
-        return createLogString(headers, body.getBytes(UTF_8));
+    public String createRequestLine(final String request, final String protocol) {
+        return String.format("%s %s", request, protocol);
     }
-
 
     /**
-     * Create a log string for the given @code{headers} and @code{body}.
+     * Create a log string for the given {@code headers} and {@code body} with the platform's default charset.
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public String createLogString(final HttpHeaders headers, final byte[] body) throws IOException {
-        final String indent = "  ";
-
-        final StringBuilder builder = new StringBuilder();
-        appendHeaders(indent, builder, headers);
-        if (body.length > 0) {
-            builder.append('\n');
-            builder.append(new String(body, UTF_8));
-        }
-        final String value = builder.toString();
-        if (value.lastIndexOf(NEW_LINE) == value.length()) {
-            LOGGER.debug("We have trailing newline.");
-        }
-
-        // remove clear text password values and indent the multi line body.
-        return indent(PASSWORD_MASKER.maskPasswordsIn(value), indent);
+    public String createLogString(final HttpHeaders headers, final String body) {
+        return createLogString(null, headers, body.getBytes(Charset.defaultCharset()), Charset.defaultCharset());
     }
 
-    private void appendHeaders(final String indent, final StringBuilder builder, final HttpHeaders headers) {
+    /**
+     * Create a log string for the given {@code headers} and {@code body} with the platform's default charset.
+     */
+    public String createLogString(final HttpHeaders headers, final byte[] body) {
+        return createLogString(null, headers, body, Charset.defaultCharset());
+    }
+
+    /**
+     * Create a log string for the given {@code headers} and {@code body} with the given {@code characterEncoding}.
+     */
+    public String createLogString(final HttpHeaders headers, final byte[] body, final String characterEncoding) {
+        return createLogString(null, headers, body, Charset.forName(characterEncoding));
+    }
+
+    /**
+     * Create a log string for the given {@code headers} and {@code body} with the given {@code charset}.
+     */
+    public String createLogString(final HttpHeaders headers, final byte[] body, final Charset charset) {
+        return createLogString(null, headers, body, charset);
+    }
+
+    /**
+     * Create a log string for the given {@code requestLine}, {@code headers} and {@code body}.
+     */
+    public String createLogString(final String requestLine, final HttpHeaders headers, final byte[] body, final String characterEncoding) {
+        return createLogString(requestLine, headers, body, Charset.forName(characterEncoding));
+    }
+
+    /**
+     * Create a log string for the given {@code requestLine}, {@code headers} and {@code body}.
+     */
+    @SuppressWarnings("PMD.LawOfDemeter")
+    public String createLogString(final String requestLine, final HttpHeaders headers, final byte[] body, final Charset charset) {
+        return createLogString(requestLine, headers, new String(body, charset));
+    }
+
+    /**
+     * Create a log string for the given {@code requestLine}, {@code headers} and {@code body}.
+     */
+    @SuppressWarnings("PMD.LawOfDemeter")
+    public String createLogString(final String requestLine, final HttpHeaders headers, final String body) {
+        final StringBuilder builder = new StringBuilder();
+        if (requestLine != null) {
+            builder.append(requestLine);
+            builder.append(NEW_LINE);
+        }
+        appendHeaders(builder, headers);
+        if (body != null && !body.isEmpty()) {
+            builder.append(NEW_LINE);
+            builder.append(body);
+        }
+        final String value = builder.toString();
+
+        // remove clear text password values and indent the multi line body.
+        return indent(PASSWORD_MASKER.maskPasswordsIn(value), INDENT);
+    }
+
+    private void appendHeaders(final StringBuilder builder, final HttpHeaders headers) {
         final List<String> headerNames = new ArrayList<>(headers.keySet());
         Collections.sort(headerNames);
-        if (!headerNames.isEmpty()) {
-            builder.append(indent);
-        }
+
         for (final String headerName : headerNames) {
             builder.append(headerName);
             builder.append(": ");
             builder.append(String.join(", ", headers.get(headerName)));
             builder.append(NEW_LINE);
         }
+    }
+
+    /**
+     * Transform the request into a log line.
+     */
+
+    public String getRequestUri(final HttpServletRequest servletRequest) {
+        final StringBuilder result = new StringBuilder(servletRequest.getMethod());
+        result.append(' ').append(servletRequest.getRequestURI());
+        if (servletRequest.getQueryString() != null) {
+            result.append('?').append(servletRequest.getQueryString());
+        }
+        return result.toString();
+    }
+
+    /**
+     * Format the request as a nicely formatted string.
+     * <p>
+     * Note that this will read the request! Use {@link org.hawaiiframework.logging.web.filter.ResettableHttpServletRequest} for instance
+     * to reset the input.
+     */
+    public String formatRequest(final String request, final HttpServletRequest servletRequest) throws IOException {
+        final String requestLine = createRequestLine(request, servletRequest.getProtocol());
+        final HttpHeaders headers = getHeaders(servletRequest);
+        final String body = getPostBody(servletRequest);
+        return createLogString(requestLine, headers, body);
+    }
+
+    private String getPostBody(final HttpServletRequest servletRequest) throws IOException {
+        final String body = IOUtils.toString(servletRequest.getInputStream(), servletRequest.getCharacterEncoding());
+        if (StringUtils.isNotBlank(body)) {
+            return body;
+        }
+
+        return getPostParametersBody(servletRequest);
+    }
+
+    private String getPostParametersBody(final HttpServletRequest request) {
+        final Map<String, String[]> parameters = request.getParameterMap();
+        return getPostParametersBody(request, parameters);
+    }
+
+    private String getPostParametersBody(final HttpServletRequest request, final Map<String, String[]> parameters) {
+        if (parameters == null || parameters.isEmpty()) {
+            return "";
+        }
+        final StringBuilder stringBuilder = new StringBuilder();
+        final List<String> parameterNames = new ArrayList<>(parameters.keySet());
+        Collections.sort(parameterNames);
+        for (final String parameterName : parameterNames) {
+            final String[] parameterValues = request.getParameterValues(parameterName);
+            if (parameterValues != null) {
+                for (final String value : parameterValues) {
+                    stringBuilder.append(parameterName).append('=').append(value).append('\n');
+                }
+            }
+        }
+        return stringBuilder.toString();
     }
 }

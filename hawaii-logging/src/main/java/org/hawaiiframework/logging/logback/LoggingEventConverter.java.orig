@@ -90,7 +90,7 @@ public class LoggingEventConverter {
     }
 
     private String getTimestamp(final LoggingEvent event) {
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.ENGLISH);
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.US);
         return simpleDateFormat.format(new Date(event.getTimeStamp()));
     }
 

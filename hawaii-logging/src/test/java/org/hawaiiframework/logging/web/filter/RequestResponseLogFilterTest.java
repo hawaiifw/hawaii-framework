@@ -58,11 +58,16 @@ public class RequestResponseLogFilterTest {
         Mockito.when(LoggerFactory.getLogger(any(Class.class))).thenReturn(logger);
         Mockito.when(LoggerFactory.getLogger(anyString())).thenReturn(logger);
 
-        filter = new RequestResponseLogFilter(mock(RequestResponseLogFilterConfiguration.class), mock(HttpRequestResponseLogUtil.class));
-
         request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(A_REQUEST_URI);
         when(request.getQueryString()).thenReturn(A_QUERY_STRING);
+
+        final HttpRequestResponseLogUtil httpRequestResponseLogUtil = mock(HttpRequestResponseLogUtil.class);
+        when(httpRequestResponseLogUtil.getRequestUri(request)).thenReturn("some uri");
+
+        filter = new RequestResponseLogFilter(mock(RequestResponseLogFilterConfiguration.class), httpRequestResponseLogUtil);
+
+
     }
 
     @Test
@@ -71,12 +76,12 @@ public class RequestResponseLogFilterTest {
 
         filter.doFilterInternal(request, mock(HttpServletResponse.class), mock(FilterChain.class));
 
-        verify(logger, atLeastOnce()).info(anyString(), captor.capture(), captor.capture(), any(), any());
+        verify(logger, atLeastOnce()).info(anyString(), captor.capture(), any(), any());
 
         final List<Object> allValues = captor.getAllValues();
-        String loggedUrl = (String) allValues.get(1);
+        String loggedUrl = (String) allValues.get(0);
 
-        assertThat(loggedUrl, is(equalTo(A_REQUEST_URI + "?" + A_QUERY_STRING)));
+        assertThat(loggedUrl, is(equalTo("some uri")));
     }
 
 }

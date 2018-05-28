@@ -58,6 +58,13 @@ public final class KibanaLogFields {
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
+    public static void set(final KibanaLogFieldNames field, final int value) {
+        set(field, Integer.toString(value));
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}.
+     */
     public static void set(final KibanaLogFieldNames field, final String value) {
         MDC.put(field.getLogName(), value);
     }
@@ -113,11 +120,23 @@ public final class KibanaLogFields {
     }
 
     /**
-     * Update log fields based on the {@code contextMap}.
+     * Update log fields based on the {@code KibanaLogContext}.
+     * <p>
+     * See {@link KibanaLogFields#getContext()}.
      */
-    public static void setContextMap(final KibanaLogContextMap contextMap) {
-        if (contextMap != null) {
-            MDC.setContextMap(contextMap.getContextMap());
+    public static void populateFromContext(final KibanaLogContext logContext) {
+        if (logContext != null) {
+            MDC.setContextMap(logContext.getContextMap());
         }
     }
+
+    /**
+     * Create a new log context for the current thread's kibana log fields.
+     * <p>
+     * See {@link KibanaLogContext#registerKibanaLogFieldsInThisThread()}.
+     */
+    public static KibanaLogContext getContext() {
+        return new KibanaLogContext();
+    }
+
 }

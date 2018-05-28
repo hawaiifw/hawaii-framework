@@ -89,7 +89,7 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
         }
     }
 
-    private void logRequest(final HttpRequest request, final byte[] body) throws IOException {
+    private void logRequest(final HttpRequest request, final byte[] body) {
         KibanaLogFields.setLogType(CALL_REQUEST_BODY);
         LOGGER.debug("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
                 httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
@@ -104,8 +104,7 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
         logResponse(statusCode, statusText, response.getHeaders(), body);
     }
 
-    private void logResponse(final HttpStatus statusCode, final String statusText, final HttpHeaders headers, final String body)
-            throws IOException {
+    private void logResponse(final HttpStatus statusCode, final String statusText, final HttpHeaders headers, final String body) {
         KibanaLogFields.setLogType(CALL_RESPONSE_BODY);
         if (statusCode.is2xxSuccessful() || statusCode.is3xxRedirection()) {
             KibanaLogFields.setCallResult(SUCCESS);

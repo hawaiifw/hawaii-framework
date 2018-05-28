@@ -33,7 +33,7 @@ public class IThrowableProxyConverter {
     /**
      * Converts an IThrowableProxy to a formatted String value.
      *
-     * @param throwableProxy, the non null value for throwable.
+     * @param throwableProxy the non null value for throwable.
      * @return a formatted String with the exception message, the classname and the stacktrace.
      */
     public String convert(final IThrowableProxy throwableProxy) {

@@ -18,7 +18,6 @@ package org.hawaiiframework.logging.web.filter;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -29,6 +28,7 @@ import java.io.IOException;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
  * A filter that logs the duration of the request.
@@ -36,13 +36,17 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class RequestDurationFilter extends OncePerRequestFilter {
+public class RequestDurationFilter extends AbstractGenericFilterBean {
 
     /**
      * The Logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestDurationFilter.class);
 
+    /**
+     * The request attribute name for the start timestamp.
+     */
+    private static final String START_TIMESTAMP = "start_timestamp";
 
     /**
      * {@inheritDoc}
@@ -50,15 +54,23 @@ public class RequestDurationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        final long start = System.nanoTime();
+        if (!isInternalRedirect(request)) {
+            request.setAttribute(START_TIMESTAMP, System.nanoTime());
+        }
         try {
             filterChain.doFilter(request, response);
         } finally {
-            logEnd(start);
+            if (!isInternalRedirect(request)) {
+                logEnd((Long) request.getAttribute(START_TIMESTAMP));
+            }
         }
     }
 
-    private void logEnd(final long start) {
+    private void logEnd(final Long start) {
+        if (start == null) {
+            LOGGER.info("Could not read start timestamp from request!");
+            return;
+        }
         KibanaLogFields.setLogType(END);
         final String duration = String.format("%.2f", (System.nanoTime() - start) / 1E6);
         KibanaLogFields.set(TX_DURATION, duration);

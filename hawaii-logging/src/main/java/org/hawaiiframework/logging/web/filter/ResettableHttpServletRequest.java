@@ -17,9 +17,12 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpUpgradeHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,6 +41,11 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
     private final HttpServletRequest request;
 
     /**
+     * The (wrapped) response.
+     */
+    private final HttpServletResponse response;
+
+    /**
      * The input stream we can reset.
      */
     private ResettableServletInputStream servletStream;
@@ -45,16 +53,19 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
     /**
      * The constructor.
      */
-    public ResettableHttpServletRequest(final HttpServletRequest request) {
+    public ResettableHttpServletRequest(final HttpServletRequest request, final HttpServletResponse response) {
         super(request);
         this.request = request;
+        this.response = response;
     }
 
     /**
      * Reset the input stream so we can read it again.
      */
     public void reset() throws IOException {
-        this.servletStream.reset();
+        if (this.servletStream != null) {
+            this.servletStream.reset();
+        }
     }
 
     /**
@@ -80,4 +91,13 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
         return IOUtils.toByteArray(request.getReader(), request.getCharacterEncoding());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends HttpUpgradeHandler> T upgrade(final Class<T> httpUpgradeHandlerClass) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_SWITCHING_PROTOCOLS);
+        return request.upgrade(httpUpgradeHandlerClass);
+    }
 }

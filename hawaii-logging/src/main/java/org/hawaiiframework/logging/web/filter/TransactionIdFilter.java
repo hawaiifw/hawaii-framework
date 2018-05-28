@@ -20,7 +20,6 @@ import org.hawaiiframework.logging.model.TransactionId;
 import org.hawaiiframework.logging.util.UuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,6 +30,7 @@ import java.util.UUID;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_ID;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
  * A filter that assigns each request a unique transaction id and output the transaction id to the response header.
@@ -38,7 +38,7 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class TransactionIdFilter extends OncePerRequestFilter {
+public class TransactionIdFilter extends AbstractGenericFilterBean {
 
     /**
      * The Logger.
@@ -70,12 +70,14 @@ public class TransactionIdFilter extends OncePerRequestFilter {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        final UUID uuid = uuidResolver.resolve(request, headerName);
+        if (!isInternalRedirect(request)) {
+            final UUID uuid = uuidResolver.resolve(request, headerName);
 
-        TransactionId.set(uuid);
-        KibanaLogFields.set(TX_ID, TransactionId.get());
+            TransactionId.set(uuid);
+            KibanaLogFields.set(TX_ID, TransactionId.get());
 
-        LOGGER.debug("Set '{}' with value '{};.", CALL_ID.getLogName(), uuid);
+            LOGGER.debug("Set '{}' with value '{};.", CALL_ID.getLogName(), uuid);
+        }
 
         try {
             if (!response.containsHeader(headerName)) {
@@ -83,7 +85,9 @@ public class TransactionIdFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } finally {
-            TransactionId.remove();
+            if (!isInternalRedirect(request)) {
+                TransactionId.remove();
+            }
         }
     }
 }

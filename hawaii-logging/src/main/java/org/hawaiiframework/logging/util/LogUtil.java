@@ -15,6 +15,16 @@
  */
 package org.hawaiiframework.logging.util;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * LogUtil to indent data.
  *
@@ -22,6 +32,11 @@ package org.hawaiiframework.logging.util;
  * @since 2.0.0
  */
 public final class LogUtil {
+
+    /**
+     * The logger to use.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogUtil.class);
 
     /**
      * The configured newline to look for.
@@ -33,9 +48,35 @@ public final class LogUtil {
     }
 
     /**
-     * Indent the @code{value} with the given @code{indent}.
+     * Indent the {@code value} with the given {@code indent}.
      */
     public static String indent(final String value, final String indent) {
-        return value.replace(NEW_LINE, String.format("%n%s", indent));
+        return indent + value.replace(NEW_LINE, String.format("%n%s", indent));
+    }
+
+    /**
+     * Writes the {@code input} to the file {@code filename} in the directory {@code parentDir}.
+     */
+    public static void writeToFile(final Path parentDir, final String filename, final InputStream input) throws IOException {
+        if (!Files.exists(parentDir)) {
+            try {
+                Files.createDirectories(parentDir);
+            } catch (IOException e) {
+                LOGGER.error("Error creating directory '{}'", parentDir.toAbsolutePath(), e);
+            }
+        }
+        if (Files.exists(parentDir)) {
+            final Path outputFile = parentDir.resolve(filename);
+            writeInputToFile(input, outputFile);
+        } else {
+            LOGGER.error("Somehow we cannot create '{}'.", parentDir.toAbsolutePath());
+        }
+    }
+
+    private static void writeInputToFile(final InputStream input, final Path outputFile) throws IOException {
+        try (OutputStream outputStream = Files.newOutputStream(outputFile)) {
+            IOUtils.copy(input, outputStream);
+        }
+        LOGGER.info("Wrote to file '{}'.", outputFile.toAbsolutePath());
     }
 }

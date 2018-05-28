@@ -14,17 +14,20 @@ The `hawaii-starter-logging` delivers a fully configured set of filters that are
 starter contains a default configuration, which can be overridden by adding properties to your configuration. The default configuration
 consists of the filters listed in the table below.
 
+Filters with a negative order are added to the filter chain before any filters that modify or wrap the request and/or response.
+The UserDetailsFilter depends on Spring Security (it logs the authenticated Principal) and therefor has a higher order.
+
 [cols="3,2,2,4a", options="header"]
 .Default filter configuration
 |===
 |Filter|Enabled|Order|Additional properties
-|kibana-log|true|4|
+|kibana-log|true|-108|
 * http-header: the header that contains the client ip address. Defaults to `X-Hawaii-Frontend-IP-Address`. If no such header is present, the filter uses the remote address from the request.
-|kibana-log-cleanup|true|2|-
-|request-duration|true|3|-
-|request-id|true|6|
+|kibana-log-cleanup|true|-110|-
+|request-duration|true|-109|-
+|request-id|true|-106|
 * http-header: the response header to which the request id will be writen. Defaults to `X-Hawaii-Request-Id`.
-|request-response|true|7|
+|request-response|true|-105|
 * fallbackToFile: write the response to a file if its size exceeds `maxLogSize`, default value is `true`
 * directory: the directory where files are written to, defaults to `/tmp`
 * maxLogSize: the maximum log size to write to the log, see `fallbackToFile`, default value is `50k`
@@ -32,7 +35,7 @@ consists of the filters listed in the table below.
 ** application/json
 ** text/plain
 ** text/xml
-|transaction-id:|true|5|
+|transaction-id:|true|-107|
 * http-header: the request header name that may contain an incoming transaction id, and the response header to which the transaction id is written. Defaults to X-Hawaii-Tx-Id`.
 |user-details|true|110|-
 |===

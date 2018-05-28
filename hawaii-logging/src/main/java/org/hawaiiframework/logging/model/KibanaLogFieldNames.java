@@ -77,7 +77,7 @@ public enum KibanaLogFieldNames {
     /**
      * Check if a key matches.
      *
-     * @param key, the key to match
+     * @param key the key to match
      * @return true if not null and if the supplied key equals this key.
      */
     @SuppressWarnings("PMD.LawOfDemeter")

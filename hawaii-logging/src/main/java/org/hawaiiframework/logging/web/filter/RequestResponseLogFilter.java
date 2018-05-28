@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.servlet.FilterChain;
@@ -32,16 +31,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.util.Objects.requireNonNull;
+import static java.lang.String.format;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HTTP_STATUS;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY;
+import static org.hawaiiframework.logging.util.LogUtil.writeToFile;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.*;
 
 /**
  * Filter that logs the input and output of each HTTP request. It also logs the duration of the request.
@@ -51,7 +52,7 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class RequestResponseLogFilter extends OncePerRequestFilter {
+public class RequestResponseLogFilter extends AbstractGenericFilterBean {
 
     /**
      * The logger to use.
@@ -71,7 +72,7 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
     /**
      * The log directory.
      */
-    private File logDir;
+    private Path logDir;
 
     /**
      * The configuration for the logging.
@@ -89,141 +90,110 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
     public RequestResponseLogFilter(final RequestResponseLogFilterConfiguration configuration,
             final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
         super();
-        this.configuration = requireNonNull(configuration);
-        this.httpRequestResponseLogUtil = requireNonNull(httpRequestResponseLogUtil);
+        this.configuration = configuration;
+        this.httpRequestResponseLogUtil = httpRequestResponseLogUtil;
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
     @Override
+    @SuppressWarnings("PMD.LawOfDemeter")
     protected void doFilterInternal(final HttpServletRequest httpServletRequest, final HttpServletResponse response,
             final FilterChain filterChain)
             throws ServletException, IOException {
+        LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.", httpServletRequest.getDispatcherType(),
+                isInternalRedirect(httpServletRequest));
 
-        // Get the request URI (formatted).
-        final String method = httpServletRequest.getMethod();
-        final String requestUri = getLogLine(httpServletRequest);
+        // Get the request URI (formatted) (for instance, GET /foo/bar?xyz=pqr&abc=11).
+        final String requestUri = httpRequestResponseLogUtil.getRequestUri(httpServletRequest);
 
         // Create a new wrapped request, which we can use to get the body from.
-        final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest);
+        final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(response);
+        final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
 
-        logRequest(requestUri, method, wrappedRequest);
-
-        final ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
+        if (!isInternalRedirect(httpServletRequest)) {
+            logRequest(requestUri, wrappedRequest);
+        }
 
         // Do filter
         try {
             filterChain.doFilter(wrappedRequest, wrappedResponse);
         } finally {
-            logResponse(requestUri, method, wrappedResponse);
-            wrappedResponse.copyBodyToResponse();
+            if (wrappedResponse.isRedirect()) {
+                markAsInternalRedirect(wrappedRequest);
+            } else {
+                unmarkAsInternalRedirect(wrappedRequest);
+                logResponse(requestUri, wrappedRequest, wrappedResponse, HttpStatus.valueOf(wrappedResponse.getStatusCode()));
+                wrappedResponse.copyBodyToResponse();
+            }
         }
     }
 
-    private void logRequest(final String request, final String method, final ResettableHttpServletRequest wrappedRequest)
+    private void logRequest(final String requestUri, final ResettableHttpServletRequest wrappedRequest)
             throws IOException {
         final int contentLength = wrappedRequest.getContentLength();
         final String contentType = wrappedRequest.getContentType();
 
         KibanaLogFields.setLogType(REQUEST_BODY);
-        LOGGER.info("Invoked '{} {}' with content type '{}' and size of '{}' bytes.", method, request, contentType, contentLength);
-
-        if (contentLength > 0 && mayLogLength(contentLength) && mayLogContentType(contentType)) {
-            LOGGER.debug("Request is:\n{}", getRequestLogString(wrappedRequest));
-        }
-        KibanaLogFields.unsetLogType();
-    }
-
-    private Object getRequestLogString(final ResettableHttpServletRequest wrappedRequest) throws IOException {
+        LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
         try {
-            final String body = IOUtils.toString(wrappedRequest.getInputStream(), wrappedRequest.getCharacterEncoding());
-            final HttpHeaders headers = httpRequestResponseLogUtil.getHeaders(wrappedRequest);
-            return httpRequestResponseLogUtil.createLogString(headers, body);
+            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+                LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
+            } else {
+                // TODO This may fail in case of a file upload. We need to test this.
+                writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+            }
+
         } finally {
             wrappedRequest.reset();
         }
+        KibanaLogFields.unsetLogType();
     }
 
-    private void logResponse(final String request, final String method, final ContentCachingResponseWrapper wrappedResponse)
+    private void logResponse(final String request, final HttpServletRequest servletRequest,
+            final ContentCachingWrappedResponse wrappedResponse, final HttpStatus httpStatus)
             throws IOException {
+
         final int contentLength = wrappedResponse.getContentSize();
         final String contentType = wrappedResponse.getContentType();
 
-        final String statusString = getHttpStatusString(wrappedResponse.getStatusCode());
-        KibanaLogFields.set(HTTP_STATUS, getResponseStatus(wrappedResponse));
+        KibanaLogFields.set(HTTP_STATUS, httpStatus.value());
         KibanaLogFields.setLogType(RESPONSE_BODY);
-        LOGGER.info("Response '{} {}' is '{}' with content type '{}' and size of '{}' bytes.", method, request,
-                statusString, contentType, contentLength);
+        LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
+                httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
 
-        if (contentLength > 0) {
-            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
-                LOGGER.debug("Response is:\n{}", getResponseLogString(wrappedResponse, contentLength));
-            } else if (mayLogToFile()) {
-                if (!logDir.exists() && !logDir.mkdirs()) {
-                    LOGGER.error("Error creating directory '{}'", logDir.getAbsolutePath());
-                }
-                if (logDir.exists()) {
-                    final String requestId = RequestId.get();
-                    final File file = new File(logDir, requestId);
-                    try (FileOutputStream fos = new FileOutputStream(file)) {
-                        IOUtils.copy(wrappedResponse.getContentInputStream(), fos);
-                    }
-                    LOGGER.info("Wrote output to file '{}'.", file.getAbsolutePath());
-                } else {
-                    LOGGER.error("Somehow we cannot create '{}'.", logDir.getAbsolutePath());
-                }
-            }
+        if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+            LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
+        } else if (mayLogToFile()) {
+            writeToFile(logDir, format("%s.out", RequestId.get()), wrappedResponse.getContentInputStream());
         }
         KibanaLogFields.unsetLogType();
     }
 
-    private String getResponseLogString(final ContentCachingResponseWrapper response, final int contentSize)
+    @SuppressWarnings("PMD.LawOfDemeter")
+    private String getResponseLogString(final HttpServletRequest servletRequest, final ContentCachingResponseWrapper response,
+            final HttpStatus httpStatus, final int contentSize)
             throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream(contentSize)) {
             IOUtils.copy(response.getContentInputStream(), baos);
 
+            final String statusLine = format("%s %s %s", servletRequest.getProtocol(), httpStatus.value(), httpStatus.getReasonPhrase());
             final HttpHeaders headers = httpRequestResponseLogUtil.getHeaders(response);
-            return httpRequestResponseLogUtil.createLogString(headers, baos.toString(response.getCharacterEncoding()));
+            return httpRequestResponseLogUtil.createLogString(statusLine, headers, baos.toByteArray(), response.getCharacterEncoding());
         }
-    }
-
-    private String getResponseStatus(final HttpServletResponse response) {
-        return Integer.toString(response.getStatus());
-    }
-
-    /**
-     * Transform the request into a log line.
-     */
-    private String getLogLine(final HttpServletRequest request) {
-        if (request.getRequestURI() == null) {
-            return null;
-        }
-
-        final StringBuilder result = new StringBuilder(request.getRequestURI());
-        if (request.getQueryString() != null) {
-            result.append('?').append(request.getQueryString());
-        }
-        return result.toString();
     }
 
     private boolean mayLogToFile() {
         return configuration.isFallbackToFile();
     }
 
-    @SuppressWarnings("PMD.LawOfDemeter")
-    private String getHttpStatusString(final int statusCode) {
-        final HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
-        return statusCode + " " + httpStatus.getReasonPhrase();
-    }
-
     private boolean mayLogLength(final int length) {
-        return length < maxContentLength;
+        return length < maxContentLength || length == 0;
     }
 
     private boolean mayLogContentType(final String contentType) {
-        if (contentTypesToLog.isEmpty()) {
+        if (contentType == null || contentTypesToLog.isEmpty()) {
             return true;
         }
 
@@ -237,10 +207,10 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
      * {@inheritDoc}
      */
     @Override
-    protected void initFilterBean() throws ServletException {
+    protected void initFilterBean() {
         contentTypesToLog.addAll(configuration.getAllowedContentTypes());
         maxContentLength = configuration.getMaxLogSizeInBytes();
-        logDir = new File(configuration.getDirectory());
+        logDir = Paths.get(configuration.getDirectory());
     }
 
 }

@@ -39,6 +39,9 @@ public final class RequestId {
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public static String get() {
+        if (id.get() == null) {
+            return null;
+        }
         return id.get().toString();
     }
 
