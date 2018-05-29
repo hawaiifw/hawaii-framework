@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.servlet.FilterChain;
@@ -141,8 +142,10 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
             if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
                 LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
             } else {
-                // TODO This may fail in case of a file upload. We need to test this.
-                writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+                if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
+                    // In case of file upload the request reader has already been accessed, so skip
+                    writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+                }
             }
 
         } finally {
