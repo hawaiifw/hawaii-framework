@@ -191,6 +191,15 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     /**
+     * De-registers a {@link ErrorResponseEnricher} based on its class name.
+     *
+     * @param className the class name of the {@link ErrorResponseEnricher} to remove
+     */
+    protected void removeResponseEnricher(final Class<? extends ErrorResponseEnricher> className) {
+        errorResponseEnrichers.remove(className.getName());
+    }
+
+    /**
      * Configures the error response enrichers.
      *
      * <p>Subclasses may override this method to remove existing or add additional listeners,
