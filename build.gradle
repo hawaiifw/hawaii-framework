@@ -8,7 +8,7 @@ buildscript {
         maven { url "http://repo.spring.io/snapshot" }
     }
     dependencies {
-        classpath("io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE")
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.5.0'
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
@@ -21,9 +21,9 @@ ext {
     bouncycastleVersion               = "1.58"
     javaVersion                       = "1.8"
     jasyptVersion                     = "1.9.2"
-    springPlatformVersion             = "Brussels-SR5"
+    springPlatformVersion             = "Brussels-SR11"
     logbackVersion                    = "1.1.5"
-    powerMockVersion                  = "1.7.1"
+    powerMockVersion                  = "1.7.4"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -220,7 +220,7 @@ project("hawaii-autoconfigure") {
         compile "org.yaml:snakeyaml"
         compileOnly project(":hawaii-async")
         compileOnly "com.fasterxml.jackson.core:jackson-databind"
-        compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compileOnly "javax.servlet:javax.servlet-api"
         testCompile("org.hamcrest:hamcrest-core")
@@ -269,7 +269,7 @@ project("hawaii-starter-rest") {
     dependencies {
         compile project(":hawaii-starter")
         compile "com.fasterxml.jackson.core:jackson-databind"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${dependencyManagement.importedProperties['jackson.version']}"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compile "org.json:json"
     }
