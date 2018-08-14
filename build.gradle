@@ -14,12 +14,14 @@ buildscript {
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
         classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
+        classpath "gradle.plugin.se.patrikerdes:gradle-use-latest-versions-plugin:0.2.3"
     }
 }
 
 ext {
     bouncycastleVersion               = "1.58"
-    javaVersion                       = "1.8"
+    javaVersion                       = "1.10"
     jasyptVersion                     = "1.9.2"
     springPlatformVersion             = "Brussels-SR11"
     logbackVersion                    = "1.1.5"
@@ -52,6 +54,8 @@ configure(allprojects) { project ->
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
+    apply plugin: "com.github.ben-manes.versions"
+    apply plugin: 'se.patrikerdes.use-latest-versions'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -95,6 +99,19 @@ configure(allprojects) { project ->
         outputs.upToDateWhen { false }
         testLogging {
             events "passed", "skipped", "failed"
+        }
+    }
+
+    dependencyUpdates.resolutionStrategy {
+        componentSelection { rules ->
+            rules.all { selection ->
+                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+                }
+                if (rejected) {
+                    selection.reject('Release candidate')
+                }
+            }
         }
     }
 
