@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Rutger Lubbers
  * @author Paul Klos
  */
+@SuppressWarnings("PMD.ClassNamingConventions")
 public final class SharedTaskContextHolder {
 
     /**

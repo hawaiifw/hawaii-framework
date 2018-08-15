@@ -41,6 +41,7 @@ import java.util.List;
  * @author Rutger Lubbers
  * @author Paul Klos
  */
+@SuppressWarnings("PMD.DataClass")
 public class ExecutorConfigurationProperties {
 
     /**

@@ -24,6 +24,7 @@ package org.hawaiiframework.async.model;
  * @author Rutger Lubbers
  * @author Paul Klos
  */
+@SuppressWarnings("PMD.DataClass")
 public class TaskProperties {
 
     /**

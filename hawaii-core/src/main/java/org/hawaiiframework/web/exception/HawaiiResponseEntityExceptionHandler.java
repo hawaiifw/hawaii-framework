@@ -26,6 +26,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -147,7 +148,8 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(final Exception ex, final Object body, final HttpHeaders headers,
+    protected ResponseEntity<Object> handleExceptionInternal(final Exception ex, final Object body,
+                                                             @Nullable final HttpHeaders headers,
             final HttpStatus status, final WebRequest request) {
         return ResponseEntity.status(status).headers(headers).body(body);
     }

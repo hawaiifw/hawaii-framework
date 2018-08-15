@@ -27,6 +27,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  * @author Ivan Melotte
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.DataClass")
 public class ErrorResponseResource {
 
     private String method;

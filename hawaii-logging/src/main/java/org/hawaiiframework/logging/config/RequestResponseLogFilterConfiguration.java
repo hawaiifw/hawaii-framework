@@ -28,6 +28,7 @@ import java.util.Locale;
  * @since 2.0.0
  */
 @ConfigurationProperties(prefix = "hawaii.requestLogging")
+@SuppressWarnings("PMD.DataClass")
 public class RequestResponseLogFilterConfiguration extends LoggingFilterProperties {
 
     /**

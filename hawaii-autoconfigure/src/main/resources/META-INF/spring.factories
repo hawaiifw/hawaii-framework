@@ -7,6 +7,3 @@ org.hawaiiframework.boot.autoconfigure.logging.HawaiiLoggingAutoConfiguration,\
 org.hawaiiframework.boot.autoconfigure.rest.HawaiiRestAutoConfiguration,\
 org.hawaiiframework.boot.autoconfigure.time.HawaiiTimeAutoConfiguration
 
-# Environment Post Processors
-org.springframework.boot.env.EnvironmentPostProcessor=\
-org.hawaiiframework.boot.autoconfigure.env.HawaiiPropertyDefaultsPostProcessor
