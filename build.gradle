@@ -295,7 +295,7 @@ project("hawaii-starter-rest") {
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-        compile "org.json:json"
+        compile "org.json:json:20180130"
     }
 }
 
