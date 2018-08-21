@@ -1,7 +1,8 @@
 language: java
 sudo: false
 jdk:
-- oraclejdk8
+- openjdk10
+- oraclejdk10
 addons:
   apt:
     packages:

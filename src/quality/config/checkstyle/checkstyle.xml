@@ -1,13 +1,12 @@
 <?xml version="1.0" ?>
 <!DOCTYPE module PUBLIC
-        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <!-- Properties (http://checkstyle.sourceforge.net/config.html#Properties#Checker) -->
     <property name="fileExtensions" value="java, properties, xml"/>
 
     <!-- Filters (http://checkstyle.sourceforge.net/config_filters.html) -->
-    <module name="SuppressionCommentFilter"/>
     <module name="SuppressWarningsFilter"/>
 
     <module name="NewlineAtEndOfFile">
@@ -23,6 +22,7 @@
 
     <module name="TreeWalker">
 
+        <module name="SuppressionCommentFilter"/>
         <!-- Annotations (http://checkstyle.sourceforge.net/config_annotation.html) -->
         <!--<module name="AnnotationLocation"/>-->
         <module name="AnnotationUseStyle"/>
@@ -158,7 +158,6 @@
         <!--<module name="AvoidEscapedUnicodeCharacters"/>-->
         <module name="CommentsIndentation"/>
         <module name="DescendantToken"/>
-        <module name="FileContentsHolder"/>
         <!--<module name="FinalParameters"/>-->  <!-- DISABLED in favor of less restricted ParameterAssignment -->
         <module name="Indentation"/>
         <module name="OuterTypeFilename"/>

@@ -36,6 +36,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -200,12 +201,14 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
             final BeanDefinitionRegistry beanDefinitionRegistry,
             final String beanName,
             final Class<?> clazz,
-            final ConstructorArgumentValues constructorArgumentValues) {
+            @Nullable final ConstructorArgumentValues constructorArgumentValues) {
         final GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         beanDefinition.setBeanClass(clazz);
         beanDefinition.setAutowireMode(ConfigurableListableBeanFactory.AUTOWIRE_NO);
         beanDefinition.setDependencyCheck(GenericBeanDefinition.DEPENDENCY_CHECK_NONE);
-        beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
+        if (constructorArgumentValues != null) {
+            beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
+        }
 
         beanDefinitionRegistry.registerBeanDefinition(beanName, beanDefinition);
     }

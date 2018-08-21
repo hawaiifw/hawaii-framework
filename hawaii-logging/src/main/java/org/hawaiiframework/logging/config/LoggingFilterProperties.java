@@ -24,6 +24,7 @@ package org.hawaiiframework.logging.config;
  * @author Wouter Eerdekens
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.DataClass")
 public class LoggingFilterProperties {
 
     /**

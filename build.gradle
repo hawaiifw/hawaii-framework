@@ -6,24 +6,32 @@ buildscript {
         maven { url "http://repo.spring.io/milestone" }
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "http://repo.spring.io/snapshot" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath("io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE")
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
+        classpath "org.jruby:jruby-complete:9.1.17.0"
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.8.1")
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.5.0'
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
-        classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
-        classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
+        classpath "ru.vyarus:gradle-quality-plugin:3.1.1"
+        classpath 'io.spring.gradle:propdeps-plugin:0.0.10.RELEASE'
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
+        classpath "gradle.plugin.se.patrikerdes:gradle-use-latest-versions-plugin:0.2.3"
     }
 }
 
+plugins {
+    id 'org.springframework.boot' version '2.0.4.RELEASE' apply false
+}
+
 ext {
-    bouncycastleVersion               = "1.58"
-    javaVersion                       = "1.8"
+    bouncycastleVersion               = "1.60"
+    javaVersion                       = "1.10"
     jasyptVersion                     = "1.9.2"
-    springPlatformVersion             = "Brussels-SR11"
+    springBootVersion                 = "2.0.4.RELEASE"
     logbackVersion                    = "1.1.5"
-    powerMockVersion                  = "1.7.4"
+    powerMockVersion                  = "2.0.0-beta.5"
     javadocLinks = [
         "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
         "http://docs.oracle.com/javase/8/docs/api/",
@@ -41,6 +49,7 @@ ext {
 ext.coreprojects = subprojects.findAll { project -> !project.name.startsWith("hawaii-samples") }
 ext.sampleprojects = subprojects.findAll { project -> project.name.startsWith("hawaii-samples") }
 
+
 configure(allprojects) { project ->
 
     group = "org.hawaiiframework"
@@ -52,6 +61,8 @@ configure(allprojects) { project ->
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
+    apply plugin: "com.github.ben-manes.versions"
+    apply plugin: 'se.patrikerdes.use-latest-versions'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -70,17 +81,18 @@ configure(allprojects) { project ->
 
     dependencyManagement {
         imports {
-            mavenBom "io.spring.platform:platform-bom:${springPlatformVersion}"
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
         }
     }
 
     dependencies {
         compile("org.slf4j:jcl-over-slf4j")
         compile("org.slf4j:slf4j-api")
-        compile("commons-io:commons-io")
+        compile("commons-io:commons-io:2.6")
         testCompile("junit:junit")
         testCompile("org.mockito:mockito-core")
         testCompile("org.springframework.boot:spring-boot-starter-logging")
+        testCompile("org.springframework:spring-test")
         optional "org.springframework.boot:spring-boot-configuration-processor"
     }
 
@@ -95,6 +107,19 @@ configure(allprojects) { project ->
         outputs.upToDateWhen { false }
         testLogging {
             events "passed", "skipped", "failed"
+        }
+    }
+
+    dependencyUpdates.resolutionStrategy {
+        componentSelection { rules ->
+            rules.all { selection ->
+                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+                }
+                if (rejected) {
+                    selection.reject('Release candidate')
+                }
+            }
         }
     }
 
@@ -271,7 +296,7 @@ project("hawaii-starter-rest") {
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-        compile "org.json:json"
+        compile "org.json:json:20180130"
     }
 }
 
@@ -333,7 +358,7 @@ project("hawaii-logging") {
         compile project(":hawaii-core")
         compile "org.springframework:spring-web"
         compileOnly "org.springframework.security:spring-security-core"
-        compile "javax.servlet:javax.servlet-api:3.1.0"
+        compile "javax.servlet:javax.servlet-api:4.0.1"
         compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
 
@@ -342,7 +367,7 @@ project("hawaii-logging") {
 
         testCompile "org.springframework.security:spring-security-core"
         testCompile("org.powermock:powermock-module-junit4:${powerMockVersion}")
-        testCompile("org.powermock:powermock-api-mockito:${powerMockVersion}")
+        testCompile("org.powermock:powermock-api-mockito2:${powerMockVersion}")
     }
 }
 
@@ -357,6 +382,7 @@ project("hawaii-async") {
         compile "org.springframework:spring-context"
         compile "org.apache.httpcomponents:httpclient"
         compile "javax.validation:validation-api"
+        compile "org.yaml:snakeyaml"
     }
 }
 

@@ -20,17 +20,18 @@ import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.bind.YamlConfigurationFactory;
+import org.springframework.util.Assert;
+import org.yaml.snakeyaml.Yaml;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 /**
  * Helper class to actually load the async configuration properties from the configuration file.
  *
- * @since 2.0.0
- *
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class AsyncPropertiesLoader {
     /**
@@ -61,16 +62,20 @@ public class AsyncPropertiesLoader {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public ExecutorConfigurationProperties loadProperties() {
         try {
-            final YamlConfigurationFactory<ExecutorConfigurationProperties> yamlConfigurationFactory =
-                    new YamlConfigurationFactory<>(ExecutorConfigurationProperties.class);
-            yamlConfigurationFactory.setYaml(new String(Files.readAllBytes(Paths.get(configFile)), "UTF-8"));
-
-            return yamlConfigurationFactory.getObject();
+            return loadYamlExecutorConfigurationProperties(new String(Files.readAllBytes(Paths.get(configFile)), "UTF-8"));
         } catch (Exception e) {
             LOGGER.error("Unable to load async configuration file");
             throw new HawaiiException(e);
         }
     }
 
-
+    private static ExecutorConfigurationProperties loadYamlExecutorConfigurationProperties(final String yaml) {
+        Assert.state(yaml != null, "Yaml document should not be null: "
+                + "either set it directly or set the resource to load it from");
+        return new Yaml(
+                new YamlJavaBeanPropertyConstructor(
+                        ExecutorConfigurationProperties.class,
+                        Collections.emptyMap()))
+                .load(yaml);
+    }
 }
