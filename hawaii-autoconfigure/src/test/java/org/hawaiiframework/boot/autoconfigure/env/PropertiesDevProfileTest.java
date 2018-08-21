@@ -23,20 +23,20 @@ import static org.junit.Assert.assertThat;
 @ActiveProfiles(profiles = "dev")
 public class PropertiesDevProfileTest extends PropertiesDefaultProfileTestBase {
 
-    private static final Map<String, Object> defaultHawaiiDevProperties;
+    private static final Map<String, Object> DEFAULT_HAWAII_DEV_PROPERTIES;
 
     @Autowired
     private ConfigurableApplicationContext context;
 
     static {
-        defaultHawaiiDevProperties = new HashMap<>(defaultHawaiiProperties);
-        defaultHawaiiDevProperties.put("logging.level.org.hawaiiframework", "DEBUG");
-        defaultHawaiiDevProperties.put("spring.jackson.serialization.indent-output", "true");
+        DEFAULT_HAWAII_DEV_PROPERTIES = new HashMap<>(DEFAULT_HAWAII_PROPERTIES);
+        DEFAULT_HAWAII_DEV_PROPERTIES.put("logging.level.org.hawaiiframework", "DEBUG");
+        DEFAULT_HAWAII_DEV_PROPERTIES.put("spring.jackson.serialization.indent-output", "true");
     }
 
     @Test
     public void testDefaultHawaiiPropertiesDevProfile() {
-        Map<String, Object> expected = new HashMap<>(defaultHawaiiDevProperties);
+        Map<String, Object> expected = new HashMap<>(DEFAULT_HAWAII_DEV_PROPERTIES);
         expected.forEach((key, value) -> {
             assertThat(getEnvProperty(key), is(equalTo(value)));
         });

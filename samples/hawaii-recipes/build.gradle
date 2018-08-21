@@ -1,29 +1,14 @@
-buildscript {
-    ext {
-        springBootVersion = "1.5.14.RELEASE"
-    }
-    repositories {
-        jcenter()
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-    }
-}
-
 apply plugin: "org.springframework.boot"
 
 dependencies {
     compile project(":hawaii-starter-rest")
-    compile project(":hawaii-starter")
     compile "org.springframework.boot:spring-boot-actuator"
     compile "org.springframework.boot:spring-boot-devtools"
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-web"
-    testCompile "javax.xml.bind:jaxb-api:2.2.8"
     testCompile project(":hawaii-starter-test")
+    testCompile "javax.xml.bind:jaxb-api"
     testCompile "org.springframework.boot:spring-boot-starter-test"
     runtime "com.h2database:h2"
 }

@@ -16,7 +16,6 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.springframework.boot.SpringApplication.BANNER_LOCATION_PROPERTY;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {PropertiesTestProfileTest.class})
@@ -24,19 +23,18 @@ import static org.springframework.boot.SpringApplication.BANNER_LOCATION_PROPERT
 @ActiveProfiles(profiles = "test")
 public class PropertiesTestProfileTest extends PropertiesDefaultProfileTestBase {
 
-    private static final Map<String, Object> defaultHawaiiTestProperties;
+    private static final Map<String, Object> DEFAULT_HAWAII_TEST_PROPERTIES;
 
     @Autowired
     private ConfigurableApplicationContext context;
 
     static {
-        defaultHawaiiTestProperties = new HashMap<>(defaultHawaiiProperties);
-
+        DEFAULT_HAWAII_TEST_PROPERTIES = new HashMap<>(DEFAULT_HAWAII_PROPERTIES);
     }
 
     @Test
     public void testDefaultHawaiiPropertiesTestProfile() {
-        Map<String, Object> expected = new HashMap<>(defaultHawaiiTestProperties);
+        Map<String, Object> expected = new HashMap<>(DEFAULT_HAWAII_TEST_PROPERTIES);
         expected.forEach((key, value) -> {
             assertThat(getEnvProperty(key), is(equalTo(value)));
         });

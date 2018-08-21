@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.EnvironmentTestUtils;
-import org.springframework.core.annotation.Order;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -23,7 +22,7 @@ public class PropertiesDefaultProfileTest extends PropertiesDefaultProfileTestBa
 
     @Test
     public void testDefaultHawaiiProperties() {
-        Map<String, Object> expected = new HashMap<>(defaultHawaiiProperties);
+        Map<String, Object> expected = new HashMap<>(DEFAULT_HAWAII_PROPERTIES);
         expected.forEach((key, value) -> {
             assertThat(getEnvProperty(key), is(equalTo(value)));
         });
