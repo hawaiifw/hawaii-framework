@@ -53,13 +53,13 @@ public class ValidationErrorResourceAssembler extends AbstractModelConverter<Val
      * <p>
      * For example, if the {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy} is defined,
      * the following field names and error codes will be translated as following:
-     * <ol>
-     * <li>description -> description</li>
-     * <li>price -> price</li>
-     * <li>discountPrice -> discount_price</li>
-     * <li>Required -> required</li>
-     * <li>InvalidLength -> invalid_length</li>
-     * </ol>
+     * <ul>
+     * <li>description -&gt; description</li>
+     * <li>price -&gt; price</li>
+     * <li>discountPrice -&gt; discount_price</li>
+     * <li>Required -&gt; required</li>
+     * <li>InvalidLength -&gt; invalid_length</li>
+     * </ul>
      */
     protected String convertProperty(final String propertyName) {
         final String name;

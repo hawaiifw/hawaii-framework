@@ -25,12 +25,12 @@ import java.util.Map;
  *
  * <p>
  * An example of the usage of this class, for a parallel stream:
+ *
  * <pre>
- *  MdcContext context = MdcContext.getCurrentMdc();
+ * MdcContext context = MdcContext.getCurrentMdc();
  *
- *  // stream and set context:
- *  list.parallelStream().forEach(entry -> { mdcContext.populateMdc(); ... })
- *
+ * // stream and set context:
+ * list.parallelStream().forEach(entry -&gt; { mdcContext.populateMdc(); ... })
  * </pre>
  *
  * @author Rutger Lubbers
