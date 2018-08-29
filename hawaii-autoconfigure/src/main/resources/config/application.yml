@@ -52,8 +52,6 @@ hawaii:
         enabled: true
         order: 110
 
-defaultHawaiiProperties: /config/hawaii-application.yml
-
 ---
 
 spring:
@@ -63,13 +61,3 @@ spring:
 logging:
   level:
     org.hawaiiframework: DEBUG
-
----
-
-spring:
-  profiles: test
-
----
-
-spring:
-  profiles: prod
