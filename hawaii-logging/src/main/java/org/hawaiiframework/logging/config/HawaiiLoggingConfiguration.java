@@ -274,7 +274,7 @@ public class HawaiiLoggingConfiguration {
             final Filter filter,
             final LoggingFilterProperties filterProperties,
             final EnumSet<DispatcherType> dispatcherTypes) {
-        final FilterRegistrationBean result = new FilterRegistrationBean(filter);
+        final FilterRegistrationBean<?> result = new FilterRegistrationBean<>(filter);
         result.setOrder(filterProperties.getOrder());
         result.setDispatcherTypes(dispatcherTypes);
         return result;

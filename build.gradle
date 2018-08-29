@@ -2,6 +2,7 @@ buildscript {
     ext {
         bouncycastleVersion        = "1.60"
         commonsIoVersion           = "2.6"
+        commonsTextVersion         = "1.4"
         findbugsAnnotationsVersion = "3.0.1"
         jasyptVersion              = "1.9.2"
         javaVersion                = "1.10"
@@ -231,6 +232,21 @@ configure(subprojects - sampleprojects) { subproject ->
     }
 }
 
+project("hawaii-async") {
+
+    description = "Hawaii Async"
+
+    dependencies {
+        compile project(":hawaii-logging")
+        compile "javax.validation:validation-api"
+        compile "org.springframework:spring-core"
+        compile "org.springframework:spring-context"
+        compile "org.springframework.boot:spring-boot"
+        compile "org.apache.httpcomponents:httpclient"
+        compile "org.yaml:snakeyaml"
+    }
+}
+
 project("hawaii-autoconfigure") {
 
     description = "Hawaii Autoconfigure"
@@ -274,6 +290,26 @@ project("hawaii-core") {
     }
 }
 
+project("hawaii-logging") {
+
+    description = "Hawaii Logging"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile "javax.servlet:javax.servlet-api"
+        compile "org.springframework:spring-web"
+        compile "org.springframework.boot:spring-boot"
+        compile "org.springframework.boot:spring-boot-autoconfigure"
+        compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
+        compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
+        compileOnly "org.springframework.security:spring-security-core"
+        testCompile "org.apache.commons:commons-text:${commonsTextVersion}"
+        testCompile "org.powermock:powermock-api-mockito2:${powerMockVersion}"
+        testCompile "org.powermock:powermock-module-junit4:${powerMockVersion}"
+        testCompile "org.springframework.security:spring-security-core"
+    }
+}
+
 project("hawaii-starter") {
 
     description = "Hawaii Starter"
@@ -283,6 +319,26 @@ project("hawaii-starter") {
         compile project(":hawaii-core")
         compile "org.springframework.boot:spring-boot-starter"
         compile "org.springframework.boot:spring-boot-starter-aop"
+    }
+}
+
+project("hawaii-starter-async") {
+
+    description = "Hawaii Starter Async"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile project(":hawaii-async")
+    }
+}
+
+project("hawaii-starter-logging") {
+
+    description = "Hawaii Starter Logging"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile project(":hawaii-logging")
     }
 }
 
@@ -308,26 +364,6 @@ project("hawaii-starter-test") {
     }
 }
 
-project("hawaii-starter-async") {
-
-    description = "Hawaii Starter Async"
-
-    dependencies {
-        compile project(":hawaii-starter")
-        compile project(":hawaii-async")
-    }
-}
-
-project("hawaii-starter-logging") {
-
-    description = "Hawaii Starter Logging"
-
-    dependencies {
-        compile project(":hawaii-starter")
-        compile project(":hawaii-logging")
-    }
-}
-
 project("hawaii-test") {
 
     description = "Hawaii Test"
@@ -346,40 +382,6 @@ project("hawaii-test") {
         compile "org.springframework:spring-test"
         compile "org.springframework:spring-web"
         compileOnly "com.google.code.findbugs:annotations:${findbugsAnnotationsVersion}"
-    }
-}
-
-project("hawaii-logging") {
-
-    description = "Hawaii Logging"
-
-    dependencies {
-        compile project(":hawaii-core")
-        compile "javax.servlet:javax.servlet-api"
-        compile "org.springframework:spring-web"
-        compile "org.springframework.boot:spring-boot"
-        compile "org.springframework.boot:spring-boot-autoconfigure"
-        compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
-        compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
-        compileOnly "org.springframework.security:spring-security-core"
-        testCompile("org.powermock:powermock-api-mockito2:${powerMockVersion}")
-        testCompile("org.powermock:powermock-module-junit4:${powerMockVersion}")
-        testCompile "org.springframework.security:spring-security-core"
-    }
-}
-
-project("hawaii-async") {
-
-    description = "Hawaii Async"
-
-    dependencies {
-        compile project(":hawaii-logging")
-        compile "javax.validation:validation-api"
-        compile "org.springframework:spring-core"
-        compile "org.springframework:spring-context"
-        compile "org.springframework.boot:spring-boot"
-        compile "org.apache.httpcomponents:httpclient"
-        compile "org.yaml:snakeyaml"
     }
 }
 
