@@ -3,7 +3,7 @@
 echo "Publishing..."
 
 # Do not deploy archives when building pull request
-if [ "$TRAVIS_BRANCH" != "master" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
+if [ "$TRAVIS_BRANCH" != "master" && "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
   exit 0
 fi
 
