@@ -23,13 +23,13 @@ buildscript {
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
         classpath "com.github.jruby-gradle:jruby-gradle-plugin:1.5.0"
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
         classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.8.1"
         classpath "org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16"
         classpath "org.jruby:jruby-complete:9.1.17.0"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "ru.vyarus:gradle-quality-plugin:3.1.1"
     }
 }
 
@@ -128,7 +128,9 @@ configure(subprojects - sampleprojects) { subproject ->
 
     apply plugin: "maven"
     apply plugin: "signing"
-    apply plugin: "ru.vyarus.quality"
+    apply plugin: "checkstyle"
+    apply plugin: "com.github.spotbugs"
+    apply plugin: "pmd"
 
     jar {
         manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -174,11 +176,26 @@ configure(subprojects - sampleprojects) { subproject ->
         archives javadocJar
     }
 
-    quality {
-        configDir = "${rootProject.projectDir}/src/quality/config/"
-        checkstyle = true
-        findbugs = true
-        pmd = true
+    checkstyle {
+        configDir = file("${rootProject.projectDir}/src/quality/config/checkstyle")
+        ignoreFailures = false
+        sourceSets = [sourceSets.main]
+        toolVersion = "8.12"
+    }
+
+    pmd {
+        ignoreFailures = false
+        ruleSetFiles = files("${rootProject.projectDir}/src/quality/config/pmd/pmd.xml")
+        ruleSets = [] // https://github.com/pmd/pmd/issues/876
+        sourceSets = [sourceSets.main]
+        toolVersion = "6.6.0"
+    }
+
+    spotbugs {
+        excludeFilter = file("${rootProject.projectDir}/src/quality/config/spotbugs/exclude.xml")
+        ignoreFailures = false
+        sourceSets = [sourceSets.main]
+        toolVersion = "3.1.6"
     }
 
     signing {
@@ -230,6 +247,13 @@ configure(subprojects - sampleprojects) { subproject ->
             }
         }
     }
+
+    tasks.withType(com.github.spotbugs.SpotBugsTask) {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
 }
 
 project("hawaii-async") {
@@ -263,6 +287,7 @@ project("hawaii-autoconfigure") {
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compileOnly "javax.servlet:javax.servlet-api"
+        compileOnly "org.springframework:spring-webmvc"
         testCompile "org.hamcrest:hamcrest-core"
         testCompile "org.hamcrest:hamcrest-library"
     }

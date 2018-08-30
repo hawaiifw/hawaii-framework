@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE module PUBLIC
-        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
     <!-- Properties (http://checkstyle.sourceforge.net/config.html#Properties#Checker) -->
     <property name="fileExtensions" value="java, properties, xml"/>
@@ -21,10 +21,12 @@
     <module name="UniqueProperties"/>
 
     <module name="TreeWalker">
-
+        <!-- http://checkstyle.sourceforge.net/config_filters.html#SuppressionCommentFilter -->
         <module name="SuppressionCommentFilter"/>
+
         <!-- Annotations (http://checkstyle.sourceforge.net/config_annotation.html) -->
         <!--<module name="AnnotationLocation"/>-->
+        <!--<module name="AnnotationOnSameLine">-->
         <module name="AnnotationUseStyle"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
@@ -183,6 +185,7 @@
         <module name="InterfaceTypeParameterName">
             <property name="format" value="^[A-Z]*$"/>
         </module>
+        <module name="LambdaParameterName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>

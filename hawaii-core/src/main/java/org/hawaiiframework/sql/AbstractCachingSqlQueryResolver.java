@@ -56,6 +56,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     /**
      * The maximum number of entries in the cache.
      */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
     private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
 
     /**
@@ -296,7 +297,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     protected static class QueryHolder {
 
         private String sqlQuery;
-        private volatile long refreshTimestamp = -2;
+        @SuppressWarnings("PMD.AvoidUsingVolatile") private volatile long refreshTimestamp = -2;
         private long queryTimestamp = -1;
         private final ReentrantLock refreshLock = new ReentrantLock();
 
