@@ -6,9 +6,26 @@
 
 The Hawaii Framework is a Java framework for developing Spring based applications.
 
+
+## Documentation
+
+See http://www.hawaiiframework.org.
+
+
+## Versions
+
+This library follows the Spring Data JPA versionning semantic.
+
+Branch   | Hawaii version | JDK version | Spring Boot version
+-------- | -------------- | ----------- | -------------------
+`master` | 3.x            | 8           | 2.x
+`2.x`    | 2.x            | 10          | 1.5.x
+
+
 ## Contributing
 
 See the [contributor guidelines][] for details.
+
 
 ## License
 The Hawaii Framework is released under version 2.0 of the [Apache License][].
