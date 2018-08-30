@@ -255,6 +255,7 @@ public class HawaiiLoggingConfiguration {
 
     /**
      * Configures the user details filter.
+     * This configuration is separated so the Hawaii logging configuration can be used without Spring Security.
      */
     @Configuration
     @ConditionalOnClass(UserDetails.class)
