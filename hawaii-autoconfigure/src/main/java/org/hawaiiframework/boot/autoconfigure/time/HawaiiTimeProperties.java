@@ -23,6 +23,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @since 2.0.0
  */
 @ConfigurationProperties("hawaii.time")
+@SuppressWarnings("PMD.DataClass")
 public class HawaiiTimeProperties {
 
     private boolean enabled = true;

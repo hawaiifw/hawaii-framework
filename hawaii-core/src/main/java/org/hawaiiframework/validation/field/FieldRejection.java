@@ -22,36 +22,41 @@ import org.hawaiiframework.validation.ValidationResult;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Reject a field based on a few conditions.
  *
- * For instance
- * <blockquote>
- *     new FieldRejection(validationResult, "houseNumber", "13-a")
- *              .whenNull()
- *              .orWhen(h -> h.contains("a"))
- *              .orWhen(h -> h.length() > 10);
- * </blockquote>
+ * <p>
+ * For instance:
  *
+ * <pre>
+ * new FieldRejection(validationResult, "houseNumber", "13-a")
+ *         .whenNull()
+ *         .orWhen(h -&gt; h.contains("a"))
+ *         .orWhen(h -&gt; h.length() &gt; 10);
+ * </pre>
+ *
+ * <p>
  * If used with the ValidationResult class this will look like:
- * <blockquote>
- *     validationResult.rejectField("houseNumber", "13-a")
- *              .whenNull()
- *              .orWhen(h -> h.contains("a'))
- *              .orWhen(h -> h.length() > 10);
- * </blockquote>
  *
+ * <pre>
+ * validationResult.rejectField("houseNumber", "13-a")
+ *         .whenNull()
+ *         .orWhen(h -&gt; h.contains("a'))
+ *         .orWhen(h -&gt; h.length() &gt; 10);
+ * </pre>
+ *
+ * <p>
  * The rejections without <code>code</code> parameters have the value <code>invalid</code>, except the
  * <code>whenNull()</code>, this has the <code>required</code> code value.
  *
+ * <p>
  * The chain will stop evaluating the rejection clauses after the first matching clause. In the examples above
  * the chain will not evaluate the length of the house number.
  *
- * @author Rutger Lubbers
- *
  * @param <T> The type of the value to evaluate.
+ * @author Rutger Lubbers
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class FieldRejection<T> {

@@ -56,6 +56,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
     /**
      * The maximum number of entries in the cache.
      */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
     private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
 
     /**
@@ -169,9 +170,13 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
             }
             if (logger.isDebugEnabled()) {
                 if (cachedSqlQuery == null) {
-                    logger.debug("No cached instance for sql query '" + cacheKey + "' was found");
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("No cached instance for sql query '" + cacheKey + "' was found");
+                    }
                 } else {
-                    logger.debug("Cache for sql query " + cacheKey + " has been cleared");
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Cache for sql query " + cacheKey + " has been cleared");
+                    }
                 }
             }
         }
@@ -288,10 +293,11 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
      * timestamp. Whether or not the latter is only meaningful depends on the way the query is loaded. For example, loading a query as a
      * resource from the classpath will not result in any meaningful timestamp, whereas loading it from the file system will.
      */
+    @SuppressWarnings("PMD.DataClass")
     protected static class QueryHolder {
 
         private String sqlQuery;
-        private volatile long refreshTimestamp = -2;
+        @SuppressWarnings("PMD.AvoidUsingVolatile") private volatile long refreshTimestamp = -2;
         private long queryTimestamp = -1;
         private final ReentrantLock refreshLock = new ReentrantLock();
 

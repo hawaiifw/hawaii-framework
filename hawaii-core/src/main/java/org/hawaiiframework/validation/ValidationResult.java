@@ -167,13 +167,15 @@ public class ValidationResult {
     /**
      * Reject a <code>field</code> with value <code>actual</code> in a fluent manner.
      *
+     * <p>
      * For instance:
-     * <blockquote>
-     *     validationResult.rejectField("houseNumber", "13-a")
-     *                          .whenNull()
-     *                          .orWhen(containsString("a"))
-     *                          .orWhen(h -> h.length() > 4);
-     * </blockquote>
+     *
+     * <pre>
+     * validationResult.rejectField("houseNumber", "13-a")
+     *         .whenNull()
+     *         .orWhen(containsString("a"))
+     *         .orWhen(h -&gt; h.length() &gt; 4);
+     * </pre>
      *
      * @param field The field name to evaluate.
      * @param actual The value to evaluate.

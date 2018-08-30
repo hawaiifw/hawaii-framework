@@ -114,15 +114,15 @@ public class RecipeController {
         logger.info("get called with id: ", id);
 
         // Retrieve recipe from repository
-        Recipe recipe = recipeRepository.findOne(id);
+        var recipe = recipeRepository.findById(id);
 
         // If recipe not found throw resource not found exception
-        if (recipe == null) {
+        if (!recipe.isPresent()) {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
 
         // Convert recipe to recipe resource to be returned to client
-        RecipeResource recipeRsource = recipeResourceAssembler.convert(recipe);
+        RecipeResource recipeRsource = recipeResourceAssembler.convert(recipe.get());
 
         // Return recipe resource to client
         return ResponseEntity.ok().body(recipeRsource);
@@ -135,10 +135,10 @@ public class RecipeController {
         logger.info("update called with id: {}, input: {}", id, recipeInput);
 
         // Retrieve recipe from repository
-        Recipe recipe = recipeRepository.findOne(id);
+        var recipe = recipeRepository.findById(id);
 
         // If recipe not found throw resource not found exception
-        if (recipe == null) {
+        if (!recipe.isPresent()) {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
 
@@ -148,13 +148,14 @@ public class RecipeController {
         // TODO verify if it is allowed to update recipe
 
         // Convert recipe input to recipe
-        recipeInputConverter.convert(recipeInput, recipe);
+        recipeInputConverter.convert(recipeInput, recipe.get());
+
 
         // Save recipe to repository
-        recipeRepository.save(recipe);
+        recipeRepository.save(recipe.get());
 
         // Convert saved recipe to recipe resource to be returned to client
-        RecipeResource recipeResource = recipeResourceAssembler.convert(recipe);
+        RecipeResource recipeResource = recipeResourceAssembler.convert(recipe.get());
 
         // Return recipe resource to client
         return ResponseEntity.ok().body(recipeResource);
@@ -166,17 +167,17 @@ public class RecipeController {
         logger.info("delete called with id: {}", id);
 
         // Retrieve recipe from repository
-        Recipe recipe = recipeRepository.findOne(id);
+        var recipe = recipeRepository.findById(id);
 
         // If recipe not found throw resource not found exception
-        if (recipe == null) {
+        if (!recipe.isPresent()) {
             throw new ResourceNotFoundException(String.format("Recipe %d not found", id));
         }
 
         // TODO verify if it is allowed to delete recipe
 
         // Delete recipe from repository
-        recipeRepository.delete(id);
+        recipeRepository.deleteById(id);
 
         // Return no content response to client
         return ResponseEntity.noContent().build();

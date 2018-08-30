@@ -18,6 +18,7 @@ package org.hawaiiframework.async.statistics;
 /**
  * A view on the {@link ExecutorStatistics}.
  */
+@SuppressWarnings("PMD.DataClass")
 public class ExecutorStatisticsView {
 
     /**

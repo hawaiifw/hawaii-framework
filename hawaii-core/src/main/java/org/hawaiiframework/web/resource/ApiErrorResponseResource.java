@@ -24,6 +24,7 @@ import org.hawaiiframework.exception.ApiException;
  * @author Paul Klos
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.DataClass")
 public class ApiErrorResponseResource extends ErrorResponseResource {
 
     /**

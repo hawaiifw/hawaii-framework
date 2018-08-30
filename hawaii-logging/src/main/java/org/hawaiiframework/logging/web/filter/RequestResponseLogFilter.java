@@ -43,7 +43,9 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HTTP_STATUS;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY;
 import static org.hawaiiframework.logging.util.LogUtil.writeToFile;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.*;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsInternalRedirect;
 
 /**
  * Filter that logs the input and output of each HTTP request. It also logs the duration of the request.

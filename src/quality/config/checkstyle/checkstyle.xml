@@ -7,7 +7,6 @@
     <property name="fileExtensions" value="java, properties, xml"/>
 
     <!-- Filters (http://checkstyle.sourceforge.net/config_filters.html) -->
-    <module name="SuppressionCommentFilter"/>
     <module name="SuppressWarningsFilter"/>
 
     <module name="NewlineAtEndOfFile">
@@ -22,9 +21,12 @@
     <module name="UniqueProperties"/>
 
     <module name="TreeWalker">
+        <!-- http://checkstyle.sourceforge.net/config_filters.html#SuppressionCommentFilter -->
+        <module name="SuppressionCommentFilter"/>
 
         <!-- Annotations (http://checkstyle.sourceforge.net/config_annotation.html) -->
         <!--<module name="AnnotationLocation"/>-->
+        <!--<module name="AnnotationOnSameLine">-->
         <module name="AnnotationUseStyle"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
@@ -158,7 +160,6 @@
         <!--<module name="AvoidEscapedUnicodeCharacters"/>-->
         <module name="CommentsIndentation"/>
         <module name="DescendantToken"/>
-        <module name="FileContentsHolder"/>
         <!--<module name="FinalParameters"/>-->  <!-- DISABLED in favor of less restricted ParameterAssignment -->
         <module name="Indentation"/>
         <module name="OuterTypeFilename"/>
@@ -184,6 +185,7 @@
         <module name="InterfaceTypeParameterName">
             <property name="format" value="^[A-Z]*$"/>
         </module>
+        <module name="LambdaParameterName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>

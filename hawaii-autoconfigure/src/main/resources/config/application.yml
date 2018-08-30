@@ -61,13 +61,3 @@ spring:
 logging:
   level:
     org.hawaiiframework: DEBUG
-
----
-
-spring:
-  profiles: test
-
----
-
-spring:
-  profiles: prod

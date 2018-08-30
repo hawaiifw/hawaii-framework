@@ -21,6 +21,7 @@ package org.hawaiiframework.logging.logback;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.ClassNamingConventions")
 public final class CharacterConstants {
 
     /**

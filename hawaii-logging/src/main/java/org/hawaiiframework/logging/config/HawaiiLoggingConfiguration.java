@@ -17,7 +17,13 @@ package org.hawaiiframework.logging.config;
 
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
-import org.hawaiiframework.logging.web.filter.*;
+import org.hawaiiframework.logging.web.filter.KibanaLogCleanupFilter;
+import org.hawaiiframework.logging.web.filter.KibanaLogFilter;
+import org.hawaiiframework.logging.web.filter.RequestDurationFilter;
+import org.hawaiiframework.logging.web.filter.RequestIdFilter;
+import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
+import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
+import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -274,7 +280,7 @@ public class HawaiiLoggingConfiguration {
             final Filter filter,
             final LoggingFilterProperties filterProperties,
             final EnumSet<DispatcherType> dispatcherTypes) {
-        final FilterRegistrationBean result = new FilterRegistrationBean(filter);
+        final FilterRegistrationBean<?> result = new FilterRegistrationBean<>(filter);
         result.setOrder(filterProperties.getOrder());
         result.setDispatcherTypes(dispatcherTypes);
         return result;

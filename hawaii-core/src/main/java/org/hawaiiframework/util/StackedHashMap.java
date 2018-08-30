@@ -16,7 +16,12 @@
 
 package org.hawaiiframework.util;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A stacked {@code HashMap} implementation.

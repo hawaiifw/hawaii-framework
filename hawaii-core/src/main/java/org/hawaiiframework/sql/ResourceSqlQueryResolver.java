@@ -37,6 +37,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author Paul Klos
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.DataClass")
 public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver implements Ordered {
 
     /**

@@ -23,6 +23,7 @@ import java.util.UUID;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.ClassNamingConventions")
 public final class RequestId {
 
     /**
