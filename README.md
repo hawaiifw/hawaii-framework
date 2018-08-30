@@ -14,8 +14,6 @@ See http://www.hawaiiframework.org.
 
 ## Versions
 
-This library follows the Spring Data JPA versionning semantic.
-
 Branch   | Hawaii version | JDK version | Spring Boot version
 -------- | -------------- | ----------- | -------------------
 `master` | 3.x            | 8           | 2.x
