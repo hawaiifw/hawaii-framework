@@ -17,12 +17,20 @@ package org.hawaiiframework.logging.config;
 
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
-import org.hawaiiframework.logging.web.filter.*;
+import org.hawaiiframework.logging.web.filter.KibanaLogCleanupFilter;
+import org.hawaiiframework.logging.web.filter.KibanaLogFilter;
+import org.hawaiiframework.logging.web.filter.RequestDurationFilter;
+import org.hawaiiframework.logging.web.filter.RequestIdFilter;
+import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
+import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
+import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
@@ -205,30 +213,6 @@ public class HawaiiLoggingConfiguration {
     }
 
     /**
-     * Create the {@link UserDetailsFilter} bean.
-     *
-     * @return the {@link UserDetailsFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
-    public UserDetailsFilter userDetailsFilter() {
-        return new UserDetailsFilter();
-    }
-
-    /**
-     * Register the {@link #userDetailsFilter()} bean.
-     *
-     * @param userDetailsFilter the user details filter
-     * @return the {@link #userDetailsFilter()} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
-    public FilterRegistrationBean userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getUserDetails();
-        return createFilterRegistrationBean(userDetailsFilter, filterProperties);
-    }
-
-    /**
      * Create a {@link HttpRequestResponseLogUtil} bean.
      *
      * This is required for the {@link RequestResponseLogFilter}, see {@link #requestResponseLogFilter(HttpRequestResponseLogUtil)}.
@@ -256,17 +240,6 @@ public class HawaiiLoggingConfiguration {
      *
      * @param filter the filter
      * @param filterProperties the configuration properties
-     * @return the wrapped filter
-     */
-    private FilterRegistrationBean createFilterRegistrationBean(final Filter filter, final LoggingFilterProperties filterProperties) {
-        return createFilterRegistrationBean(filter, filterProperties, EnumSet.of(DispatcherType.REQUEST));
-    }
-
-    /**
-     * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
-     *
-     * @param filter the filter
-     * @param filterProperties the configuration properties
      * @param dispatcherTypes the request dispatcher types the filter is used for
      * @return the wrapped filter
      */
@@ -280,4 +253,54 @@ public class HawaiiLoggingConfiguration {
         return result;
     }
 
+    /**
+     * Configures the user details filter.
+     */
+    @Configuration
+    @ConditionalOnClass(UserDetails.class)
+    @SuppressWarnings("PMD.CommentDefaultAccessModifier")
+    static class UserDetailsFilterConfiguration {
+
+        /**
+         * The the logging configuration properties.
+         */
+        private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+
+        /**
+         * Autowired constructor.
+         *
+         * @param hawaiiLoggingConfigurationProperties the logging configuration properties
+         */
+        UserDetailsFilterConfiguration(
+                final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+            this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+        }
+
+        /**
+         * Create the {@link UserDetailsFilter} bean.
+         *
+         * @return the {@link UserDetailsFilter} bean
+         */
+        @Bean
+        @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
+        public UserDetailsFilter userDetailsFilter() {
+            return new UserDetailsFilter();
+        }
+
+        /**
+         * Register the {@link #userDetailsFilter()} bean.
+         *
+         * @param userDetailsFilter the user details filter
+         * @return the {@link #userDetailsFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+         */
+        @Bean
+        @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
+        public FilterRegistrationBean userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
+            final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getUserDetails();
+            final FilterRegistrationBean result = new FilterRegistrationBean(userDetailsFilter);
+            result.setOrder(filterProperties.getOrder());
+            result.setDispatcherTypes(EnumSet.of(DispatcherType.REQUEST));
+            return result;
+        }
+    }
 }
