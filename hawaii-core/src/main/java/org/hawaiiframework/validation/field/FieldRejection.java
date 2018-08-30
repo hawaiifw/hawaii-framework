@@ -22,7 +22,7 @@ import org.hawaiiframework.validation.ValidationResult;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Reject a field based on a few conditions.

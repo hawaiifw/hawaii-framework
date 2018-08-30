@@ -29,7 +29,9 @@ import java.util.Locale;
 
 import static org.hawaiiframework.logging.logback.CharacterConstants.INDENT;
 import static org.hawaiiframework.logging.logback.CharacterConstants.NEW_LINE;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.*;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_LOCATION;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.THREAD;
 
 /**
  * Converts logging events to a readable log format.

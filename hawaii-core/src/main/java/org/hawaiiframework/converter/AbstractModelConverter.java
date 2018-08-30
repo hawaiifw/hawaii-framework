@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.converter;
 
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.BeanUtils;
 
 import static java.util.Objects.requireNonNull;
 

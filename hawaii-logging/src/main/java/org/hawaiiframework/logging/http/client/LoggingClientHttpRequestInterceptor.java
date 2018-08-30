@@ -30,8 +30,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.*;
-import static org.hawaiiframework.logging.model.KibanaLogTypeNames.*;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.BACKEND_FAILURE;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.SUCCESS;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.TIME_OUT;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_REQUEST_BODY;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_RESPONSE_BODY;
 
 /**
  * A logging client http request interceptor.

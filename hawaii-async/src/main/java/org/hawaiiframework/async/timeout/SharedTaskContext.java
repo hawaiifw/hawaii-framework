@@ -17,8 +17,8 @@
 package org.hawaiiframework.async.timeout;
 
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
-import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
+import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

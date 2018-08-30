@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.*;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CLIENT_IP;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.METHOD;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.URI;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.START;
 
 /**

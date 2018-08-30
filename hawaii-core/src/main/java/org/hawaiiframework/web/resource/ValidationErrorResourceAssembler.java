@@ -16,11 +16,10 @@
 
 package org.hawaiiframework.web.resource;
 
-import org.hawaiiframework.converter.AbstractModelConverter;
-import org.hawaiiframework.validation.ValidationError;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import org.hawaiiframework.converter.AbstractModelConverter;
+import org.hawaiiframework.validation.ValidationError;
 
 import static java.util.Objects.requireNonNull;
 
