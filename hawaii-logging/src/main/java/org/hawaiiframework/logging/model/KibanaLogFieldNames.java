@@ -21,9 +21,10 @@ import java.util.Arrays;
  * This enum represents keys for data that is stored in the logging MDC.
  *
  * @author Rutger Lubbers
+ * @author Paul Klos
  * @since 2.0.0
  */
-public enum KibanaLogFieldNames {
+public enum KibanaLogFieldNames implements KibanaLogField {
     SESSION_ID("session.id"),
 
     TX_ID("tx.id"),
@@ -70,19 +71,8 @@ public enum KibanaLogFieldNames {
     /**
      * @return the kibana log's field name.
      */
-    public String getLogName() {
+    @Override public String getLogName() {
         return fieldName;
-    }
-
-    /**
-     * Check if a key matches.
-     *
-     * @param key the key to match
-     * @return true if not null and if the supplied key equals this key.
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public boolean matches(final String key) {
-        return key != null && key.equalsIgnoreCase(this.fieldName);
     }
 
     /**

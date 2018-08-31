@@ -27,6 +27,7 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
  * Log lines for Kibana will contain all fields set, until the log fields are cleared by invoking {@link KibanaLogFields#clear()}.
  *
  * @author Rutger Lubbers
+ * @author Paul Klos
  * @since 2.0.0
  */
 @SuppressWarnings("PMD.ClassNamingConventions")
@@ -59,35 +60,35 @@ public final class KibanaLogFields {
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
-    public static void set(final KibanaLogFieldNames field, final int value) {
+    public static void set(final KibanaLogField field, final int value) {
         set(field, Integer.toString(value));
     }
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
-    public static void set(final KibanaLogFieldNames field, final String value) {
+    public static void set(final KibanaLogField field, final String value) {
         MDC.put(field.getLogName(), value);
     }
 
     /**
      * Retrieves the value for the {@code field}. It will return {@code null} if no value is set.
      */
-    public static String get(final KibanaLogFieldNames field) {
+    public static String get(final KibanaLogField field) {
         return getOrDefault(field, null);
     }
 
     /**
      * Retrieves the value for the {@code field}. It will return {@code defaultValue} if no value is set.
      */
-    public static String getOrDefault(final KibanaLogFieldNames field, final String defaultValue) {
+    public static String getOrDefault(final KibanaLogField field, final String defaultValue) {
         return StringUtils.defaultIfEmpty(MDC.get(field.getLogName()), defaultValue);
     }
 
     /**
      * Removes the value for the field {@code field}.
      */
-    public static void unset(final KibanaLogFieldNames field) {
+    public static void unset(final KibanaLogField field) {
         MDC.remove(field.getLogName());
     }
 
