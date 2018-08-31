@@ -140,6 +140,7 @@ configure(subprojects - sampleprojects) { subproject ->
         from("${rootProject.projectDir}/src/dist") {
             include "license.txt"
             include "notice.txt"
+            include "release-notes.md"
             into "META-INF"
             expand(copyright: new Date().format("yyyy"), version: project.version)
         }
