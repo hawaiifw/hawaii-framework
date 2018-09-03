@@ -1,5 +1,13 @@
 # Release Notes #
 
+## 3.0.0.M1
+
+### General
+* Next major version of Hawaii Framework.
+* Upgrade to Java 10
+* Upgrade to Spring 5
+* Upgrade to Spring boot 2
+
 ## 2.0.0.M16
 
 ### Hawaii logging

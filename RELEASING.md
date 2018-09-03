@@ -3,7 +3,7 @@
 Follow the steps below for publishing a new release.
 
 * [ ] Set the new version in `gradle.properties`. E.g. change `version=2.0.0.BUILD-SNAPSHOT` to `version=2.0.0.M3`.
-* [ ] Execute `./gradlew clean install` and verify the build is successful.
+* [ ] Execute `./gradlew clean build install` and verify the build is successful.
 * [ ] Push the changes. This will trigger a Travis build which uploads the artifacts to the Sonatype OSSRH repository.
       This will also upload the api docs and userguide to the hawaiiframeork.org github pages.
 * [ ] Login into https://oss.sonatype.org/ and navigate to the Staging Repositories.
