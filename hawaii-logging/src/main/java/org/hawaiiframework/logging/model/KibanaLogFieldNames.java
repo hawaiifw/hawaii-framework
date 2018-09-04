@@ -54,7 +54,9 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     TIMESTAMP("timestamp"),
     LOG_LOCATION("log.loc"),
 
-    MESSAGE("message");
+    MESSAGE("message"),
+
+    SECURITY_INCIDENT("security.incident");
 
     /**
      * The logging key for this MDC entry.
