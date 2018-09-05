@@ -95,6 +95,7 @@ configure(allprojects) { project ->
         outputs.upToDateWhen { false }
         testLogging {
             events "passed", "skipped", "failed"
+            exceptionFormat "full"
         }
     }
 
