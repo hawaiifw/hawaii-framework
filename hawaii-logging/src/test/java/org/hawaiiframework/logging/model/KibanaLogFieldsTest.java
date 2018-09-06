@@ -15,6 +15,7 @@
  */
 package org.hawaiiframework.logging.model;
 
+import org.junit.After;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,5 +36,10 @@ public class KibanaLogFieldsTest {
                 assertThat(String.format("Kibana log string should contain %s", mdcKey.getLogName()), KibanaLogFields.getValuesAsLogString(), containsString(mdcKey.getLogName()));
             }
         }
+    }
+
+    @After
+    public void tearDown() {
+        KibanaLogFields.clear();
     }
 }
