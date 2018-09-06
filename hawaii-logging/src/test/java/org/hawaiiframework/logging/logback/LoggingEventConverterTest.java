@@ -25,6 +25,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -48,8 +52,10 @@ public class LoggingEventConverterTest {
 
     private static final String CONVERTED_MESSAGE = "converted message";
     private static final String FORMATTED_MESSAGE = "formatted message";
+    private static final String DATE_PATTERN = "YYYY-MM-dd HH:mm:ss,SSS";
+    private static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_PATTERN, Locale.ENGLISH);
     private static final String BASE_LOG_MESSAGE =
-            "1970-01-01 01:00:00,000 DEBUG -  log.loc=\"org.hawaiiframework.logging.logback.LoggingEventConverterTest:9\" thread=\"threadio\" message=#";
+            SDF.format(new Date(0)) + " DEBUG -  log.loc=\"org.hawaiiframework.logging.logback.LoggingEventConverterTest:9\" thread=\"threadio\" message=#";
 
     private LoggingEventConverter loggingEventConverter;
 
