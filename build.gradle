@@ -2,14 +2,14 @@ buildscript {
     ext {
         bouncycastleVersion        = "1.60"
         commonsIoVersion           = "2.6"
-        commonsTextVersion         = "1.4"
+        commonsTextVersion         = "1.6"
         findbugsAnnotationsVersion = "3.0.1"
         jasyptVersion              = "1.9.2"
-        javaVersion                = "1.10"
-        logbackVersion             = "1.1.5"
+        javaVersion                = "10"
+        logbackVersion             = "1.2.3"
         jsonVersion                = "20180130"
-        powerMockVersion           = "2.0.0-beta.5"
-        springBootVersion          = "2.0.4.RELEASE"
+        powerMockVersion           = "2.0.0-RC.1"
+        springBootVersion          = "2.1.0.RELEASE"
     }
     repositories {
         jcenter()
@@ -23,7 +23,7 @@ buildscript {
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
         classpath "com.github.jruby-gradle:jruby-gradle-plugin:1.5.0"
-        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2"
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.3"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
         classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.8.1"
@@ -37,11 +37,10 @@ ext.coreprojects = subprojects.findAll { project -> !project.name.startsWith("ha
 ext.sampleprojects = subprojects.findAll { project -> project.name.startsWith("hawaii-samples") }
 
 ext.javadocLinks = [
-        "http://commons.apache.org/proper/commons-lang/javadocs/api-3.5/",
-        "https://docs.oracle.com/javase/10/docs/api/",
+        "https://docs.oracle.com/en/java/javase/11/docs/api/",
         "http://docs.oracle.com/javaee/7/api/",
-        "http://docs.spring.io/spring/docs/5.0.8.RELEASE/javadoc-api/",
-        "http://docs.spring.io/spring-boot/docs/2.0.4.RELEASE/api/",
+        "http://docs.spring.io/spring/docs/5.1.2.RELEASE/javadoc-api/",
+        "http://docs.spring.io/spring-boot/docs/2.1.0.RELEASE/api/",
         "http://fasterxml.github.io/jackson-core/javadoc/2.9/",
         "http://fasterxml.github.io/jackson-databind/javadoc/2.9/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
@@ -413,6 +412,7 @@ project("hawaii-test") {
 }
 
 configure(rootProject) {
+
     description = "Hawaii Framework"
 
     apply plugin: "org.asciidoctor.convert"
@@ -430,7 +430,7 @@ configure(rootProject) {
 
     asciidoctorj {
         // We can change the AsciidoctorJ dependency version.
-        version = "1.5.4"
+        version = "1.5.7"
     }
 
     asciidoctor {
