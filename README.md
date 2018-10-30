@@ -16,8 +16,8 @@ See http://www.hawaiiframework.org.
 
 Branch   | Hawaii version | JDK version | Spring Boot version
 -------- | -------------- | ----------- | -------------------
-`master` | 3.x            | 8           | 2.x
-`2.x`    | 2.x            | 10          | 1.5.x
+`master` | 3.x            | 10          | 2.x
+`2.x`    | 2.x            | 8           | 1.5.x
 
 
 ## Contributing

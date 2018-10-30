@@ -139,8 +139,17 @@ Additionally, an asynchronous configuration must be defined in the file identifi
 which is set to `./config/async-config.yml` by default.
 
 The essential difference in usage is that where Spring allows the specification of an executor by specifying the value of the
-`@Async` annotation, the Hawaii additions allow specifying the `Task` name instead of the executor. The Hawaii async configuration will
+`@Async` annotation, the Hawaii additions require specifying the `Task` name instead of the executor. The Hawaii async configuration will
 take care of routing the execution to the correct `Executor`.
+
+===== HTTP
+To execute http requests using the Hawaii async framework, you'll need to use the `HawaiiHttpComponentsClientHttpRequestFactory` to enable
+timing out of tasks that run too long.
+
+You can use the `LoggingClientHttpRequestInterceptor` to log requests and responses made over http. Note that since this interceptor
+consumes the response, this will only work if you wrap the `HawaiiHttpComponentsClientHttpRequestFactory` in a
+`org.springframework.http.client.BufferingClientHttpRequestFactory`, or take other measures to make sure the response can be read
+more than once.
 
 [[starters-hawaii-starter-async-components]]
 ==== Components

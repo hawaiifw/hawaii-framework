@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
     ext {
         bouncycastleVersion        = "1.60"
@@ -22,7 +24,7 @@ buildscript {
     }
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
-        classpath "com.github.jruby-gradle:jruby-gradle-plugin:1.5.0"
+        classpath "com.github.jruby-gradle:jruby-gradle-plugin:1.6.0"
         classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.3"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
@@ -447,6 +449,10 @@ configure(rootProject) {
         gemPath = jrubyPrepare.outputDir
 
         backends = ["html5", "pdf"]
+        //if can be removed when jruby 9.2.1.0 is used https://github.com/jruby/jruby/issues/5204
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            backends.removeIf { it == "pdf"}
+        }
 
         sourceDir project.file("src/asciidoc")
 
