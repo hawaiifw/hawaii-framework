@@ -18,7 +18,7 @@ buildscript {
         pmdToolVersion                    = "6.9.0"
         powerMockVersion                  = "2.0.0-RC.1"
         propdepsPluginVersion             = "0.0.10.RELEASE"
-        spotbugsPluginVersion             = "1.6.3"
+        spotbugsPluginVersion             = "1.6.5"
         spotbugsToolVersion               = "3.1.8"
         springBootVersion                 = "2.1.0.RELEASE"
         versionsPluginVersion             = "0.20.0"
