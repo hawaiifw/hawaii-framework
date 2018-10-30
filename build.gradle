@@ -141,7 +141,7 @@ configure(subprojects - sampleprojects) { subproject ->
     apply plugin: "maven"
     apply plugin: "signing"
     apply plugin: "checkstyle"
-    apply plugin: "com.github.spotbugs" // TODO: Disable spotbugs until Java 11 is supported: https://github.com/spotbugs/spotbugs/issues/763
+    apply plugin: "com.github.spotbugs"
     apply plugin: "pmd"
 
     jar {
@@ -204,7 +204,6 @@ configure(subprojects - sampleprojects) { subproject ->
         toolVersion = pmdToolVersion
     }
 
-    // TODO: Disable spotbugs until Java 11 is supported: https://github.com/spotbugs/spotbugs/issues/763
     spotbugs {
         excludeFilter = file("${rootProject.projectDir}/src/quality/config/spotbugs/exclude.xml")
         ignoreFailures = false
