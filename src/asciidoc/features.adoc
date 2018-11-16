@@ -11,7 +11,17 @@ TODO.
 [[features-configuration-properties]]
 === Configuration properties
 
-TODO.
+Working with configuration properties in for example a .yml file, the following rules should be applied:
+
+. Property naming should be done in kebab-case
+
+```
+    example-property:
+       sub-property-value: foo
+```
+
+More documentation TODO.
+
 
 [[features-logging]]
 === Logging
