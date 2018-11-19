@@ -39,35 +39,39 @@ This section provides a list of available Hawaii application properties.
         configuration: ./config/async-config.yml # location of the Hawaii async configuration file
       logging:
         filters:
-          kibana-log:
-            enabled: true
-            order: -108
-            http-header: X-Hawaii-Frontend-IP-Address
           kibana-log-cleanup:
             enabled: true
-            order: -110
+            order: -900
           request-duration:
             enabled: true
-            order: -109
+            order: -800
+          kibana-log:
+            enabled: true
+            order: -700
+            http-header: X-Hawaii-Frontend-IP-Address
+          class-method-name:
+            enabled: true
+            order: -600
+          transaction-id:
+            enabled: true
+            order: -500
+            http-header: X-Hawaii-Tx-Id
           request-id:
             enabled: true
-            order: -106
+            order: -400
             http-header: X-Hawaii-Request-Id
           request-response:
             enabled: true
-            order: -105
+            order: -300
             fallbackToFile: true
             directory: /tmp
             maxLogSize: 50k
             # For console logging, the allowed content types, empty means allow all.
             allowedContentTypes:
-              - application/json
-              - text/plain
-              - text/xml
-          transaction-id:
-            enabled: true
-            order: -107
-            http-header: X-Hawaii-Tx-Id
+                - application/json
+                - text/plain
+                - text/xml
+                - application/vnd.spring-boot.actuator.v1+json
           user-details:
             enabled: true
             order: 110
