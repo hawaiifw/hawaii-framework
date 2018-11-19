@@ -39,6 +39,8 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     CALL_DURATION("call.duration"),
     CALL_RESULT("call.result"),
 
+    TASK_ID("task_id"),
+
     URI("uri"),
     METHOD("method"),
     USER("user.name"),

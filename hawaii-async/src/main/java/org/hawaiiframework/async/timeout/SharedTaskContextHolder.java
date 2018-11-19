@@ -63,6 +63,13 @@ public final class SharedTaskContextHolder {
     }
 
     /**
+     * Removes the current {@link SharedTaskContext} from the ThreadLocal store.
+     */
+    public static void remove() {
+        threadLocalStore.remove();
+    }
+
+    /**
      * Set the current thread's {@code taskAbortStrategy}.
      * <p>
      * This sets the {@code taskAbortStrategy} into the thread's {@link SharedTaskContext}.
@@ -103,10 +110,4 @@ public final class SharedTaskContextHolder {
         return sharedTaskContext.getTaskId();
     }
 
-    /**
-     * Removes the current {@link SharedTaskContext} from the ThreadLocal store.
-     */
-    public static void remove() {
-        threadLocalStore.remove();
-    }
 }

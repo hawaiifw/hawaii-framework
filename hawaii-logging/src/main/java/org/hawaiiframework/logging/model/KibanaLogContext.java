@@ -2,6 +2,7 @@ package org.hawaiiframework.logging.model;
 
 import org.slf4j.MDC;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,14 +13,16 @@ public final class KibanaLogContext {
     /**
      * The MDC map.
      */
-    private final Map<String, String> contextMap;
-
+    private final Map<String, String> contextMap = new HashMap<>();
 
     /**
      * Create a new instance, copying the MDC (context map).
      */
     public KibanaLogContext() {
-        this.contextMap = MDC.getCopyOfContextMap();
+        final var copyContextMap = MDC.getCopyOfContextMap();
+        if (copyContextMap != null) {
+            contextMap.putAll(copyContextMap);
+        }
     }
 
     /**

@@ -50,6 +50,7 @@ public final class KibanaLogFields {
     public static void setCallResult(final KibanaLogCallResultTypes value) {
         set(CALL_RESULT, value.toString());
     }
+
     /**
      * Removes the value for the field KibanaLogTypeNames.LOG_TYPE.
      */
@@ -98,7 +99,6 @@ public final class KibanaLogFields {
     public static void clear() {
         MDC.clear();
     }
-
 
     /**
      * Getter for the log string.
