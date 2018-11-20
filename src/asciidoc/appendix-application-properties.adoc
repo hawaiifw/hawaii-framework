@@ -63,15 +63,15 @@ This section provides a list of available Hawaii application properties.
           request-response:
             enabled: true
             order: -300
-            fallbackToFile: true
+            fallback-to-file: true
             directory: /tmp
-            maxLogSize: 50k
+            max-log-size: 50k
             # For console logging, the allowed content types, empty means allow all.
-            allowedContentTypes:
-                - application/json
-                - text/plain
-                - text/xml
-                - application/vnd.spring-boot.actuator.v1+json
+            allowed-content-types:
+              - application/json
+              - text/plain
+              - text/xml
+              - application/vnd.spring-boot.actuator.v1+json
           user-details:
             enabled: true
             order: 110

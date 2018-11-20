@@ -43,11 +43,11 @@ hawaii:
       request-response:
         enabled: true
         order: -300
-        fallbackToFile: true
+        fallback-to-file: true
         directory: /tmp
-        maxLogSize: 50k
+        max-log-size: 50k
         # For console logging, the allowed content types, empty means allow all.
-        allowedContentTypes:
+        allowed-content-types:
           - application/json
           - text/plain
           - text/xml
