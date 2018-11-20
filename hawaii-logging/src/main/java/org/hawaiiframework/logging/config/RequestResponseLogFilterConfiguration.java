@@ -15,8 +15,6 @@
  */
 package org.hawaiiframework.logging.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +25,6 @@ import java.util.Locale;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-@ConfigurationProperties(prefix = "hawaii.requestLogging")
 @SuppressWarnings("PMD.DataClass")
 public class RequestResponseLogFilterConfiguration extends LoggingFilterProperties {
 
