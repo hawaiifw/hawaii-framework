@@ -16,11 +16,12 @@
 
 package org.hawaiiframework.web.exception;
 
+import org.hawaiiframework.converter.ModelConverter;
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.validation.ValidationResult;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
-import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
+import org.hawaiiframework.web.resource.ValidationErrorResource;
 import org.hawaiiframework.web.resource.ValidationErrorResponseResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.WebRequest;
@@ -32,14 +33,15 @@ import java.util.Objects;
  * This enricher adds validation errors to the error response resource.
  *
  * @author Paul Klos
+ * @author Richard den Adel
  * @since 2.0.0
  */
 public class ValidationErrorResponseEnricher implements ErrorResponseEnricher {
 
-    private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
+    private final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler;
 
     public ValidationErrorResponseEnricher(
-            final ValidationErrorResourceAssembler validationErrorResourceAssembler) {
+            final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler) {
         this.validationErrorResourceAssembler = Objects.requireNonNull(validationErrorResourceAssembler,
                 "'validationErrorResourceAssembler' must not be null");
     }
