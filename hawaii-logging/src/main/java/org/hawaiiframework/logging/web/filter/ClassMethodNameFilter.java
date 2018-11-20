@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hawaiiframework.logging.web.filter;
 
 import org.hawaiiframework.logging.model.KibanaLogFields;
@@ -15,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
  * A filter that assigns the class name and method name to the Kibana logger for each request.
@@ -51,18 +67,26 @@ public class ClassMethodNameFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain filterChain) throws ServletException, IOException {
 
+        if (!isInternalRedirect(request)) {
+            logRequest(request);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+
+    private void logRequest(final HttpServletRequest request) {
         HandlerMethod handler = null;
 
         for (HandlerMapping handlerMapping : applicationContext.getBeansOfType(HandlerMapping.class).values()) {
             HandlerExecutionChain handlerExecutionChain = null;
-            // Maybe nicer way of handling this error??
             try {
                 handlerExecutionChain = handlerMapping.getHandler(request);
             } catch (Exception e) {
-                LOGGER.debug("Exception when fetching the handler");
+                LOGGER.warn("Exception when fetching the handler");
             }
             if (handlerExecutionChain != null) {
-                handler = (HandlerMethod) handlerExecutionChain.getHandler();
+                final var tempHandler = handlerExecutionChain.getHandler();
+                handler = tempHandler instanceof HandlerMethod ? (HandlerMethod) tempHandler : null;
                 break;
             }
         }
@@ -78,8 +102,6 @@ public class ClassMethodNameFilter extends AbstractGenericFilterBean {
             KibanaLogFields.set(TX_TYPE, value);
             LOGGER.debug("Set '{}' with value '{};", TX_TYPE.getLogName(), value);
         }
-        filterChain.doFilter(request, response);
     }
-
 
 }
