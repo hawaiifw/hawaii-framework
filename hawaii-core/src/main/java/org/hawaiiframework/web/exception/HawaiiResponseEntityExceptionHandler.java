@@ -16,10 +16,12 @@
 
 package org.hawaiiframework.web.exception;
 
+import org.hawaiiframework.converter.ModelConverter;
 import org.hawaiiframework.exception.ApiException;
+import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
-import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
+import org.hawaiiframework.web.resource.ValidationErrorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -41,19 +43,21 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * This class creates proper HTTP response bodies for exceptions.
- *
+ * <p>
  * In this implementation, the response enrichers are stored in a map, with the class name as key. This means that any enricher can
  * be stored only once. Also, enrichers are not ordered. Subclasses may implement another mechanism if required. This would mean that
  * the following methods would need to be overwritten:
  * <ul>
- *     <li>{@link #addResponseEnricher(ErrorResponseEnricher)}</li>
- *     <li>{@link #removeResponseEnricher(ErrorResponseEnricher)} (optionally)</li>
- *     <li>{@link #configureResponseEnrichers()}</li>
- *     <li>{@link #getResponseEnrichers()}</li>
+ * <li>{@link #addResponseEnricher(ErrorResponseEnricher)}</li>
+ * <li>{@link #removeResponseEnricher(ErrorResponseEnricher)} (optionally)</li>
+ * <li>{@link #configureResponseEnrichers()}</li>
+ * <li>{@link #getResponseEnrichers()}</li>
  * </ul>
+ *
  * @author Marcel Overdijk
  * @author Ivan Melotte
  * @author Paul Klos
+ * @author Richard den Adel
  * @since 2.0.0
  */
 @ControllerAdvice
@@ -61,12 +65,12 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ValidationErrorResourceAssembler validationErrorResourceAssembler;
+    private final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler;
     private final ExceptionResponseFactory exceptionResponseFactory;
     private final Map<String, ErrorResponseEnricher> errorResponseEnrichers = new ConcurrentHashMap<>();
 
     public HawaiiResponseEntityExceptionHandler(
-            final ValidationErrorResourceAssembler validationErrorResourceAssembler,
+            final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler,
             final ExceptionResponseFactory exceptionResponseFactory) {
         this.validationErrorResourceAssembler =
                 requireNonNull(validationErrorResourceAssembler, "'validationErrorResourceAssembler' must not be null");
@@ -93,10 +97,10 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     public ResponseEntity handleHttpException(final HttpException e, final WebRequest request) {
         final HttpStatus status = e.getHttpStatus();
         return handleExceptionInternal(
-                e, 
+                e,
                 buildErrorResponseBody(e, status, request),
-                null, 
-                status, 
+                null,
+                status,
                 request);
     }
 
@@ -149,20 +153,20 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(final Exception ex, final Object body,
-                                                             @Nullable final HttpHeaders headers,
+            @Nullable final HttpHeaders headers,
             final HttpStatus status, final WebRequest request) {
         return ResponseEntity.status(status).headers(headers).body(body);
     }
 
     /**
      * Builds a meaningful response body for the given throwable, HTTP status and request.
-     *
+     * <p>
      * This method constructs an {@link ErrorResponseResource} using {@link #exceptionResponseFactory} and then applies
      * the error response enrichers returned from {@link #getResponseEnrichers()} to complete the response.
      *
-     * @param throwable         the exception
-     * @param status            the HTTP status
-     * @param request           the current request
+     * @param throwable the exception
+     * @param status    the HTTP status
+     * @param request   the current request
      * @return an error response
      */
     protected ErrorResponseResource buildErrorResponseBody(
@@ -206,14 +210,14 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      *
      * <p>Subclasses may override this method to remove existing or add additional listeners,
      * using {@link #addResponseEnricher(ErrorResponseEnricher)} and {@link #removeResponseEnricher(ErrorResponseEnricher)}.</p>
-     *
+     * <p>
      * The default implementation adds the following listeners:
      * <ul>
-     *     <li>{@link ErrorResponseStatusEnricher}</li>
-     *     <li>{@link ErrorMessageResponseEnricher}</li>
-     *     <li>{@link RequestInfoErrorResponseEnricher}</li>
-     *     <li>{@link ValidationErrorResponseEnricher}</li>
-     *     <li>{@link ApiErrorResponseEnricher}</li>
+     * <li>{@link ErrorResponseStatusEnricher}</li>
+     * <li>{@link ErrorMessageResponseEnricher}</li>
+     * <li>{@link RequestInfoErrorResponseEnricher}</li>
+     * <li>{@link ValidationErrorResponseEnricher}</li>
+     * <li>{@link ApiErrorResponseEnricher}</li>
      * </ul>
      */
     protected void configureResponseEnrichers() {
