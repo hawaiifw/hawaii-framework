@@ -48,10 +48,10 @@ hawaii:
         max-log-size: 50k
         # For console logging, the allowed content types, empty means allow all.
         allowed-content-types:
-          - application/json
-          - text/plain
-          - text/xml
-          - application/vnd.spring-boot.actuator.v1+json
+        - application/json
+        - text/plain
+        - text/xml
+        - application/vnd.spring-boot.actuator.v1+json
       user-details:
         enabled: true
         order: 110
