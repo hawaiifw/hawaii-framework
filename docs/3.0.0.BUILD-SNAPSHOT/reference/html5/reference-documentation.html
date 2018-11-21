@@ -461,6 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#features-logging-transaction-id">3.3.5. Transaction id</a></li>
 <li><a href="#features-logging-user-details">3.3.6. User details</a></li>
 <li><a href="#features-logging-request-response">3.3.7. Request/response</a></li>
+<li><a href="#_class_method_name">3.3.8. Class Method Name</a></li>
 </ul>
 </li>
 <li><a href="#features-hawaii-time">3.4. Hawaii Time</a></li>
@@ -647,6 +648,13 @@ included in each log message. This filter is only instantiated if Spring securit
 <div class="paragraph">
 <p>This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body. Optionally,
 the filter can log the response to a file if it exceeds a certain threshold size.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_class_method_name"><a class="anchor" href="#_class_method_name"></a><a class="link" href="#_class_method_name">3.3.8. Class Method Name</a></h4>
+<div class="paragraph">
+<p>This filter retrieves the controller and the calling method, this will then be used to log it accordingly.
+For example: controller Foo.java, with method helloWorld(), will be displayed as Foo.helloWorld.</p>
 </div>
 </div>
 </div>
@@ -1365,35 +1373,39 @@ hawaii:
        configuration: ./config/async-config.yml # location of the Hawaii async configuration file
      logging:
        filters:
-         kibana-log:
-           enabled: true
-           order: -108
-           http-header: X-Hawaii-Frontend-IP-Address
          kibana-log-cleanup:
            enabled: true
-           order: -110
+           order: -900
          request-duration:
            enabled: true
-           order: -109
+           order: -800
+         kibana-log:
+           enabled: true
+           order: -700
+           http-header: X-Hawaii-Frontend-IP-Address
+         class-method-name:
+           enabled: true
+           order: -600
+         transaction-id:
+           enabled: true
+           order: -500
+           http-header: X-Hawaii-Tx-Id
          request-id:
            enabled: true
-           order: -106
+           order: -400
            http-header: X-Hawaii-Request-Id
          request-response:
            enabled: true
-           order: -105
-           fallbackToFile: true
+           order: -300
+           fallback-to-file: true
            directory: /tmp
-           maxLogSize: 50k
+           max-log-size: 50k
            # For console logging, the allowed content types, empty means allow all.
-           allowedContentTypes:
+           allowed-content-types:
              - application/json
              - text/plain
              - text/xml
-         transaction-id:
-           enabled: true
-           order: -107
-           http-header: X-Hawaii-Tx-Id
+             - application/vnd.spring-boot.actuator.v1+json
          user-details:
            enabled: true
            order: 110
@@ -1426,7 +1438,7 @@ spring:
 <div id="footer">
 <div id="footer-text">
 Version 3.0.0.BUILD-SNAPSHOT<br>
-Last updated 2018-11-20 08:03:38 UTC
+Last updated 2018-11-21 08:55:13 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
