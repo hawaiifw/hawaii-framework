@@ -25,34 +25,34 @@ import java.util.Arrays;
  * @since 2.0.0
  */
 public enum KibanaLogFieldNames implements KibanaLogField {
-    SESSION_ID("session.id"),
+    SESSION_ID("session_id"),
 
-    TX_ID("tx.id"),
+    TX_ID("tx_id"),
     // Deprecated, left in place for current usage of kibana.
-    TX_DURATION("tx.duration"),
+    TX_DURATION("tx_duration"),
 
     REQUEST_ID("req.id"),
-    REQUEST_DURATION("req.duration"),
+    REQUEST_DURATION("req_duration"),
 
-    CALL_ID("call.id"),
-    CALL_TYPE("call.type"),
-    CALL_DURATION("call.duration"),
-    CALL_RESULT("call.result"),
+    CALL_ID("call_id"),
+    CALL_TYPE("call_type"),
+    CALL_DURATION("call_duration"),
+    CALL_RESULT("call_result"),
 
     URI("uri"),
     METHOD("method"),
     USER("user.name"),
 
-    HTTP_STATUS("tx.status"),
+    HTTP_STATUS("tx_status"),
 
-    CLIENT_IP("client.ip"),
+    CLIENT_IP("client_ip"),
 
-    LOG_TYPE("log.type"),
+    LOG_TYPE("log_type"),
 
     THREAD("thread"),
     LEVEL("level"),
     TIMESTAMP("timestamp"),
-    LOG_LOCATION("log.loc"),
+    LOG_LOCATION("log_loc"),
 
     MESSAGE("message");
 
