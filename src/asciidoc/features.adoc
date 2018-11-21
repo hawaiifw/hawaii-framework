@@ -72,6 +72,9 @@ included in each log message. This filter is only instantiated if Spring securit
 This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body. Optionally,
 the filter can log the response to a file if it exceeds a certain threshold size.
 
+==== Class Method Name
+This filter retrieves the controller and the calling method, this will then be used to log it accordingly.
+For example: controller Foo.java, with method helloWorld(), will be displayed as Foo.helloWorld.
 
 [[features-hawaii-time]]
 === Hawaii Time

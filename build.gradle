@@ -341,6 +341,7 @@ project("hawaii-logging") {
         compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
+        compileOnly "org.springframework:spring-webmvc"
         testCompile "org.apache.commons:commons-text:${commonsTextVersion}"
         testCompile "org.powermock:powermock-api-mockito2:${powerMockVersion}"
         testCompile "org.powermock:powermock-module-junit4:${powerMockVersion}"
