@@ -16,14 +16,9 @@
 
 package org.hawaiiframework.async.timeout;
 
-import org.hawaiiframework.logging.model.MdcContext;
+import org.hawaiiframework.async.HawaiiAsyncRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-
-import javax.validation.constraints.NotNull;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Task that stops another scheduled task if the scheduled task's timeout has been reached.
@@ -33,12 +28,11 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * For this the guarded task must register it's {@link TaskAbortStrategy} in the {@link SharedTaskContext}.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
-public class TimeoutGuardTask implements Runnable {
+public class TimeoutGuardTask extends HawaiiAsyncRunnable {
 
     /**
      * The logger to use.
@@ -46,43 +40,19 @@ public class TimeoutGuardTask implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeoutGuardTask.class);
 
     /**
-     * The MDC context used to copy the (logging) context to the thread executing this task.
+     * Create a new {@link TimeoutGuardTask} instance with the given {@code taskExecutor}.
      */
-    private final MdcContext mdcContext;
-
-    /**
-     * The {@code guardedTask}'s abort strategy. May be null.
-     */
-    private final SharedTaskContext sharedTaskContext;
-
-    /**
-     * Create a new {@link TimeoutGuardTask} instance with the given {@code mdcContext} and {@code taskExecutor}.
-     *
-     * @param mdcContext The Logging context to set
-     */
-    public TimeoutGuardTask(@NotNull final MdcContext mdcContext, final SharedTaskContext sharedTaskContext) {
-        this.mdcContext = requireNonNull(mdcContext);
-        this.sharedTaskContext = sharedTaskContext;
+    public TimeoutGuardTask(final SharedTaskContext sharedTaskContext) {
+        super(sharedTaskContext);
     }
 
     /**
      * {@inheritDoc}
-     * <p>
-     * When this method is run, the {@code guardedTask} is running longer than it's timeout.
      */
     @Override
-    public void run() {
-        mdcContext.populateMdc();
-        SharedTaskContextHolder.register(sharedTaskContext);
-        MDC.put("task_id", sharedTaskContext.getTaskId());
+    protected void doRun() {
         LOGGER.trace("Executing guard task.");
-
-        try {
-            sharedTaskContext.timeout();
-        } finally {
-            MDC.clear();
-            SharedTaskContextHolder.remove();
-        }
+        sharedTaskContext.timeout();
     }
 
 }

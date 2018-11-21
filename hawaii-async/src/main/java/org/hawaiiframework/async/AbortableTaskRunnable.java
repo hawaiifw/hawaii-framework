@@ -18,11 +18,8 @@ package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
-import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
-import org.hawaiiframework.logging.model.MdcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import javax.validation.constraints.NotNull;
 
@@ -35,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * @author Paul Klos
  * @since 2.0.0
  */
-public class AbortableTaskRunnable implements Runnable {
+public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
 
     /**
      * The logger to use.
@@ -43,46 +40,31 @@ public class AbortableTaskRunnable implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbortableTaskRunnable.class);
 
     /**
-     * The MDC context that is set to the thread.
-     */
-    private final MdcContext mdcContext;
-
-    /**
      * The delegate.
      */
     private final Runnable delegate;
 
     /**
-     * The abort strategy to set on the executing thread's ThreadLocal {@link SharedTaskContextHolder}.
-     */
-    private final SharedTaskContext sharedTaskContext;
-
-    /**
      * Construct a new instance.
      *
-     * @param mdcContext        the MDC context (of the calling thread).
      * @param delegate          the delegate to run.
      * @param sharedTaskContext the abort strategy to set.
      */
-    public AbortableTaskRunnable(@NotNull final MdcContext mdcContext, @NotNull final Runnable delegate,
-            @NotNull final SharedTaskContext sharedTaskContext) {
-        this.mdcContext = requireNonNull(mdcContext);
+    public AbortableTaskRunnable(@NotNull final Runnable delegate,
+                                 @NotNull final SharedTaskContext sharedTaskContext) {
+        super(requireNonNull(sharedTaskContext));
         this.delegate = requireNonNull(delegate);
-        this.sharedTaskContext = requireNonNull(sharedTaskContext);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void run() {
-        mdcContext.populateMdc();
+    protected void doRun() {
         sharedTaskContext.startExecution();
 
         final String taskId = sharedTaskContext.getTaskId();
-        MDC.put("task_id", taskId);
 
-        SharedTaskContextHolder.register(sharedTaskContext);
         try {
             LOGGER.trace("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), taskId);
             delegate.run();
@@ -92,8 +74,6 @@ public class AbortableTaskRunnable implements Runnable {
             LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).", sharedTaskContext.getTaskName(),
                     taskId, taskStatistics.getTotalTime() / 1E6, taskStatistics.getQueueTime() / 1E6,
                     taskStatistics.getExecutionTime() / 1E6);
-            MDC.clear();
-            SharedTaskContextHolder.remove();
         }
     }
 

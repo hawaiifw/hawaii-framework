@@ -19,10 +19,14 @@ package org.hawaiiframework.async.timeout;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.TaskStatistics;
+import org.hawaiiframework.logging.model.KibanaLogContext;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
+
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TASK_ID;
 
 /**
  * The strategy is used by the {@link TimeoutGuardTask} to stop a running guarded task.
@@ -50,7 +54,6 @@ public class SharedTaskContext {
      */
     private TaskAbortStrategy taskAbortStrategy;
 
-
     /**
      * The registered timeout guard task removal strategy.
      */
@@ -74,6 +77,11 @@ public class SharedTaskContext {
     private final ExecutorConfigurationProperties executorConfigurationProperties;
 
     /**
+     * Kibana log context needed.
+     */
+    private final KibanaLogContext logContext;
+
+    /**
      * The executors statistics.
      */
     private final ExecutorStatistics executorStatistics;
@@ -82,6 +90,7 @@ public class SharedTaskContext {
      * Flag to indicate that the task has been aborted.
      */
     private boolean aborted;
+
     /**
      * The task's statistics.
      */
@@ -94,10 +103,12 @@ public class SharedTaskContext {
      * @param executorConfigurationProperties the executor configuration properties
      */
     public SharedTaskContext(final String taskName,
-            final ExecutorConfigurationProperties executorConfigurationProperties,
-            final ExecutorStatistics executorStatistics) {
+                             final ExecutorConfigurationProperties executorConfigurationProperties,
+                             final ExecutorStatistics executorStatistics,
+                             final KibanaLogContext logContext) {
         this.taskName = taskName;
         this.executorConfigurationProperties = executorConfigurationProperties;
+        this.logContext = logContext;
         this.taskId = UUID.randomUUID().toString();
         this.taskStatistics = new TaskStatistics();
         this.executorStatistics = executorStatistics;
@@ -230,4 +241,25 @@ public class SharedTaskContext {
         taskStatistics.startExecution();
     }
 
+    /**
+     * Registers log fields using the current log context.
+     */
+    public void registerLogFields() {
+        KibanaLogFields.populateFromContext(logContext);
+        setSharedLogFields();
+    }
+
+    /**
+     * Clears the kibana log fields.
+     */
+    public void removeLogFields() {
+        KibanaLogFields.clear();
+    }
+
+    /**
+     * Set the default log fields of the shared task context.
+     */
+    private void setSharedLogFields() {
+        KibanaLogFields.set(TASK_ID, taskId);
+    }
 }

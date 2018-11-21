@@ -20,7 +20,6 @@ import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskRemoveStrategy;
 import org.hawaiiframework.async.timeout.TimeoutGuardTask;
-import org.hawaiiframework.logging.model.MdcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskDecorator;
@@ -33,10 +32,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task decorator to copy the MDC from the calling thread to the executing thread..
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class AbortableTaskDecorator implements TaskDecorator {
 
@@ -80,20 +78,18 @@ public class AbortableTaskDecorator implements TaskDecorator {
      */
     @Override
     public Runnable decorate(final Runnable runnable) {
-        final MdcContext currentMdc = MdcContext.getCurrentMdc();
-
         final SharedTaskContext sharedTaskContext = SharedTaskContextHolder.get();
         try {
-            return getRunnable(runnable, currentMdc, sharedTaskContext);
+            return getRunnable(runnable, sharedTaskContext);
         } finally {
             SharedTaskContextHolder.remove();
         }
     }
 
-    private Runnable getRunnable(final Runnable runnable, final MdcContext currentMdc, final SharedTaskContext sharedTaskContext) {
-        createTimeoutGuardTask(currentMdc, sharedTaskContext);
+    private Runnable getRunnable(final Runnable runnable, final SharedTaskContext sharedTaskContext) {
+        createTimeoutGuardTask(sharedTaskContext);
 
-        return createGuardedTask(runnable, currentMdc, sharedTaskContext);
+        return createGuardedTask(runnable, sharedTaskContext);
     }
 
     /**
@@ -101,8 +97,8 @@ public class AbortableTaskDecorator implements TaskDecorator {
      * <p>
      * This task is guarded by a {@link TimeoutGuardTask}. The {@link TimeoutGuardTask} will try to stop the guarded task upon timeout.
      */
-    private Runnable createGuardedTask(final Runnable runnable, final MdcContext currentMdc, final SharedTaskContext sharedTaskContext) {
-        final Runnable guardedTask = new AbortableTaskRunnable(currentMdc, runnable, sharedTaskContext);
+    private Runnable createGuardedTask(final Runnable runnable, final SharedTaskContext sharedTaskContext) {
+        final Runnable guardedTask = new AbortableTaskRunnable(runnable, sharedTaskContext);
 
         sharedTaskContext.setTaskRemoveStrategy(new TaskRemoveStrategy(taskExecutor.getThreadPoolExecutor(), guardedTask, "guarded"));
 
@@ -115,15 +111,14 @@ public class AbortableTaskDecorator implements TaskDecorator {
      * Next to this it will register it's removal strategy in the {@link SharedTaskContext}. This allows the guarded task, after completion,
      * to remove the timeout guard task.
      */
-    private void createTimeoutGuardTask(final MdcContext currentMdc, final SharedTaskContext sharedTaskContext) {
+    private void createTimeoutGuardTask(final SharedTaskContext sharedTaskContext) {
         final Integer timeout = sharedTaskContext.getTimeout();
         LOGGER.debug("Setting timeout of '{}' second(s) for task '{}' with id '{}'.", timeout, sharedTaskContext.getTaskName(),
                 sharedTaskContext.getTaskId());
 
-        final TimeoutGuardTask timeoutGuardTask = new TimeoutGuardTask(currentMdc, sharedTaskContext);
+        final TimeoutGuardTask timeoutGuardTask = new TimeoutGuardTask(sharedTaskContext);
         final RunnableScheduledFuture<?> scheduledTimeoutGuardTask =
                 (RunnableScheduledFuture) timeoutExecutor.schedule(timeoutGuardTask, timeout, TimeUnit.SECONDS);
-
 
         sharedTaskContext
                 .setTimeoutGuardTaskRemoveStrategy(new TaskRemoveStrategy(timeoutExecutor, scheduledTimeoutGuardTask, "timeout guard"));
