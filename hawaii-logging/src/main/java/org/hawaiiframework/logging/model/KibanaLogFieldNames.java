@@ -31,7 +31,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     // Deprecated, left in place for current usage of kibana.
     TX_DURATION("tx_duration"),
 
-    REQUEST_ID("req.id"),
+    REQUEST_ID("req_id"),
     REQUEST_DURATION("req_duration"),
 
     CALL_ID("call_id"),
@@ -41,7 +41,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
 
     URI("uri"),
     METHOD("method"),
-    USER("user.name"),
+    USER("user_name"),
 
     HTTP_STATUS("tx_status"),
 
