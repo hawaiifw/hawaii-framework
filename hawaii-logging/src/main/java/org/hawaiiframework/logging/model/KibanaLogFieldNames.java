@@ -28,6 +28,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     SESSION_ID("session_id"),
 
     TX_ID("tx_id"),
+    TX_TYPE("tx_type"),
     // Deprecated, left in place for current usage of kibana.
     TX_DURATION("tx_duration"),
 
@@ -38,6 +39,8 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     CALL_TYPE("call_type"),
     CALL_DURATION("call_duration"),
     CALL_RESULT("call_result"),
+
+    TASK_ID("task_id"),
 
     URI("uri"),
     METHOD("method"),

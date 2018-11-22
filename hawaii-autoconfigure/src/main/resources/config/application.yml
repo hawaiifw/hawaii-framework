@@ -19,23 +19,30 @@ hawaii:
     configuration: ./config/async-config.yml
   logging:
     filters:
-      kibana-log:
-        enabled: true
-        order: -108
-        http-header: X-Hawaii-Frontend-IP-Address
       kibana-log-cleanup:
         enabled: true
-        order: -110
+        order: -900
       request-duration:
         enabled: true
-        order: -109
+        order: -800
+      kibana-log:
+        enabled: true
+        order: -700
+        http-header: X-Hawaii-Frontend-IP-Address
+      class-method-name:
+        enabled: true
+        order: -600
+      transaction-id:
+        enabled: true
+        order: -500
+        http-header: X-Hawaii-Tx-Id
       request-id:
         enabled: true
-        order: -106
+        order: -400
         http-header: X-Hawaii-Request-Id
       request-response:
         enabled: true
-        order: -105
+        order: -300
         fallback-to-file: true
         directory: /tmp
         max-log-size: 50k
@@ -45,10 +52,6 @@ hawaii:
         - text/plain
         - text/xml
         - application/vnd.spring-boot.actuator.v1+json
-      transaction-id:
-        enabled: true
-        order: -107
-        http-header: X-Hawaii-Tx-Id
       user-details:
         enabled: true
         order: 110

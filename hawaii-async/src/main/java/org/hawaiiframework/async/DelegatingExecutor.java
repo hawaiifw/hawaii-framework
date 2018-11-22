@@ -21,6 +21,7 @@ import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
@@ -32,10 +33,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * In addition to the delegate, the async configuration properties and the task name is stored,
  * so we know which task this executor is for and we are able to determine the timeout.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class DelegatingExecutor implements TaskExecutor {
 
@@ -88,7 +88,8 @@ public class DelegatingExecutor implements TaskExecutor {
      */
     @Override
     public void execute(final Runnable task) {
-        final SharedTaskContext sharedTaskContext = new SharedTaskContext(taskName, executorConfigurationProperties, executorStatistics);
+        final SharedTaskContext sharedTaskContext = new SharedTaskContext(taskName, executorConfigurationProperties,
+                executorStatistics, KibanaLogFields.getContext());
         LOGGER.info("Scheduling task '{}' with id '{}'.", sharedTaskContext.getTaskName(), sharedTaskContext.getTaskId());
         LOGGER.info("Executor '{}' has '{}/{}' threads, '{}' queued entries, '{}' total executions and '{}' aborted executions.", taskName,
                 executorStatistics.getPoolSize(), executorStatistics.getMaxPoolSize(), executorStatistics.getQueueSize(),
