@@ -16,6 +16,9 @@ import static java.util.Objects.requireNonNull;
  * Redis Cache implementation.
  *
  * @param <T> the type to cache.
+ *
+ * @author Richard Kohlen
+ * @version 3.0.0
  */
 public class RedisCache<T> implements Cache<T> {
 
