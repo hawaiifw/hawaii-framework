@@ -69,7 +69,6 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
     @Override
     public void put(@NotNull final String key, @NotNull final T value) {
         final String cacheKey = getKey(key);
@@ -83,7 +82,6 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
     @Override
     public void put(@NotNull final String key, @NotNull final T value, @NotNull final Duration duration) {
         final String cacheKey = getKey(key);
@@ -95,7 +93,6 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
     @Override
     public void put(@NotNull final String key, @NotNull final T value, @NotNull final HawaiiTime expiresAt) {
         final String cacheKey = getKey(key);
@@ -108,7 +105,6 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.LawOfDemeter")
     @Override
     public T get(@NotNull final String key) {
         final String cacheKey = getKey(key);

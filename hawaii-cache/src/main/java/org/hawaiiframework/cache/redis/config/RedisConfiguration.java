@@ -37,43 +37,35 @@ public class RedisConfiguration {
      */
     private RedisPoolConfigurationProperties poolConfiguration;
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Long getDefaultTimeOutInMinutes() {
         return defaultTimeOutInMinutes;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setDefaultTimeOutInMinutes(final Long defaultTimeOutInMinutes) {
         this.defaultTimeOutInMinutes = defaultTimeOutInMinutes;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public String getClusterMaster() {
         return clusterMaster;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setClusterMaster(final String clusterMaster) {
         this.clusterMaster = clusterMaster;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public List<String> getSentinelHostsAndPorts() {
         return sentinelHostsAndPorts;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setSentinelHostsAndPorts(final List<String> sentinelHostsAndPorts) {
         this.sentinelHostsAndPorts = sentinelHostsAndPorts;
     }
 
 
-    @SuppressWarnings("PMD.CommentRequired")
     public RedisPoolConfigurationProperties getPoolConfiguration() {
         return poolConfiguration;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setPoolConfiguration(final RedisPoolConfigurationProperties poolConfiguration) {
         this.poolConfiguration = poolConfiguration;
     }

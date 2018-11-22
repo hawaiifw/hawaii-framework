@@ -69,112 +69,90 @@ public class RedisPoolConfigurationProperties {
      */
     private Long minEvictableIdleTimeMillis;
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Boolean getBlockWhenExhausted() {
         return blockWhenExhausted;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setBlockWhenExhausted(final Boolean blockWhenExhausted) {
         this.blockWhenExhausted = blockWhenExhausted;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Integer getMaxTotal() {
         return maxTotal;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setMaxTotal(final Integer maxTotal) {
         this.maxTotal = maxTotal;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Integer getMaxIdle() {
         return maxIdle;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setMaxIdle(final Integer maxIdle) {
         this.maxIdle = maxIdle;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Integer getMinIdle() {
         return minIdle;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setMinIdle(final Integer minIdle) {
         this.minIdle = minIdle;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Long getMaxWaitMillis() {
         return maxWaitMillis;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setMaxWaitMillis(final Long maxWaitMillis) {
         this.maxWaitMillis = maxWaitMillis;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Boolean getTestOnBorrow() {
         return testOnBorrow;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setTestOnBorrow(final Boolean testOnBorrow) {
         this.testOnBorrow = testOnBorrow;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Boolean getTestOnReturn() {
         return testOnReturn;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setTestOnReturn(final Boolean testOnReturn) {
         this.testOnReturn = testOnReturn;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Boolean getTestWhenIdle() {
         return testWhenIdle;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setTestWhenIdle(final Boolean testWhenIdle) {
         this.testWhenIdle = testWhenIdle;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Long getTimeBetweenEvictionRunsMillis() {
         return timeBetweenEvictionRunsMillis;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setTimeBetweenEvictionRunsMillis(final Long timeBetweenEvictionRunsMillis) {
         this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Integer getNumTestsPerEvictionRun() {
         return numTestsPerEvictionRun;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setNumTestsPerEvictionRun(final Integer numTestsPerEvictionRun) {
         this.numTestsPerEvictionRun = numTestsPerEvictionRun;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public Long getMinEvictableIdleTimeMillis() {
         return minEvictableIdleTimeMillis;
     }
 
-    @SuppressWarnings("PMD.CommentRequired")
     public void setMinEvictableIdleTimeMillis(final Long minEvictableIdleTimeMillis) {
         this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
     }
