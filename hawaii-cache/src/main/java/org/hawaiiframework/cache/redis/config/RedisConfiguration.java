@@ -15,15 +15,17 @@
  */
 package org.hawaiiframework.cache.redis.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * Redis configuration.
@@ -31,71 +33,24 @@ import java.util.List;
  * @author Richard Kohlen
  * @version 3.0.0
  */
-@Configuration
-@ConfigurationProperties(prefix = "redis")
+
 public class RedisConfiguration {
 
-    /**
-     * The default timeout in minutes.
-     */
-    private Long defaultTimeOutInMinutes;
 
-    /**
-     * The redis cluster's master name.
-     */
-    private String clusterMaster;
+    private final RedisConfigurationProperties properties;
 
-    /**
-     * The set of sentinels.
-     */
-    private List<String> sentinelHostsAndPorts;
-
-    /**
-     * The connection pool configuration.
-     */
-    private RedisPoolConfigurationProperties poolConfiguration;
-
-    public Long getDefaultTimeOutInMinutes() {
-        return defaultTimeOutInMinutes;
-    }
-
-    public void setDefaultTimeOutInMinutes(final Long defaultTimeOutInMinutes) {
-        this.defaultTimeOutInMinutes = defaultTimeOutInMinutes;
-    }
-
-    public String getClusterMaster() {
-        return clusterMaster;
-    }
-
-    public void setClusterMaster(final String clusterMaster) {
-        this.clusterMaster = clusterMaster;
-    }
-
-    public List<String> getSentinelHostsAndPorts() {
-        return sentinelHostsAndPorts;
-    }
-
-    public void setSentinelHostsAndPorts(final List<String> sentinelHostsAndPorts) {
-        this.sentinelHostsAndPorts = sentinelHostsAndPorts;
-    }
-
-
-    public RedisPoolConfigurationProperties getPoolConfiguration() {
-        return poolConfiguration;
-    }
-
-    public void setPoolConfiguration(final RedisPoolConfigurationProperties poolConfiguration) {
-        this.poolConfiguration = poolConfiguration;
+    public RedisConfiguration(RedisConfigurationProperties properties) {
+        this.properties = properties;
     }
 
     /**
-     * Create a new jedis connection factory.
+     * Create a new Jedis connection factory.
      *
      * @return a jedis connection factory.
      */
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        final JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisSentinelConfiguration(), jedisPoolConfig());
+    public JedisConnectionFactory jedisConnectionFactory(RedisSentinelConfiguration sentinelConfiguration, JedisPoolConfig poolConfig) {
+        final JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(sentinelConfiguration, poolConfig);
 
         jedisConnectionFactory.afterPropertiesSet();
         return jedisConnectionFactory;
@@ -108,22 +63,58 @@ public class RedisConfiguration {
      */
     @Bean
     public RedisSentinelConfiguration redisSentinelConfiguration() {
-        return new RedisSentinelConfiguration(getClusterMaster(), new HashSet<>(getSentinelHostsAndPorts()));
+        return new RedisSentinelConfiguration(properties.getClusterMaster(), new HashSet<>(properties.getSentinelHostsAndPorts()));
     }
 
     /**
-     * Create a jedis pool configuration.
+     * Create a Jedis pool configuration.
      *
-     * @return a jedis pool config.
+     * @return a Jedis pool config.
      */
     @Bean
-    public JedisPoolConfig jedisPoolConfig() {
-        final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        applyConfiguration(getPoolConfiguration(), jedisPoolConfig);
-        return jedisPoolConfig;
+    public JedisPoolConfig jedisPoolConfig() throws Exception {
+        return applyConfiguration(JedisPoolConfig.class, properties.getPoolConfiguration());
     }
 
-    private void applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration, final JedisPoolConfig jedisPoolConfig) {
-        poolConfiguration.applyTo(jedisPoolConfig);
+    private <T extends GenericObjectPoolConfig> T applyConfiguration(Class<T> type,
+            final RedisPoolConfigurationProperties poolConfiguration)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        T temp = type.getDeclaredConstructor().newInstance();
+        poolConfiguration.applyTo(temp);
+
+        return temp;
     }
+
+//
+//    /**
+//     * Create a user cache in redis.
+//     *
+//     * @param template           the redis template.
+//     * @param cacheConfiguration the configuration.
+//     * @return a cache for {@code HawaiiSsoUserDetails}
+//     */
+//    @Bean
+//    public Cache<U> userPrincipalCache(final RedisTemplate<String, U> template, final RedisConfiguration cacheConfiguration) {
+//        return new RedisCache<>(template, cacheConfiguration.getDefaultTimeOutInMinutes(), "jti");
+//    }
+//
+//
+//    /**
+//     * Create a new redis template to retrieve / store users.
+//     *
+//     * @param jedisConnectionFactory the connection factory.
+//     * @return a redis template for {@code HawaiiSsoUserDetails}
+//     */
+//    @Bean
+//    public RedisTemplate<String, U> userRedisTemplate(final JedisConnectionFactory jedisConnectionFactory) {
+//        final RedisTemplate<String, U> template = new RedisTemplate<>();
+//        template.setConnectionFactory(jedisConnectionFactory);
+//        template.setKeySerializer(new StringRedisSerializer());
+//        template.setValueSerializer(redisSerializer());
+//
+//        template.afterPropertiesSet();
+//        return template;
+//    }
+
+
 }
