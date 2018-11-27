@@ -386,6 +386,16 @@ project("hawaii-starter-async") {
     }
 }
 
+project("hawaii-starter-cache") {
+
+    description = "Hawaii Starter Cache"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile project(":hawaii-cache")
+    }
+}
+
 project("hawaii-starter-logging") {
 
     description = "Hawaii Starter Logging"

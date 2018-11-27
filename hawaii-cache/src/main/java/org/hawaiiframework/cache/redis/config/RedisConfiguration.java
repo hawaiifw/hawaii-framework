@@ -16,12 +16,12 @@
 package org.hawaiiframework.cache.redis.config;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.hawaiiframework.cache.redis.HawaiiRedisCacheUtil;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,31 +33,31 @@ import java.util.HashSet;
  * @author Richard Kohlen
  * @version 3.0.0
  */
-
+@Configuration
+@EnableConfigurationProperties(RedisConfigurationProperties.class)
 public class RedisConfiguration {
-
 
     private final RedisConfigurationProperties properties;
 
-    public RedisConfiguration(RedisConfigurationProperties properties) {
+    public RedisConfiguration(final RedisConfigurationProperties properties) {
         this.properties = properties;
     }
 
     /**
-     * Create a new Jedis connection factory.
+     * Creates a new Jedis connection factory.
      *
      * @return a jedis connection factory.
      */
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory(RedisSentinelConfiguration sentinelConfiguration, JedisPoolConfig poolConfig) {
+    public JedisConnectionFactory jedisConnectionFactory(final RedisSentinelConfiguration sentinelConfiguration,
+            final JedisPoolConfig poolConfig) {
         final JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(sentinelConfiguration, poolConfig);
-
         jedisConnectionFactory.afterPropertiesSet();
         return jedisConnectionFactory;
     }
 
     /**
-     * Create a new redis sentinel configuration.
+     * Creates a new redis sentinel configuration.
      *
      * @return a redis sentinel config.
      */
@@ -67,54 +67,31 @@ public class RedisConfiguration {
     }
 
     /**
-     * Create a Jedis pool configuration.
+     * Creates a Jedis pool configuration.
      *
      * @return a Jedis pool config.
      */
     @Bean
     public JedisPoolConfig jedisPoolConfig() throws Exception {
-        return applyConfiguration(JedisPoolConfig.class, properties.getPoolConfiguration());
+        return applyConfiguration(properties.getPoolConfiguration(), JedisPoolConfig.class);
     }
 
-    private <T extends GenericObjectPoolConfig> T applyConfiguration(Class<T> type,
-            final RedisPoolConfigurationProperties poolConfiguration)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        T temp = type.getDeclaredConstructor().newInstance();
+    /**
+     * Provides a {@link HawaiiRedisCacheUtil}.
+     *
+     * @return an instance of {@link HawaiiRedisCacheUtil}
+     */
+    @Bean
+    public HawaiiRedisCacheUtil hawaiiRedisCacheUtil(final JedisConnectionFactory jedisConnectionFactory) {
+        return new HawaiiRedisCacheUtil(properties, jedisConnectionFactory);
+    }
+
+    private <T extends GenericObjectPoolConfig> T applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration,
+            final Class<T> type) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        final T temp = type.getDeclaredConstructor().newInstance();
         poolConfiguration.applyTo(temp);
 
         return temp;
     }
-
-//
-//    /**
-//     * Create a user cache in redis.
-//     *
-//     * @param template           the redis template.
-//     * @param cacheConfiguration the configuration.
-//     * @return a cache for {@code HawaiiSsoUserDetails}
-//     */
-//    @Bean
-//    public Cache<U> userPrincipalCache(final RedisTemplate<String, U> template, final RedisConfiguration cacheConfiguration) {
-//        return new RedisCache<>(template, cacheConfiguration.getDefaultTimeOutInMinutes(), "jti");
-//    }
-//
-//
-//    /**
-//     * Create a new redis template to retrieve / store users.
-//     *
-//     * @param jedisConnectionFactory the connection factory.
-//     * @return a redis template for {@code HawaiiSsoUserDetails}
-//     */
-//    @Bean
-//    public RedisTemplate<String, U> userRedisTemplate(final JedisConnectionFactory jedisConnectionFactory) {
-//        final RedisTemplate<String, U> template = new RedisTemplate<>();
-//        template.setConnectionFactory(jedisConnectionFactory);
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setValueSerializer(redisSerializer());
-//
-//        template.afterPropertiesSet();
-//        return template;
-//    }
-
 
 }
