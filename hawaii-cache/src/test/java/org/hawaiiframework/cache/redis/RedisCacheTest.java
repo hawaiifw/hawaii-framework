@@ -68,15 +68,6 @@ public class RedisCacheTest {
         this.redisCache = new RedisCache<>(mockTemplate, defaultExpiry, keyPrefix);
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    @Test
-    public void instantiationOfCache() {
-
-    }
-
     @Test
     public void put() {
         //Test 2 parameter put
