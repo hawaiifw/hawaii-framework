@@ -19,6 +19,7 @@ import org.hawaiiframework.time.HawaiiTime;
 
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -72,7 +73,7 @@ public interface Cache<T> {
      * @param value     The (not null) object to store.
      * @param expiresAt The (not null) expiry time.
      */
-    void put(@NotNull String key, @NotNull T value, @NotNull HawaiiTime expiresAt);
+    void put(@NotNull String key, @NotNull T value, @NotNull LocalDateTime expiresAt);
 
     /**
      * Put the object in the cache with the given <code>key</code> for ever.
@@ -81,11 +82,14 @@ public interface Cache<T> {
      * expiry time for objects put in the cache. However, the object may still be evicted from
      * the cache, for instance for memory reasons.
      *
+     * This method calls Duration.ofMillis(Long.max()) and passes it to the put(key, value, Duration duration).
+     * So this method does not persist eternally, but rather persists for a long time.
+     *
      * @param key   The (not null) key to store the object under.
      * @param value The (not null) object to store.
      */
     default void putEternally(@NotNull String key, @NotNull T value) {
-        put(key, value, Duration.ZERO);
+        put(key, value, Duration.ofMillis(Long.MAX_VALUE));
     }
 
     /**

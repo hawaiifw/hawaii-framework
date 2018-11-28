@@ -16,6 +16,7 @@
 package org.hawaiiframework.cache.redis;
 
 import org.hawaiiframework.cache.redis.config.RedisConfigurationProperties;
+import org.hawaiiframework.time.HawaiiTime;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -58,14 +59,12 @@ public class HawaiiRedisCacheUtil {
      * @param keyPrefix       The prefix which should be used in the {@link RedisTemplate}
      * @param keySerializer   The Key serializer
      * @param valueSerializer The value serializer
-     * @param <T>             Type of the Redis Cache is inferred from the provided type in the parameter
-     * @param <U>             Type of the key serializer
      * @param <V>             Type of the value serializer
      * @return the constructed {@link RedisCache}
      */
-    public <T, U, V> RedisCache<T> generateRedisCache(final String keyPrefix, final RedisSerializer<U> keySerializer,
+    public <V> RedisCache<V> generateRedisCache(final String keyPrefix, HawaiiTime hawaiiTime, final RedisSerializer<String> keySerializer,
             final RedisSerializer<V> valueSerializer) {
-        return generateRedisCache(generateRedisTemplate(keySerializer, valueSerializer), keyPrefix);
+        return generateRedisCache(generateRedisTemplate(keySerializer, valueSerializer), hawaiiTime, keyPrefix);
     }
 
     /**
@@ -73,11 +72,11 @@ public class HawaiiRedisCacheUtil {
      *
      * @param template  The redis template that should be used
      * @param keyPrefix The prefix which should be used in the {@link RedisTemplate}
-     * @param <T>       Type of the Redis Cache is innferred from the provided type in the parameter
+     * @param <V>       Type of the Redis Cache is inferred from the provided type in the parameter
      * @return the constructed {@link RedisCache}
      */
-    public <T> RedisCache<T> generateRedisCache(final RedisTemplate<String, T> template, final String keyPrefix) {
-        return new RedisCache<>(template, cacheConfiguration.getDefaultTimeOutInMinutes(), keyPrefix);
+    public <V> RedisCache<V> generateRedisCache(final RedisTemplate<String, V> template, final HawaiiTime hawaiiTime,final String keyPrefix) {
+        return new RedisCache<V>(template, hawaiiTime, cacheConfiguration.getDefaultTimeOutInMinutes(), keyPrefix);
     }
 
     /**
@@ -85,14 +84,12 @@ public class HawaiiRedisCacheUtil {
      *
      * @param keySerializer   The Key serializer
      * @param valueSerializer The value serializer
-     * @param <T>             Type of the Redis Cache is inferred from the provided type in the parameter
-     * @param <U>             Type of the key serializer
      * @param <V>             Type of the value serializer
      * @return the constructed {@link RedisTemplate}
      */
-    public <T, U, V> RedisTemplate<String, T> generateRedisTemplate(final RedisSerializer<U> keySerializer,
+    private <V> RedisTemplate<String, V> generateRedisTemplate(final RedisSerializer<String> keySerializer,
             final RedisSerializer<V> valueSerializer) {
-        final RedisTemplate<String, T> template = new RedisTemplate<>();
+        final RedisTemplate<String, V> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory);
         template.setKeySerializer(keySerializer);
         template.setValueSerializer(valueSerializer);

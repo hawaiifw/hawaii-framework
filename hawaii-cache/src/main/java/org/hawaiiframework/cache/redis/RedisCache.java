@@ -23,6 +23,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.requireNonNull;
@@ -61,6 +62,8 @@ public class RedisCache<T> implements Cache<T> {
      */
     private String keyPrefix;
 
+    private final HawaiiTime hawaiiTime;
+
 
     /**
      * Constructor.
@@ -69,7 +72,9 @@ public class RedisCache<T> implements Cache<T> {
      * @param defaultExpireInMinutes The default time out in minutes.
      * @param keyPrefix              They key's prefix.
      */
-    public RedisCache(final RedisTemplate<String, T> redisTemplate, final Long defaultExpireInMinutes, final String keyPrefix) {
+    public RedisCache(final RedisTemplate<String, T> redisTemplate, final HawaiiTime hawaiiTime, final Long defaultExpireInMinutes,
+            final String keyPrefix) {
+        this.hawaiiTime = hawaiiTime;
         this.redisTemplate = requireNonNull(redisTemplate);
         this.defaultExpireInMinutes = defaultExpireInMinutes;
         requireNonNull(keyPrefix);
@@ -89,8 +94,9 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Override
     public void put(@NotNull final String key, @NotNull final T value) {
-        requireNonNull(key);
+        requireNonNull(key, "Key should not be null");
         requireNonNull(value);
+
 
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}'.", cacheKey);
@@ -112,17 +118,14 @@ public class RedisCache<T> implements Cache<T> {
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}' with duration '{}'.", cacheKey, duration);
         redisTemplate.opsForValue().set(cacheKey, value);
-
-        if (!duration.equals(Duration.ZERO)) {
-            redisTemplate.expire(cacheKey, duration.toMillis(), TimeUnit.MILLISECONDS);
-        }
+        redisTemplate.expire(cacheKey, duration.toMillis(), TimeUnit.MILLISECONDS);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void put(@NotNull final String key, @NotNull final T value, @NotNull final HawaiiTime expiresAt) {
+    public void put(@NotNull final String key, @NotNull final T value, @NotNull final LocalDateTime expiresAt) {
         requireNonNull(key);
         requireNonNull(value);
         requireNonNull(expiresAt);
@@ -130,7 +133,7 @@ public class RedisCache<T> implements Cache<T> {
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}' with expiration of '{}'.", cacheKey, expiresAt);
         redisTemplate.opsForValue().set(cacheKey, value);
-        final long expiry = expiresAt.millis() - new HawaiiTime().millis();
+        final long expiry = Duration.between(hawaiiTime.localDateTime(), expiresAt).toMillis();
         redisTemplate.expire(cacheKey, expiry, TimeUnit.MILLISECONDS);
     }
 
