@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hawaiiframework.cache.redis;
 
 import org.hawaiiframework.time.HawaiiTime;
@@ -23,7 +38,6 @@ import static org.mockito.Mockito.*;
 public class RedisCacheTest {
 
     private final String keyPrefix = "redisCacheTest_";
-    private final Long defaultExpire = 1L;
     private final Duration duration = Duration.ofMillis(1000);
     private final HawaiiTime hawaiiTime;
     private final String fullKey;
@@ -33,7 +47,7 @@ public class RedisCacheTest {
     private RedisTemplate<String, Foo> mockTemplate;
 
     @Mock
-    private ValueOperations mockOperations;
+    private ValueOperations<String, Foo> mockOperations;
 
     /**
      * Object to be tested.
@@ -50,7 +64,8 @@ public class RedisCacheTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(mockTemplate.opsForValue()).thenReturn(mockOperations);
-        this.redisCache = new RedisCache<>(mockTemplate, defaultExpire, keyPrefix);
+        final Long defaultExpiry = 1L;
+        this.redisCache = new RedisCache<>(mockTemplate, defaultExpiry, keyPrefix);
     }
 
     @After
@@ -195,16 +210,5 @@ public class RedisCacheTest {
             this.world = world;
         }
 
-        public String getBar() {
-            return bar;
-        }
-
-        public String getHello() {
-            return hello;
-        }
-
-        public String getWorld() {
-            return world;
-        }
     }
 }
