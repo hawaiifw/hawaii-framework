@@ -38,8 +38,7 @@ public class HawaiiRedisCacheUtil {
     }
 
     /**
-     * TODO: change the text
-     * Generates a Redis cache using the type which is provided.
+     * Generates a Redis cache using the provided parameters.
      *
      * @param keyPrefix       The prefix which should be used in the {@link RedisTemplate}
      * @param keySerializer   The Key serializer
@@ -55,13 +54,12 @@ public class HawaiiRedisCacheUtil {
     }
 
     /**
-     * TODO: change the text
-     * Generates a {@link RedisCache}.
+     * Generates a {@link RedisCache} using the given parameters.
      *
      * @param template  The redis template that should be used
      * @param keyPrefix The prefix which should be used in the {@link RedisTemplate}
      * @param <T>       Type of the Redis Cache is innferred from the provided type in the parameter
-     * @return
+     * @return the constructed {@link RedisCache}
      */
     public <T> RedisCache<T> generateRedisCache(final RedisTemplate<String, T> template, final String keyPrefix) {
         return new RedisCache<>(template, cacheConfiguration.getDefaultTimeOutInMinutes(), keyPrefix);

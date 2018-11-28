@@ -16,7 +16,6 @@ import static java.util.Objects.requireNonNull;
  * Redis Cache implementation.
  *
  * @param <T> the type to cache.
- *
  * @author Richard Kohlen
  * @version 3.0.0
  */
@@ -40,7 +39,7 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * The default time out in minutes.
      */
-    private final Long defaultTimeOutInMinutes;
+    private final Long defaultExpireInMinutes;
 
     /**
      * They key's prefix.
@@ -50,13 +49,14 @@ public class RedisCache<T> implements Cache<T> {
 
     /**
      * Constructor.
-     * @param redisTemplate           The redis template to use.
-     * @param defaultTimeOutInMinutes The default time out in minutes.
-     * @param keyPrefix               They key's prefix.
+     *
+     * @param redisTemplate          The redis template to use.
+     * @param defaultExpireInMinutes The default time out in minutes.
+     * @param keyPrefix              They key's prefix.
      */
-    public RedisCache(final RedisTemplate<String, T> redisTemplate, final Long defaultTimeOutInMinutes, final String keyPrefix) {
+    public RedisCache(final RedisTemplate<String, T> redisTemplate, final Long defaultExpireInMinutes, final String keyPrefix) {
         this.redisTemplate = requireNonNull(redisTemplate);
-        this.defaultTimeOutInMinutes = defaultTimeOutInMinutes;
+        this.defaultExpireInMinutes = defaultExpireInMinutes;
         requireNonNull(keyPrefix);
         if (keyPrefix.endsWith(UNDERSCORE)) {
             this.keyPrefix = keyPrefix;
@@ -74,11 +74,14 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Override
     public void put(@NotNull final String key, @NotNull final T value) {
+        requireNonNull(key);
+        requireNonNull(value);
+
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}'.", cacheKey);
         redisTemplate.opsForValue().set(cacheKey, value);
-        if (defaultTimeOutInMinutes != null) {
-            redisTemplate.expire(cacheKey, defaultTimeOutInMinutes, TimeUnit.MINUTES);
+        if (defaultExpireInMinutes != null) {
+            redisTemplate.expire(cacheKey, defaultExpireInMinutes, TimeUnit.MINUTES);
         }
     }
 
@@ -87,10 +90,17 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Override
     public void put(@NotNull final String key, @NotNull final T value, @NotNull final Duration duration) {
+        requireNonNull(key);
+        requireNonNull(value);
+        requireNonNull(duration);
+
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}' with duration '{}'.", cacheKey, duration);
         redisTemplate.opsForValue().set(cacheKey, value);
-        redisTemplate.expire(cacheKey, duration.toMillis(), TimeUnit.MILLISECONDS);
+
+        if (!duration.equals(Duration.ZERO)) {
+            redisTemplate.expire(cacheKey, duration.toMillis(), TimeUnit.MILLISECONDS);
+        }
     }
 
     /**
@@ -98,6 +108,10 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Override
     public void put(@NotNull final String key, @NotNull final T value, @NotNull final HawaiiTime expiresAt) {
+        requireNonNull(key);
+        requireNonNull(value);
+        requireNonNull(expiresAt);
+
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}' with expiration of '{}'.", cacheKey, expiresAt);
         redisTemplate.opsForValue().set(cacheKey, value);
@@ -110,6 +124,8 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Override
     public T get(@NotNull final String key) {
+        requireNonNull(key);
+
         final String cacheKey = getKey(key);
         LOGGER.debug("Get '{}'.", cacheKey);
         return redisTemplate.opsForValue().get(cacheKey);
@@ -119,7 +135,9 @@ public class RedisCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
-    public void remove(final String key) {
+    public void remove(@NotNull final String key) {
+        requireNonNull(key);
+
         final String cacheKey = getKey(key);
         LOGGER.debug("Delete '{}'.", cacheKey);
         redisTemplate.delete(cacheKey);

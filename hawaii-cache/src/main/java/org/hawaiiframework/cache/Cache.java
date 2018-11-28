@@ -85,7 +85,7 @@ public interface Cache<T> {
      * @param value The (not null) object to store.
      */
     default void putEternally(@NotNull String key, @NotNull T value) {
-        put(key, value, Duration.ofMillis(Long.MAX_VALUE));
+        put(key, value, Duration.ZERO);
     }
 
     /**
