@@ -19,6 +19,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+import org.hawaiiframework.logging.model.KibanaLogFieldNames;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,14 +56,18 @@ public class LoggingEventConverterTest {
     private static final String DATE_PATTERN = "YYYY-MM-dd HH:mm:ss,SSS";
     private static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_PATTERN, Locale.ENGLISH);
     private static final String BASE_LOG_MESSAGE =
-            SDF.format(new Date(0)) + " DEBUG -  log.loc=\"org.hawaiiframework.logging.logback.LoggingEventConverterTest:9\" thread=\"threadio\" message=#";
+            SDF.format(new Date(0)) + " DEBUG -  " +
+                    KibanaLogFieldNames.LOG_LOCATION.getLogName() +
+                    "=\"org.hawaiiframework.logging.logback.LoggingEventConverterTest:9\" " +
+                    KibanaLogFieldNames.THREAD.getLogName() + "=\"threadio\" " +
+                    KibanaLogFieldNames.MESSAGE.getLogName() + "=#";
 
     private LoggingEventConverter loggingEventConverter;
 
     @Before
     public void setUp() {
         stackTraceElement = new StackTraceElement(this.getClass().getCanonicalName(), "<methodName>", "<fileName>", 9);
-        when(loggingEvent.getCallerData()).thenReturn(new StackTraceElement[] {stackTraceElement});
+        when(loggingEvent.getCallerData()).thenReturn(new StackTraceElement[]{stackTraceElement});
         when(loggingEvent.getThreadName()).thenReturn("threadio");
         when(loggingEvent.getThrowableProxy()).thenReturn(iThrowableProxy);
 
