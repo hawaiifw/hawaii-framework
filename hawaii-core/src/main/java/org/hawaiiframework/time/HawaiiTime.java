@@ -17,7 +17,6 @@
 package org.hawaiiframework.time;
 
 import java.time.*;
-import java.time.temporal.Temporal;
 
 import static java.util.Objects.requireNonNull;
 
@@ -115,14 +114,13 @@ public class HawaiiTime {
     }
 
     /**
-     * Calculates the difference between this instance and the provided {@link Temporal}.
+     * Calculates the difference between this instance and the provided {@link Instant}.
      *
      * @param time which to compare
      * @return the result of the of the difference calculation as a {@link Long}
      */
     public Long between(final Instant time) {
-        final var hawaiiTime = instant();
-        return Duration.between(hawaiiTime, time).toMillis();
+        return Duration.between(instant(), time).toMillis();
     }
 
     /**

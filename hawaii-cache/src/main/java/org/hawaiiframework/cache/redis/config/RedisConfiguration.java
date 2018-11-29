@@ -83,7 +83,7 @@ public class RedisConfiguration {
      * @return an instance of {@link HawaiiRedisCacheBuilder}
      */
     @Bean
-    public HawaiiRedisCacheBuilder hawaiiRedisCacheUtil(final JedisConnectionFactory jedisConnectionFactory) {
+    public HawaiiRedisCacheBuilder hawaiiRedisCacheBuilder(final JedisConnectionFactory jedisConnectionFactory) {
         return new HawaiiRedisCacheBuilder(properties, jedisConnectionFactory, new HawaiiTime());
     }
 
