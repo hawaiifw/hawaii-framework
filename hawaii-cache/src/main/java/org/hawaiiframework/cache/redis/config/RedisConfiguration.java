@@ -16,7 +16,8 @@
 package org.hawaiiframework.cache.redis.config;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.hawaiiframework.cache.redis.HawaiiRedisCacheUtil;
+import org.hawaiiframework.cache.redis.HawaiiRedisCacheBuilder;
+import org.hawaiiframework.time.HawaiiTime;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,13 +78,13 @@ public class RedisConfiguration {
     }
 
     /**
-     * Provides a {@link HawaiiRedisCacheUtil}.
+     * Provides a {@link HawaiiRedisCacheBuilder}.
      *
-     * @return an instance of {@link HawaiiRedisCacheUtil}
+     * @return an instance of {@link HawaiiRedisCacheBuilder}
      */
     @Bean
-    public HawaiiRedisCacheUtil hawaiiRedisCacheUtil(final JedisConnectionFactory jedisConnectionFactory) {
-        return new HawaiiRedisCacheUtil(properties, jedisConnectionFactory);
+    public HawaiiRedisCacheBuilder hawaiiRedisCacheUtil(final JedisConnectionFactory jedisConnectionFactory) {
+        return new HawaiiRedisCacheBuilder(properties, jedisConnectionFactory, new HawaiiTime());
     }
 
     private <T extends GenericObjectPoolConfig> T applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration,

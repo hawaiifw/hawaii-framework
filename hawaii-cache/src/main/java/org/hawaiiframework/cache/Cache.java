@@ -15,11 +15,10 @@
  */
 package org.hawaiiframework.cache;
 
-import org.hawaiiframework.time.HawaiiTime;
-
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -34,7 +33,6 @@ import java.util.Optional;
  * In case the key is not found <code>null</code> will be returned.
  *
  * @param <T> the type of objects to store.
- *
  * @author Richard Kohlen
  * @version 3.0.0
  */
@@ -76,12 +74,24 @@ public interface Cache<T> {
     void put(@NotNull String key, @NotNull T value, @NotNull LocalDateTime expiresAt);
 
     /**
+     * Put the object in the cache with the given <code>key</code> for until
+     * <code>expiresAt</code> has come.
+     * <p>
+     * The object is stored and should be removed when <code>expiresAt</code> had come.
+     *
+     * @param key       The (not null) key to store the object under.
+     * @param value     The (not null) object to store.
+     * @param expiresAt The (not null) expiry time.
+     */
+    void put(@NotNull String key, @NotNull T value, @NotNull ZonedDateTime expiresAt);
+
+    /**
      * Put the object in the cache with the given <code>key</code> for ever.
      * <p>
      * The object is stored and should never be removed. This should overrule configured default
      * expiry time for objects put in the cache. However, the object may still be evicted from
      * the cache, for instance for memory reasons.
-     *
+     * <p>
      * This method calls Duration.ofMillis(Long.max()) and passes it to the put(key, value, Duration duration).
      * So this method does not persist eternally, but rather persists for a long time.
      *

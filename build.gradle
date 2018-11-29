@@ -269,20 +269,6 @@ configure(subprojects - sampleprojects) { subproject ->
     }
 }
 
-project("hawaii-cache") {
-
-    description = "Hawaii Cache"
-
-    dependencies {
-        compile project(":hawaii-core")
-        compile("javax.validation:validation-api")
-        compile("org.apache.commons:commons-dbcp2")
-        compile("org.springframework.boot:spring-boot")
-        compile("org.springframework.data:spring-data-redis")
-        compile("redis.clients:jedis")
-    }
-}
-
 project("hawaii-async") {
 
     description = "Hawaii Async"
@@ -318,6 +304,20 @@ project("hawaii-autoconfigure") {
         compileOnly "org.springframework:spring-webmvc"
         testCompile "org.hamcrest:hamcrest-core"
         testCompile "org.hamcrest:hamcrest-library"
+    }
+}
+
+project("hawaii-cache") {
+
+    description = "Hawaii Cache"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile("javax.validation:validation-api")
+        compile("org.apache.commons:commons-dbcp2")
+        compile("org.springframework.boot:spring-boot")
+        compile("org.springframework.data:spring-data-redis")
+        compile("redis.clients:jedis")
     }
 }
 

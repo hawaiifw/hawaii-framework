@@ -23,7 +23,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.requireNonNull;
@@ -126,15 +128,27 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Override
     public void put(@NotNull final String key, @NotNull final T value, @NotNull final LocalDateTime expiresAt) {
+        requireNonNull(expiresAt);
+        put(key, value, expiresAt.atZone(hawaiiTime.getZone()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void put(@NotNull final String key, @NotNull final T value, @NotNull final ZonedDateTime expiresAt) {
+        requireNonNull(expiresAt);
+        putAndSetExpiry(key, value, expiresAt.toInstant());
+    }
+
+    private void putAndSetExpiry(@NotNull final String key, @NotNull final T value, final Instant expiry) {
         requireNonNull(key);
         requireNonNull(value);
-        requireNonNull(expiresAt);
-
         final String cacheKey = getKey(key);
-        LOGGER.debug("Putting '{}' with expiration of '{}'.", cacheKey, expiresAt);
+        final var exp = hawaiiTime.between(expiry);
+        LOGGER.debug("Putting '{}' with expiration of '{}'.", cacheKey, expiry);
         redisTemplate.opsForValue().set(cacheKey, value);
-        final long expiry = Duration.between(hawaiiTime.localDateTime(), expiresAt).toMillis();
-        redisTemplate.expire(cacheKey, expiry, TimeUnit.MILLISECONDS);
+        redisTemplate.expire(cacheKey, exp, TimeUnit.MILLISECONDS);
     }
 
     /**
