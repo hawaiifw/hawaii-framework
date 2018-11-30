@@ -33,16 +33,16 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
- * A filter that assigns the class name and method name to the Kibana logger for each request.
+ * A filter that assigns the transaction's name (class and method name) to the Kibana logger for each request.
  *
  * @author Richard Kohlen
  */
-public class ClassMethodNameFilter extends AbstractGenericFilterBean {
+public class TransactionNameFilter extends AbstractGenericFilterBean {
 
     /**
      * The Logger.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassMethodNameFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionNameFilter.class);
 
     /**
      * Application context (ac), ac is the context of this Spring Boot Application.
@@ -56,7 +56,7 @@ public class ClassMethodNameFilter extends AbstractGenericFilterBean {
      *
      * @param applicationContext the application context of the Spring Boot Application
      */
-    public ClassMethodNameFilter(final ApplicationContext applicationContext) {
+    public TransactionNameFilter(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
