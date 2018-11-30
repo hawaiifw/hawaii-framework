@@ -76,18 +76,14 @@ public class AsyncExecutorConfigurationTest {
     @Test
     public void thatDefaultExecutorIsCreated() throws Exception {
         doIt();
-        ThreadPoolTaskExecutor executor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor executor = (DelegatingExecutor) configuration.getAsyncExecutor();
         ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(defaultExecutorProperties.getName());
-        assertTrue(executor == defaultExecutor);
+
         final ScheduledThreadPoolExecutor asyncTimeoutExecutor = (ScheduledThreadPoolExecutor) beanFactory.getBean("asyncTimeoutExecutor");
         assertNotNull(asyncTimeoutExecutor);
         assertEquals(properties.getAsyncTimeoutExecutorPoolSize(), (Integer) asyncTimeoutExecutor.getCorePoolSize());
-        assertEquals(defaultExecutorProperties.getCorePoolSize(), (Integer) executor.getCorePoolSize());
-        assertEquals(defaultExecutorProperties.getMaxPoolSize(), (Integer) executor.getMaxPoolSize());
-        assertEquals(defaultExecutorProperties.getKeepAliveTime(), (Integer) executor.getKeepAliveSeconds());
-        assertEquals(defaultExecutorProperties.getMaxPendingRequests(),
-                (Integer) executor.getThreadPoolExecutor().getQueue().remainingCapacity());
-        assertEquals(defaultExecutorProperties.getName() + "-", executor.getThreadNamePrefix());
+
+        assertTrue(executor.hasDelegate(defaultExecutor));
     }
 
     private void doIt() {
@@ -115,7 +111,7 @@ public class AsyncExecutorConfigurationTest {
                 (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(taskExecutor);
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
 
         final CountDownLatch taskLatch = new CountDownLatch(1);
@@ -153,7 +149,7 @@ public class AsyncExecutorConfigurationTest {
         assertNotNull(executor);
 
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         ThreadPoolTaskExecutor systemExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(systemExecutorName);
         assertEquals(0, defaultExecutor.getActiveCount());
         assertEquals(0, systemExecutor.getActiveCount());
@@ -199,7 +195,7 @@ public class AsyncExecutorConfigurationTest {
         assertNotNull(executor);
 
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         ThreadPoolTaskExecutor systemExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(systemExecutorName);
         ThreadPoolTaskExecutor taskExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(taskExecutorName);
         assertEquals(0, defaultExecutor.getActiveCount());
@@ -258,7 +254,7 @@ public class AsyncExecutorConfigurationTest {
         DelegatingExecutor taskExecutor =
                 (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
 
         ScheduledThreadPoolExecutor asyncTimeoutExecutor = (ScheduledThreadPoolExecutor) beanFactory.getBean("asyncTimeoutExecutor");
@@ -309,7 +305,7 @@ public class AsyncExecutorConfigurationTest {
         DelegatingExecutor taskExecutor =
                 (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
 
         ScheduledThreadPoolExecutor asyncTimeoutExecutor = (ScheduledThreadPoolExecutor) beanFactory.getBean("asyncTimeoutExecutor");

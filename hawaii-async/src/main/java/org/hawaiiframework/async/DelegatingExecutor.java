@@ -24,8 +24,14 @@ import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.core.task.AsyncListenableTaskExecutor;
+import org.springframework.lang.NonNull;
+import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 /**
  * Task executor that delegates to the task executor configured for a task.
@@ -37,7 +43,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * @author Paul Klos
  * @since 2.0.0
  */
-public class DelegatingExecutor implements TaskExecutor {
+public class DelegatingExecutor implements AsyncListenableTaskExecutor, SchedulingTaskExecutor {
+
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = -8533500008410021569L;
 
     /**
      * Logger for this class.
@@ -72,9 +83,9 @@ public class DelegatingExecutor implements TaskExecutor {
      * @param taskName                        the task name
      */
     public DelegatingExecutor(
-            final ThreadPoolTaskExecutor delegate,
-            final ExecutorConfigurationProperties executorConfigurationProperties,
-            final String taskName) {
+        final ThreadPoolTaskExecutor delegate,
+        final ExecutorConfigurationProperties executorConfigurationProperties,
+        final String taskName) {
         this.delegate = delegate;
         this.executorConfigurationProperties = executorConfigurationProperties;
         this.taskName = taskName;
@@ -87,16 +98,72 @@ public class DelegatingExecutor implements TaskExecutor {
      * Configures a {@link SharedTaskContextHolder} before delegating execution.
      */
     @Override
-    public void execute(final Runnable task) {
+    public void execute(@NonNull final Runnable task) {
+        initializeTask();
+        delegate.execute(task);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Configures a {@link SharedTaskContextHolder} before delegating execution.
+     */
+    @Override
+    public void execute(@NonNull final Runnable task, final long startTimeout) {
+        initializeTask();
+        delegate.execute(task, startTimeout);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Configures a {@link SharedTaskContextHolder} before delegating execution.
+     */
+    @Override
+    public Future<?> submit(@NonNull final Runnable task) {
+        initializeTask();
+        return delegate.submit(task);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Configures a {@link SharedTaskContextHolder} before delegating execution.
+     */
+    @Override public <T> Future<T> submit(@NonNull final Callable<T> task) {
+        initializeTask();
+        return delegate.submit(task);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Configures a {@link SharedTaskContextHolder} before delegating execution.
+     */
+    @Override public ListenableFuture<?> submitListenable(final Runnable task) {
+        initializeTask();
+        return delegate.submitListenable(task);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Configures a {@link SharedTaskContextHolder} before delegating execution.
+     */
+    @Override public <T> ListenableFuture<T> submitListenable(final Callable<T> task) {
+        initializeTask();
+        return delegate.submitListenable(task);
+    }
+
+    private void initializeTask() {
         final SharedTaskContext sharedTaskContext = new SharedTaskContext(taskName, executorConfigurationProperties,
-                executorStatistics, KibanaLogFields.getContext());
+            executorStatistics, KibanaLogFields.getContext());
         LOGGER.info("Scheduling task '{}' with id '{}'.", sharedTaskContext.getTaskName(), sharedTaskContext.getTaskId());
         LOGGER.info("Executor '{}' has '{}/{}' threads, '{}' queued entries, '{}' total executions and '{}' aborted executions.", taskName,
-                executorStatistics.getPoolSize(), executorStatistics.getMaxPoolSize(), executorStatistics.getQueueSize(),
-                executorStatistics.getCompletedTaskCount(), executorStatistics.getAbortedTaskCount());
+            executorStatistics.getPoolSize(), executorStatistics.getMaxPoolSize(), executorStatistics.getQueueSize(),
+            executorStatistics.getCompletedTaskCount(), executorStatistics.getAbortedTaskCount());
 
         SharedTaskContextHolder.register(sharedTaskContext);
-        delegate.execute(task);
     }
 
     /**
@@ -104,5 +171,28 @@ public class DelegatingExecutor implements TaskExecutor {
      */
     public ExecutorStatisticsView getExecutorStatistics() {
         return new ExecutorStatisticsView(executorStatistics);
+    }
+
+    /**
+     * For testing purposes.
+     */
+    public boolean hasDelegate(final ThreadPoolTaskExecutor executor) {
+        return delegate.equals(executor);
+    }
+
+    /**
+     * For testing purposes.
+     *
+     * Returns the delegate's active count.
+     */
+    public int getActiveCount() {
+        return delegate.getActiveCount();
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean prefersShortLivedTasks() {
+        return delegate.prefersShortLivedTasks();
     }
 }
