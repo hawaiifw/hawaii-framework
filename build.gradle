@@ -302,6 +302,8 @@ project("hawaii-autoconfigure") {
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compileOnly "javax.servlet:javax.servlet-api"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly("org.springframework.data:spring-data-redis")
+        compileOnly("redis.clients:jedis")
         testCompile "org.hamcrest:hamcrest-core"
         testCompile "org.hamcrest:hamcrest-library"
     }
@@ -316,8 +318,10 @@ project("hawaii-cache") {
         compile("javax.validation:validation-api")
         compile("org.apache.commons:commons-dbcp2")
         compile("org.springframework.boot:spring-boot")
-        compile("org.springframework.data:spring-data-redis")
-        compile("redis.clients:jedis")
+        compileOnly("org.springframework.data:spring-data-redis")
+        compileOnly("redis.clients:jedis")
+        testCompile("org.springframework.data:spring-data-redis")
+        testCompile("redis.clients:jedis")
     }
 }
 

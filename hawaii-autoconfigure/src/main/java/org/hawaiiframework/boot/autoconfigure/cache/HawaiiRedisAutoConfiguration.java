@@ -19,14 +19,16 @@ import org.hawaiiframework.cache.redis.config.RedisConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import redis.clients.jedis.Jedis;
+
 
 /**
- *
  * @author Richard Kohlen
- * @since 2.0.0
+ * @since 3.0.0
  */
 @Configuration
-@ConditionalOnClass(RedisConfiguration.class)
+@ConditionalOnClass({RedisConfiguration.class, Jedis.class, JedisConnectionFactory.class})
 @Import(RedisConfiguration.class)
 public class HawaiiRedisAutoConfiguration {
 
