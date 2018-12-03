@@ -76,18 +76,14 @@ public class AsyncExecutorConfigurationTest {
     @Test
     public void thatDefaultExecutorIsCreated() throws Exception {
         doIt();
-        ThreadPoolTaskExecutor executor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor executor = (DelegatingExecutor) configuration.getAsyncExecutor();
         ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(defaultExecutorProperties.getName());
-        assertTrue(executor == defaultExecutor);
+
         final ScheduledThreadPoolExecutor asyncTimeoutExecutor = (ScheduledThreadPoolExecutor) beanFactory.getBean("asyncTimeoutExecutor");
         assertNotNull(asyncTimeoutExecutor);
         assertEquals(properties.getAsyncTimeoutExecutorPoolSize(), (Integer) asyncTimeoutExecutor.getCorePoolSize());
-        assertEquals(defaultExecutorProperties.getCorePoolSize(), (Integer) executor.getCorePoolSize());
-        assertEquals(defaultExecutorProperties.getMaxPoolSize(), (Integer) executor.getMaxPoolSize());
-        assertEquals(defaultExecutorProperties.getKeepAliveTime(), (Integer) executor.getKeepAliveSeconds());
-        assertEquals(defaultExecutorProperties.getMaxPendingRequests(),
-                (Integer) executor.getThreadPoolExecutor().getQueue().remainingCapacity());
-        assertEquals(defaultExecutorProperties.getName() + "-", executor.getThreadNamePrefix());
+
+        assertTrue(executor.hasDelegate(defaultExecutor));
     }
 
     private void doIt() {
@@ -112,10 +108,10 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(taskExecutor);
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
 
         final CountDownLatch taskLatch = new CountDownLatch(1);
@@ -129,11 +125,11 @@ public class AsyncExecutorConfigurationTest {
     }
 
     /*
-    * Configure a system with a task, with specifying an executors for the system but not the task.
-    * The expectation is that the task will default to the system's executor.
-    * This is tested by enqueueing a task and checking that the active count on the
-    * default executor increases.
-    */
+     * Configure a system with a task, with specifying an executors for the system but not the task.
+     * The expectation is that the task will default to the system's executor.
+     * This is tested by enqueueing a task and checking that the active count on the
+     * default executor increases.
+     */
     @Test
     public void thatSystemExecutorIsUsedForTaskWithoutExecutor() throws Exception {
         String systemExecutorName = "coffee-bar-executor";
@@ -149,11 +145,11 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor executor =
-                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(executor);
 
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         ThreadPoolTaskExecutor systemExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(systemExecutorName);
         assertEquals(0, defaultExecutor.getActiveCount());
         assertEquals(0, systemExecutor.getActiveCount());
@@ -170,11 +166,11 @@ public class AsyncExecutorConfigurationTest {
     }
 
     /*
-    * Configure a system with a task, with specifying executors on each level (global, system and task).
-    * The expectation is that the task will use it's own executor.
-    * This is tested by enqueueing a task and checking that the active count on the
-    * default executor increases.
-    */
+     * Configure a system with a task, with specifying executors on each level (global, system and task).
+     * The expectation is that the task will use it's own executor.
+     * This is tested by enqueueing a task and checking that the active count on the
+     * default executor increases.
+     */
     @Test
     public void thatTaskExecutorIsUsedWhenConfigured() throws Exception {
         String systemExecutorName = "coffee-bar-executor";
@@ -195,11 +191,11 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor executor =
-                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(executor);
 
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         ThreadPoolTaskExecutor systemExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(systemExecutorName);
         ThreadPoolTaskExecutor taskExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(taskExecutorName);
         assertEquals(0, defaultExecutor.getActiveCount());
@@ -219,7 +215,7 @@ public class AsyncExecutorConfigurationTest {
     }
 
     private Runnable createRunnable(final CountDownLatch taskLatch, final CountDownLatch testLatch,
-            final TaskAbortStrategy taskAbortStrategy) {
+        final TaskAbortStrategy taskAbortStrategy) {
         return () -> {
             try {
                 SharedTaskContextHolder.setTaskAbortStrategy(taskAbortStrategy);
@@ -232,7 +228,7 @@ public class AsyncExecutorConfigurationTest {
     }
 
     private ExecutorProperties addExecutorProperties(final String executorName, int corePoolSize, int maxPoolSize, int maxPendingRequests,
-            int keepAliveSeconds) {
+        int keepAliveSeconds) {
         ExecutorProperties executorProperties = new ExecutorProperties();
         executorProperties.setName(executorName);
         executorProperties.setCorePoolSize(corePoolSize);
@@ -256,9 +252,9 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
 
         ScheduledThreadPoolExecutor asyncTimeoutExecutor = (ScheduledThreadPoolExecutor) beanFactory.getBean("asyncTimeoutExecutor");
@@ -307,9 +303,9 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
-        ThreadPoolTaskExecutor defaultExecutor = (ThreadPoolTaskExecutor) configuration.getAsyncExecutor();
+        DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
 
         ScheduledThreadPoolExecutor asyncTimeoutExecutor = (ScheduledThreadPoolExecutor) beanFactory.getBean("asyncTimeoutExecutor");
@@ -369,7 +365,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
 
         final CountDownLatch taskLatch = new CountDownLatch(1);
@@ -410,10 +406,10 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor mochaTaskExecutor =
-                (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-mocha");
+            (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-mocha");
 
         DelegatingExecutor waterTaskExecutor =
-                (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-water");
+            (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-water");
 
         final CountDownLatch taskLatch = new CountDownLatch(1);
         final CountDownLatch mochaLatch = new CountDownLatch(1);
