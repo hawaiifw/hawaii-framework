@@ -98,7 +98,7 @@ public class AsyncExecutorInitializer {
     }
 
     private void registerDefaultExecutor(final ThreadPoolTaskExecutor executor) {
-        defaultExecutor = executor;
+        defaultExecutor = new DelegatingExecutor(executor, configuration, configuration.getDefaultExecutor());
     }
 
     @SuppressWarnings("PMD.CommentRequired")
