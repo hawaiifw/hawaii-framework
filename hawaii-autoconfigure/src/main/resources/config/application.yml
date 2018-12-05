@@ -29,7 +29,7 @@ hawaii:
         enabled: true
         order: -700
         http-header: X-Hawaii-Frontend-IP-Address
-      transaction-name:
+      transaction-type:
         enabled: true
         order: -600
       transaction-id:

@@ -37,12 +37,12 @@ import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInterna
  *
  * @author Richard Kohlen
  */
-public class TransactionNameFilter extends AbstractGenericFilterBean {
+public class TransactionTypeFilter extends AbstractGenericFilterBean {
 
     /**
      * The Logger.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionNameFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionTypeFilter.class);
 
     /**
      * Application context (ac), ac is the context of this Spring Boot Application.
@@ -56,7 +56,7 @@ public class TransactionNameFilter extends AbstractGenericFilterBean {
      *
      * @param applicationContext the application context of the Spring Boot Application
      */
-    public TransactionNameFilter(final ApplicationContext applicationContext) {
+    public TransactionTypeFilter(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
@@ -92,7 +92,7 @@ public class TransactionNameFilter extends AbstractGenericFilterBean {
         }
 
         if (handler == null) {
-            LOGGER.debug("HANDLER NOT FOUND");
+            LOGGER.debug("No handler found.");
         } else {
 
             final var nameMethod = handler.getMethod().getName();
@@ -100,7 +100,7 @@ public class TransactionNameFilter extends AbstractGenericFilterBean {
             final var value = nameController + "." + nameMethod;
 
             KibanaLogFields.set(TX_TYPE, value);
-            LOGGER.debug("Set '{}' with value '{};", TX_TYPE.getLogName(), value);
+            LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), value);
         }
     }
 
