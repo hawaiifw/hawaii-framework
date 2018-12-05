@@ -49,7 +49,7 @@ This section provides a list of available Hawaii application properties.
             enabled: true
             order: -700
             http-header: X-Hawaii-Frontend-IP-Address
-          class-method-name:
+          transaction-type:
             enabled: true
             order: -600
           transaction-id:
