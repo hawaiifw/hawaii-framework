@@ -18,7 +18,7 @@ public class AbstractModelConverterTest {
 
     @Test
     public void assureThatNullObjectReturnsNull() {
-        PersonModelConverter converter = new PersonModelConverter(NullListConversionStrategy.RETURN_NULL);
+        PersonModelConverter converter = new PersonModelConverter(DefaultNullListConversionStrategies.returnNull(PersonInput.class));
         PersonInput source = null;
         final PersonInput target = converter.convert(source);
         assertThat(target, is(nullValue()));
@@ -26,7 +26,7 @@ public class AbstractModelConverterTest {
 
     @Test
     public void assureThatNulListReturnsNull() {
-        PersonModelConverter converter = new PersonModelConverter(NullListConversionStrategy.RETURN_NULL);
+        PersonModelConverter converter = new PersonModelConverter(DefaultNullListConversionStrategies.returnNull(PersonInput.class));
         List<PersonInput> source = null;
         final List<PersonInput> target = converter.convert(source);
         assertThat(target, is(nullValue()));
@@ -34,7 +34,7 @@ public class AbstractModelConverterTest {
 
     @Test
     public void assureThatNulListReturnsEmptyList() {
-        PersonModelConverter converter = new PersonModelConverter(NullListConversionStrategy.RETURN_EMPTY_LIST);
+        PersonModelConverter converter = new PersonModelConverter(DefaultNullListConversionStrategies.returnEmptyList(PersonInput.class));
         List<PersonInput> source = null;
         final List<PersonInput> target = converter.convert(source);
         assertThat(target, is(not(nullValue())));
@@ -43,7 +43,7 @@ public class AbstractModelConverterTest {
 
     @Test
     public void assureThatNulListWillThrowAnException() {
-        PersonModelConverter converter = new PersonModelConverter(NullListConversionStrategy.RAISE_ERROR);
+        PersonModelConverter converter = new PersonModelConverter(DefaultNullListConversionStrategies.raiseError(PersonInput.class));
         List<PersonInput> source = null;
         thrown.expect(IllegalArgumentException.class);
         converter.convert(source);

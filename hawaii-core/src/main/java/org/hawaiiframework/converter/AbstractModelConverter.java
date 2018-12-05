@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
-import static org.hawaiiframework.converter.NullListConversionStrategy.RETURN_EMPTY_LIST;
+import static org.hawaiiframework.converter.DefaultNullListConversionStrategies.returnEmptyList;
 
 /**
  * Abstract {@link ModelConverter} implementation.
@@ -42,7 +42,10 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
      */
     private final Class<T> targetType;
 
-    private final NullListConversionStrategy nullListConversionStrategy;
+    /**
+     * The conversion strategy for null lists values.
+     */
+    private final NullListConversionStrategy<T> nullListConversionStrategy;
 
     /**
      * Constructs a {@link AbstractModelConverter}.
@@ -50,16 +53,23 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
      * @param targetType the target type
      */
     public AbstractModelConverter(final Class<T> targetType) {
-        this(targetType, RETURN_EMPTY_LIST);
+        this(targetType, returnEmptyList(targetType));
     }
 
     /**
      * Constructs a {@link AbstractModelConverter}.
+     * <p>
+     * The null list conversion strategy to be used can be supplied, or one of the supplied default methods can be used. See:
+     * <ul>
+     * <li>{@link DefaultNullListConversionStrategies#raiseError(Class)}</li>
+     * <li>{@link DefaultNullListConversionStrategies#returnNull(Class)}</li>
+     * <li>{@link DefaultNullListConversionStrategies#returnEmptyList(Class)}</li>
+     * </ul>
      *
      * @param targetType                 the target type.
      * @param nullListConversionStrategy the strategy how to handle null lists.
      */
-    public AbstractModelConverter(final Class<T> targetType, final NullListConversionStrategy nullListConversionStrategy) {
+    public AbstractModelConverter(final Class<T> targetType, final NullListConversionStrategy<T> nullListConversionStrategy) {
         this.targetType = requireNonNull(targetType, "'targetType' must not be null");
         this.nullListConversionStrategy = requireNonNull(nullListConversionStrategy, "'nullListConversionStrategy' must not be null");
     }
@@ -83,30 +93,13 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
     @Override
     public List<T> convert(final Iterable<? extends S> objects) {
         if (objects == null) {
-            return handleNullCollection();
+            return nullListConversionStrategy.apply();
         }
         final List<T> result = new ArrayList<>();
         for (final S object : objects) {
             result.add(convert(object));
         }
         return result;
-    }
-
-    private List<T> handleNullCollection() {
-        final List<T> nullResult;
-        switch (nullListConversionStrategy) {
-            case RAISE_ERROR:
-                throw new IllegalArgumentException("'objects' cannot be null");
-            case RETURN_NULL:
-                nullResult = null;
-                break;
-            case RETURN_EMPTY_LIST:
-                // fall through to default;
-            default:
-                nullResult = new ArrayList<>();
-                break;
-        }
-        return nullResult;
     }
 
     /**

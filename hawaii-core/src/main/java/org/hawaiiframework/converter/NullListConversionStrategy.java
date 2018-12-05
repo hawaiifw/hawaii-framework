@@ -16,11 +16,22 @@
 
 package org.hawaiiframework.converter;
 
+import java.util.List;
+
 /**
  * Strategy how to handle {@code null} values in lists to be converted.
+ *
+ * @param <T> The type of the list element that should be returned.
  */
-public enum NullListConversionStrategy {
-    RETURN_EMPTY_LIST,
-    RETURN_NULL,
-    RAISE_ERROR
+@FunctionalInterface
+public interface NullListConversionStrategy<T> {
+
+    /**
+     * Applies the strategy and returns the list.
+     *
+     * The strategy might not always return a list, it could, for instance, throw an exception or simply return {@code null}.
+     *
+     * @return The, optionally {@code null} list.
+     */
+    List<T> apply();
 }
