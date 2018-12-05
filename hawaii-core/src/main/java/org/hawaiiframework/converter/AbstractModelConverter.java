@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
+import static org.hawaiiframework.converter.NullListConversionStrategy.RETURN_EMPTY_LIST;
 
 /**
  * Abstract {@link ModelConverter} implementation.
@@ -41,13 +42,26 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
      */
     private final Class<T> targetType;
 
+    private final NullListConversionStrategy nullListConversionStrategy;
+
     /**
      * Constructs a {@link AbstractModelConverter}.
      *
      * @param targetType the target type
      */
     public AbstractModelConverter(final Class<T> targetType) {
+        this(targetType, RETURN_EMPTY_LIST);
+    }
+
+    /**
+     * Constructs a {@link AbstractModelConverter}.
+     *
+     * @param targetType                 the target type.
+     * @param nullListConversionStrategy the strategy how to handle null lists.
+     */
+    public AbstractModelConverter(final Class<T> targetType, final NullListConversionStrategy nullListConversionStrategy) {
         this.targetType = requireNonNull(targetType, "'targetType' must not be null");
+        this.nullListConversionStrategy = requireNonNull(nullListConversionStrategy, "'nullListConversionStrategy' must not be null");
     }
 
     /**
@@ -68,12 +82,31 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
      */
     @Override
     public List<T> convert(final Iterable<? extends S> objects) {
-        requireNonNull(objects, "'objects' must not be null");
+        if (objects == null) {
+            return handleNullCollection();
+        }
         final List<T> result = new ArrayList<>();
         for (final S object : objects) {
             result.add(convert(object));
         }
         return result;
+    }
+
+    private List<T> handleNullCollection() {
+        final List<T> nullResult;
+        switch (nullListConversionStrategy) {
+            case RAISE_ERROR:
+                throw new IllegalArgumentException("'objects' cannot be null");
+            case RETURN_NULL:
+                nullResult = null;
+                break;
+            case RETURN_EMPTY_LIST:
+                // fall through to default;
+            default:
+                nullResult = new ArrayList<>();
+                break;
+        }
+        return nullResult;
     }
 
     /**
