@@ -1,5 +1,6 @@
 org.hawaiiframework.aspect
 org.hawaiiframework.async
+org.hawaiiframework.async.config
 org.hawaiiframework.async.exception
 org.hawaiiframework.async.http
 org.hawaiiframework.async.model
