@@ -3,6 +3,7 @@ rootProject.name = "hawaii"
 def String[] modules = [
         "hawaii-async",
         "hawaii-autoconfigure",
+        "hawaii-cache",
         "hawaii-core",
         "hawaii-logging",
         "hawaii-test"
@@ -11,6 +12,7 @@ def String[] modules = [
 def String[] starters = [
         "hawaii-starter",
         "hawaii-starter-async",
+        "hawaii-starter-cache",
         "hawaii-starter-logging",
         "hawaii-starter-rest",
         "hawaii-starter-test"

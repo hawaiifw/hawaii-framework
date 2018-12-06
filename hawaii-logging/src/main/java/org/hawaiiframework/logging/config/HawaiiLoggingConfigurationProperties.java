@@ -68,10 +68,10 @@ public class HawaiiLoggingConfigurationProperties {
     private HttpHeaderLoggingFilterProperties transactionId;
 
     /**
-     * Configuration properties for the class method logging filter.
+     * Configuration properties for the transaction type logging filter.
      */
     @NestedConfigurationProperty
-    private LoggingFilterProperties classMethodName;
+    private LoggingFilterProperties transactionType;
 
     /**
      * Configuration properties for the user details logging filter.
@@ -206,21 +206,21 @@ public class HawaiiLoggingConfigurationProperties {
     }
 
     /**
-     * Getter for the class method name filter properties.
+     * Getter for the transaction type filter properties.
      *
      * @return the properties
      */
-    public LoggingFilterProperties getClassMethodName() {
-        return classMethodName;
+    public LoggingFilterProperties getTransactionType() {
+        return transactionType;
     }
 
     /**
-     * Setter for the class method name filter properties.
+     * Setter for the transaction type filter properties.
      *
-     * @param classMethodName the properties
+     * @param transactionType the properties
      */
-    public void setClassMethodName(final LoggingFilterProperties classMethodName) {
-        this.classMethodName = classMethodName;
+    public void setTransactionType(final LoggingFilterProperties transactionType) {
+        this.transactionType = transactionType;
     }
 
 }

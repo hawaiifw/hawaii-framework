@@ -24,7 +24,7 @@ import org.hawaiiframework.logging.web.filter.RequestIdFilter;
 import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
 import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
 import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
-import org.hawaiiframework.logging.web.filter.ClassMethodNameFilter;
+import org.hawaiiframework.logging.web.filter.TransactionTypeFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -215,28 +215,28 @@ public class HawaiiLoggingConfiguration {
     }
 
     /**
-     * Create the {@link ClassMethodNameFilter} bean.
+     * Create the {@link TransactionTypeFilter} bean.
      *
      * @param applicationContext the application context of the Spring Boot Application
-     * @return the {@link ClassMethodNameFilter} bean, wrapped in a {@link FilterRegistrationBean}
+     * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.class-method-name", name = "enabled")
-    public ClassMethodNameFilter classMethodNameFilter(final ApplicationContext applicationContext) {
-        return new ClassMethodNameFilter(applicationContext);
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled")
+    public TransactionTypeFilter transactionTypeFilter(final ApplicationContext applicationContext) {
+        return new TransactionTypeFilter(applicationContext);
     }
 
     /**
-     * Register the {@link ClassMethodNameFilter} bean.
+     * Register the {@link TransactionTypeFilter} bean.
      *
-     * @param classMethodNameFilter the class method name filter
-     * @return the {@link ClassMethodNameFilter} bean, wrapped in a {@link FilterRegistrationBean}
+     * @param transactionNameFilter the transaction name filter
+     * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.class-method-name", name = "enabled")
-    public FilterRegistrationBean classMethodNameFilterRegistration(final ClassMethodNameFilter classMethodNameFilter) {
-        final var filterProperties = hawaiiLoggingConfigurationProperties.getClassMethodName();
-        return createFilterRegistrationBean(classMethodNameFilter, filterProperties, ALL_DISPATCHER_TYPES);
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-name", name = "enabled")
+    public FilterRegistrationBean transactionTypeFilterRegistration(final TransactionTypeFilter transactionNameFilter) {
+        final var filterProperties = hawaiiLoggingConfigurationProperties.getTransactionType();
+        return createFilterRegistrationBean(transactionNameFilter, filterProperties, ALL_DISPATCHER_TYPES);
     }
 
     /**
