@@ -19,6 +19,7 @@ package org.hawaiiframework.async.config;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.hawaiiframework.async.AbortableTaskDecorator;
+import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.ExecutorProperties;
 import org.slf4j.Logger;
@@ -97,7 +98,7 @@ public class AsyncExecutorInitializer {
     }
 
     private void registerDefaultExecutor(final ThreadPoolTaskExecutor executor) {
-        defaultExecutor = executor;
+        defaultExecutor = new DelegatingExecutor(executor, configuration, configuration.getDefaultExecutor());
     }
 
     @SuppressWarnings("PMD.CommentRequired")
