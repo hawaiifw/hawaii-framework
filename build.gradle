@@ -1,27 +1,27 @@
 buildscript {
     ext {
-        asciidoctorjVersion               = "1.5.7"
-        asciidoctorjDiagramVersion        = "1.5.9"
-        asciidoctorjPdfVersion            = "1.5.0-alpha.16"
-        asciidoctorPluginVersion          = "1.5.8.1"
-        bouncycastleVersion               = "1.60"
-        checkstyleToolVersion             = "8.12"
-        commonsIoVersion                  = "2.6"
-        commonsTextVersion                = "1.6"
+        asciidoctorjVersion = "1.5.7"
+        asciidoctorjDiagramVersion = "1.5.9"
+        asciidoctorjPdfVersion = "1.5.0-alpha.16"
+        asciidoctorPluginVersion = "1.5.8.1"
+        bouncycastleVersion = "1.60"
+        checkstyleToolVersion = "8.12"
+        commonsIoVersion = "2.6"
+        commonsTextVersion = "1.6"
         dependencyManagementPluginVersion = "1.0.6.RELEASE"
-        findbugsAnnotationsVersion        = "3.0.1"
-        jasyptVersion                     = "1.9.2"
-        javaVersion                       = "11"
-        jrubyVersion                      = "9.1.17.0"
-        jsonVersion                       = "20180130"
-        logbackVersion                    = "1.2.3"
-        pmdToolVersion                    = "6.9.0"
-        powerMockVersion                  = "2.0.0-RC.1"
-        propdepsPluginVersion             = "0.0.10.RELEASE"
-        spotbugsPluginVersion             = "1.6.5"
-        spotbugsToolVersion               = "3.1.8"
-        springBootVersion                 = "2.1.0.RELEASE"
-        versionsPluginVersion             = "0.20.0"
+        findbugsAnnotationsVersion = "3.0.1"
+        jasyptVersion = "1.9.2"
+        javaVersion = "11"
+        jrubyVersion = "9.1.17.0"
+        jsonVersion = "20180130"
+        logbackVersion = "1.2.3"
+        pmdToolVersion = "6.9.0"
+        powerMockVersion = "2.0.0-RC.1"
+        propdepsPluginVersion = "0.0.10.RELEASE"
+        spotbugsPluginVersion = "1.6.5"
+        spotbugsToolVersion = "3.1.8"
+        springBootVersion = "2.1.0.RELEASE"
+        versionsPluginVersion = "0.20.0"
     }
     repositories {
         jcenter()
@@ -296,13 +296,32 @@ project("hawaii-autoconfigure") {
         compile "org.yaml:snakeyaml"
         compileOnly project(":hawaii-async")
         compileOnly project(":hawaii-logging")
+        compileOnly project(":hawaii-cache")
         compileOnly "com.fasterxml.jackson.core:jackson-databind"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
         compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compileOnly "javax.servlet:javax.servlet-api"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly("org.springframework.data:spring-data-redis")
+        compileOnly("redis.clients:jedis")
         testCompile "org.hamcrest:hamcrest-core"
         testCompile "org.hamcrest:hamcrest-library"
+    }
+}
+
+project("hawaii-cache") {
+
+    description = "Hawaii Cache"
+
+    dependencies {
+        compile project(":hawaii-core")
+        compile("javax.validation:validation-api")
+        compile("org.apache.commons:commons-dbcp2")
+        compile("org.springframework.boot:spring-boot")
+        compileOnly("org.springframework.data:spring-data-redis")
+        compileOnly("redis.clients:jedis")
+        testCompile("org.springframework.data:spring-data-redis")
+        testCompile("redis.clients:jedis")
     }
 }
 
@@ -368,6 +387,16 @@ project("hawaii-starter-async") {
     dependencies {
         compile project(":hawaii-starter")
         compile project(":hawaii-async")
+    }
+}
+
+project("hawaii-starter-cache") {
+
+    description = "Hawaii Starter Cache"
+
+    dependencies {
+        compile project(":hawaii-starter")
+        compile project(":hawaii-cache")
     }
 }
 
@@ -451,14 +480,14 @@ configure(rootProject) {
 
         // If can be removed when jruby 9.2.1.0 is used https://github.com/jruby/jruby/issues/5204
         if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {
-            backends.removeIf { it == "pdf"}
+            backends.removeIf { it == "pdf" }
         }
 
         sourceDir project.file("src/asciidoc")
 
-        attributes  "revnumber": project.version,
-                    "spring-version": "${dependencyManagement.importedProperties['spring.version']}",
-                    "spring-boot-version": "${dependencyManagement.importedProperties['spring-boot.version']}"
+        attributes "revnumber": project.version,
+                "spring-version": "${dependencyManagement.importedProperties['spring.version']}",
+                "spring-boot-version": "${dependencyManagement.importedProperties['spring-boot.version']}"
 
         // Split resources in 'real' images and generated resources (by asciidoctor-diagram)
         // so we can ignore the generated once. Bundle in a single resources directory because
@@ -511,11 +540,11 @@ configure(rootProject) {
         classifier = "docs"
         description = "Builds -${classifier} archive containing Javadoc API and reference documentation."
 
-        from (api) {
+        from(api) {
             into "api"
         }
 
-        from (asciidoctor) {
+        from(asciidoctor) {
             include "html5/**/*.*"
             include "pdf/index.pdf"
             into "reference"
@@ -542,7 +571,7 @@ configure(rootProject) {
         }
 
         coreprojects.each { subproject ->
-            into ("libs") {
+            into("libs") {
                 from subproject.jar
                 if (subproject.tasks.findByPath("sourcesJar")) {
                     from subproject.sourcesJar

@@ -16,19 +16,7 @@
 
 package org.hawaiiframework.time;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.MonthDay;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,6 +28,9 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * Be aware that third-party libraries being used by the application do obviously not use {@code HawaiiTime} and probably instantiate date
  * and time objects based on the {@code System} time.
+ * <p>
+ * Furthermore this class should be injected using constructor injection. This will provide the flexibility to test this object using the
+ * the fixed clock methods.
  *
  * @author Marcel Overdijk
  * @since 2.0.0
@@ -120,6 +111,16 @@ public class HawaiiTime {
      */
     public void setZone(final ZoneId zone) {
         this.zone = zone;
+    }
+
+    /**
+     * Calculates the difference between this instance and the provided {@link Instant}.
+     *
+     * @param time which to compare
+     * @return the result of the of the difference calculation as a {@link Long}
+     */
+    public Long between(final Instant time) {
+        return Duration.between(instant(), time).toMillis();
     }
 
     /**
@@ -298,4 +299,5 @@ public class HawaiiTime {
     public ZonedDateTime zonedDateTime() {
         return ZonedDateTime.now(this.clock);
     }
+
 }
