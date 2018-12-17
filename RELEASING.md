@@ -2,6 +2,7 @@
 
 Follow the steps below for publishing a new release.
 
+* [ ] Update the release notes in `src/dist/release-notes.md`.
 * [ ] Set the new version in `gradle.properties`. E.g. change `version=2.0.0.BUILD-SNAPSHOT` to `version=2.0.0.M3`.
 * [ ] Execute `./gradlew clean build install` and verify the build is successful.
 * [ ] Push the changes. This will trigger a Travis build which uploads the artifacts to the Sonatype OSSRH repository.
