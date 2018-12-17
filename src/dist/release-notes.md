@@ -1,5 +1,28 @@
 # Release Notes #
 
+## 3.0.0.M4 (unreleased)
+* Allow Async annotation without an executor name
+* Use delegating executor for the default executor
+* Redis cache implementation
+* Added strategy how to handle null lists in abstract model converter
+* Refactored kibana log field names from '.' to '_'
+
+## 3.0.0.M3
+* Change .yml files to snake case
+* Documentation updates
+* Added new logging filter that inserts the controller and the method name into the logging context
+* Only use MdcContext indirectly, through KibanaLogContext
+* Change dependendies of ValidationErrorResponseEnricher and HawaiiResponseEntityExceptionHandler 
+  to interfaces instead of the actual implementation
+
+## 3.0.0.M2
+* Clear the MDC after test
+* More unit tests
+* License header fixes
+* Disable Asciidoc PDF generation (prevented building on Windows)
+* Updated to Spring Boot 2.1.0.RELEASE + other dependencies
+* Build on JDK 11
+
 ## 3.0.0.M1
 
 ### General
