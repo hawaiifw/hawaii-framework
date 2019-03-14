@@ -10,9 +10,11 @@ Follow the steps below for publishing a new release.
 * [ ] Login into https://oss.sonatype.org/ and navigate to the Staging Repositories.
       Scroll to the bottom and verify the contents of the `orghawaiiframework-xxxx` repository.
       It should contain the new uploaded artifacts.
-      Close and then Release the repository to activate the Maven Central synchronization (which will approx. 1 hour).
+      Close and then Release the repository to activate the Maven Central synchronization (which will take approx. 1 hour).
 * [ ] Create a new tag and push it to origin:
       `git tag -a v[version] -m "Release v[version]"`
       `git push origin v[version]`
 * [ ] Change back the version in `gradle.properties` to the `BUILD-SNAPSHOT` and push the change.
-* [ ] After the new version is synchronized to Maven Central update the links in https://github.com/hawaiifw/hawaii-framework/blob/gh-pages/_includes/releases.html (in the `gh-pages` branch) to display the new version on http://www.hawaiiframework.org/. 
+* [ ] After the new version is synchronized to Maven Central update the links in 
+      https://github.com/hawaiifw/hawaii-framework/blob/gh-pages/_includes/releases.html (in the `gh-pages` branch) to 
+      display the new version on http://www.hawaiiframework.org/. 
