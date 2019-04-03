@@ -330,6 +330,7 @@ project("hawaii-core") {
     description = "Hawaii Core"
 
     dependencies {
+        compile "commons-codec:commons-codec"
         compile "org.apache.commons:commons-lang3"
         compile "org.hamcrest:hamcrest-core"
         compile "org.hamcrest:hamcrest-library"
@@ -343,7 +344,10 @@ project("hawaii-core") {
         compileOnly "org.springframework:spring-context"
         compileOnly "org.springframework:spring-web"
         compileOnly "org.springframework:spring-webmvc"
+        testCompile "javax.servlet:javax.servlet-api"
         testCompile "org.springframework:spring-core"
+        testCompile "org.springframework:spring-web"
+        testCompile "org.springframework:spring-webmvc"
     }
 }
 
