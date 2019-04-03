@@ -146,7 +146,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ResponseEntity handleThrowable(final Throwable t, final WebRequest request) {
-        logger.error("", t);
+        logger.error("Unhandled exception", t);
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
     }
