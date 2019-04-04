@@ -1,6 +1,6 @@
 # Release Notes #
 
-## 3.0.0.M6 (NOT YET RELEASED)
+## 3.0.0.M6
 * Updated to Spring Boot 2.1.4.RELEASE + other dependencies
 * Added HexEncoder
 * Added HostResolver
