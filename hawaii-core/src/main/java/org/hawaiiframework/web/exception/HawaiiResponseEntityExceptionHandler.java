@@ -214,7 +214,6 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * The default implementation adds the following listeners:
      * <ul>
      * <li>{@link ErrorResponseStatusEnricher}</li>
-     * <li>{@link ErrorMessageResponseEnricher}</li>
      * <li>{@link RequestInfoErrorResponseEnricher}</li>
      * <li>{@link ValidationErrorResponseEnricher}</li>
      * <li>{@link ApiErrorResponseEnricher}</li>
@@ -222,7 +221,6 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     protected void configureResponseEnrichers() {
         addResponseEnricher(new ErrorResponseStatusEnricher());
-        addResponseEnricher(new ErrorMessageResponseEnricher());
         addResponseEnricher(new RequestInfoErrorResponseEnricher());
         addResponseEnricher(new ValidationErrorResponseEnricher(validationErrorResourceAssembler));
         addResponseEnricher(new ApiErrorResponseEnricher());
