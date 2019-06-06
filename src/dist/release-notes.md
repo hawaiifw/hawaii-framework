@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.M7
+* Remove ErrorMessageResponseEnricher from the default configuration to prevent information leakage
+
 ## 3.0.0.M6
 * Updated to Spring Boot 2.1.4.RELEASE + other dependencies
 * Added HexEncoder
