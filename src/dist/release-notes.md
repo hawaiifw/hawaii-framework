@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 2.0.0.M17
+* Remove ErrorMessageResponseEnricher from the default configuration to prevent information leakage
+
 ## 2.0.0.M16
 
 ### Hawaii logging
