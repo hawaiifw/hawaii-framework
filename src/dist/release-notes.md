@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 2.0.0.M18
+* Issue releasing 2.0.0.M17
+
 ## 2.0.0.M17
 * Remove ErrorMessageResponseEnricher from the default configuration to prevent information leakage
 
