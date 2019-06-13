@@ -15,7 +15,7 @@ openssl aes-256-cbc -K $encrypted_d349fd801c84_key -iv $encrypted_d349fd801c84_i
 
 echo "Publishing archives..."
 
-./gradlew -Psigning.keyId="$SIGNING_KEY" -Psigning.password="$SIGNING_PASSWORD" -Psigning.secretKeyRingFile="${TRAVIS_BUILD_DIR}/secring.gpg" uploadArchives
+./gradlew -Psigning.keyId="$SIGNING_KEY" -Psigning.password="$SIGNING_PASSWORD" -Psigning.secretKeyRingFile="${TRAVIS_BUILD_DIR}/secring.gpg" uploadArchives --debug
 
 # Deploy api and reference documentation to gh-pages
 
