@@ -4,6 +4,7 @@ org.hawaiiframework.async.config
 org.hawaiiframework.async.exception
 org.hawaiiframework.async.http
 org.hawaiiframework.async.model
+org.hawaiiframework.async.sql
 org.hawaiiframework.async.statistics
 org.hawaiiframework.async.timeout
 org.hawaiiframework.boot.autoconfigure
@@ -26,6 +27,8 @@ org.hawaiiframework.logging.logback
 org.hawaiiframework.logging.model
 org.hawaiiframework.logging.util
 org.hawaiiframework.logging.web.filter
+org.hawaiiframework.security.oauth2.config
+org.hawaiiframework.security.oauth2.provider.token
 org.hawaiiframework.sql
 org.hawaiiframework.test.mockmvc
 org.hawaiiframework.time
