@@ -6,6 +6,7 @@ def String[] modules = [
         "hawaii-cache",
         "hawaii-core",
         "hawaii-logging",
+        "hawaii-security",
         "hawaii-test"
 ]
 

@@ -8,6 +8,7 @@ buildscript {
         checkstyleToolVersion = "8.12"
         commonsIoVersion = "2.6"
         commonsTextVersion = "1.6"
+        dataSourceProxyVersion = "1.5.1"
         dependencyManagementPluginVersion = "1.0.6.RELEASE"
         findbugsAnnotationsVersion = "3.0.1"
         jasyptVersion = "1.9.3"
@@ -276,6 +277,7 @@ project("hawaii-async") {
     dependencies {
         compile project(":hawaii-logging")
         compile "javax.validation:validation-api"
+        compile "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         compile "org.springframework:spring-core"
         compile "org.springframework:spring-context"
         compile "org.springframework.boot:spring-boot"
@@ -370,6 +372,17 @@ project("hawaii-logging") {
         testCompile "org.powermock:powermock-module-junit4:${powerMockVersion}"
         testCompile "org.springframework.security:spring-security-core"
     }
+}
+
+project("hawaii-security") {
+
+    description = "Hawaii Security"
+
+    dependencies {
+        compile project(":hawaii-cache")
+        compile project(":hawaii-core")
+        compileOnly "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}"
+0    }
 }
 
 project("hawaii-starter") {

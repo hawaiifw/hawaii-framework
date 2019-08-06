@@ -1,5 +1,10 @@
 # Release Notes #
 
+## 3.0.0.M8
+* Updated to Spring Boot 2.1.6.RELEASE + other dependencies
+* Added hawaii-security module containing the HawaiiTokenService
+* Added Async utility classes and HawaiiQueryExecutionListener
+
 ## 3.0.0.M7
 * Remove ErrorMessageResponseEnricher from the default configuration to prevent information leakage
 
