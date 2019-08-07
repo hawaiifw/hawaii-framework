@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.Arrays;
  * @since 2.0.0
  */
 public enum KibanaLogFieldNames implements KibanaLogField {
+
     SESSION_ID("session_id"),
 
     TX_ID("tx_id"),
@@ -37,6 +38,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
 
     CALL_ID("call_id"),
     CALL_TYPE("call_type"),
+    CALL_METHOD("call_method"),
     CALL_DURATION("call_duration"),
     CALL_RESULT("call_result"),
 
