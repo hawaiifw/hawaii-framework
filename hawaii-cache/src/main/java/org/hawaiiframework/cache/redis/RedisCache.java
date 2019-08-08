@@ -64,6 +64,9 @@ public class RedisCache<T> implements Cache<T> {
      */
     private String keyPrefix;
 
+    /**
+     * Hawaii time, used to get the current time.
+     */
     private final HawaiiTime hawaiiTime;
 
 
