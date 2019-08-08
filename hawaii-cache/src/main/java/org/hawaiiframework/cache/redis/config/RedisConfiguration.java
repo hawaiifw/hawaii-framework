@@ -54,6 +54,7 @@ public class RedisConfiguration {
      * Constructor.
      *
      * @param properties the properties to create the redis beans.
+     * @param hawaiiTime The hawaii time.
      */
     @Autowired
     public RedisConfiguration(final RedisConfigurationProperties properties, final HawaiiTime hawaiiTime) {
