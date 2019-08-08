@@ -18,10 +18,12 @@ package org.hawaiiframework.cache.redis.config;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.hawaiiframework.cache.redis.HawaiiRedisCacheBuilder;
 import org.hawaiiframework.time.HawaiiTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -38,21 +40,41 @@ import java.util.HashSet;
 @EnableConfigurationProperties(RedisConfigurationProperties.class)
 public class RedisConfiguration {
 
+    /**
+     * Redis configuration properties.
+     */
     private final RedisConfigurationProperties properties;
 
-    public RedisConfiguration(final RedisConfigurationProperties properties) {
+    /**
+     * Hawaii time.
+     */
+    private final HawaiiTime hawaiiTime;
+
+    /**
+     * Constructor.
+     *
+     * @param properties the properties to create the redis beans.
+     */
+    @Autowired
+    public RedisConfiguration(final RedisConfigurationProperties properties, final HawaiiTime hawaiiTime) {
         this.properties = properties;
+        this.hawaiiTime = hawaiiTime;
     }
 
     /**
-     * Creates a new Jedis connection factory.
+     * Create a new {@link JedisConnectionFactory}.
      *
-     * @return a jedis connection factory.
+     * @return a new {@link JedisConnectionFactory}.
      */
     @Bean
     public JedisConnectionFactory jedisConnectionFactory(final RedisSentinelConfiguration sentinelConfiguration,
             final JedisPoolConfig poolConfig) {
-        final JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(sentinelConfiguration, poolConfig);
+        final JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder()
+                .usePooling()
+                .poolConfig(poolConfig)
+                .build();
+        final JedisConnectionFactory jedisConnectionFactory =
+                new JedisConnectionFactory(sentinelConfiguration, jedisClientConfiguration);
         jedisConnectionFactory.afterPropertiesSet();
         return jedisConnectionFactory;
     }
@@ -84,7 +106,7 @@ public class RedisConfiguration {
      */
     @Bean
     public HawaiiRedisCacheBuilder hawaiiRedisCacheBuilder(final JedisConnectionFactory jedisConnectionFactory) {
-        return new HawaiiRedisCacheBuilder(properties, jedisConnectionFactory, new HawaiiTime());
+        return new HawaiiRedisCacheBuilder(properties, jedisConnectionFactory, hawaiiTime);
     }
 
     private <T extends GenericObjectPoolConfig> T applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration,
