@@ -70,8 +70,7 @@ public class KibanaLogFilter extends AbstractGenericFilterBean {
         KibanaLogFields.set(METHOD, request.getMethod());
         KibanaLogFields.set(URI, request.getRequestURI());
         KibanaLogFields.set(CLIENT_IP, clientIpResolver.getClientIp(request));
-        LOGGER.info("Start request '{}', '{}' from '{}'", request.getMethod(), request.getRequestURI(),
-                clientIpResolver.getClientIp(request));
+        LOGGER.info("Start request '{}', '{}'", request.getMethod(), request.getRequestURI());
         KibanaLogFields.unsetLogType();
     }
 }
