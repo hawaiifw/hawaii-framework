@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.BACKEND_FAILURE;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.SUCCESS;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.TIME_OUT;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_METHOD;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_RESPONSE_BODY;
@@ -51,11 +53,6 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
      * The logger to use.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingClientHttpRequestInterceptor.class);
-
-    /**
-     * Constant for UTF-8 charset.
-     */
-    private static final String UTF_8 = "UTF-8";
 
     /**
      * The configured newline to look for.
@@ -94,9 +91,11 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     }
 
     private void logRequest(final HttpRequest request, final byte[] body) {
+        KibanaLogFields.set(CALL_METHOD, request.getMethodValue());
         KibanaLogFields.setLogType(CALL_REQUEST_BODY);
-        LOGGER.debug("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
+        LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
                 httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
+
         KibanaLogFields.unsetLogType();
     }
 
@@ -116,7 +115,8 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
             KibanaLogFields.setCallResult(BACKEND_FAILURE);
         }
 
-        LOGGER.debug("Got response '{} {}':\n{}", statusCode, statusText, httpRequestResponseLogUtil.createLogString(headers, body));
+        LOGGER.info("Got response '{} {}':\n{}", statusCode, statusText, httpRequestResponseLogUtil.createLogString(headers, body));
+
         KibanaLogFields.unsetLogType();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,17 @@ package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_ID;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_TYPE;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
 
 /**
  * Delegating Runnable that copies the MDC to the executing thread before running the delegate.
@@ -50,8 +55,7 @@ public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
      * @param delegate          the delegate to run.
      * @param sharedTaskContext the abort strategy to set.
      */
-    public AbortableTaskRunnable(@NotNull final Runnable delegate,
-                                 @NotNull final SharedTaskContext sharedTaskContext) {
+    public AbortableTaskRunnable(@NotNull final Runnable delegate, @NotNull final SharedTaskContext sharedTaskContext) {
         super(requireNonNull(sharedTaskContext));
         this.delegate = requireNonNull(delegate);
     }
@@ -65,15 +69,24 @@ public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
 
         final String taskId = sharedTaskContext.getTaskId();
 
+        KibanaLogFields.setLogType(CALL_START);
+        KibanaLogFields.set(CALL_ID, taskId);
+        KibanaLogFields.set(CALL_TYPE, sharedTaskContext.getTaskName());
+
+        LOGGER.info("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), taskId);
+
+        KibanaLogFields.unsetLogType();
+
         try {
-            LOGGER.trace("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), taskId);
             delegate.run();
         } finally {
             sharedTaskContext.finish();
             final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
+            KibanaLogFields.setLogType(CALL_END);
             LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).", sharedTaskContext.getTaskName(),
                     taskId, taskStatistics.getTotalTime() / 1E6, taskStatistics.getQueueTime() / 1E6,
                     taskStatistics.getExecutionTime() / 1E6);
+            KibanaLogFields.unsetLogType();
         }
     }
 
