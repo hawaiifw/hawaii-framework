@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.xx
+* Updated to Spring Boot 2.1.7.RELEASE
+
 ## 3.0.0.M8
 * Updated to Spring Boot 2.1.6.RELEASE + other dependencies
 * Added hawaii-security module containing the HawaiiTokenService
