@@ -96,9 +96,7 @@ public final class AsyncUtil {
      * @param <T>     the return type
      */
     @SuppressWarnings("rawtypes")
-    public static <T> void waitForCompletion(final Long timeout,
-            final TimeUnit unit,
-            final List<CompletableFuture<T>> futures) {
+    public static <T> void waitForCompletion(final Long timeout, final TimeUnit unit, final List<CompletableFuture<T>> futures) {
         waitForCompletion(timeout, unit, futures.toArray(new CompletableFuture[] {}));
     }
 
