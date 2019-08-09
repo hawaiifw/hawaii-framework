@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static net.ttddyy.dsproxy.proxy.ParameterSetOperation.isSetNullParameterOperation;
+import static org.apache.commons.lang3.StringUtils.chomp;
 import static org.hawaiiframework.logging.util.LogUtil.indent;
 
 /**
@@ -33,12 +34,11 @@ public class HawaiiQueryExecutionListener implements QueryExecutionListener {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
     public void beforeQuery(final ExecutionInfo execInfo, final List<QueryInfo> queryInfoList) {
         SharedTaskContextHolder.setTaskAbortStrategy(createAbortStrategy(execInfo));
 
         final QueryInfo queryInfo = queryInfoList.get(0);
-        final StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder(128);
         builder.append("Executing query:").append(LINE_SEPARATOR).append(queryInfo.getQuery());
 
         boolean parameterHeaderAppended = false;
@@ -62,7 +62,7 @@ public class HawaiiQueryExecutionListener implements QueryExecutionListener {
         if (value.endsWith("," + LINE_SEPARATOR)) {
             value = value.substring(0, value.length() - 1 - LINE_SEPARATOR.length());
         }
-        LOGGER.debug(indent(value, "  "));
+        LOGGER.info(indent(value, "  "));
     }
 
     private TaskAbortStrategy createAbortStrategy(final ExecutionInfo execInfo) {
@@ -75,5 +75,12 @@ public class HawaiiQueryExecutionListener implements QueryExecutionListener {
     @Override
     public void afterQuery(final ExecutionInfo execInfo, final List<QueryInfo> queryInfoList) {
         LOGGER.debug("Execution of query took '{}' msec.", execInfo.getElapsedTime());
+        if (!execInfo.isSuccess()) {
+            logFailure(execInfo.getThrowable());
+        }
+    }
+
+    private void logFailure(final Throwable throwable) {
+        LOGGER.info("Query execution failed with error '{}'.", chomp(throwable.getMessage()));
     }
 }
