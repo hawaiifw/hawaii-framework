@@ -5,6 +5,10 @@
 * Logging improvements (#44)
 * Added `timeOutInMinutes` to `HawaiiRedisCacheBuilder` (#45)
 * Renamed Async related classes and methods (#46)
+  This causes breaking changes with the following upgrade instructions:
+  * `VoidResult` → `Void`
+  * `AsyncUtil.invokeAndLogError()` → `AsyncUtil.invoke()`
+  * `AsyncUtil.expectErrorInTimeoutOrStopWaiting()` → `AsyncUtil.waitForCompletion()`
 
 ## 3.0.0.M8
 * Updated to Spring Boot 2.1.6.RELEASE + other dependencies
@@ -73,5 +77,5 @@
 * Do not log the request content in case of a file upload
 * Create separate beans for individual logging filters
 * Various improvements
-** Define a default filter order, right after Spring security
-** All logging filters updated from downstream project
+  * Define a default filter order, right after Spring security
+  * All logging filters updated from downstream project
