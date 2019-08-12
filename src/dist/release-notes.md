@@ -1,6 +1,6 @@
 # Release Notes #
 
-## 3.0.0.xx
+## 3.0.0.M9
 * Updated to Spring Boot 2.1.7.RELEASE
 * Logging improvements (#44)
 * Added `timeOutInMinutes` to `HawaiiRedisCacheBuilder` (#45)
