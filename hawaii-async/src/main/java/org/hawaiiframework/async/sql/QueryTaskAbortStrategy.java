@@ -27,6 +27,8 @@ public class QueryTaskAbortStrategy implements TaskAbortStrategy {
 
     /**
      * Create a new instance for the given {@code statement}.
+     *
+     * @param statement The statement to abort.
      */
     public QueryTaskAbortStrategy(final Statement statement) {
         this.statement = statement;
