@@ -4,6 +4,7 @@
 * Updated to Spring Boot 2.1.7.RELEASE
 * Logging improvements (#44)
 * Added `timeOutInMinutes` to `HawaiiRedisCacheBuilder` (#45)
+* Renamed Async related classes and methods (#46)
 
 ## 3.0.0.M8
 * Updated to Spring Boot 2.1.6.RELEASE + other dependencies
