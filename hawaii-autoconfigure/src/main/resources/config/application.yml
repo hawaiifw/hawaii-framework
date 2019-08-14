@@ -18,6 +18,13 @@ hawaii:
   async:
     configuration: ./config/async-config.yml
   logging:
+    # For console logging, the allowed content types, empty means allow all,
+    # including binary files, so not a good idea.
+    allowed-content-types:
+      - application/json
+      - text/plain
+      - text/xml
+      - application/vnd.spring-boot.actuator.v1+json
     filters:
       kibana-log-cleanup:
         enabled: true
@@ -43,15 +50,6 @@ hawaii:
       request-response:
         enabled: true
         order: -300
-        fallback-to-file: true
-        directory: /tmp
-        max-log-size: 50k
-        # For console logging, the allowed content types, empty means allow all.
-        allowed-content-types:
-        - application/json
-        - text/plain
-        - text/xml
-        - application/vnd.spring-boot.actuator.v1+json
       user-details:
         enabled: true
         order: 110

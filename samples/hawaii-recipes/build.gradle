@@ -2,6 +2,7 @@ apply plugin: "org.springframework.boot"
 
 dependencies {
     compile project(":hawaii-starter-rest")
+    compile project(":hawaii-starter-logging")
     compile "org.springframework.boot:spring-boot-actuator"
     compile "org.springframework.boot:spring-boot-devtools"
     compile "org.springframework.boot:spring-boot-starter-aop"

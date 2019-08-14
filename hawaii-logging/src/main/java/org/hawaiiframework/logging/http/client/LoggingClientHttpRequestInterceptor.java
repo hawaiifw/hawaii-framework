@@ -15,6 +15,7 @@
  */
 package org.hawaiiframework.logging.http.client;
 
+import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -29,6 +31,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.BACKEND_FAILURE;
@@ -60,6 +63,11 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     private static final String NEW_LINE = System.getProperty("line.separator");
 
     /**
+     * The Hawaii logging configuration properties.
+     */
+    private final HawaiiLoggingConfigurationProperties configuration;
+
+    /**
      * The request/response log util to use for generating log statements.
      */
     private final HttpRequestResponseLogUtil httpRequestResponseLogUtil;
@@ -67,7 +75,10 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     /**
      * The constructor.
      */
-    public LoggingClientHttpRequestInterceptor(final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
+    public LoggingClientHttpRequestInterceptor(
+            final HawaiiLoggingConfigurationProperties configuration,
+            final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
+        this.configuration = configuration;
         this.httpRequestResponseLogUtil = httpRequestResponseLogUtil;
     }
 
@@ -102,8 +113,10 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     private void logResponse(final ClientHttpResponse response) throws IOException {
         final HttpStatus statusCode = response.getStatusCode();
         final String statusText = response.getStatusText();
-        final String body = readResponseBody(response);
-
+        String body = "";
+        if (contentTypeCanBeLogged(getContentType(response))) {
+            body = readResponseBody(response);
+        }
         logResponse(statusCode, statusText, response.getHeaders(), body);
     }
 
@@ -138,6 +151,32 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
         }
 
         return inputStringBuilder.toString();
+    }
+
+    private String getContentType(final ClientHttpResponse response) {
+        final HttpHeaders httpHeaders = getHttpHeaders(response);
+        final MediaType contentType = getMediaType(httpHeaders);
+        return getContentTypeAsString(contentType);
+    }
+
+    private HttpHeaders getHttpHeaders(final ClientHttpResponse response) {
+        return response.getHeaders();
+    }
+
+    private MediaType getMediaType(final HttpHeaders httpHeaders) {
+        return httpHeaders.getContentType();
+    }
+
+    private String getContentTypeAsString(final MediaType mediaType) {
+        return mediaType.getType() + '/' + mediaType.getSubtype();
+    }
+
+    private boolean contentTypeCanBeLogged(final String contentType) {
+        return getAllowedContentTypes().contains(contentType);
+    }
+
+    private List<String> getAllowedContentTypes() {
+        return configuration.getAllowedContentTypes();
     }
 
 }

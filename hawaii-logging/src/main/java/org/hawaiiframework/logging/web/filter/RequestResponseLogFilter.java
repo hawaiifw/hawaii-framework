@@ -16,15 +16,13 @@
 package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
-import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
+import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.model.KibanaLogFields;
-import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.servlet.FilterChain;
@@ -33,8 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,7 +38,6 @@ import static java.lang.String.format;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HTTP_STATUS;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY;
-import static org.hawaiiframework.logging.util.LogUtil.writeToFile;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsInternalRedirect;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsInternalRedirect;
@@ -68,19 +63,9 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     private final Set<String> contentTypesToLog = new HashSet<>();
 
     /**
-     * The maximum length to log to console.
-     */
-    private long maxContentLength;
-
-    /**
-     * The log directory.
-     */
-    private Path logDir;
-
-    /**
      * The configuration for the logging.
      */
-    private final RequestResponseLogFilterConfiguration configuration;
+    private final HawaiiLoggingConfigurationProperties configuration;
 
     /**
      * The request response log util.
@@ -90,7 +75,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     /**
      * The constructor.
      */
-    public RequestResponseLogFilter(final RequestResponseLogFilterConfiguration configuration,
+    public RequestResponseLogFilter(final HawaiiLoggingConfigurationProperties configuration,
             final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
         super();
         this.configuration = configuration;
@@ -141,15 +126,9 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         KibanaLogFields.setLogType(REQUEST_BODY);
         LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
         try {
-            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+            if (mayLogContentType(contentType)) {
                 LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
-            } else {
-                if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
-                    // In case of file upload the request reader has already been accessed, so skip
-                    writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
-                }
             }
-
         } finally {
             wrappedRequest.reset();
         }
@@ -168,10 +147,8 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
                 httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
 
-        if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+        if (mayLogContentType(contentType)) {
             LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
-        } else if (mayLogToFile()) {
-            writeToFile(logDir, format("%s.out", RequestId.get()), wrappedResponse.getContentInputStream());
         }
         KibanaLogFields.unsetLogType();
     }
@@ -187,14 +164,6 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
             final HttpHeaders headers = httpRequestResponseLogUtil.getHeaders(response);
             return httpRequestResponseLogUtil.createLogString(statusLine, headers, baos.toByteArray(), response.getCharacterEncoding());
         }
-    }
-
-    private boolean mayLogToFile() {
-        return configuration.isFallbackToFile();
-    }
-
-    private boolean mayLogLength(final int length) {
-        return length < maxContentLength || length == 0;
     }
 
     private boolean mayLogContentType(final String contentType) {
@@ -214,8 +183,6 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     @Override
     protected void initFilterBean() {
         contentTypesToLog.addAll(configuration.getAllowedContentTypes());
-        maxContentLength = configuration.getMaxLogSizeInBytes();
-        logDir = Paths.get(configuration.getDirectory());
     }
 
 }

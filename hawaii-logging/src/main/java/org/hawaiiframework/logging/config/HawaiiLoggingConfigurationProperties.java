@@ -19,208 +19,62 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Model class that represents the Hawaii logging configuration properties.
+ * Class to hold the configuration properties for the logging filter.
  *
- * @author Paul Klos
- * @author Wouter Eerdekens
+ * @author Rutger Lubbers
  * @since 2.0.0
  */
 @Component
-@ConfigurationProperties(prefix = "hawaii.logging.filters")
+@ConfigurationProperties(prefix = "hawaii.logging")
 @SuppressWarnings("PMD.DataClass")
 public class HawaiiLoggingConfigurationProperties {
 
     /**
-     * Configuration properties for the Kibana log filter.
+     * The content types we log to the console / log file(s).
+     */
+    private List<String> allowedContentTypes = new ArrayList<>();
+
+    /**
+     * The logging filters configuration properties.
      */
     @NestedConfigurationProperty
-    private HttpHeaderLoggingFilterProperties kibanaLog;
+    private HawaiiLoggingFiltersConfigurationProperties filters;
 
     /**
-     * Configuration properties for the Kibana log cleanup filter.
-     */
-    @NestedConfigurationProperty
-    private LoggingFilterProperties kibanaLogCleanup;
-
-    /**
-     * Configuration properties for the request duration logging filter.
-     */
-    @NestedConfigurationProperty
-    private LoggingFilterProperties requestDuration;
-
-    /**
-     * Configuration properties for the request-response logging filter.
-     */
-    @NestedConfigurationProperty
-    private RequestResponseLogFilterConfiguration requestResponse;
-
-    /**
-     * Configuration properties for the request id logging filter.
-     */
-    @NestedConfigurationProperty
-    private HttpHeaderLoggingFilterProperties requestId;
-
-    /**
-     * Configuration properties for the transaction id logging filter.
-     */
-    @NestedConfigurationProperty
-    private HttpHeaderLoggingFilterProperties transactionId;
-
-    /**
-     * Configuration properties for the transaction type logging filter.
-     */
-    @NestedConfigurationProperty
-    private LoggingFilterProperties transactionType;
-
-    /**
-     * Configuration properties for the user details logging filter.
-     */
-    @NestedConfigurationProperty
-    private LoggingFilterProperties userDetails;
-
-    /**
-     * Getter for the Kibana log filter properties.
+     * Getter for the allowed content types.
      *
+     * @return the allowed content types
+     */
+    public List<String> getAllowedContentTypes() {
+        return allowedContentTypes;
+    }
+
+    /**
+     * Setter for the allowed content types.
+     *
+     * @param allowedContentTypes the allowed content types
+     */
+    public void setAllowedContentTypes(final List<String> allowedContentTypes) {
+        this.allowedContentTypes = allowedContentTypes;
+    }
+
+    /**
+     * Getter for the logging filters configuration properties.
      * @return the properties
      */
-    public HttpHeaderLoggingFilterProperties getKibanaLog() {
-        return kibanaLog;
+    public HawaiiLoggingFiltersConfigurationProperties getFilters() {
+        return filters;
     }
 
     /**
-     * Setter for the Kibana log filter properties.
-     *
-     * @param kibanaLog the properties
+     * Setter for the logging filters configuration properties.
+     * @param filters the properties
      */
-    public void setKibanaLog(final HttpHeaderLoggingFilterProperties kibanaLog) {
-        this.kibanaLog = kibanaLog;
+    public void setFilters(final HawaiiLoggingFiltersConfigurationProperties filters) {
+        this.filters = filters;
     }
-
-    /**
-     * Getter for the Kibana log cleanup filter properties.
-     *
-     * @return the properties
-     */
-    public LoggingFilterProperties getKibanaLogCleanup() {
-        return kibanaLogCleanup;
-    }
-
-    /**
-     * Setter for the Kibana log cleanup filter properties.
-     *
-     * @param kibanaLogCleanup the properties
-     */
-    public void setKibanaLogCleanup(final LoggingFilterProperties kibanaLogCleanup) {
-        this.kibanaLogCleanup = kibanaLogCleanup;
-    }
-
-    /**
-     * Getter for the request duration logging filter properties.
-     *
-     * @return the properties
-     */
-    public LoggingFilterProperties getRequestDuration() {
-        return requestDuration;
-    }
-
-    /**
-     * Setter for the request duration logging filter properties.
-     *
-     * @param requestDuration the properties
-     */
-    public void setRequestDuration(final LoggingFilterProperties requestDuration) {
-        this.requestDuration = requestDuration;
-    }
-
-    /**
-     * Getter for the request-response logging filter properties.
-     *
-     * @return the properties
-     */
-    public RequestResponseLogFilterConfiguration getRequestResponse() {
-        return requestResponse;
-    }
-
-    /**
-     * Setter for the request-response logging filter properties.
-     *
-     * @param requestResponse the properties
-     */
-    public void setRequestResponse(final RequestResponseLogFilterConfiguration requestResponse) {
-        this.requestResponse = requestResponse;
-    }
-
-    /**
-     * Getter for the request id logging filter properties.
-     *
-     * @return the properties
-     */
-    public HttpHeaderLoggingFilterProperties getRequestId() {
-        return requestId;
-    }
-
-    /**
-     * Setter for the request id logging filter properties.
-     *
-     * @param requestId the properties
-     */
-    public void setRequestId(final HttpHeaderLoggingFilterProperties requestId) {
-        this.requestId = requestId;
-    }
-
-    /**
-     * Getter for the transaction id logging filter properties.
-     *
-     * @return the properties
-     */
-    public HttpHeaderLoggingFilterProperties getTransactionId() {
-        return transactionId;
-    }
-
-    /**
-     * Setter for the transaction id logging filter properties.
-     *
-     * @param transactionId the properties
-     */
-    public void setTransactionId(final HttpHeaderLoggingFilterProperties transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    /**
-     * Getter for the user details logging filter properties.
-     *
-     * @return the properties
-     */
-    public LoggingFilterProperties getUserDetails() {
-        return userDetails;
-    }
-
-    /**
-     * Setter for the user details logging filter properties.
-     *
-     * @param userDetails the properties
-     */
-    public void setUserDetails(final LoggingFilterProperties userDetails) {
-        this.userDetails = userDetails;
-    }
-
-    /**
-     * Getter for the transaction type filter properties.
-     *
-     * @return the properties
-     */
-    public LoggingFilterProperties getTransactionType() {
-        return transactionType;
-    }
-
-    /**
-     * Setter for the transaction type filter properties.
-     *
-     * @param transactionType the properties
-     */
-    public void setTransactionType(final LoggingFilterProperties transactionType) {
-        this.transactionType = transactionType;
-    }
-
 }

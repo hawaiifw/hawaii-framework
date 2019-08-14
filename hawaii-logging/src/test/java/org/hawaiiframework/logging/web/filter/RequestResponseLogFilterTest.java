@@ -15,7 +15,7 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
+import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,7 +70,7 @@ public class RequestResponseLogFilterTest {
         final HttpRequestResponseLogUtil httpRequestResponseLogUtil = mock(HttpRequestResponseLogUtil.class);
         when(httpRequestResponseLogUtil.getRequestUri(request)).thenReturn("some uri");
 
-        filter = new RequestResponseLogFilter(mock(RequestResponseLogFilterConfiguration.class), httpRequestResponseLogUtil);
+        filter = new RequestResponseLogFilter(mock(HawaiiLoggingConfigurationProperties.class), httpRequestResponseLogUtil);
 
 
     }
