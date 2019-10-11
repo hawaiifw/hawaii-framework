@@ -18,19 +18,20 @@ package org.hawaiiframework.logging.model;
 import java.util.UUID;
 
 /**
- * Class that holds a transaction id in a ThreadLocal.
+ * Class that holds a subtransaction id in a ThreadLocal.
  *
- * @author Rutger Lubbers
+ * @author Maikel Geuns
  * @since 2.0.0
  */
-public final class TransactionId {
+@SuppressWarnings("PMD.ClassNamingConventions")
+public final class SubTransactionId {
 
     /**
      * The thread local id.
      */
     private static ThreadLocal<UUID> id = new InheritableThreadLocal<>();
 
-    private TransactionId() {
+    private SubTransactionId() {
         // private constructor for utility class.
     }
 
