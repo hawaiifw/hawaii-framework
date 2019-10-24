@@ -3,13 +3,13 @@
 echo "Publishing..."
 
 # Do not deploy archives when building pull request
-if [ "$TRAVIS_BRANCH" != "master" && "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
+if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
   exit 0
 fi
 
 # Decrypt secring.gpg
 
-openssl aes-256-cbc -K $encrypted_d349fd801c84_key -iv $encrypted_d349fd801c84_iv -in secring.gpg.enc -out secring.gpg -d
+openssl aes-256-cbc -K $encrypted_30f4b87b093a_key -iv $encrypted_30f4b87b093a_iv -in secring.gpg.enc -out secring.gpg -d
 
 # Deploy jar artifacts to Sonatype OSSRH
 
