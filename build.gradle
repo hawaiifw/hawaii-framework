@@ -171,6 +171,11 @@ nexus {
     snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
 
+project.ext {
+    nexusUsername = System.getenv("SONATYPE_OSSRH_USERNAME")
+    nexusPassword = System.getenv("SONATYPE_OSSRH_PASSWORD")
+}
+
 //modifyProm {
 //    project {
 //        name "Hawaii Framework"
