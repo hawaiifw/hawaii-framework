@@ -14,6 +14,7 @@ buildscript {
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
         classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
     }
 }
 
@@ -52,6 +53,7 @@ configure(allprojects) { project ->
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
+    apply plugin: "com.bmuschko.nexus"
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -103,9 +105,6 @@ configure(allprojects) { project ->
 }
 
 configure(subprojects - sampleprojects) { subproject ->
-
-    apply plugin: "maven"
-    apply plugin: "signing"
     apply plugin: "ru.vyarus.quality"
 
     jar {
@@ -137,76 +136,11 @@ configure(subprojects - sampleprojects) { subproject ->
         logging.captureStandardOutput LogLevel.INFO // suppress "## warnings" message
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = "sources"
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = "javadoc"
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
-
     quality {
         configDir = "${rootProject.projectDir}/src/quality/config/"
         checkstyle = true
         findbugs = true
         pmd = true
-    }
-
-    signing {
-        required { gradle.taskGraph.hasTask("uploadArchives") }
-        sign configurations.archives
-    }
-
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
-                }
-
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
-                }
-
-                pom.project {
-                    name "Hawaii Framework"
-                    packaging "jar"
-                    description "Hawaii Framework"
-                    url "https://github.com/hawaiifw/hawaii-framework"
-
-                    scm {
-                        connection "scm:git@github.com/hawaiifw/hawaii-framework.git"
-                        developerConnection "scm:git@github.com:hawaiifw/hawaii-framework.git"
-                        url "https://github.com/hawaiifw/hawaii-framework"
-                    }
-
-                    licenses {
-                        license {
-                            name "The Apache License, Version 2.0"
-                            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id "marceloverdijk"
-                            name "Marcel Overdijk"
-                            email "marcel@overdijk.me"
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -229,6 +163,43 @@ project("hawaii-autoconfigure") {
         testCompile("org.hamcrest:hamcrest-library")
     }
 }
+
+
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+}
+
+//modifyProm {
+//    project {
+//        name "Hawaii Framework"
+//        packaging "jar"
+//        description "Hawaii Framework"
+//        url "https://github.com/hawaiifw/hawaii-framework"
+//
+//        scm {
+//            connection "scm:git@github.com/hawaiifw/hawaii-framework.git"
+//            developerConnection "scm:git@github.com:hawaiifw/hawaii-framework.git"
+//            url "https://github.com/hawaiifw/hawaii-framework"
+//        }
+//
+//        licenses {
+//            license {
+//                name "The Apache License, Version 2.0"
+//                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+//            }
+//        }
+//
+//        developers {
+//            developer {
+//                id "marceloverdijk"
+//                name "Marcel Overdijk"
+//                email "marcel@overdijk.me"
+//            }
+//        }
+//    }
+//}
 
 project("hawaii-core") {
 
