@@ -54,7 +54,6 @@ configure(allprojects) { project ->
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
-    apply plugin: 'de.marcphilipp.nexus-publish'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -107,6 +106,9 @@ configure(allprojects) { project ->
 
 configure(subprojects - sampleprojects) { subproject ->
     apply plugin: "ru.vyarus.quality"
+    apply plugin: 'de.marcphilipp.nexus-publish'
+    apply plugin: "signing"
+    apply plugin: "maven"
 
     jar {
         manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -143,6 +145,55 @@ configure(subprojects - sampleprojects) { subproject ->
         findbugs = true
         pmd = true
     }
+
+
+    signing {
+        sign publishing.publications
+    }
+
+    publishing.publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = "Hawaii Framework"
+                packaging "jar"
+                description = "Hawaii Framework"
+                url = "https://github.com/hawaiifw/hawaii-framework"
+
+                scm {
+                    connection = "scm:git@github.com/hawaiifw/hawaii-framework.git"
+                    developerConnection = "scm:git@github.com:hawaiifw/hawaii-framework.git"
+                    url = "https://github.com/hawaiifw/hawaii-framework"
+                }
+
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "marceloverdijk"
+                        name = "Marcel Overdijk"
+                        email = "marcel@overdijk.me"
+                    }
+                }
+            }
+        }
+    }
+
+    nexusPublishing {
+        repositories {
+            sonatype {
+                nexusUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                snapshotRepositoryUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                username = System.getenv("SONATYPE_OSSRH_USERNAME")
+                password = System.getenv("SONATYPE_OSSRH_PASSWORD")
+            }
+        }
+    }
 }
 
 project("hawaii-autoconfigure") {
@@ -163,56 +214,6 @@ project("hawaii-autoconfigure") {
         testCompile("org.hamcrest:hamcrest-core")
         testCompile("org.hamcrest:hamcrest-library")
     }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from(components.java)
-            pom {
-                name "Hawaii Framework"
-                packaging "jar"
-                description "Hawaii Framework"
-                url "https://github.com/hawaiifw/hawaii-framework"
-
-                scm {
-                    connection "scm:git@github.com/hawaiifw/hawaii-framework.git"
-                    developerConnection "scm:git@github.com:hawaiifw/hawaii-framework.git"
-                    url "https://github.com/hawaiifw/hawaii-framework"
-                }
-
-                licenses {
-                    license {
-                        name "The Apache License, Version 2.0"
-                        url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                    }
-                }
-
-                developers {
-                    developer {
-                        id "marceloverdijk"
-                        name "Marcel Overdijk"
-                        email "marcel@overdijk.me"
-                    }
-                }
-            }
-        }
-    }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            snapshotRepositoryUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-            username = System.getenv("SONATYPE_OSSRH_USERNAME")
-            password = System.getenv("SONATYPE_OSSRH_PASSWORD")
-        }
-    }
-}
-
-signing {
-    sign publishing.publications
 }
 
 //modifyProm {
