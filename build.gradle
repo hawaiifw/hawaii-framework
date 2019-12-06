@@ -206,6 +206,8 @@ configure(subprojects - sampleprojects) { subproject ->
                 packageGroup = 'org.hawaiiframework'
                 username = System.getenv("SONATYPE_OSSRH_USERNAME")
                 password = System.getenv("SONATYPE_OSSRH_PASSWORD")
+                connectTimeout = 10000
+                clientTimeout = 10000
             }
         }
     }
