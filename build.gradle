@@ -24,6 +24,7 @@ buildscript {
 apply plugin: 'io.codearte.nexus-staging'
 
 
+
 ext {
     bouncycastleVersion               = "1.58"
     javaVersion                       = "1.8"
@@ -59,6 +60,7 @@ configure(allprojects) { project ->
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
+    apply plugin: 'de.marcphilipp.nexus-publish'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -113,7 +115,6 @@ configure(subprojects - sampleprojects) { subproject ->
     apply plugin: "ru.vyarus.quality"
     apply plugin: "signing"
     apply plugin: "maven"
-    apply plugin: 'de.marcphilipp.nexus-publish'
 
 
     project.group = 'org.hawaiiframework'
@@ -191,18 +192,6 @@ configure(subprojects - sampleprojects) { subproject ->
         }
     }
 
-    publishing.repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = System.getenv("SONATYPE_OSSRH_USERNAME")
-                password = System.getenv("SONATYPE_OSSRH_PASSWORD")
-            }
-        }
-    }
-
 
     //io.codearte.gradle
     nexusStaging {
@@ -210,10 +199,17 @@ configure(subprojects - sampleprojects) { subproject ->
         numberOfRetries = 20
         delayBetweenRetriesInMillis = 3000
     }
+}
 
-    nexusPublishing {
-        packageGroup = rootProject.nexusStaging.packageGroup
 
+nexusPublishing {
+    repositories {
+        sonatype {
+            packageGroup = 'org.hawaiiframework'
+            stagingProfileId = "stageId"
+            username = System.getenv("SONATYPE_OSSRH_USERNAME")
+            password = System.getenv("SONATYPE_OSSRH_PASSWORD")
+        }
     }
 }
 
