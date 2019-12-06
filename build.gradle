@@ -206,7 +206,7 @@ nexusPublishing {
     repositories {
         sonatype {
             packageGroup = 'org.hawaiiframework'
-            stagingProfileId = "stageId"
+            stagingProfileId = "org.hawaiiframework"
             username = System.getenv("SONATYPE_OSSRH_USERNAME")
             password = System.getenv("SONATYPE_OSSRH_PASSWORD")
         }
