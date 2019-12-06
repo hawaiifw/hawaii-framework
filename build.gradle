@@ -15,9 +15,13 @@ buildscript {
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath "ru.vyarus:gradle-quality-plugin:2.2.0"
         classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.1"
         classpath "de.marcphilipp.gradle:nexus-publish-plugin:0.4.0"
+
     }
 }
+
+apply plugin: 'io.codearte.nexus-staging'
 
 ext {
     bouncycastleVersion               = "1.58"
@@ -110,6 +114,9 @@ configure(subprojects - sampleprojects) { subproject ->
     apply plugin: "signing"
     apply plugin: "maven"
 
+
+    project.group = 'org.hawaiiframework'
+
     jar {
         manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
         manifest.attributes["Implementation-Title"] = subproject.name
@@ -145,7 +152,6 @@ configure(subprojects - sampleprojects) { subproject ->
         findbugs = true
         pmd = true
     }
-
 
     signing {
         sign publishing.publications
@@ -184,15 +190,29 @@ configure(subprojects - sampleprojects) { subproject ->
         }
     }
 
-    nexusPublishing {
-        repositories {
-            sonatype {
-                nexusUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                snapshotRepositoryUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
                 username = System.getenv("SONATYPE_OSSRH_USERNAME")
                 password = System.getenv("SONATYPE_OSSRH_PASSWORD")
             }
         }
+    }
+
+
+    //io.codearte.gradle
+    nexusStaging {
+        packageGroup = 'org.hawaiiframework'
+        numberOfRetries = 20
+        delayBetweenRetriesInMillis = 3000
+    }
+
+    nexusPublishing {
+        packageGroup = rootProject.nexusStaging.packageGroup
+
     }
 }
 
