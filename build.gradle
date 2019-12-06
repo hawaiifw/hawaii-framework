@@ -204,7 +204,6 @@ configure(subprojects - sampleprojects) { subproject ->
         repositories {
             sonatype {
                 packageGroup = 'org.hawaiiframework'
-                stagingProfileId = "org.hawaiiframework"
                 username = System.getenv("SONATYPE_OSSRH_USERNAME")
                 password = System.getenv("SONATYPE_OSSRH_PASSWORD")
             }
