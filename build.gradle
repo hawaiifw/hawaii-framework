@@ -23,6 +23,7 @@ buildscript {
 
 apply plugin: 'io.codearte.nexus-staging'
 
+
 ext {
     bouncycastleVersion               = "1.58"
     javaVersion                       = "1.8"
@@ -110,9 +111,9 @@ configure(allprojects) { project ->
 
 configure(subprojects - sampleprojects) { subproject ->
     apply plugin: "ru.vyarus.quality"
-    apply plugin: 'de.marcphilipp.nexus-publish'
     apply plugin: "signing"
     apply plugin: "maven"
+    apply plugin: 'de.marcphilipp.nexus-publish'
 
 
     project.group = 'org.hawaiiframework'
@@ -190,7 +191,7 @@ configure(subprojects - sampleprojects) { subproject ->
         }
     }
 
-    repositories {
+    publishing.repositories {
         maven {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
