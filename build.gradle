@@ -199,16 +199,15 @@ configure(subprojects - sampleprojects) { subproject ->
         numberOfRetries = 20
         delayBetweenRetriesInMillis = 3000
     }
-}
 
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            packageGroup = 'org.hawaiiframework'
-            stagingProfileId = "org.hawaiiframework"
-            username = System.getenv("SONATYPE_OSSRH_USERNAME")
-            password = System.getenv("SONATYPE_OSSRH_PASSWORD")
+    nexusPublishing {
+        repositories {
+            sonatype {
+                packageGroup = 'org.hawaiiframework'
+                stagingProfileId = "org.hawaiiframework"
+                username = System.getenv("SONATYPE_OSSRH_USERNAME")
+                password = System.getenv("SONATYPE_OSSRH_PASSWORD")
+            }
         }
     }
 }
