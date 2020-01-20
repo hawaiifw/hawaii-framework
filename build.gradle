@@ -181,7 +181,7 @@ configure(subprojects - sampleprojects) { subproject ->
         mavenJava(MavenPublication) {
             from components.java
             artifact tasks.sourcesJar
-            artifact tasks javadocJar
+            artifact tasks.javadocJar
 
             pom {
                 name = "Hawaii Framework"
