@@ -5,7 +5,7 @@ echo "Publishing..."
 HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
 
 # Do not deploy archives when building pull request
-if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" || $HAWAII_FRAMEWORK_VERSION =~ "SNAPSHOT"; then
+if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ] || [ $HAWAII_FRAMEWORK_VERSION =~ "SNAPSHOT" ]; then
   exit 0
 fi
 
