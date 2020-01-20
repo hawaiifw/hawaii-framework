@@ -146,7 +146,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ResponseEntity handleThrowable(final Throwable t, final WebRequest request) {
-        logger.error("", t);
+        logger.error("Unhandled exception", t);
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
     }
@@ -214,7 +214,6 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      * The default implementation adds the following listeners:
      * <ul>
      * <li>{@link ErrorResponseStatusEnricher}</li>
-     * <li>{@link ErrorMessageResponseEnricher}</li>
      * <li>{@link RequestInfoErrorResponseEnricher}</li>
      * <li>{@link ValidationErrorResponseEnricher}</li>
      * <li>{@link ApiErrorResponseEnricher}</li>
@@ -222,7 +221,6 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     protected void configureResponseEnrichers() {
         addResponseEnricher(new ErrorResponseStatusEnricher());
-        addResponseEnricher(new ErrorMessageResponseEnricher());
         addResponseEnricher(new RequestInfoErrorResponseEnricher());
         addResponseEnricher(new ValidationErrorResponseEnricher(validationErrorResourceAssembler));
         addResponseEnricher(new ApiErrorResponseEnricher());

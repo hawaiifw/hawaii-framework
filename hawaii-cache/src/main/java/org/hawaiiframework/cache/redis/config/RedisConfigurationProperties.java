@@ -17,14 +17,12 @@ package org.hawaiiframework.cache.redis.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Redis configuration properties.
  */
-@Component
 @Configuration
 @ConfigurationProperties(prefix = "redis")
 public class RedisConfigurationProperties {

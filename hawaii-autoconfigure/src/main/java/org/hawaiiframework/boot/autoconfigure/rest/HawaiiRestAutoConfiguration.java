@@ -21,6 +21,7 @@ import org.hawaiiframework.web.exception.DefaultExceptionResponseFactory;
 import org.hawaiiframework.web.exception.ExceptionResponseFactory;
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
+import org.hawaiiframework.web.util.HostResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
@@ -52,4 +53,8 @@ public class HawaiiRestAutoConfiguration {
         return new HawaiiResponseEntityExceptionHandler(validationErrorResourceAssembler(), exceptionResponseFactory());
     }
 
+    @Bean
+    public HostResolver hostResolver() {
+        return new HostResolver();
+    }
 }

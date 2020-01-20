@@ -64,13 +64,16 @@ public class RedisCache<T> implements Cache<T> {
      */
     private String keyPrefix;
 
+    /**
+     * Hawaii time, used to get the current time.
+     */
     private final HawaiiTime hawaiiTime;
-
 
     /**
      * Constructor.
      *
      * @param redisTemplate          The redis template to use.
+     * @param hawaiiTime             the Hawaii time, used to get the current time.
      * @param defaultExpireInMinutes The default time out in minutes.
      * @param keyPrefix              They key's prefix.
      */

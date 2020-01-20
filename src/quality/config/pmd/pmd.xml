@@ -60,6 +60,7 @@
         <exclude name="ModifiedCyclomaticComplexity"/>
         <exclude name="SignatureDeclareThrowsException"/>
         <exclude name="StdCyclomaticComplexity"/>
+        <exclude name="AvoidUncheckedExceptionsInSignatures"/>
     </rule>
     <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>

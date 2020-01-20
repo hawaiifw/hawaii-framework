@@ -15,3 +15,6 @@ classes/
 lib/
 log/
 target/
+
+# Ignore unencrypted key ring
+secring.gpg

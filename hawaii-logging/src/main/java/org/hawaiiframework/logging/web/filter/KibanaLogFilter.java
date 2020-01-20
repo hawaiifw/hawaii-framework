@@ -17,6 +17,8 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.ClientIpResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.FilterChain;
@@ -37,6 +39,11 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.START;
  * @since 2.0.0
  */
 public class KibanaLogFilter extends AbstractGenericFilterBean {
+
+    /**
+     * The Logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogFilter.class);
 
     /**
      * HostResolver for this class.
@@ -63,5 +70,7 @@ public class KibanaLogFilter extends AbstractGenericFilterBean {
         KibanaLogFields.set(METHOD, request.getMethod());
         KibanaLogFields.set(URI, request.getRequestURI());
         KibanaLogFields.set(CLIENT_IP, clientIpResolver.getClientIp(request));
+        LOGGER.info("Start request '{}', '{}'", request.getMethod(), request.getRequestURI());
+        KibanaLogFields.unsetLogType();
     }
 }
