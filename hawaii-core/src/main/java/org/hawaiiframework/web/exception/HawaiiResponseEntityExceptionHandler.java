@@ -204,19 +204,17 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      *
      * <p>Subclasses may override this method to remove existing or add additional listeners,
      * using {@link #addResponseEnricher(ErrorResponseEnricher)} and {@link #removeResponseEnricher(ErrorResponseEnricher)}.</p>
-     *
+     * <p>
      * The default implementation adds the following listeners:
      * <ul>
-     *     <li>{@link ErrorResponseStatusEnricher}</li>
-     *     <li>{@link ErrorMessageResponseEnricher}</li>
-     *     <li>{@link RequestInfoErrorResponseEnricher}</li>
-     *     <li>{@link ValidationErrorResponseEnricher}</li>
-     *     <li>{@link ApiErrorResponseEnricher}</li>
+     *  <li>{@link ErrorResponseStatusEnricher}</li>
+     *  <li>{@link RequestInfoErrorResponseEnricher}</li>
+     *  <li>{@link ValidationErrorResponseEnricher}</li>
+     *  <li>{@link ApiErrorResponseEnricher}</li>
      * </ul>
      */
     protected void configureResponseEnrichers() {
         addResponseEnricher(new ErrorResponseStatusEnricher());
-        addResponseEnricher(new ErrorMessageResponseEnricher());
         addResponseEnricher(new RequestInfoErrorResponseEnricher());
         addResponseEnricher(new ValidationErrorResponseEnricher(validationErrorResourceAssembler));
         addResponseEnricher(new ApiErrorResponseEnricher());

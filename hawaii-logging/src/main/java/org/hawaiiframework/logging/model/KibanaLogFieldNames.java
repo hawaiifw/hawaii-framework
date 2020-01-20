@@ -28,6 +28,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     SESSION_ID("session.id"),
 
     TX_ID("tx.id"),
+    TX_ID_SUB("tx.id.sub"),
     // Deprecated, left in place for current usage of kibana.
     TX_DURATION("tx.duration"),
 
