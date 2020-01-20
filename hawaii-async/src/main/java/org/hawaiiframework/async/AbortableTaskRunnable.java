@@ -19,7 +19,9 @@ package org.hawaiiframework.async;
 import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
+import org.hawaiiframework.logging.model.KibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.hawaiiframework.logging.model.KibanaLogTypeNames;
 import org.hawaiiframework.logging.model.MdcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ import static java.util.Objects.requireNonNull;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_ID;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TASK_ID;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
 
 /**
  * Delegating Runnable that copies the MDC to the executing thread before running the delegate.
@@ -94,6 +97,7 @@ public class AbortableTaskRunnable implements Runnable {
             sharedTaskContext.finish();
             final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
             final String duration = String.format("%.2f", taskStatistics.getTotalTime() / 1E6);
+            KibanaLogFields.setLogType(CALL_END);
             KibanaLogFields.set(CALL_DURATION, duration);
             LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).",
                 sharedTaskContext.getTaskName(),
