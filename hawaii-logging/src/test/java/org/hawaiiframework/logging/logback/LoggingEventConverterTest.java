@@ -27,7 +27,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.not;
@@ -109,6 +111,13 @@ public class LoggingEventConverterTest {
             String line = lines[i];
             assertThat("Line '" + line + "' does not start with a whitespace.", Character.isWhitespace(line.charAt(0)), is(true));
         }
+    }
+
+    @Test
+    public void testTimestampCreation() {
+        final Date timestamp = new GregorianCalendar(2019, Calendar.DECEMBER, 31, 14, 37, 48).getTime();
+        final String formatted = loggingEventConverter.getTimestamp(timestamp);
+        assertThat(formatted.startsWith("2019-12-31"), is(true));
     }
 
 
