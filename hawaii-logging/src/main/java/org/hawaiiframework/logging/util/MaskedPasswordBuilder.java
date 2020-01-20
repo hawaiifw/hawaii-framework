@@ -135,7 +135,7 @@ public class MaskedPasswordBuilder {
      * Appends the password mask at the {@code index}.
      */
     public void maskPasswordAt(final Integer index) {
-        result.append(stringToMask.substring(lastAddedIndex, index));
+        result.append(stringToMask, lastAddedIndex, index);
         result.append(MASKED_PASSWORD);
         lastAddedIndex = currentIndex;
     }
