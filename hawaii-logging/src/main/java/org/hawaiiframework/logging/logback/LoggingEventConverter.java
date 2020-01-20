@@ -47,7 +47,7 @@ public class LoggingEventConverter {
     /**
      * Date pattern for logging output.
      */
-    private static final String DATE_PATTERN = "YYYY-MM-dd HH:mm:ss,SSS";
+    private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
 
     /**
      * our throwable proxy converter.
@@ -90,8 +90,19 @@ public class LoggingEventConverter {
     }
 
     private String getTimestamp(final LoggingEvent event) {
+        final Date timestamp = new Date(event.getTimeStamp());
+        return getTimestamp(timestamp);
+    }
+
+    /**
+     * Public method to check whether the timestamp is correct for the last week of december.
+     *
+     * @param timestamp The timestamp to convert.
+     * @return The converted timestamp.
+     */
+    public String getTimestamp(final Date timestamp) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.ENGLISH);
-        return simpleDateFormat.format(new Date(event.getTimeStamp()));
+        return simpleDateFormat.format(timestamp);
     }
 
 

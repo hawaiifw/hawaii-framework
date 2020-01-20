@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -52,7 +53,7 @@ public class LoggingEventConverterTest {
 
     private static final String CONVERTED_MESSAGE = "converted message";
     private static final String FORMATTED_MESSAGE = "formatted message";
-    private static final String DATE_PATTERN = "YYYY-MM-dd HH:mm:ss,SSS";
+    private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
     private static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_PATTERN, Locale.ENGLISH);
     private static final String BASE_LOG_MESSAGE =
             SDF.format(new Date(0)) + " DEBUG -  log.loc=\"org.hawaiiframework.logging.logback.LoggingEventConverterTest:9\" thread=\"threadio\" message=#";
@@ -104,6 +105,13 @@ public class LoggingEventConverterTest {
             String line = lines[i];
             assertThat("Line '" + line + "' does not start with a whitespace.", Character.isWhitespace(line.charAt(0)), is(true));
         }
+    }
+
+    @Test
+    public void testTimestampCreation() {
+        final Date timestamp = new Date(119, Calendar.DECEMBER, 31, 14, 37, 48);
+        final String formatted = loggingEventConverter.getTimestamp(timestamp);
+        assertThat(formatted.startsWith("2019-12-31"), is(true));
     }
 
 
