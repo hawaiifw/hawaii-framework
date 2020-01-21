@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.M10
+* Log call duration in separate log field for elastic search.
+
 ## 3.0.0.M9
 * Updated to Spring Boot 2.1.7.RELEASE
 * Logging improvements (#44)
