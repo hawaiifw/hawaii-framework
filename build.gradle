@@ -1,3 +1,5 @@
+import java.time.Duration
+
 buildscript {
     ext {
         asciidoctorjVersion = "1.5.7"
@@ -23,6 +25,8 @@ buildscript {
         spotbugsToolVersion = "3.1.12"
         springBootVersion = "2.1.7.RELEASE"
         versionsPluginVersion = "0.21.0"
+        nexusStagingVersion = "0.21.1"
+        nexusPublishVersion = "0.4.0"
     }
     repositories {
         jcenter()
@@ -43,6 +47,8 @@ buildscript {
         classpath "org.asciidoctor:asciidoctorj-pdf:${asciidoctorjPdfVersion}"
         classpath "org.jruby:jruby-complete:${jrubyVersion}"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:${nexusStagingVersion}"
+        classpath "de.marcphilipp.gradle:nexus-publish-plugin:${nexusPublishVersion}"
     }
 }
 
@@ -61,6 +67,9 @@ ext.javadocLinks = [
         "http://hamcrest.org/JavaHamcrest/javadoc/1.3/"
 ] as String[]
 
+//Can only be applied to the root. See https://github.com/Codearte/gradle-nexus-staging-plugin/issues/47
+apply plugin: 'io.codearte.nexus-staging'
+
 configure(allprojects) { project ->
 
     group = "org.hawaiiframework"
@@ -73,6 +82,7 @@ configure(allprojects) { project ->
     apply plugin: "propdeps-idea"
     apply plugin: "propdeps-eclipse"
     apply plugin: "com.github.ben-manes.versions"
+    apply plugin: 'de.marcphilipp.nexus-publish'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -145,6 +155,8 @@ configure(subprojects - sampleprojects) { subproject ->
     apply plugin: "com.github.spotbugs"
     apply plugin: "pmd"
 
+    project.group = 'org.hawaiiframework'
+
     jar {
         manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
         manifest.attributes["Implementation-Title"] = subproject.name
@@ -213,53 +225,62 @@ configure(subprojects - sampleprojects) { subproject ->
     }
 
     signing {
-        required { gradle.taskGraph.hasTask("uploadArchives") }
-        sign configurations.archives
+        sign publishing.publications
     }
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
+    publishing.publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact tasks.sourcesJar
+            artifact tasks.javadocJar
 
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            pom {
+                name = "Hawaii Framework"
+                packaging "jar"
+                description = "Hawaii Framework"
+                url = "https://github.com/hawaiifw/hawaii-framework"
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
+                scm {
+                    connection = "scm:git@github.com/hawaiifw/hawaii-framework.git"
+                    developerConnection = "scm:git@github.com:hawaiifw/hawaii-framework.git"
+                    url = "https://github.com/hawaiifw/hawaii-framework"
                 }
 
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: System.getenv("SONATYPE_OSSRH_USERNAME"), password: System.getenv("SONATYPE_OSSRH_PASSWORD"))
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
                 }
 
-                pom.project {
-                    name "Hawaii Framework"
-                    packaging "jar"
-                    description "Hawaii Framework"
-                    url "https://github.com/hawaiifw/hawaii-framework"
-
-                    scm {
-                        connection "scm:git@github.com/hawaiifw/hawaii-framework.git"
-                        developerConnection "scm:git@github.com:hawaiifw/hawaii-framework.git"
-                        url "https://github.com/hawaiifw/hawaii-framework"
-                    }
-
-                    licenses {
-                        license {
-                            name "The Apache License, Version 2.0"
-                            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id "marceloverdijk"
-                            name "Marcel Overdijk"
-                            email "marcel@overdijk.me"
-                        }
+                developers {
+                    developer {
+                        id = "marceloverdijk"
+                        name = "Marcel Overdijk"
+                        email = "marcel@overdijk.me"
                     }
                 }
             }
         }
+    }
+
+    //io.codearte.gradle
+    nexusStaging {
+        packageGroup = 'org.hawaiiframework'
+        numberOfRetries = 20
+        delayBetweenRetriesInMillis = 3000
+    }
+
+    nexusPublishing {
+        repositories {
+            sonatype {
+                packageGroup = 'org.hawaiiframework'
+                username = System.getenv("SONATYPE_OSSRH_USERNAME")
+                password = System.getenv("SONATYPE_OSSRH_PASSWORD")
+            }
+        }
+        connectTimeout = Duration.ofSeconds(1000)
+        clientTimeout = Duration.ofSeconds(1000)
     }
 
     tasks.withType(com.github.spotbugs.SpotBugsTask) {
