@@ -13,6 +13,8 @@ The same code formatter file should also be imported in IntelliJ IDEA.
 This [README][Hawaii Framework Java Style code formatter README] contains a full list of adjustments
 made to the code formatter.
 
+Important! Update the number of imports before using a `*` to 300. In IntelliJ IDEA this is found under 'Editor > Code Style > Java > Imports'.
+
 ### Apache License Header
 
 Add the following Apache license header to all new Java classes.
