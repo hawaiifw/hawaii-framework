@@ -7,7 +7,6 @@ spring:
       write-dates-as-timestamps: false
       write-date-timestamps-as-nanoseconds: false
 logging:
-  file: log/hawaii.log
   level:
     org.hawaiiframework: INFO
     org.springframework: INFO
@@ -19,6 +18,7 @@ hawaii:
     configuration: ./config/async-config.yml
   logging:
     opentracing:
+      # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
       enabled: true
     filters:
       kibana-log-cleanup:
