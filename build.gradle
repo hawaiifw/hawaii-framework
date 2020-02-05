@@ -389,6 +389,7 @@ project("hawaii-logging") {
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly "io.opentracing.contrib:opentracing-api-extensions:0.6.0"
         testCompile "org.apache.commons:commons-text:${commonsTextVersion}"
         testCompile "org.powermock:powermock-api-mockito2:${powerMockVersion}"
         testCompile "org.powermock:powermock-module-junit4:${powerMockVersion}"

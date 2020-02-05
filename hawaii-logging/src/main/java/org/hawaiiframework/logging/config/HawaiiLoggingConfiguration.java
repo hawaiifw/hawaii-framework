@@ -32,6 +32,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.DispatcherType;
@@ -40,7 +41,7 @@ import java.util.EnumSet;
 
 /**
  * Configures the logging based on the application properties.
- *
+ * <p>
  * This class creates filter beans for the enabled filters.
  *
  * @author Wouter Eerdekens
@@ -50,6 +51,7 @@ import java.util.EnumSet;
  */
 @Configuration
 @EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
+@Import(OpenTracingHawaiiLoggingConfiguration.class)
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public class HawaiiLoggingConfiguration {
 
@@ -241,7 +243,7 @@ public class HawaiiLoggingConfiguration {
 
     /**
      * Create a {@link HttpRequestResponseLogUtil} bean.
-     *
+     * <p>
      * This is required for the {@link RequestResponseLogFilter}, see {@link #requestResponseLogFilter(HttpRequestResponseLogUtil)}.
      *
      * @return the bean
@@ -265,9 +267,9 @@ public class HawaiiLoggingConfiguration {
     /**
      * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
      *
-     * @param filter the filter
+     * @param filter           the filter
      * @param filterProperties the configuration properties
-     * @param dispatcherTypes the request dispatcher types the filter is used for
+     * @param dispatcherTypes  the request dispatcher types the filter is used for
      * @return the wrapped filter
      */
     private FilterRegistrationBean createFilterRegistrationBean(
@@ -329,5 +331,7 @@ public class HawaiiLoggingConfiguration {
             result.setDispatcherTypes(EnumSet.of(DispatcherType.REQUEST));
             return result;
         }
+
     }
+
 }
