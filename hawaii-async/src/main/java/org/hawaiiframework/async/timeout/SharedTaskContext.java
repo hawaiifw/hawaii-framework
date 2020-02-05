@@ -243,13 +243,17 @@ public class SharedTaskContext {
         taskStatistics.stopExecution();
         taskListeners.stream().sorted(Collections.reverseOrder(ORDER_COMPARATOR)).forEach(listener -> {
             logListener(listener, "finish()");
-            listener.finish();
+            try {
+                listener.finish();
+            } catch (Throwable ignored) {
+                // Do nothing.
+            }
         });
         SharedTaskContextHolder.remove();
     }
 
     private void logListener(final TaskListener listener, final String method) {
-        LOGGER.info("Calling listener '{}#{}'.", listener.getClass().getSimpleName(), method);
+        LOGGER.trace("Calling listener '{}#{}'.", listener.getClass().getSimpleName(), method);
     }
 
     /**

@@ -16,16 +16,20 @@
 
 package org.hawaiiframework.async.task_listener;
 
-import org.springframework.stereotype.Component;
+import io.opentracing.Tracer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * Provider for logging task events.
+ * Task Context provider for open tracing's Tracer.
  */
-@Component
-public class LoggingTaskListenerProvider implements TaskListenerProvider {
+@Configuration
+@ConditionalOnClass(Tracer.class)
+public class OpenTracingAsyncTaskListenerProviderConfiguration {
 
-    @Override
-    public TaskListener provide() {
-        return new LoggingTaskListener();
+    @Bean
+    public OpenTracingAsyncTaskListenerProvider tracerTaskContextProvider() {
+        return new OpenTracingAsyncTaskListenerProvider();
     }
 }
