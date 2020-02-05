@@ -19,9 +19,10 @@ package org.hawaiiframework.async;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
+import org.hawaiiframework.async.task_listener.TaskListener;
+import org.hawaiiframework.async.task_listener.TaskListenerProvider;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
-import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
@@ -30,8 +31,12 @@ import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * Task executor that delegates to the task executor configured for a task.
@@ -76,20 +81,28 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
     private final ExecutorStatistics executorStatistics;
 
     /**
+     * The Task Context Providers.
+     */
+    private final Collection<TaskListenerProvider> taskListenerProviders;
+
+    /**
      * Constructor.
      *
      * @param delegate                        the delegate
      * @param executorConfigurationProperties the configuration properties
+     * @param taskListenerProviders            The task context providers.
      * @param taskName                        the task name
      */
     public DelegatingExecutor(
             final ThreadPoolTaskExecutor delegate,
             final ExecutorConfigurationProperties executorConfigurationProperties,
+            final Collection<TaskListenerProvider> taskListenerProviders,
             final String taskName) {
         this.delegate = delegate;
         this.executorConfigurationProperties = executorConfigurationProperties;
-        this.taskName = taskName;
         this.executorStatistics = new ExecutorStatistics(delegate);
+        this.taskListenerProviders = taskListenerProviders;
+        this.taskName = taskName;
     }
 
     /**
@@ -130,7 +143,8 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
      * <p>
      * Configures a {@link SharedTaskContextHolder} before delegating execution.
      */
-    @Override public <T> Future<T> submit(@NonNull final Callable<T> task) {
+    @Override
+    public <T> Future<T> submit(@NonNull final Callable<T> task) {
         initializeTask();
         return delegate.submit(task);
     }
@@ -140,7 +154,8 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
      * <p>
      * Configures a {@link SharedTaskContextHolder} before delegating execution.
      */
-    @Override public ListenableFuture<?> submitListenable(final Runnable task) {
+    @Override
+    public ListenableFuture<?> submitListenable(final Runnable task) {
         initializeTask();
         return delegate.submitListenable(task);
     }
@@ -150,20 +165,25 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
      * <p>
      * Configures a {@link SharedTaskContextHolder} before delegating execution.
      */
-    @Override public <T> ListenableFuture<T> submitListenable(final Callable<T> task) {
+    @Override
+    public <T> ListenableFuture<T> submitListenable(@NotNull final Callable<T> task) {
         initializeTask();
         return delegate.submitListenable(task);
     }
 
     private void initializeTask() {
         final SharedTaskContext sharedTaskContext = new SharedTaskContext(taskName, executorConfigurationProperties,
-                executorStatistics, KibanaLogFields.getContext());
+                executorStatistics, createTaskListeners());
         LOGGER.info("Scheduling task '{}' with id '{}'.", sharedTaskContext.getTaskName(), sharedTaskContext.getTaskId());
         LOGGER.info("Executor '{}' has '{}/{}' threads, '{}' queued entries, '{}' total executions and '{}' aborted executions.", taskName,
                 executorStatistics.getPoolSize(), executorStatistics.getMaxPoolSize(), executorStatistics.getQueueSize(),
                 executorStatistics.getCompletedTaskCount(), executorStatistics.getAbortedTaskCount());
 
         SharedTaskContextHolder.register(sharedTaskContext);
+    }
+
+    private List<TaskListener> createTaskListeners() {
+        return taskListenerProviders.stream().map(TaskListenerProvider::provide).collect(Collectors.toList());
     }
 
     /**
@@ -186,6 +206,7 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
     public int getActiveCount() {
         return delegate.getActiveCount();
     }
+
     /**
      * {@inheritDoc}
      */

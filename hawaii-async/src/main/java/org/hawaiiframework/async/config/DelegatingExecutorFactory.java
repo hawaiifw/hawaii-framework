@@ -21,6 +21,7 @@ import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.SystemProperties;
 import org.hawaiiframework.async.model.TaskProperties;
+import org.hawaiiframework.async.task_listener.TaskListenerProvider;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.core.task.TaskExecutor;
 
+import java.util.Map;
 import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -132,11 +134,13 @@ public class DelegatingExecutorFactory {
     private void createTaskExecutorDelegate(
         final String taskName,
         final String executor) {
+        final Map<String, TaskListenerProvider> beansOfType = beanFactory.getBeansOfType(TaskListenerProvider.class);
         final TaskExecutor delegate = (TaskExecutor) beanFactory.getBean(executor);
         final ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
         constructorArgumentValues.addIndexedArgumentValue(0, delegate);
         constructorArgumentValues.addIndexedArgumentValue(1, configuration);
-        constructorArgumentValues.addIndexedArgumentValue(2, taskName);
+        constructorArgumentValues.addIndexedArgumentValue(2, beansOfType.values());
+        constructorArgumentValues.addIndexedArgumentValue(3, taskName);
         LOGGER.debug("Registering delegate '{}' to for executor '{}'.", taskName, executor);
         registrar.registerBean(taskName, DelegatingExecutor.class, constructorArgumentValues);
     }

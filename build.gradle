@@ -224,9 +224,9 @@ configure(subprojects - sampleprojects) { subproject ->
         toolVersion = spotbugsToolVersion
     }
 
-    signing {
-        sign publishing.publications
-    }
+//    signing {
+//        sign publishing.publications
+//    }
 
     publishing.publications {
         mavenJava(MavenPublication) {
@@ -304,6 +304,7 @@ project("hawaii-async") {
         compile "org.springframework.boot:spring-boot"
         compile "org.apache.httpcomponents:httpclient"
         compile "org.yaml:snakeyaml"
+        compileOnly "io.opentracing:opentracing-api:0.33.0"
     }
 }
 

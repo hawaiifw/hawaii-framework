@@ -17,6 +17,7 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
 import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
+import org.hawaiiframework.logging.model.KibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
@@ -55,6 +56,7 @@ import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsI
  * @author Rutger Lubbers
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public class RequestResponseLogFilter extends AbstractGenericFilterBean {
 
     /**
@@ -138,22 +140,21 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         final int contentLength = wrappedRequest.getContentLength();
         final String contentType = wrappedRequest.getContentType();
 
-        KibanaLogFields.setLogType(REQUEST_BODY);
-        LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
-        try {
-            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
-                LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
-            } else {
-                if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
-                    // In case of file upload the request reader has already been accessed, so skip
-                    writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+        try (KibanaLogField kibanaLogField = KibanaLogFields.logType(REQUEST_BODY)) {
+            LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
+            try {
+                if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+                    LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
+                } else {
+                    if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
+                        // In case of file upload the request reader has already been accessed, so skip
+                        writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+                    }
                 }
+            } finally {
+                wrappedRequest.reset();
             }
-
-        } finally {
-            wrappedRequest.reset();
         }
-        KibanaLogFields.unsetLogType();
     }
 
     private void logResponse(final String request, final HttpServletRequest servletRequest,
@@ -164,16 +165,16 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         final String contentType = wrappedResponse.getContentType();
 
         KibanaLogFields.set(HTTP_STATUS, httpStatus.value());
-        KibanaLogFields.setLogType(RESPONSE_BODY);
-        LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
-                httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
+        try (KibanaLogField kibanaLogField = KibanaLogFields.logType(RESPONSE_BODY)) {
+            LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
+                    httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
 
-        if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
-            LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
-        } else if (mayLogToFile()) {
-            writeToFile(logDir, format("%s.out", RequestId.get()), wrappedResponse.getContentInputStream());
+            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+                LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
+            } else if (mayLogToFile()) {
+                writeToFile(logDir, format("%s.out", RequestId.get()), wrappedResponse.getContentInputStream());
+            }
         }
-        KibanaLogFields.unsetLogType();
     }
 
     @SuppressWarnings("PMD.LawOfDemeter")
