@@ -21,6 +21,7 @@ import org.hawaiiframework.logging.model.KibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
+import org.hawaiiframework.logging.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -43,7 +45,6 @@ import static java.lang.String.format;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HTTP_STATUS;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY;
-import static org.hawaiiframework.logging.util.LogUtil.writeToFile;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsInternalRedirect;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsInternalRedirect;
@@ -148,7 +149,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
                 } else {
                     if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
                         // In case of file upload the request reader has already been accessed, so skip
-                        writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+                        writeToFile("%s.in", wrappedRequest.getInputStream());
                     }
                 }
             } finally {
@@ -171,9 +172,15 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
 
             if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
                 LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
-            } else if (mayLogToFile()) {
-                writeToFile(logDir, format("%s.out", RequestId.get()), wrappedResponse.getContentInputStream());
+            } else {
+                writeToFile("%s.out", wrappedResponse.getContentInputStream());
             }
+        }
+    }
+
+    private void writeToFile(final String fileNamePattern, final InputStream contentInputStream) throws IOException {
+        if (mayLogToFile()) {
+            LogUtil.writeToFile(logDir, format(fileNamePattern, RequestId.get()), contentInputStream);
         }
     }
 
