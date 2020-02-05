@@ -243,7 +243,7 @@ public class SharedTaskContext {
         taskStatistics.stopExecution();
         taskListeners.stream().sorted(Collections.reverseOrder(ORDER_COMPARATOR)).forEach(listener -> {
             logListener(listener, "finish()");
-            listener.startExecution();
+            listener.finish();
         });
         SharedTaskContextHolder.remove();
     }
