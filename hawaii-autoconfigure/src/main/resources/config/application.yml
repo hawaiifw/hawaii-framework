@@ -18,6 +18,8 @@ hawaii:
   async:
     configuration: ./config/async-config.yml
   logging:
+    opentracing:
+      enabled: true
     filters:
       kibana-log-cleanup:
         enabled: true
