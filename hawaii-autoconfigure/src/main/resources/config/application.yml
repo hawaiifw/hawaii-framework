@@ -12,9 +12,12 @@ logging:
     org.springframework: INFO
 hawaii:
   time:
+    # Enable creation of the `HawaiiTime` bean.
     enabled: true
+    # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
     timezone: UTC
   async:
+    # location of the Hawaii async configuration file
     configuration: ./config/async-config.yml
   logging:
     opentracing:

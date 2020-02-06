@@ -40,8 +40,8 @@ public final class KibanaLogFields {
     /**
      * Set the field KibanaLogTypeNames.LOG_TYPE to the given {@code value}.
      */
-    public static KibanaLogField logType(final KibanaLogTypeNames value) {
-        return set(LOG_TYPE, value.toString());
+    public static AutoCloseableKibanaLogField logType(final KibanaLogTypeNames value) {
+        return tagCloseable(LOG_TYPE, value.toString());
     }
 
     /**
@@ -69,8 +69,22 @@ public final class KibanaLogFields {
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
     public static KibanaLogField set(final KibanaLogField field, final String value) {
+        return tag(field, value);
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}.
+     */
+    public static KibanaLogField tag(final KibanaLogField field, final String value) {
         MDC.put(field.getLogName(), value);
         return field;
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     */
+    public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final String value) {
+        return new AutoCloseableKibanaLogField(tag(field, value));
     }
 
     /**

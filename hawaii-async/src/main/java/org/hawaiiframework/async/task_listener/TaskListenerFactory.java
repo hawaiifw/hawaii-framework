@@ -16,16 +16,16 @@
 
 package org.hawaiiframework.async.task_listener;
 
-import org.springframework.stereotype.Component;
-
 /**
- * Provider for logging task events.
+ * Factory for a task listener. The listeners are invoked for the async task lifecycle events.
+ * See {@link TaskListener}.
  */
-@Component
-public class LoggingTaskListenerProvider implements TaskListenerProvider {
+public interface TaskListenerFactory {
 
-    @Override
-    public TaskListener provide() {
-        return new LoggingTaskListener();
-    }
+    /**
+     * Create a task listener.
+     *
+     * @return The task listener for this provider.
+     */
+    TaskListener create();
 }

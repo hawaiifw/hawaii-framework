@@ -20,7 +20,7 @@ import org.hawaiiframework.async.model.ExecutorProperties;
 import org.hawaiiframework.async.model.SystemProperties;
 import org.hawaiiframework.async.model.TaskProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
-import org.hawaiiframework.async.task_listener.KibanaLogFieldsTaskListenerProvider;
+import org.hawaiiframework.async.task_listener.KibanaLogFieldsTaskListenerFactory;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.junit.Before;
@@ -64,7 +64,7 @@ public class AsyncExecutorConfigurationTest {
     public void setup() throws Exception {
         beanFactory = new DefaultListableBeanFactory();
 
-        beanFactory.registerSingleton("KibanaLogFieldsTaskContextProvider", new KibanaLogFieldsTaskListenerProvider());
+        beanFactory.registerSingleton("KibanaLogFieldsTaskContextProvider", new KibanaLogFieldsTaskListenerFactory());
         when(loader.loadProperties()).thenReturn(properties);
         configuration = new AsyncExecutorConfiguration();
 

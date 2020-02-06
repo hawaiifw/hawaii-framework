@@ -15,29 +15,31 @@ This section provides a list of available Hawaii application properties.
 	# ===================================================================
 
 	# HAWAII SPRING BOOT DEFAULTS
-	spring:
-	  jackson:
-		date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
-		property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
-		serialization:
-		  indent-output: false
-		  write-dates-as-timestamps: false
-		  write-date-timestamps-as-nanoseconds: false
-	logging:
-	  file: log/hawaii.log
-	  level:
-		  org.hawaiiframework: INFO
-		  org.springframework: INFO
-
-    [[appendix-hawaii-application-properties-time]]
-	# HAWAII TIME
-	hawaii:
-	  time:
-	    enabled: true # Enable creation of the `HawaiiTime` bean.
-	    timezone: UTC # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
+    spring:
+      jackson:
+        date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+        property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+        serialization:
+          indent-output: false
+          write-dates-as-timestamps: false
+          write-date-timestamps-as-nanoseconds: false
+    logging:
+      level:
+        org.hawaiiframework: INFO
+        org.springframework: INFO
+    hawaii:
+      time:
+        # Enable creation of the `HawaiiTime` bean.
+        enabled: true
+        # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
+        timezone: UTC
       async:
-        configuration: ./config/async-config.yml # location of the Hawaii async configuration file
+        # location of the Hawaii async configuration file
+        configuration: ./config/async-config.yml
       logging:
+        opentracing:
+          # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
+          enabled: true
         filters:
           kibana-log-cleanup:
             enabled: true
@@ -68,32 +70,22 @@ This section provides a list of available Hawaii application properties.
             max-log-size: 50k
             # For console logging, the allowed content types, empty means allow all.
             allowed-content-types:
-              - application/json
-              - text/plain
-              - text/xml
-              - application/vnd.spring-boot.actuator.v1+json
+            - application/json
+            - text/plain
+            - text/xml
+            - application/vnd.spring-boot.actuator.v1+json
           user-details:
             enabled: true
             order: 110
 
-	---
+    ---
 
-	spring:
-	  profiles: dev
-	  jackson:
-		serialization.indent-output: true
-	logging:
-	  level:
-		org.hawaiiframework: DEBUG
-
-	---
-
-	spring:
-	  profiles: test
-
-	---
-
-	spring:
-	  profiles: prod
+    spring:
+      profiles: dev
+      jackson:
+        serialization.indent-output: true
+    logging:
+      level:
+        org.hawaiiframework: DEBUG
 
 ----

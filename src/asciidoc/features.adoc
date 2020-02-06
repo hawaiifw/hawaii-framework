@@ -22,57 +22,76 @@ Working with configuration properties in for example a .yml file, the following 
 
 More documentation TODO.
 
-
 [[features-logging]]
 === Logging
 
 The Hawaii logging feature provides a number of filter beans which add information that can log information about requests.
-The Hawaii logging is only usable in a servlet environment, because all filters use HttpServletRequest and HttpServletResponse
-to obtain information.
+The Hawaii logging is only usable in a servlet environment, because all filters use HttpServletRequest and HttpServletResponse to obtain information.
 
-The main purpose of Hawaii logging is to write structured information into log lines, in such a way that it can be parsed by elastic search (Kibana). A
-specialized encoder is included to write out the log lines, as well as a bunch of filters that gather and, in some cases, create information to
-be included in each message. Hawaii logging currently only contains a logback-based encoder, so Hawaii logging is only usable if you use
-logback as your logging implementation.
+The main purpose of Hawaii logging is to write structured information into log lines, in such a way that it can be parsed by elastic search (Kibana).
+A specialized encoder is included to write out the log lines, as well as a bunch of filters that gather and, in some cases, create information to be included in each message.
+Hawaii logging currently only contains a logback-based encoder, so Hawaii logging is only usable if you use logback as your logging implementation.
 
-The next sections describe the individual filters contained in the Hawaii logging module. For more information on disabling and configuring
-individual filters, please refer to <<starters-hawaii-starter-logging, the Hawaii logging starter>>.
+[[features-logging-opentracing]]
+==== Opentracing
+
+If opentracing is available on the classpath, the logging can take log the trace and span id's.
+For this you have to include the `opentracing-api-extensions` library.
+The configuration picks this up and configures the logging accordingly.
+Then the `Tracer` accepts `TracerObserver`s which can react to new traces, spans and other opentracing events. See the `KibanaLogFieldsTracerObserver` class.
+
+If the opentracing's span is enriched with a tag and value the observer is notified.
+If this tag is known to `hawaii-logging` (see `OpenTracingKibanaLogField`) then the tag and it's value will propagate to kibana.
+
+[[features-logging-filters]]
+==== Filters
+
+The next sections describe the individual filters contained in the Hawaii logging module.
+For more information on disabling and configuring individual filters, please refer to <<starters-hawaii-starter-logging, the Hawaii logging starter>>.
 
 [[features-logging-kibana]]
-==== Kibana
-The Kibana log filter gathers request data such as request method, uri and client ip address and stores it so it can be added to subsequent log
-messages.
+===== Kibana
+
+The Kibana log filter gathers request data such as request method, uri and client ip address and stores it so it can be added to subsequent log messages.
 
 [[features-logging-kibana-cleanup]]
-==== Kibana cleanup
-The Kibana cleanup filter empties all Kibana-specific data after the rest of the filter chain has been processed. It is intended to be used
-early in the chain, such that the cleanup happens last.
+===== Kibana cleanup
+
+The Kibana cleanup filter empties all Kibana-specific data after the rest of the filter chain has been processed.
+It is intended to be used early in the chain, such that the cleanup happens last.
 
 [[features-logging-request-duration]]
-==== Request duration
-This filter determines the duration of the request in milliseconds. It add the duration to the Kibana fields and logs it.
+===== Request duration
+
+This filter determines the duration of the request in milliseconds.
+It add the duration to the Kibana fields and logs it.
 
 [[features-logging-request-id]]
-==== Request id
+===== Request id
+
 This filter generates a new request id, adds it to the Kibana fields and also writes it as a header on the response.
 
 [[features-logging-transaction-id]]
-==== Transaction id
-This filter reads an incoming transaction id from a request header, or generates a new one. The transaction id is written to a response header and
-added to the Kibana fields. The ability to read an incoming transaction id provides the ability to have multiple requests, spanning multiple systems
-within the same transaction.
+===== Transaction id
+
+This filter reads an incoming transaction id from a request header, or generates a new one.
+The transaction id is written to a response header and added to the Kibana fields.
+The ability to read an incoming transaction id provides the ability to have multiple requests, spanning multiple systems within the same transaction.
 
 [[features-logging-user-details]]
-==== User details
-This filter retrieves the authenticated principal from the security context and stores the user name in the Kibana fields so that it gets
-included in each log message. This filter is only instantiated if Spring security is found on the class path.
+===== User details
+
+This filter retrieves the authenticated principal from the security context and stores the user name in the Kibana fields so that it gets included in each log message.
+This filter is only instantiated if Spring security is found on the class path.
 
 [[features-logging-request-response]]
-==== Request/response
-This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body. Optionally,
-the filter can log the response to a file if it exceeds a certain threshold size.
+===== Request/response
 
-==== Class Method Name
+This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body.
+Optionally, the filter can log the response to a file if it exceeds a certain threshold size.
+
+===== Class Method Name
+
 This filter retrieves the controller and the calling method, this will then be used to log it accordingly.
 For example: controller Foo.java, with method helloWorld(), will be displayed as Foo.helloWorld.
 
@@ -84,8 +103,10 @@ It provides an application wide `java.time.Clock` reference which is particular 
 
 It is similar to Joda's `DateTimeUtils` which also allows setting a fixed current time.
 However it is important to note that Joda's `DateTimeUtils` uses a static variable to store the current time.
-`HawaiiTime` does not take this approach. Instead the `HawaiiTime` bean needs to be injected in any class that needs to instantiate new date
-and time objects. This approach is more flexible and e.g. has the benefit that unit tests can be run in parallel. See example usage below.
+`HawaiiTime` does not take this approach.
+Instead the `HawaiiTime` bean needs to be injected in any class that needs to instantiate new date and time objects.
+This approach is more flexible and e.g. has the benefit that unit tests can be run in parallel.
+See example usage below.
 
 [source,java,indent=0]
 ----
@@ -121,14 +142,12 @@ and time objects. This approach is more flexible and e.g. has the benefit that u
 <2> Use the injected `HawaiiTime` bean to instantiate new date and time objects.
 <3> In unit tests a fixed clock can be used to manipulate and predict the exact current time.
 
-Another benefit of using `HawaiiTime` is that a fixed time can be used in a running application to test how it behaves on a given date or
-time.
+Another benefit of using `HawaiiTime` is that a fixed time can be used in a running application to test how it behaves on a given date or time.
 
-CAUTION: Third-party libraries being used by the application do not use `HawaiiTime` and probably instantiate date and time objects based on
-the `System` time.
+CAUTION: Third-party libraries being used by the application do not use `HawaiiTime` and probably instantiate date and time objects based on the `System` time.
 
-Hawaii uses `UTC` as default timezone but this can be changed by setting the `hawaii.time.timezone` configuration property. The provided
-value will be parsed by `java.time.ZoneId#of(String zoneId)` and supports different timezone formats like `UTC`, `Europe/Amsterdam` and
+Hawaii uses `UTC` as default timezone but this can be changed by setting the `hawaii.time.timezone` configuration property.
+The provided value will be parsed by `java.time.ZoneId#of(String zoneId)` and supports different timezone formats like `UTC`, `Europe/Amsterdam` and
 `GMT+1`.
 
 The creation of the `HawaiiTime` bean can also be disabled by setting `hawaii.time.enabled` to `false`.
@@ -136,22 +155,23 @@ The creation of the `HawaiiTime` bean can also be disabled by setting `hawaii.ti
 [[features-validation]]
 === Validation
 
-Hawaii's validation mechanism can be used to validate any object. It basically validates values, collects validation errors and stores them
-in a validation result. These validation errors are simple field / error code combinations.
+Hawaii's validation mechanism can be used to validate any object.
+It basically validates values, collects validation errors and stores them in a validation result.
+These validation errors are simple field / error code combinations.
 
-Hawaii's `Validator` is inspired on Spring's `org.springframework.validation.Validator` mechanism. However Hawaii's validator mechanism
-uses it's own `ValidationResult` instead of Spring's `org.springframework.validation.Errors`. The main difference is that Hawaii's
-`ValidationResult` does not bind directly the object being validated. This also gives the possibility to add errors for specific keys that
-are not direct properties of the object being validated.
+Hawaii's `Validator` is inspired on Spring's `org.springframework.validation.Validator` mechanism.
+However Hawaii's validator mechanism uses it's own `ValidationResult` instead of Spring's `org.springframework.validation.Errors`.
+The main difference is that Hawaii's
+`ValidationResult` does not bind directly the object being validated.
+This also gives the possibility to add errors for specific keys that are not direct properties of the object being validated.
 
-Hawaii's validation mechanism also provides additional sugar like Hamcrest matcher support to write human readable validating code,
-the capability to validate and automatically throw a `ValidationException` in case of errors etc.
+Hawaii's validation mechanism also provides additional sugar like Hamcrest matcher support to write human readable validating code, the capability to validate and automatically throw a `ValidationException` in case of errors etc.
 
-Like Spring's validation mechanism the Hawaii validation mechanism also supports the notion of nested error paths which also stimulates to
-re-use validators.
+Like Spring's validation mechanism the Hawaii validation mechanism also supports the notion of nested error paths which also stimulates to re-use validators.
 
-Let's take an example. Imagine a `Customer` object with common name, e-mail, and address fields. A validation result could for example
-contain the following field / error code combinations:
+Let's take an example.
+Imagine a `Customer` object with common name, e-mail, and address fields.
+A validation result could for example contain the following field / error code combinations:
 
 [source%nowrap,properties,indent=0,subs="verbatim,attributes,macros"]
 ----
@@ -173,8 +193,7 @@ addresses[0].country_code = required
 The example demonstrates simple field errors (like `first_name`) but also storing errors for arrays and nested paths (`addresses[0].type`).
 In theory a field could also have multiple error codes if needed.
 
-Implementors should typically only implement the `org.hawaiiframework.sample.validator.Validator#validate(Object, ValidationResult)` method
-as the other methods in the interface are already implemented using the interface's default methods.
+Implementors should typically only implement the `org.hawaiiframework.sample.validator.Validator#validate(Object, ValidationResult)` method as the other methods in the interface are already implemented using the interface's default methods.
 
 A generic `EmailValidator` would look like:
 
@@ -325,3 +344,4 @@ TODO.
 ===== Resource Assembler
 
 TODO.
+

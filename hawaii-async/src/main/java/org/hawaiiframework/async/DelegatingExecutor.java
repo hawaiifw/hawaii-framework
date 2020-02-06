@@ -20,7 +20,7 @@ import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
 import org.hawaiiframework.async.task_listener.TaskListener;
-import org.hawaiiframework.async.task_listener.TaskListenerProvider;
+import org.hawaiiframework.async.task_listener.TaskListenerFactory;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.slf4j.Logger;
@@ -81,27 +81,27 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
     private final ExecutorStatistics executorStatistics;
 
     /**
-     * The Task Context Providers.
+     * The TaskListener factories.
      */
-    private final Collection<TaskListenerProvider> taskListenerProviders;
+    private final Collection<TaskListenerFactory> taskListenerFactories;
 
     /**
      * Constructor.
      *
      * @param delegate                        the delegate
      * @param executorConfigurationProperties the configuration properties
-     * @param taskListenerProviders            The task context providers.
+     * @param taskListenerFactories            The task context providers.
      * @param taskName                        the task name
      */
     public DelegatingExecutor(
             final ThreadPoolTaskExecutor delegate,
             final ExecutorConfigurationProperties executorConfigurationProperties,
-            final Collection<TaskListenerProvider> taskListenerProviders,
+            final Collection<TaskListenerFactory> taskListenerFactories,
             final String taskName) {
         this.delegate = delegate;
         this.executorConfigurationProperties = executorConfigurationProperties;
         this.executorStatistics = new ExecutorStatistics(delegate);
-        this.taskListenerProviders = taskListenerProviders;
+        this.taskListenerFactories = taskListenerFactories;
         this.taskName = taskName;
     }
 
@@ -183,7 +183,7 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
     }
 
     private List<TaskListener> createTaskListeners() {
-        return taskListenerProviders.stream().map(TaskListenerProvider::provide).collect(Collectors.toList());
+        return taskListenerFactories.stream().map(TaskListenerFactory::create).collect(Collectors.toList());
     }
 
     /**

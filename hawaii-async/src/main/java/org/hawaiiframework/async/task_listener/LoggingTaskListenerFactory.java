@@ -16,15 +16,16 @@
 
 package org.hawaiiframework.async.task_listener;
 
-/**
- * Provider for task listener. Providers can be used to pass data between the caller and the async tasks.
- */
-public interface TaskListenerProvider {
+import org.springframework.stereotype.Component;
 
-    /**
-     * Create a task listener.
-     *
-     * @return The task listener for this provider.
-     */
-    TaskListener provide();
+/**
+ * Factory for logging task events.
+ */
+@Component
+public class LoggingTaskListenerFactory implements TaskListenerFactory {
+
+    @Override
+    public TaskListener create() {
+        return new LoggingTaskListener();
+    }
 }

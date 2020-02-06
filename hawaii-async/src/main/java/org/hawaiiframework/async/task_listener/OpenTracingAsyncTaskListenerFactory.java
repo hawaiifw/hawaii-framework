@@ -25,9 +25,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 
 /**
- * Task Context provider for open tracing's Tracer.
+ * Factory that creates a {@link OpenTracingAsyncTaskListener}.
  */
-public class OpenTracingAsyncTaskListenerProvider implements TaskListenerProvider, ApplicationContextAware,
+public class OpenTracingAsyncTaskListenerFactory implements TaskListenerFactory, ApplicationContextAware,
         ApplicationListener<ApplicationReadyEvent> {
 
     /**
@@ -40,10 +40,18 @@ public class OpenTracingAsyncTaskListenerProvider implements TaskListenerProvide
     private ApplicationContext applicationContext;
 
     @Override
-    public TaskListener provide() {
+    public TaskListener create() {
         return new OpenTracingAsyncTaskListener(tracer, tracer.activeSpan());
     }
 
+    /*
+     * The setup of this factory goes in two parts. The reason for this is that the async delegating executor is created
+     * quite early in the spring bootstrap, while the tracer is created rather late.
+     * Autowiring the tracer does not work, since then a new traces is being created. For Jaeger tracing this leads to errors.
+     *
+     * Hence the application context that is wired in here and the event listener.
+     * So Jaeger can create it's tracer and we can use that tracer here by requesting it just before the application starts.
+     */
     @Override
     public void setApplicationContext(@NonNull final ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;

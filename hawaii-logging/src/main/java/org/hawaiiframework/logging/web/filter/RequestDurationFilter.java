@@ -15,7 +15,7 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import org.hawaiiframework.logging.model.KibanaLogField;
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
             LOGGER.info("Could not read start timestamp from request!");
             return;
         }
-        try (KibanaLogField endField = KibanaLogFields.logType(END)) {
+        try (AutoCloseableKibanaLogField endField = KibanaLogFields.logType(END)) {
             final String duration = String.format("%.2f", (System.nanoTime() - start) / 1E6);
             KibanaLogFields.set(TX_DURATION, duration);
             KibanaLogFields.set(REQUEST_DURATION, duration);

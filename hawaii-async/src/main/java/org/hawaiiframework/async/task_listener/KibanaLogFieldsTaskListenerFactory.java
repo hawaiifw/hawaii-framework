@@ -19,13 +19,13 @@ package org.hawaiiframework.async.task_listener;
 import org.springframework.stereotype.Component;
 
 /**
- * Task listener provider for Kibana log fields.
+ * Task listener factory for Kibana log fields.
  */
 @Component
-public class KibanaLogFieldsTaskListenerProvider implements TaskListenerProvider {
+public class KibanaLogFieldsTaskListenerFactory implements TaskListenerFactory {
 
     @Override
-    public TaskListener provide() {
+    public TaskListener create() {
         return new KibanaLogFieldsTaskListener();
     }
 }

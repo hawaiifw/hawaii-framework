@@ -18,7 +18,7 @@ package org.hawaiiframework.async.task_listener;
 
 import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
-import org.hawaiiframework.logging.model.KibanaLogField;
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class LoggingTaskListener implements TaskListener {
 
     @Override
     public void startExecution() {
-        try (KibanaLogField callStart = KibanaLogFields.logType(CALL_START)) {
+        try (AutoCloseableKibanaLogField callStart = KibanaLogFields.logType(CALL_START)) {
             LOGGER.info("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), sharedTaskContext.getTaskId());
         }
     }
@@ -62,8 +62,8 @@ public class LoggingTaskListener implements TaskListener {
         final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
         final String duration = formatTime(taskStatistics.getTotalTime());
 
-        try (KibanaLogField callEnd = KibanaLogFields.logType(CALL_START);
-                KibanaLogField durationField = KibanaLogFields.set(CALL_DURATION, duration)) {
+        try (AutoCloseableKibanaLogField callEnd = KibanaLogFields.logType(CALL_START);
+                AutoCloseableKibanaLogField durationField = KibanaLogFields.tagCloseable(CALL_DURATION, duration)) {
 
             LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).",
                     sharedTaskContext.getTaskName(),

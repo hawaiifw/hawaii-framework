@@ -21,7 +21,7 @@ import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.SystemProperties;
 import org.hawaiiframework.async.model.TaskProperties;
-import org.hawaiiframework.async.task_listener.TaskListenerProvider;
+import org.hawaiiframework.async.task_listener.TaskListenerFactory;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +134,7 @@ public class DelegatingExecutorFactory {
     private void createTaskExecutorDelegate(
         final String taskName,
         final String executor) {
-        final Map<String, TaskListenerProvider> beansOfType = beanFactory.getBeansOfType(TaskListenerProvider.class);
+        final Map<String, TaskListenerFactory> beansOfType = beanFactory.getBeansOfType(TaskListenerFactory.class);
         final TaskExecutor delegate = (TaskExecutor) beanFactory.getBean(executor);
         final ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
         constructorArgumentValues.addIndexedArgumentValue(0, delegate);

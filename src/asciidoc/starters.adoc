@@ -10,14 +10,15 @@ TODO.
 
 [[starters-hawaii-starter-logging]]
 === hawaii-starter-logging
-The `hawaii-starter-logging` delivers a fully configured set of filters that are added to the filter chain in the configured order. The
-starter contains a default configuration, which can be overridden by adding properties to your configuration. The default configuration
-consists of the filters listed in the table below.
+
+The `hawaii-starter-logging` delivers a fully configured set of filters that are added to the filter chain in the configured order.
+The starter contains a default configuration, which can be overridden by adding properties to your configuration.
+The default configuration consists of the filters listed in the table below.
 
 Filters with a negative order are added to the filter chain before any filters that modify or wrap the request and/or response.
 The UserDetailsFilter depends on Spring Security (it logs the authenticated Principal) and therefor has a higher order.
 
-[cols="3,2,2,4a", options="header"]
+[cols="3,2,2,4a",options="header"]
 .Default filter configuration
 |===
 |Filter|Enabled|Order|Additional properties
@@ -43,7 +44,9 @@ The UserDetailsFilter depends on Spring Security (it logs the authenticated Prin
 An example of the default configuration is available in <<appendix-hawaii-application-properties, the appendix>>.
 
 ==== How to use
+
 In order to use Hawaii logging, you'll need to define an appender that uses the `KibanaLogEventEncoder`, for example:
+
 ```
     <appender name="kibana" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>log/idm-kibana.log</file>
@@ -54,6 +57,7 @@ In order to use Hawaii logging, you'll need to define an appender that uses the 
         </rollingPolicy>
     </appender>
 ```
+
 [[starters-hawaii-starter-rest]]
 === hawaii-starter-rest
 
@@ -78,7 +82,9 @@ There are two main additions:
 
 [[starters-hawaii-starter-async-executor-configuration]]
 ==== Executor configuration
-The Hawaii async configuration allows the definition of executors. An executor can be viewed as a thread pool.
+
+The Hawaii async configuration allows the definition of executors.
+An executor can be viewed as a thread pool.
 An executor configuration looks something like this:
 
     executors:
@@ -89,9 +95,11 @@ An executor configuration looks something like this:
         maxPendingRequests: 60
         maxPoolSize: 60
 
-The lowest level of configuration is a task. Tasks are grouped into systems. A system could be some backend
-system against which requests are executed, or a database on which queries are executed.
-Each request or query represents a task in Hawaii async terminology. System and task configuration looks like this:
+The lowest level of configuration is a task.
+Tasks are grouped into systems.
+A system could be some backend system against which requests are executed, or a database on which queries are executed.
+Each request or query represents a task in Hawaii async terminology.
+System and task configuration looks like this:
 
     systems:
       -
@@ -106,10 +114,11 @@ Each request or query represents a task in Hawaii async terminology. System and 
             -
                 method: myOtherTask
 
-As can be seen, an executor can be assigned on system level. This will be the default executor for all the tasks in the system,
-unless a specific executor is configured for a task, such as `myTask` in the example. The same mechanism applies to the timeout settings.
-It is therefore perfectly legal to configure a task without any properties. However, it remains necessary to define the task
-in the configuration, otherwise it can't be used, i.e. every task *must* be defined in the configuration.
+As can be seen, an executor can be assigned on system level.
+This will be the default executor for all the tasks in the system, unless a specific executor is configured for a task, such as `myTask` in the example.
+The same mechanism applies to the timeout settings.
+It is therefore perfectly legal to configure a task without any properties.
+However, it remains necessary to define the task in the configuration, otherwise it can't be used, i.e. every task *must* be defined in the configuration.
 
 Finally, there are some global properties:
 
@@ -117,39 +126,38 @@ Finally, there are some global properties:
     defaultTimeout: 10
     asyncTimeoutExecutorPoolSize: 10
 
-These define the default executor and timeout. These defaults will be used if no executor or timeout is defined on either task or system.
+These define the default executor and timeout.
+These defaults will be used if no executor or timeout is defined on either task or system.
 
 The `asyncTimeoutExecutorPoolSize` property defines the number of threads that are used to run timeout tasks.
 See <<starters-hawaii-starter-async-task-timeout, task timeout>>.
 
 [[starters-hawaii-starter-async-task-timeout]]
 ==== Task timeout
-Another addition is automatically timing out tasks. For each task that is executed, the Hawaii async framework enqueues a
-cancellation task into a separate executor. If the timeout moment arrives, the timeout task is executed and will attempt to abort the
-actual task being executed. The actual task will remove the timeout task when it finishes, so if a task runs within its time limit,
-the timeout task will never be run.
+
+Another addition is automatically timing out tasks.
+For each task that is executed, the Hawaii async framework enqueues a cancellation task into a separate executor.
+If the timeout moment arrives, the timeout task is executed and will attempt to abort the actual task being executed.
+The actual task will remove the timeout task when it finishes, so if a task runs within its time limit, the timeout task will never be run.
 
 [[starters-hawaii-starter-async-usage]]
 ==== Usage
-In practice, using the Hawaii asynchronous framework is not that different from using Spring's: asynchronous execution must be
-enabled with `@EnableAsync` and methods that are to be executed asynchronously must be annotated with the `@Async` annotation,
-and they must have a `Future` typed return value.
 
-Additionally, an asynchronous configuration must be defined in the file identified by the `hawaii.async.configuration` property,
-which is set to `./config/async-config.yml` by default.
+In practice, using the Hawaii asynchronous framework is not that different from using Spring's: asynchronous execution must be enabled with `@EnableAsync` and methods that are to be executed asynchronously must be annotated with the `@Async` annotation, and they must have a `Future` typed return value.
+
+Additionally, an asynchronous configuration must be defined in the file identified by the `hawaii.async.configuration` property, which is set to `./config/async-config.yml` by default.
 
 The essential difference in usage is that where Spring allows the specification of an executor by specifying the value of the
-`@Async` annotation, the Hawaii additions require specifying the `Task` name instead of the executor. The Hawaii async configuration will
-take care of routing the execution to the correct `Executor`.
+`@Async` annotation, the Hawaii additions require specifying the `Task` name instead of the executor.
+The Hawaii async configuration will take care of routing the execution to the correct `Executor`.
 
 ===== HTTP
-To execute http requests using the Hawaii async framework, you'll need to use the `HawaiiHttpComponentsClientHttpRequestFactory` to enable
-timing out of tasks that run too long.
 
-You can use the `LoggingClientHttpRequestInterceptor` to log requests and responses made over http. Note that since this interceptor
-consumes the response, this will only work if you wrap the `HawaiiHttpComponentsClientHttpRequestFactory` in a
-`org.springframework.http.client.BufferingClientHttpRequestFactory`, or take other measures to make sure the response can be read
-more than once.
+To execute http requests using the Hawaii async framework, you'll need to use the `HawaiiHttpComponentsClientHttpRequestFactory` to enable timing out of tasks that run too long.
+
+You can use the `LoggingClientHttpRequestInterceptor` to log requests and responses made over http.
+Note that since this interceptor consumes the response, this will only work if you wrap the `HawaiiHttpComponentsClientHttpRequestFactory` in a
+`org.springframework.http.client.BufferingClientHttpRequestFactory`, or take other measures to make sure the response can be read more than once.
 
 [[starters-hawaii-starter-async-components]]
 ==== Components
@@ -158,30 +166,43 @@ The following diagram shows the various components in the Hawaii async solution:
 
 image::./resources/images/hawaii-async-task-overview.png[]
 
-In the diagram, MethodX is the call that must be executed asynchronously, for example service or repository method. The `@Async`
-annotation causes Spring to create a proxy around this method. The proxy locates the executor, which in the Hawaii case is a
-`DelegatingExecutor` which will delegate to the real executor specified for the task. The executor takes the `MethodX Runnable`
+In the diagram, MethodX is the call that must be executed asynchronously, for example service or repository method.
+The `@Async`
+annotation causes Spring to create a proxy around this method.
+The proxy locates the executor, which in the Hawaii case is a
+`DelegatingExecutor` which will delegate to the real executor specified for the task.
+The executor takes the `MethodX Runnable`
 and executes it on an available thread.
 
 Additionally, a delayed (by the configured timeout) task, the `MethodX Guard` is created and passed to the `Delayed Guard Executor`.
 
-Both tasks share the `Shared Task Context` which allows them to share logging context, and which also provides access for the
-guarded task to remove the guard task upon completion, and for the guard task to abort the guarded task upon activation.
+Both tasks share the `Shared Task Context` which allows them to share logging context, and which also provides access for the guarded task to remove the guard task upon completion, and for the guard task to abort the guarded task upon activation.
 
 [[starters-hawaii-starter-async-processing]]
 ==== Processing
+
 The sequence below shows the components working together to execute a task.
 
 :imagesdir: ./resources/generated
 
-[plantuml, hawaii-async-task-overview-normal, svg]
+[plantuml,hawaii-async-task-overview-normal,svg]
 ....
 include::../uml/hawaii-async-task-overview-normal.uml[]
 ....
 
 The sequence below shows the flow when a task times out.
 
-[plantuml, hawaii-async-task-overview-timeout, svg]
+[plantuml,hawaii-async-task-overview-timeout,svg]
 ....
 include::../uml/hawaii-async-task-overview-timeout.uml[]
 ....
+
+[[starters-hawaii-starter-async-opentracing]]
+==== Opentracing
+
+The async component can collaborate with opentracing and start a new span for each task.
+For this you have to include the `opentracing-api` library.
+The configuration picks this up and configures the logging accordingly.
+
+You can disable this behaviour by explicitly turning this off, set the `hawaii.logging.opentracing.enabled` value to `false`.
+The default is `true`, even if the property is not present.

@@ -17,7 +17,7 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
 import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
-import org.hawaiiframework.logging.model.KibanaLogField;
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
@@ -141,7 +141,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         final int contentLength = wrappedRequest.getContentLength();
         final String contentType = wrappedRequest.getContentType();
 
-        try (KibanaLogField kibanaLogField = KibanaLogFields.logType(REQUEST_BODY)) {
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(REQUEST_BODY)) {
             LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
             try {
                 if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
@@ -166,7 +166,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         final String contentType = wrappedResponse.getContentType();
 
         KibanaLogFields.set(HTTP_STATUS, httpStatus.value());
-        try (KibanaLogField kibanaLogField = KibanaLogFields.logType(RESPONSE_BODY)) {
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(RESPONSE_BODY)) {
             LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
                     httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
 

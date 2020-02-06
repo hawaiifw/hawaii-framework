@@ -15,7 +15,7 @@
  */
 package org.hawaiiframework.logging.http.client;
 
-import org.hawaiiframework.logging.model.KibanaLogField;
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.slf4j.Logger;
@@ -85,7 +85,7 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
             return response;
         } catch (IOException t) {
             KibanaLogFields.callResult(TIME_OUT);
-            try (KibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_END)) {
+            try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_END)) {
                 LOGGER.info("Got timeout from backend.");
             }
             throw t;
@@ -93,8 +93,8 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     }
 
     private void logRequest(final HttpRequest request, final byte[] body) {
-        try (KibanaLogField callMethod = KibanaLogFields.set(CALL_METHOD, request.getMethodValue());
-                KibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_REQUEST_BODY)) {
+        try (AutoCloseableKibanaLogField callMethod = KibanaLogFields.tagCloseable(CALL_METHOD, request.getMethodValue());
+                AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_REQUEST_BODY)) {
             LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
                     httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
         }
@@ -109,7 +109,7 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     }
 
     private void logResponse(final HttpStatus statusCode, final String statusText, final HttpHeaders headers, final String body) {
-        try (KibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_RESPONSE_BODY)) {
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_RESPONSE_BODY)) {
             if (statusCode.is2xxSuccessful() || statusCode.is3xxRedirection()) {
                 KibanaLogFields.callResult(SUCCESS);
             } else {

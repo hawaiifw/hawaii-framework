@@ -22,7 +22,7 @@ import org.hawaiiframework.async.AbortableTaskDecorator;
 import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.ExecutorProperties;
-import org.hawaiiframework.async.task_listener.TaskListenerProvider;
+import org.hawaiiframework.async.task_listener.TaskListenerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -100,7 +100,7 @@ public class AsyncExecutorInitializer {
     }
 
     private void registerDefaultExecutor(final ThreadPoolTaskExecutor executor) {
-        final Map<String, TaskListenerProvider> beansOfType = beanFactory.getBeansOfType(TaskListenerProvider.class);
+        final Map<String, TaskListenerFactory> beansOfType = beanFactory.getBeansOfType(TaskListenerFactory.class);
         defaultExecutor = new DelegatingExecutor(executor, configuration, beansOfType.values(), configuration.getDefaultExecutor());
     }
 

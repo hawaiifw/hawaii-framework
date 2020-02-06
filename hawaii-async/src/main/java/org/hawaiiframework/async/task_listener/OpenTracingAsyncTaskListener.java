@@ -25,6 +25,8 @@ import org.hawaiiframework.async.timeout.SharedTaskContext;
 /**
  * Task listener for open tracing's Tracer. Should be executed first upon start and last upon finish.
  * <p>
+ * The task listener creates a span for each async invocation.
+ * <p>
  * Ordered at -200.
  */
 public class OpenTracingAsyncTaskListener implements TaskListener {

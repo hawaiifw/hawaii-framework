@@ -21,7 +21,7 @@ package org.hawaiiframework.logging.model;
  * @author Paul Klos
  * @since 2.0.0
  */
-public interface KibanaLogField extends AutoCloseable {
+public interface KibanaLogField {
 
     /**
      * Get the name with which this field will appear in the log.
@@ -40,8 +40,4 @@ public interface KibanaLogField extends AutoCloseable {
         return key != null && key.equalsIgnoreCase(getLogName());
     }
 
-    @Override
-    default void close() {
-        KibanaLogFields.unset(this);
-    }
 }

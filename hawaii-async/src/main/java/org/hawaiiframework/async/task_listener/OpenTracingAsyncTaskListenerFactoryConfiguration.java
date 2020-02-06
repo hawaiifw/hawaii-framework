@@ -22,14 +22,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Task Context provider for open tracing's Tracer.
+ * Configuration that creates an opentracing task listener factory.
  */
 @Configuration
 @ConditionalOnClass(Tracer.class)
-public class OpenTracingAsyncTaskListenerProviderConfiguration {
+public class OpenTracingAsyncTaskListenerFactoryConfiguration {
 
     @Bean
-    public OpenTracingAsyncTaskListenerProvider tracerTaskContextProvider() {
-        return new OpenTracingAsyncTaskListenerProvider();
+    public OpenTracingAsyncTaskListenerFactory tracerTaskContextProvider() {
+        return new OpenTracingAsyncTaskListenerFactory();
     }
 }
