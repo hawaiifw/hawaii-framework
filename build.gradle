@@ -298,7 +298,7 @@ project("hawaii-async") {
     dependencies {
         compile project(":hawaii-logging")
         compile "javax.validation:validation-api"
-        compile "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
+        compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         compile "org.springframework:spring-core"
         compile "org.springframework:spring-context"
         compile "org.springframework.boot:spring-boot"
@@ -368,6 +368,8 @@ project("hawaii-core") {
         compileOnly "org.springframework:spring-context"
         compileOnly "org.springframework:spring-web"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+        compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         testCompile "javax.servlet:javax.servlet-api"
         testCompile "org.springframework:spring-core"
         testCompile "org.springframework:spring-web"
@@ -389,6 +391,7 @@ project("hawaii-logging") {
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         compileOnly "io.opentracing.contrib:opentracing-api-extensions:0.6.0"
         testCompile "org.apache.commons:commons-text:${commonsTextVersion}"
         testCompile "org.powermock:powermock-api-mockito2:${powerMockVersion}"

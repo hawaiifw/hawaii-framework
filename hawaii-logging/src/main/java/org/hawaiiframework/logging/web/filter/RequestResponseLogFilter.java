@@ -16,7 +16,7 @@
 package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
-import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterProperties;
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
@@ -83,7 +83,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     /**
      * The configuration for the logging.
      */
-    private final RequestResponseLogFilterConfiguration configuration;
+    private final RequestResponseLogFilterProperties configuration;
 
     /**
      * The request response log util.
@@ -93,7 +93,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     /**
      * The constructor.
      */
-    public RequestResponseLogFilter(final RequestResponseLogFilterConfiguration configuration,
+    public RequestResponseLogFilter(final RequestResponseLogFilterProperties configuration,
             final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
         super();
         this.configuration = configuration;

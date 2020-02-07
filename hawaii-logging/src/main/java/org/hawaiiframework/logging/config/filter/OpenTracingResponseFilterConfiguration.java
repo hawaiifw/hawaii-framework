@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.logging.config;
+package org.hawaiiframework.logging.config.filter;
 
 import io.opentracing.Tracer;
 import io.opentracing.contrib.api.TracerObserver;
@@ -26,7 +26,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
 
 /**
  * Configuration to map / weave opentracing with kibana logging.
@@ -34,7 +34,7 @@ import static org.hawaiiframework.logging.config.FilterRegistrationBeanUtil.crea
 @Configuration
 @ConditionalOnClass({Tracer.class, TracerObserver.class})
 @ConditionalOnProperty(prefix = "hawaii.logging.opentracing", name = "enabled", matchIfMissing = true)
-public class OpenTracingHawaiiLoggingConfiguration {
+public class OpenTracingResponseFilterConfiguration {
 
     /**
      * The the logging configuration properties.
@@ -46,7 +46,7 @@ public class OpenTracingHawaiiLoggingConfiguration {
      *
      * @param hawaiiLoggingConfigurationProperties the logging configuration properties
      */
-    public OpenTracingHawaiiLoggingConfiguration(
+    public OpenTracingResponseFilterConfiguration(
             final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
         this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
     }

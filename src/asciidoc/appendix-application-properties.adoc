@@ -78,6 +78,10 @@ This section provides a list of available Hawaii application properties.
             - text/plain
             - text/xml
             - application/vnd.spring-boot.actuator.v1+json
+          container-name:
+            enabled: true
+            http-header: X-Hawaii-Hostname
+            hostname: ${HOSTNAME:localhost}
           user-details:
             enabled: true
             order: 110

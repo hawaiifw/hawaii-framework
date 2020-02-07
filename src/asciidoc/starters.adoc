@@ -45,19 +45,6 @@ An example of the default configuration is available in <<appendix-hawaii-applic
 
 ==== How to use
 
-In order to use Hawaii logging, you'll need to define an appender that uses the `KibanaLogEventEncoder`, for example:
-
-```
-    <appender name="kibana" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/idm-kibana.log</file>
-        <encoder class="org.hawaiiframework.logging.logback.KibanaLogEventEncoder"/>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${tomcat_logs}/hawaii-idm.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>10</maxHistory>
-        </rollingPolicy>
-    </appender>
-```
-
 [[starters-hawaii-starter-rest]]
 === hawaii-starter-rest
 
@@ -206,3 +193,9 @@ The configuration picks this up and configures the logging accordingly.
 
 You can disable this behaviour by explicitly turning this off, set the `hawaii.logging.opentracing.enabled` value to `false`.
 The default is `true`, even if the property is not present.
+
+==== SQL
+If the `net.ttddyy:datasource-proxy` is present on the classpath, then SQL statements can be terminated. This relies on the
+JDBC driver's implementation of the `Statement#cancel()` method.
+Note, the statement must be part of an `@Async('db-name.query-name') annotatied method.
+

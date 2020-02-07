@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.logging.config;
+package org.hawaiiframework.logging.config.filter;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -53,7 +53,7 @@ public class HawaiiLoggingConfigurationProperties {
      * Configuration properties for the request-response logging filter.
      */
     @NestedConfigurationProperty
-    private RequestResponseLogFilterConfiguration requestResponse;
+    private RequestResponseLogFilterProperties requestResponse;
 
     /**
      * Configuration properties for the request id logging filter.
@@ -72,6 +72,12 @@ public class HawaiiLoggingConfigurationProperties {
      */
     @NestedConfigurationProperty
     private LoggingFilterProperties transactionType;
+
+    /**
+     * Configuration properties for the container name log filter.
+     */
+    @NestedConfigurationProperty
+    private ContainerNameHttpHeaderFilterProperties containerName;
 
     /**
      * Configuration properties for the user details logging filter.
@@ -138,7 +144,7 @@ public class HawaiiLoggingConfigurationProperties {
      *
      * @return the properties
      */
-    public RequestResponseLogFilterConfiguration getRequestResponse() {
+    public RequestResponseLogFilterProperties getRequestResponse() {
         return requestResponse;
     }
 
@@ -147,7 +153,7 @@ public class HawaiiLoggingConfigurationProperties {
      *
      * @param requestResponse the properties
      */
-    public void setRequestResponse(final RequestResponseLogFilterConfiguration requestResponse) {
+    public void setRequestResponse(final RequestResponseLogFilterProperties requestResponse) {
         this.requestResponse = requestResponse;
     }
 
@@ -185,6 +191,23 @@ public class HawaiiLoggingConfigurationProperties {
      */
     public void setTransactionId(final HttpHeaderLoggingFilterProperties transactionId) {
         this.transactionId = transactionId;
+    }
+
+    /**
+     * Getter for the container name response filter properties.
+     *
+     * @return the properties
+     */
+    public ContainerNameHttpHeaderFilterProperties getContainerName() {
+        return containerName;
+    }
+    /**
+     * Setter for the container name response filter properties.
+     *
+     * @param containerName the properties
+     */
+    public void setContainerName(final ContainerNameHttpHeaderFilterProperties containerName) {
+        this.containerName = containerName;
     }
 
     /**

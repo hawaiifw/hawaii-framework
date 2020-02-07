@@ -90,10 +90,19 @@ This filter is only instantiated if Spring security is found on the class path.
 This filter logs the content type, size, headers and body of incoming requests, as well as the response status, headers and body.
 Optionally, the filter can log the response to a file if it exceeds a certain threshold size.
 
-===== Class Method Name
+[[features-logging-container-name]]
+===== Container Name Response
+
+This filter adds the container name to the response of a call.
+
+===== Transaction Type
 
 This filter retrieves the controller and the calling method, this will then be used to log it accordingly.
 For example: controller Foo.java, with method helloWorld(), will be displayed as Foo.helloWorld.
+
+==== SQL
+If the `net.ttddyy:datasource-proxy` library is present on the classpath, the SQL statements with parameters will be logged.
+The logging can be suppressed selectively by using the `SqlStatementLogging#suppress()` method.
 
 [[features-hawaii-time]]
 === Hawaii Time
