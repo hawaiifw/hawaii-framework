@@ -16,20 +16,40 @@
 
 package org.hawaiiframework.logging.config;
 
+import io.opentracing.Tracer;
 import io.opentracing.contrib.api.TracerObserver;
 import org.hawaiiframework.logging.opentracing.KibanaLogFieldsTracerObserver;
+import org.hawaiiframework.logging.opentracing.OpentracingResponseFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static org.hawaiiframework.logging.config.FilterRegistrationBeanUtil.createFilterRegistrationBean;
 
 /**
  * Configuration to map / weave opentracing with kibana logging.
  */
 @Configuration
-@ConditionalOnClass(TracerObserver.class)
+@ConditionalOnClass({Tracer.class, TracerObserver.class})
 @ConditionalOnProperty(prefix = "hawaii.logging.opentracing", name = "enabled", matchIfMissing = true)
 public class OpenTracingHawaiiLoggingConfiguration {
+
+    /**
+     * The the logging configuration properties.
+     */
+    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+
+    /**
+     * Autowired constructor.
+     *
+     * @param hawaiiLoggingConfigurationProperties the logging configuration properties
+     */
+    public OpenTracingHawaiiLoggingConfiguration(
+            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    }
 
     /**
      * Register the kibana log fields tracer observer to add trace id and span id to kibana log fields.
@@ -39,5 +59,29 @@ public class OpenTracingHawaiiLoggingConfiguration {
     @Bean
     public TracerObserver kibanaLogFieldsTracerObserver() {
         return new KibanaLogFieldsTracerObserver();
+    }
+
+    /**
+     * Create the {@link OpentracingResponseFilter} bean.
+     *
+     * @return the {@link OpentracingResponseFilter} bean
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.opentracing-response", name = "enabled", matchIfMissing = true)
+    public OpentracingResponseFilter opentracingResponseFilter() {
+        return new OpentracingResponseFilter();
+    }
+
+    /**
+     * Register the {@link #opentracingResponseFilter()} bean.
+     *
+     * @param opentracingResponseFilter the opentracingResponseFilter
+     * @return the {@link #opentracingResponseFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.opentracing-response", name = "enabled", matchIfMissing = true)
+    public FilterRegistrationBean opentracingResponseFilterRegistration(final OpentracingResponseFilter opentracingResponseFilter) {
+        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLogCleanup();
+        return createFilterRegistrationBean(opentracingResponseFilter, filterProperties);
     }
 }

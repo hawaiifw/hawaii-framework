@@ -47,6 +47,10 @@ This section provides a list of available Hawaii application properties.
           request-duration:
             enabled: true
             order: -800
+          opentracing-response:
+            # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
+            enabled: true
+            order: -790
           kibana-log:
             enabled: true
             order: -700

@@ -23,8 +23,8 @@ import org.hawaiiframework.logging.web.filter.RequestDurationFilter;
 import org.hawaiiframework.logging.web.filter.RequestIdFilter;
 import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
 import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
-import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
 import org.hawaiiframework.logging.web.filter.TransactionTypeFilter;
+import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,8 +36,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
 import java.util.EnumSet;
+
+import static org.hawaiiframework.logging.config.FilterRegistrationBeanUtil.createFilterRegistrationBean;
 
 /**
  * Configures the logging based on the application properties.
@@ -54,8 +55,6 @@ import java.util.EnumSet;
 @Import(OpenTracingHawaiiLoggingConfiguration.class)
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public class HawaiiLoggingConfiguration {
-
-    private static final EnumSet<DispatcherType> ALL_DISPATCHER_TYPES = EnumSet.allOf(DispatcherType.class);
 
     /**
      * The the logging configuration properties.
@@ -93,7 +92,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
     public FilterRegistrationBean kibanaLogFilterRegistration(final KibanaLogFilter kibanaLogFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLog();
-        return createFilterRegistrationBean(kibanaLogFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(kibanaLogFilter, filterProperties);
     }
 
     /**
@@ -117,7 +116,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled")
     public FilterRegistrationBean kibanaLogCleanupFilterRegistration(final KibanaLogCleanupFilter kibanaLogCleanupFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLogCleanup();
-        return createFilterRegistrationBean(kibanaLogCleanupFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(kibanaLogCleanupFilter, filterProperties);
     }
 
     /**
@@ -141,7 +140,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled")
     public FilterRegistrationBean requestDurationFilterRegistration(final RequestDurationFilter requestDurationFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestDuration();
-        return createFilterRegistrationBean(requestDurationFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(requestDurationFilter, filterProperties);
     }
 
     /**
@@ -165,7 +164,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
     public FilterRegistrationBean requestIdFilterRegistration(final RequestIdFilter requestIdFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestId();
-        return createFilterRegistrationBean(requestIdFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(requestIdFilter, filterProperties);
     }
 
     /**
@@ -188,7 +187,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
     public FilterRegistrationBean requestResponseLogFilterRegistration(final RequestResponseLogFilter requestResponseLogFilter) {
         final RequestResponseLogFilterConfiguration filterProperties = hawaiiLoggingConfigurationProperties.getRequestResponse();
-        return createFilterRegistrationBean(requestResponseLogFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(requestResponseLogFilter, filterProperties);
     }
 
     /**
@@ -213,7 +212,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled")
     public FilterRegistrationBean transactionIdFilterRegistration(final TransactionIdFilter transactionIdFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getTransactionId();
-        return createFilterRegistrationBean(transactionIdFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(transactionIdFilter, filterProperties);
     }
 
     /**
@@ -238,7 +237,7 @@ public class HawaiiLoggingConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-name", name = "enabled")
     public FilterRegistrationBean transactionTypeFilterRegistration(final TransactionTypeFilter transactionNameFilter) {
         final var filterProperties = hawaiiLoggingConfigurationProperties.getTransactionType();
-        return createFilterRegistrationBean(transactionNameFilter, filterProperties, ALL_DISPATCHER_TYPES);
+        return createFilterRegistrationBean(transactionNameFilter, filterProperties);
     }
 
     /**
@@ -264,23 +263,7 @@ public class HawaiiLoggingConfiguration {
         return new ClientIpResolver(filterProperties.getHttpHeader());
     }
 
-    /**
-     * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
-     *
-     * @param filter           the filter
-     * @param filterProperties the configuration properties
-     * @param dispatcherTypes  the request dispatcher types the filter is used for
-     * @return the wrapped filter
-     */
-    private FilterRegistrationBean createFilterRegistrationBean(
-            final Filter filter,
-            final LoggingFilterProperties filterProperties,
-            final EnumSet<DispatcherType> dispatcherTypes) {
-        final FilterRegistrationBean<?> result = new FilterRegistrationBean<>(filter);
-        result.setOrder(filterProperties.getOrder());
-        result.setDispatcherTypes(dispatcherTypes);
-        return result;
-    }
+
 
     /**
      * Configures the user details filter.
