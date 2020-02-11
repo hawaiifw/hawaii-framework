@@ -24,7 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-import static org.hawaiiframework.logging.opentracing.OpenTracingKibanaLogField.SPAN_OPERATION_NAME;
+import static org.hawaiiframework.logging.opentracing.OpentracingKibanaLogField.SPAN_OPERATION_NAME;
+import static org.hawaiiframework.logging.opentracing.OpentracingKibanaUtil.addTagToKibanaFields;
 
 /**
  * A SpanObserver that adds some field data in KibanaLogFields.
@@ -45,16 +46,14 @@ public class KibanaLogFieldsSpanObserver implements SpanObserver {
     @Override
     public void onSetTag(final SpanData spanData, final String key, final Object value) {
         LOGGER.debug("onSetTag(spanData, '{}', '{}')", key, value);
-        final OpenTracingKibanaLogField field = OpenTracingKibanaLogField.fromKey(key);
-        if (field != null) {
-            KibanaLogFields.set(field, value.toString());
-        }
+        addTagToKibanaFields(key, value);
     }
 
     @Override
     public void onSetBaggageItem(final SpanData spanData, final String key, final String value) {
         LOGGER.debug("onSetBaggageItem(spanData, '{}', '{}')", key, value);
     }
+
 
     @Override
     public void onLog(final SpanData spanData, final long timestampMicroseconds, final Map<String, ?> fields) {

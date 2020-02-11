@@ -31,7 +31,7 @@ import java.util.Map;
  * @see <a href="https://github.com/opentracing/specification/blob/master/semantic_conventions.md">
  * https://github.com/opentracing/specification/blob/master/semantic_conventions.md</a>
  */
-public enum OpenTracingKibanaLogField implements KibanaLogField {
+public enum OpentracingKibanaLogField implements KibanaLogField {
     // Invented, not part of the spec.
     SPAN_ID("span.id"),
     // Invented, not part of the pec
@@ -57,7 +57,7 @@ public enum OpenTracingKibanaLogField implements KibanaLogField {
     //peer.service
     PEER_SERVICE("peer.service");
 
-    private static final Map<String, OpenTracingKibanaLogField> LOOKUP = new HashMap<>();
+    private static final Map<String, OpentracingKibanaLogField> LOOKUP = new HashMap<>();
 
     static {
         Arrays.stream(values()).forEach(field -> LOOKUP.put(field.fieldName, field));
@@ -71,7 +71,7 @@ public enum OpenTracingKibanaLogField implements KibanaLogField {
     /**
      * @param fieldName the kibana log's field name..
      */
-    OpenTracingKibanaLogField(final String fieldName) {
+    OpentracingKibanaLogField(final String fieldName) {
         this.fieldName = fieldName;
     }
 
@@ -90,7 +90,7 @@ public enum OpenTracingKibanaLogField implements KibanaLogField {
      * @return the LogField with the given name, or {@code null}.
      */
     @SuppressWarnings("PMD.LawOfDemeter")
-    public static OpenTracingKibanaLogField fromKey(final String key) {
+    public static OpentracingKibanaLogField fromKey(final String key) {
         return LOOKUP.getOrDefault(key, null);
     }
 }
