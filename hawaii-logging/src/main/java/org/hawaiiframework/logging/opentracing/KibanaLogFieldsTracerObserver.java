@@ -23,6 +23,8 @@ import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.hawaiiframework.logging.opentracing.OpentracingKibanaUtil.addTagsToKibanaFields;
+
 /**
  * A TracerObserver that registers some of the span data in KibanaLogFields.
  */
@@ -47,8 +49,9 @@ public class KibanaLogFieldsTracerObserver implements TracerObserver {
 
     @Override
     public SpanObserver onStart(final SpanData spanData) {
-        KibanaLogFields.set(OpenTracingKibanaLogField.SPAN_ID, spanData.getSpanId());
-        KibanaLogFields.set(OpenTracingKibanaLogField.TRACE_ID, spanData.getTraceId());
+        KibanaLogFields.set(OpentracingKibanaLogField.SPAN_ID, spanData.getSpanId());
+        KibanaLogFields.set(OpentracingKibanaLogField.TRACE_ID, spanData.getTraceId());
+        addTagsToKibanaFields(spanData.getTags());
         LOGGER.debug("Start of span '{}'.", spanData.getSpanId());
         return spanObserver;
     }
