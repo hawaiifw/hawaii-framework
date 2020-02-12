@@ -65,7 +65,8 @@ public class TransactionTypeFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-name", name = "enabled")
-    public FilterRegistrationBean transactionTypeFilterRegistration(final TransactionTypeFilter transactionNameFilter) {
+    public FilterRegistrationBean<TransactionTypeFilter> transactionTypeFilterRegistration(
+            final TransactionTypeFilter transactionNameFilter) {
         final var filterProperties = hawaiiLoggingConfigurationProperties.getTransactionType();
         return createFilterRegistrationBean(transactionNameFilter, filterProperties);
     }

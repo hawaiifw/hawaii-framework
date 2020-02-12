@@ -64,7 +64,7 @@ public class KibanaLogFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
-    public FilterRegistrationBean kibanaLogFilterRegistration(final KibanaLogFilter kibanaLogFilter) {
+    public FilterRegistrationBean<KibanaLogFilter> kibanaLogFilterRegistration(final KibanaLogFilter kibanaLogFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLog();
         return createFilterRegistrationBean(kibanaLogFilter, filterProperties);
     }

@@ -63,7 +63,7 @@ public class RequestIdFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
-    public FilterRegistrationBean requestIdFilterRegistration(final RequestIdFilter requestIdFilter) {
+    public FilterRegistrationBean<RequestIdFilter> requestIdFilterRegistration(final RequestIdFilter requestIdFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestId();
         return createFilterRegistrationBean(requestIdFilter, filterProperties);
     }

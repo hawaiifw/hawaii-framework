@@ -63,7 +63,8 @@ public class RequestResponseLogFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
-    public FilterRegistrationBean requestResponseLogFilterRegistration(final RequestResponseLogFilter requestResponseLogFilter) {
+    public FilterRegistrationBean<RequestResponseLogFilter> requestResponseLogFilterRegistration(
+            final RequestResponseLogFilter requestResponseLogFilter) {
         final RequestResponseLogFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestResponse();
         return createFilterRegistrationBean(requestResponseLogFilter, filterProperties);
     }

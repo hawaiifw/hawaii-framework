@@ -63,7 +63,8 @@ public class KibanaLogCleanupFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled")
-    public FilterRegistrationBean kibanaLogCleanupFilterRegistration(final KibanaLogCleanupFilter kibanaLogCleanupFilter) {
+    public FilterRegistrationBean<KibanaLogCleanupFilter> kibanaLogCleanupFilterRegistration(
+            final KibanaLogCleanupFilter kibanaLogCleanupFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLogCleanup();
         return createFilterRegistrationBean(kibanaLogCleanupFilter, filterProperties);
     }

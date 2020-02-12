@@ -63,7 +63,8 @@ public class RequestDurationFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled")
-    public FilterRegistrationBean requestDurationFilterRegistration(final RequestDurationFilter requestDurationFilter) {
+    public FilterRegistrationBean<RequestDurationFilter> requestDurationFilterRegistration(
+            final RequestDurationFilter requestDurationFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestDuration();
         return createFilterRegistrationBean(requestDurationFilter, filterProperties);
     }

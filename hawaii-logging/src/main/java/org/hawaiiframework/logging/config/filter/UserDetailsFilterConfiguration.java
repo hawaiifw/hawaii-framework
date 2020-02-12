@@ -69,7 +69,7 @@ public class UserDetailsFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
-    public FilterRegistrationBean userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
+    public FilterRegistrationBean<UserDetailsFilter> userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getUserDetails();
         final FilterRegistrationBean<UserDetailsFilter> result = new FilterRegistrationBean<>(userDetailsFilter);
         result.setOrder(filterProperties.getOrder());

@@ -80,7 +80,8 @@ public class OpenTracingResponseFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.opentracing-response", name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean opentracingResponseFilterRegistration(final OpentracingResponseFilter opentracingResponseFilter) {
+    public FilterRegistrationBean<OpentracingResponseFilter> opentracingResponseFilterRegistration(
+            final OpentracingResponseFilter opentracingResponseFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLogCleanup();
         return createFilterRegistrationBean(opentracingResponseFilter, filterProperties);
     }

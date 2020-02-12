@@ -43,10 +43,10 @@ public final class FilterRegistrationBeanUtil {
      * @param filterProperties the configuration properties
      * @return the wrapped filter
      */
-    public static FilterRegistrationBean createFilterRegistrationBean(
-            final Filter filter,
+    public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
+            final T filter,
             final LoggingFilterProperties filterProperties) {
-        final FilterRegistrationBean<?> result = new FilterRegistrationBean<>(filter);
+        final FilterRegistrationBean<T> result = new FilterRegistrationBean<>(filter);
         result.setOrder(filterProperties.getOrder());
         result.setDispatcherTypes(ALL_DISPATCHER_TYPES);
         return result;
@@ -60,11 +60,11 @@ public final class FilterRegistrationBeanUtil {
      * @param dispatcherTypes  the request dispatcher types the filter is used for
      * @return the wrapped filter
      */
-    public static FilterRegistrationBean createFilterRegistrationBean(
-            final Filter filter,
+    public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
+            final T filter,
             final LoggingFilterProperties filterProperties,
             final EnumSet<DispatcherType> dispatcherTypes) {
-        final FilterRegistrationBean<?> result = new FilterRegistrationBean<>(filter);
+        final FilterRegistrationBean<T> result = new FilterRegistrationBean<>(filter);
         result.setOrder(filterProperties.getOrder());
         result.setDispatcherTypes(dispatcherTypes);
         return result;

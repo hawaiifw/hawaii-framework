@@ -21,8 +21,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
 
 /**
@@ -66,7 +64,8 @@ public class ContainerNameHttpHeaderFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled")
-    public FilterRegistrationBean<Filter> containerNameHttpHeaderFilterRegistration(final ContainerNameHttpHeaderFilter filter) {
+    public FilterRegistrationBean<ContainerNameHttpHeaderFilter> containerNameHttpHeaderFilterRegistration(
+            final ContainerNameHttpHeaderFilter filter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getContainerName();
         return createFilterRegistrationBean(filter, filterProperties);
     }

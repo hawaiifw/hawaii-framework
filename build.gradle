@@ -74,7 +74,7 @@ configure(allprojects) { project ->
 
     group = "org.hawaiiframework"
 
-    apply plugin: "java"
+    apply plugin: "java-library"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
     apply plugin: "propdeps"
@@ -297,14 +297,17 @@ project("hawaii-async") {
 
     dependencies {
         compile project(":hawaii-logging")
-        compile "javax.validation:validation-api"
+        compileOnly "javax.validation:validation-api"
         compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
-        compile "org.springframework:spring-core"
-        compile "org.springframework:spring-context"
-        compile "org.springframework.boot:spring-boot"
-        compile "org.apache.httpcomponents:httpclient"
+        compileOnly "org.springframework:spring-core"
+        compileOnly "org.springframework:spring-context"
+        compileOnly "org.springframework.boot:spring-boot"
+        compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+        compileOnly "org.apache.httpcomponents:httpclient"
+        compileOnly "org.springframework:spring-web"
         compile "org.yaml:snakeyaml"
         compileOnly "io.opentracing:opentracing-api:0.33.0"
+        testCompile "org.springframework:spring-context"
     }
 }
 
@@ -383,10 +386,12 @@ project("hawaii-logging") {
 
     dependencies {
         compile project(":hawaii-core")
-        compile "javax.servlet:javax.servlet-api"
-        compile "org.springframework:spring-web"
-        compile "org.springframework.boot:spring-boot"
-        compile "org.springframework.boot:spring-boot-autoconfigure"
+        compileOnly "javax.servlet:javax.servlet-api"
+        testCompile "javax.servlet:javax.servlet-api"
+        compileOnly "org.springframework:spring-web"
+        testCompile "org.springframework:spring-web"
+        compileOnly "org.springframework.boot:spring-boot"
+        compileOnly "org.springframework.boot:spring-boot-autoconfigure"
         compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"

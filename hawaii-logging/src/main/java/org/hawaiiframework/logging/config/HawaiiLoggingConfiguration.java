@@ -40,8 +40,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
-@Import(DataSourceProxyConfiguration.class)
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@Import({DataSourceProxyConfiguration.class, HawaiiLoggingFilterConfiguration.class})
 public class HawaiiLoggingConfiguration {
 
     /**
