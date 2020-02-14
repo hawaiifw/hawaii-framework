@@ -15,13 +15,10 @@
  */
 package org.hawaiiframework.logging.config;
 
-import net.ttddyy.dsproxy.listener.QueryExecutionListener;
 import org.hawaiiframework.logging.config.filter.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.http.client.LoggingClientHttpRequestInterceptor;
-import org.hawaiiframework.logging.sql.StatementLoggerQueryExecutionListener;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -40,19 +37,13 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
-@Import({DataSourceProxyConfiguration.class, HawaiiLoggingFilterConfiguration.class})
+@Import({
+        DataSourceProxyConfiguration.class,
+        HawaiiLoggingFilterConfiguration.class,
+        StatementLoggerQueryExecutionListenerConfiguration.class
+})
 public class HawaiiLoggingConfiguration {
 
-    /**
-     * Create a statement logger query execution listener.
-     *
-     * @return The listener that logs JDBC statements.
-     */
-    @ConditionalOnClass(QueryExecutionListener.class)
-    @Bean
-    public StatementLoggerQueryExecutionListener statementLoggerQueryExecutionListener() {
-        return new StatementLoggerQueryExecutionListener();
-    }
 
     /**
      * Create a {@link HttpRequestResponseLogUtil} bean.

@@ -28,6 +28,7 @@ import java.util.List;
 /**
  * Configuration for the datasource proxy.
  */
+@ConditionalOnClass(ProxyDataSource.class)
 @Configuration
 public class DataSourceProxyConfiguration {
 
