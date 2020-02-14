@@ -86,6 +86,12 @@ public class HawaiiLoggingConfigurationProperties {
     private LoggingFilterProperties userDetails;
 
     /**
+     * Configuration properties for the opentracing response filter.
+     */
+    @NestedConfigurationProperty
+    private LoggingFilterProperties opentracingResponse;
+
+    /**
      * Getter for the Kibana log filter properties.
      *
      * @return the properties
@@ -246,4 +252,11 @@ public class HawaiiLoggingConfigurationProperties {
         this.transactionType = transactionType;
     }
 
+    public LoggingFilterProperties getOpentracingResponse() {
+        return opentracingResponse;
+    }
+
+    public void setOpentracingResponse(final LoggingFilterProperties opentracingResponse) {
+        this.opentracingResponse = opentracingResponse;
+    }
 }

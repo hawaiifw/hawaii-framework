@@ -34,7 +34,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 @Configuration
 @ConditionalOnClass({Tracer.class, TracerObserver.class})
 @ConditionalOnProperty(prefix = "hawaii.logging.opentracing", name = "enabled", matchIfMissing = true)
-public class OpenTracingResponseFilterConfiguration {
+public class OpentracingResponseFilterConfiguration {
 
     /**
      * The the logging configuration properties.
@@ -46,8 +46,7 @@ public class OpenTracingResponseFilterConfiguration {
      *
      * @param hawaiiLoggingConfigurationProperties the logging configuration properties
      */
-    public OpenTracingResponseFilterConfiguration(
-            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+    public OpentracingResponseFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
         this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
     }
 
@@ -82,7 +81,7 @@ public class OpenTracingResponseFilterConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.opentracing-response", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<OpentracingResponseFilter> opentracingResponseFilterRegistration(
             final OpentracingResponseFilter opentracingResponseFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLogCleanup();
+        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getOpentracingResponse();
         return createFilterRegistrationBean(opentracingResponseFilter, filterProperties);
     }
 }

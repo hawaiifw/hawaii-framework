@@ -21,6 +21,7 @@ import org.hawaiiframework.async.config.AsyncExecutorInitializer;
 import org.hawaiiframework.async.config.BeanRegistrar;
 import org.hawaiiframework.async.config.DelegatingExecutorFactory;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
+import org.hawaiiframework.async.task_listener.TaskListenerFactoryConfiguration;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ import java.util.concurrent.Executor;
  * @since 2.0.0
  */
 @Configuration
-@Import(DataSourceProxyConfiguration.class)
+@Import({DataSourceProxyConfiguration.class, TaskListenerFactoryConfiguration.class})
 @EnableAsync
 public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostProcessor, AsyncConfigurer, EnvironmentAware {
 
