@@ -4,6 +4,7 @@ echo "Publishing..."
 
 HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
 
+echo $HAWAII_FRAMEWORK_VERSION
 # Do not deploy archives when building pull request
 if [ $HAWAII_FRAMEWORK_VERSION =~ "SNAPSHOT" ]; then
   exit 0
