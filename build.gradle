@@ -224,8 +224,10 @@ configure(subprojects - sampleprojects) { subproject ->
         toolVersion = spotbugsToolVersion
     }
 
-    signing {
-        sign publishing.publications
+    if (project.hasProperty("signing.keyId")) {
+        signing {
+            sign publishing.publications
+        }
     }
 
     publishing.publications {
