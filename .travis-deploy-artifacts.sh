@@ -4,13 +4,10 @@ echo "Publishing..."
 
 HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
 
-echo $HAWAII_FRAMEWORK_VERSION
 # Do not deploy archives when building pull request
-if [ $HAWAII_FRAMEWORK_VERSION =~ "SNAPSHOT" ]; then
+if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ] || [[ $HAWAII_FRAMEWORK_VERSION == *SNAPSHOT* ]]; then
   exit 0
 fi
-
-echo "Test"
 
 # Decrypt secring.gpg
 
