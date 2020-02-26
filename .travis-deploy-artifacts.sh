@@ -2,8 +2,11 @@
 
 echo "Publishing..."
 
+HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
+
 # Do not deploy archives when building pull request
-if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
+if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "2.x" ] || [ "$TRAVIS_PULL_REQUEST" == "true" ] || [[ $HAWAII_FRAMEWORK_VERSION == *SNAPSHOT* ]]; then
+  echo "Do not publish to sonatype..."
   exit 0
 fi
 
@@ -21,7 +24,6 @@ echo "Publishing archives..."
 
 echo "Publishing Documentation..."
 
-HAWAII_FRAMEWORK_VERSION=`cat gradle.properties | grep "version" | cut -d'=' -f2`
 GH_PAGES_DIR=.gh-pages
 GH_REF=github.com/hawaiifw/hawaii-framework
 
