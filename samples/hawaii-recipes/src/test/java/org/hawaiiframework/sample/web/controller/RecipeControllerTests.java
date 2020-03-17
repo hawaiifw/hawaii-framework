@@ -24,7 +24,6 @@ import org.hawaiiframework.test.mockmvc.AbstractMockMvcTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -37,7 +36,7 @@ import static org.hawaiiframework.sample.web.Paths.RECIPES_DELETE_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_GET_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_LIST_PATH;
 import static org.hawaiiframework.sample.web.Paths.RECIPES_UPDATE_PATH;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,7 +58,7 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
     public void listShouldReturnRecipes() throws Exception {
         mockMvc.perform(get(RECIPES_LIST_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].created_date", is("2016-02-15")))
                 .andExpect(jsonPath("$[0].name", is("Marcel")))
@@ -151,10 +150,10 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
         hawaiiTime.useFixedClock(now);
 
         mockMvc.perform(post(RECIPES_CREATE_PATH)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(recipeInput)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(notNullValue())))
                 .andExpect(jsonPath("$.created_date", is(now.toLocalDate().toString())))
                 .andExpect(jsonPath("$.name", is("Marcel")))
@@ -177,7 +176,7 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
     public void getShouldReturnRecipe() throws Exception {
         mockMvc.perform(get(RECIPES_GET_PATH, 1))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.created_date", is("2016-02-15")))
                 .andExpect(jsonPath("$.name", is("Marcel")))
@@ -233,10 +232,10 @@ public class RecipeControllerTests extends AbstractMockMvcTest {
         hawaiiTime.useFixedClock(now);
 
         mockMvc.perform(put(RECIPES_UPDATE_PATH, 1)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(recipeInput)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(notNullValue())))
                 .andExpect(jsonPath("$.created_date", is("2016-02-15")))
                 .andExpect(jsonPath("$.name", is("Marcel")))

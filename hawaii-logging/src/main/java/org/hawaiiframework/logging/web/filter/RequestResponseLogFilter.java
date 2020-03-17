@@ -127,7 +127,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
                 markAsInternalRedirect(wrappedRequest);
             } else {
                 unmarkAsInternalRedirect(wrappedRequest);
-                logResponse(requestUri, wrappedRequest, wrappedResponse, HttpStatus.valueOf(wrappedResponse.getStatusCode()));
+                logResponse(requestUri, wrappedRequest, wrappedResponse, HttpStatus.valueOf(wrappedResponse.getStatus()));
                 wrappedResponse.copyBodyToResponse();
             }
         }

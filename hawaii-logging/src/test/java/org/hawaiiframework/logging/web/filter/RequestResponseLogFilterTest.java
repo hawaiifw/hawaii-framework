@@ -78,8 +78,10 @@ public class RequestResponseLogFilterTest {
     @Test
     public void thatRequestParamsAreLogged() throws ServletException, IOException {
         final ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        when(response.getStatus()).thenReturn(200);
 
-        filter.doFilterInternal(request, mock(HttpServletResponse.class), mock(FilterChain.class));
+        filter.doFilterInternal(request, response, mock(FilterChain.class));
 
         verify(logger, atLeastOnce()).info(anyString(), captor.capture(), any(), any());
 
