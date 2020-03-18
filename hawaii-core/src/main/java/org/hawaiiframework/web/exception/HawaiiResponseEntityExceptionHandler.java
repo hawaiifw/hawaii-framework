@@ -28,6 +28,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -79,7 +80,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         configureResponseEnrichers();
     }
 
@@ -94,7 +95,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(HttpException.class)
     @ResponseBody
-    public ResponseEntity handleHttpException(final HttpException e, final WebRequest request) {
+    public ResponseEntity<Object> handleHttpException(final HttpException e, final WebRequest request) {
         final HttpStatus status = e.getHttpStatus();
         return handleExceptionInternal(
                 e,
@@ -115,7 +116,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(ValidationException.class)
     @ResponseBody
-    public ResponseEntity handleValidationException(final ValidationException e, final WebRequest request) {
+    public ResponseEntity<Object> handleValidationException(final ValidationException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), null, status, request);
     }
@@ -131,7 +132,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(ApiException.class)
     @ResponseBody
-    public ResponseEntity handleApiException(final ApiException e, final WebRequest request) {
+    public ResponseEntity<Object> handleApiException(final ApiException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), null, status, request);
     }
@@ -145,16 +146,20 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @ExceptionHandler(Throwable.class)
     @ResponseBody
-    public ResponseEntity handleThrowable(final Throwable t, final WebRequest request) {
+    public ResponseEntity<Object> handleThrowable(final Throwable t, final WebRequest request) {
         logger.error("Unhandled exception", t);
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(final Exception ex, final Object body,
+    @NonNull
+    protected ResponseEntity<Object> handleExceptionInternal(
+            @NonNull final Exception ex,
+            final Object body,
             @Nullable final HttpHeaders headers,
-            final HttpStatus status, final WebRequest request) {
+            final HttpStatus status,
+            @NonNull final WebRequest request) {
         return ResponseEntity.status(status).headers(headers).body(body);
     }
 

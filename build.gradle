@@ -74,7 +74,6 @@ configure(allprojects) { project ->
 
     group = "org.hawaiiframework"
 
-    apply plugin: "java-library"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
     apply plugin: "propdeps"
@@ -83,6 +82,7 @@ configure(allprojects) { project ->
     apply plugin: "propdeps-eclipse"
     apply plugin: "com.github.ben-manes.versions"
     apply plugin: 'de.marcphilipp.nexus-publish'
+    apply plugin: 'project-report'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -106,13 +106,14 @@ configure(allprojects) { project ->
     }
 
     dependencies {
-        compile "commons-io:commons-io:${commonsIoVersion}"
-        compile "org.slf4j:jcl-over-slf4j"
-        compile "org.slf4j:slf4j-api"
-        testCompile "junit:junit"
-        testCompile "org.mockito:mockito-core"
-        testCompile "org.springframework.boot:spring-boot-starter-logging"
-        testCompile "org.springframework:spring-test"
+        implementation "commons-io:commons-io:${commonsIoVersion}"
+        implementation "org.apache.commons:commons-lang3"
+        implementation "org.slf4j:jcl-over-slf4j"
+        implementation "org.slf4j:slf4j-api"
+        testImplementation "junit:junit"
+        testImplementation "org.mockito:mockito-core"
+        testImplementation "org.springframework.boot:spring-boot-starter-logging"
+        testImplementation "org.springframework:spring-test"
         optional "org.springframework.boot:spring-boot-configuration-processor"
     }
 
@@ -149,6 +150,7 @@ configure(allprojects) { project ->
 
 configure(subprojects - sampleprojects) { subproject ->
 
+    apply plugin: "java-library"
     apply plugin: "maven"
     apply plugin: "signing"
     apply plugin: "checkstyle"
@@ -298,7 +300,7 @@ project("hawaii-async") {
     description = "Hawaii Async"
 
     dependencies {
-        implementation project(":hawaii-logging")
+        api project(":hawaii-logging")
         implementation "javax.validation:validation-api"
         implementation "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         implementation "org.springframework:spring-core"
@@ -306,6 +308,7 @@ project("hawaii-async") {
         implementation "org.springframework.boot:spring-boot"
         implementation "org.apache.httpcomponents:httpclient"
         implementation "org.yaml:snakeyaml"
+        compileOnly "org.springframework:spring-web"
     }
 }
 
@@ -314,11 +317,11 @@ project("hawaii-autoconfigure") {
     description = "Hawaii Autoconfigure"
 
     dependencies {
-        compile project(":hawaii-core")
-        compile "org.springframework.boot:spring-boot"
-        compile "org.springframework.boot:spring-boot-autoconfigure"
-        compile "org.springframework.boot:spring-boot-test"
-        compile "org.yaml:snakeyaml"
+        implementation project(":hawaii-core")
+        implementation "org.springframework.boot:spring-boot"
+        implementation "org.springframework.boot:spring-boot-autoconfigure"
+        implementation "org.springframework.boot:spring-boot-test"
+        implementation "org.yaml:snakeyaml"
         compileOnly project(":hawaii-async")
         compileOnly project(":hawaii-logging")
         compileOnly project(":hawaii-cache")
@@ -329,7 +332,7 @@ project("hawaii-autoconfigure") {
         compileOnly "org.springframework:spring-webmvc"
         compileOnly("org.springframework.data:spring-data-redis")
         compileOnly("redis.clients:jedis")
-        testCompile "org.hamcrest:hamcrest"
+        testImplementation "org.hamcrest:hamcrest"
     }
 }
 
@@ -338,14 +341,14 @@ project("hawaii-cache") {
     description = "Hawaii Cache"
 
     dependencies {
-        compile project(":hawaii-core")
-        compile("javax.validation:validation-api")
-        compile("org.apache.commons:commons-dbcp2")
-        compile("org.springframework.boot:spring-boot")
+        implementation project(":hawaii-core")
+        implementation("javax.validation:validation-api")
+        implementation("org.apache.commons:commons-dbcp2")
+        implementation("org.springframework.boot:spring-boot")
         compileOnly("org.springframework.data:spring-data-redis")
         compileOnly("redis.clients:jedis")
-        testCompile("org.springframework.data:spring-data-redis")
-        testCompile("redis.clients:jedis")
+        testImplementation("org.springframework.data:spring-data-redis")
+        testImplementation("redis.clients:jedis")
     }
 }
 
@@ -354,11 +357,11 @@ project("hawaii-core") {
     description = "Hawaii Core"
 
     dependencies {
-        compile "commons-codec:commons-codec"
-        compile "org.apache.commons:commons-lang3"
-        compile "org.hamcrest:hamcrest"
-        compile "org.jasypt:jasypt:${jasyptVersion}"
-        compile "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
+        implementation "commons-codec:commons-codec"
+        implementation "org.apache.commons:commons-lang3"
+        implementation "org.hamcrest:hamcrest"
+        implementation "org.jasypt:jasypt:${jasyptVersion}"
+        implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
         compileOnly "com.fasterxml.jackson.core:jackson-databind"
         compileOnly "javax.servlet:javax.servlet-api"
         compileOnly "org.aspectj:aspectjweaver"
@@ -367,10 +370,10 @@ project("hawaii-core") {
         compileOnly "org.springframework:spring-context"
         compileOnly "org.springframework:spring-web"
         compileOnly "org.springframework:spring-webmvc"
-        testCompile "javax.servlet:javax.servlet-api"
-        testCompile "org.springframework:spring-core"
-        testCompile "org.springframework:spring-web"
-        testCompile "org.springframework:spring-webmvc"
+        testImplementation "javax.servlet:javax.servlet-api"
+        testImplementation "org.springframework:spring-core"
+        testImplementation "org.springframework:spring-web"
+        testImplementation "org.springframework:spring-webmvc"
     }
 }
 
@@ -379,19 +382,19 @@ project("hawaii-logging") {
     description = "Hawaii Logging"
 
     dependencies {
-        compile project(":hawaii-core")
-        compile "javax.servlet:javax.servlet-api"
-        compile "org.springframework:spring-web"
-        compile "org.springframework.boot:spring-boot"
-        compile "org.springframework.boot:spring-boot-autoconfigure"
+        api project(":hawaii-core")
+        implementation "javax.servlet:javax.servlet-api"
+        implementation "org.springframework:spring-web"
+        implementation "org.springframework.boot:spring-boot"
+        implementation "org.springframework.boot:spring-boot-autoconfigure"
         compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
         compileOnly "org.springframework:spring-webmvc"
-        testCompile "org.apache.commons:commons-text:${commonsTextVersion}"
-        testCompile "org.powermock:powermock-api-mockito2:${powerMockVersion}"
-        testCompile "org.powermock:powermock-module-junit4:${powerMockVersion}"
-        testCompile "org.springframework.security:spring-security-core"
+        testImplementation "org.apache.commons:commons-text:${commonsTextVersion}"
+        testImplementation "org.powermock:powermock-api-mockito2:${powerMockVersion}"
+        testImplementation "org.powermock:powermock-module-junit4:${powerMockVersion}"
+        testImplementation "org.springframework.security:spring-security-core"
     }
 }
 
@@ -400,8 +403,8 @@ project("hawaii-security") {
     description = "Hawaii Security"
 
     dependencies {
-        compile project(":hawaii-cache")
-        compile project(":hawaii-core")
+        implementation project(":hawaii-cache")
+        implementation project(":hawaii-core")
         compileOnly "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}"
 0    }
 }
@@ -411,10 +414,10 @@ project("hawaii-starter") {
     description = "Hawaii Starter"
 
     dependencies {
-        compile project(":hawaii-autoconfigure")
-        compile project(":hawaii-core")
-        compile "org.springframework.boot:spring-boot-starter"
-        compile "org.springframework.boot:spring-boot-starter-aop"
+        api project(":hawaii-autoconfigure")
+        api project(":hawaii-core")
+        implementation "org.springframework.boot:spring-boot-starter"
+        implementation "org.springframework.boot:spring-boot-starter-aop"
     }
 }
 
@@ -423,8 +426,8 @@ project("hawaii-starter-async") {
     description = "Hawaii Starter Async"
 
     dependencies {
-        compile project(":hawaii-starter")
-        compile project(":hawaii-async")
+        api project(":hawaii-starter")
+        api project(":hawaii-async")
     }
 }
 
@@ -433,8 +436,8 @@ project("hawaii-starter-cache") {
     description = "Hawaii Starter Cache"
 
     dependencies {
-        compile project(":hawaii-starter")
-        compile project(":hawaii-cache")
+        api project(":hawaii-starter")
+        api project(":hawaii-cache")
     }
 }
 
@@ -443,8 +446,8 @@ project("hawaii-starter-logging") {
     description = "Hawaii Starter Logging"
 
     dependencies {
-        compile project(":hawaii-starter")
-        compile project(":hawaii-logging")
+        api project(":hawaii-starter")
+        api project(":hawaii-logging")
     }
 }
 
@@ -453,11 +456,11 @@ project("hawaii-starter-rest") {
     description = "Hawaii Starter Rest"
 
     dependencies {
-        compile project(":hawaii-starter")
-        compile "com.fasterxml.jackson.core:jackson-databind"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-        compile "org.json:json:${jsonVersion}"
+        api project(":hawaii-starter")
+        api "org.json:json:${jsonVersion}"
+        implementation "com.fasterxml.jackson.core:jackson-databind"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     }
 }
 
@@ -466,7 +469,7 @@ project("hawaii-starter-test") {
     description = "Hawaii Starter Test"
 
     dependencies {
-        compile project(":hawaii-test")
+        api project(":hawaii-test")
     }
 }
 
@@ -475,17 +478,17 @@ project("hawaii-test") {
     description = "Hawaii Test"
 
     dependencies {
-        compile project(":hawaii-core")
-        compile "com.jayway.jsonpath:json-path"
-        compile "com.jayway.jsonpath:json-path-assert"
-        compile "junit:junit"
-        compile "org.hamcrest:hamcrest"
-        compile "org.mockito:mockito-core"
-        compile "org.skyscreamer:jsonassert"
-        compile "org.springframework:spring-beans"
-        compile "org.springframework:spring-core"
-        compile "org.springframework:spring-test"
-        compile "org.springframework:spring-web"
+        api "org.hamcrest:hamcrest"
+        implementation project(":hawaii-core")
+        implementation "com.jayway.jsonpath:json-path"
+        implementation "com.jayway.jsonpath:json-path-assert"
+        implementation "junit:junit"
+        implementation "org.mockito:mockito-core"
+        implementation "org.skyscreamer:jsonassert"
+        implementation "org.springframework:spring-beans"
+        implementation "org.springframework:spring-core"
+        implementation "org.springframework:spring-test"
+        implementation "org.springframework:spring-web"
         compileOnly "com.google.code.findbugs:annotations:${findbugsAnnotationsVersion}"
     }
 }
