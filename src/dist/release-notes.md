@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.M13
+* No changes, M12 failed to publish
+
 ## 3.0.0.M12
 * Move hamcrest, jasypt and bouncycastle to api dependencies
 
