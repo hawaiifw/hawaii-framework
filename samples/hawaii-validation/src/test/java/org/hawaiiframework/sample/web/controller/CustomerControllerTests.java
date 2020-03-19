@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -67,10 +67,10 @@ public class CustomerControllerTests extends AbstractMockMvcTest {
         customerInput.getAddresses().add(addressInput);
         String json = objectMapper.writeValueAsString(customerInput);
         mockMvc.perform(post("/api/customers")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.method", is(equalTo("POST"))))
                 .andExpect(jsonPath("$.uri", is(equalTo("/api/customers"))))
                 .andExpect(jsonPath("$.query", is(nullValue())))

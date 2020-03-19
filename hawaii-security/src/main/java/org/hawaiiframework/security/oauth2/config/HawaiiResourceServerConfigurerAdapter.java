@@ -41,12 +41,25 @@ import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStor
 /**
  * Configuration class for the {@link HawaiiTokenServices}.
  *
+ *  A JWT decoder can be created like so:
+ *
+ *  <pre>
+ *  \u0040Bean
+ *  public JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") final String jwksUrl) {
+ *      return NimbusJwtDecoder.withJwkSetUri(jwksUrl).build();
+ *  }
+ *  </pre>
+ *
+ * @deprecated See the <a href="https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
+ *  * OAuth 2.0 Migration Guide</a> for Spring Security 5.
+ *  Among others, creating a TokenStore bean is no longer necessary.
  * @author Wouter Eerdekens
  * @author Jules Houben
  * @since 3.0.0
  */
 @EnableWebSecurity
 @EnableResourceServer
+@Deprecated
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class HawaiiResourceServerConfigurerAdapter extends ResourceServerConfigurerAdapter {
 

@@ -2,7 +2,7 @@ package org.hawaiiframework.converter;
 
 public class PersonModelConverter extends AbstractModelConverter<PersonInput, PersonInput> {
 
-    public PersonModelConverter(NullListConversionStrategy strategy) {
+    public PersonModelConverter(NullListConversionStrategy<PersonInput> strategy) {
         super(PersonInput.class, strategy);
     }
     /**
