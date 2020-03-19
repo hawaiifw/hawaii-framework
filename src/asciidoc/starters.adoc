@@ -44,7 +44,9 @@ An example of the default configuration is available in <<appendix-hawaii-applic
 
 ==== How to use
 In order to use Hawaii logging, you'll need to define an appender that uses the `KibanaLogEventEncoder`, for example:
-```
+
+[source]
+----
     <appender name="kibana" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>log/idm-kibana.log</file>
         <encoder class="org.hawaiiframework.logging.logback.KibanaLogEventEncoder"/>
@@ -53,7 +55,7 @@ In order to use Hawaii logging, you'll need to define an appender that uses the 
             <maxHistory>10</maxHistory>
         </rollingPolicy>
     </appender>
-```
+----
 [[starters-hawaii-starter-rest]]
 === hawaii-starter-rest
 
