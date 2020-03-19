@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.M12
+* Move hamcrest, jasypt and bouncycastle to api dependencies
+
 ## 3.0.0.M11
 * Upgrade to Gradle version 6.2.2
 * Apply `java-library` plugin for framework projects, and the `java` plugin for sample projects
