@@ -1,5 +1,11 @@
 # Release Notes #
 
+## 3.0.0.M11
+* Upgrade to Gradle version 6.2.2
+* Apply `java-library` plugin for framework projects, and the `java` plugin for sample projects
+* Replace deprecated `compile` configurations with either `implementation` or `api` to better control transitive dependencies
+* Upgrade to Spring Boot version 2.2.5.RELEASE
+
 ## 3.0.0.M10
 * Log call duration in separate log field for elastic search.
 
