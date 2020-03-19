@@ -6,13 +6,14 @@ buildscript {
         asciidoctorjDiagramVersion = "1.5.9"
         asciidoctorjPdfVersion = "1.5.0-alpha.16"
         asciidoctorPluginVersion = "1.5.8.1"
-        bouncycastleVersion = "1.62"
+        bouncycastleVersion = "1.64"
         checkstyleToolVersion = "8.12"
         commonsIoVersion = "2.6"
         commonsTextVersion = "1.6"
         dataSourceProxyVersion = "1.5.1"
         dependencyManagementPluginVersion = "1.0.9.RELEASE"
         findbugsAnnotationsVersion = "3.0.1"
+        hamcrestVersion = "2.2"
         jasyptVersion = "1.9.3"
         javaVersion = "11"
         jrubyVersion = "9.1.17.0"
@@ -64,7 +65,7 @@ ext.javadocLinks = [
         "http://fasterxml.github.io/jackson-databind/javadoc/2.9/",
         "http://fasterxml.github.io/jackson-datatype-json-org/javadoc/2.8/",
         "http://fasterxml.github.io/jackson-datatype-jsr310/javadoc/2.8/",
-        "http://hamcrest.org/JavaHamcrest/javadoc/2.1/"
+        "http://hamcrest.org/JavaHamcrest/javadoc/2.2/"
 ] as String[]
 
 //Can only be applied to the root. See https://github.com/Codearte/gradle-nexus-staging-plugin/issues/47
@@ -317,7 +318,7 @@ project("hawaii-autoconfigure") {
     description = "Hawaii Autoconfigure"
 
     dependencies {
-        implementation project(":hawaii-core")
+        api project(":hawaii-core")
         implementation "org.springframework.boot:spring-boot"
         implementation "org.springframework.boot:spring-boot-autoconfigure"
         implementation "org.springframework.boot:spring-boot-test"
@@ -332,7 +333,6 @@ project("hawaii-autoconfigure") {
         compileOnly "org.springframework:spring-webmvc"
         compileOnly("org.springframework.data:spring-data-redis")
         compileOnly("redis.clients:jedis")
-        testImplementation "org.hamcrest:hamcrest"
     }
 }
 
@@ -357,11 +357,11 @@ project("hawaii-core") {
     description = "Hawaii Core"
 
     dependencies {
+        api "org.jasypt:jasypt:${jasyptVersion}"
+        api "org.hamcrest:hamcrest:${hamcrestVersion}"
+        api "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
         implementation "commons-codec:commons-codec"
         implementation "org.apache.commons:commons-lang3"
-        implementation "org.hamcrest:hamcrest"
-        implementation "org.jasypt:jasypt:${jasyptVersion}"
-        implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}"
         compileOnly "com.fasterxml.jackson.core:jackson-databind"
         compileOnly "javax.servlet:javax.servlet-api"
         compileOnly "org.aspectj:aspectjweaver"
@@ -478,8 +478,7 @@ project("hawaii-test") {
     description = "Hawaii Test"
 
     dependencies {
-        api "org.hamcrest:hamcrest"
-        implementation project(":hawaii-core")
+        api project(":hawaii-core")
         implementation "com.jayway.jsonpath:json-path"
         implementation "com.jayway.jsonpath:json-path-assert"
         implementation "junit:junit"

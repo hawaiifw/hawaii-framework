@@ -4,7 +4,6 @@ apply plugin: "java"
 dependencies {
     implementation project(":hawaii-starter-rest")
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.hamcrest:hamcrest"
     testImplementation project(":hawaii-starter-test")
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
