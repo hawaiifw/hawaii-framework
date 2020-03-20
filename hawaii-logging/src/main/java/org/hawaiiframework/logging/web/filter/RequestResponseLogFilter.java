@@ -20,6 +20,7 @@ import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
+import org.hawaiiframework.logging.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -42,7 +44,6 @@ import static java.lang.String.format;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HTTP_STATUS;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY;
-import static org.hawaiiframework.logging.util.LogUtil.writeToFile;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsInternalRedirect;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsInternalRedirect;
@@ -55,6 +56,7 @@ import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsI
  * @author Rutger Lubbers
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public class RequestResponseLogFilter extends AbstractGenericFilterBean {
 
     /**
@@ -90,7 +92,8 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     /**
      * The constructor.
      */
-    public RequestResponseLogFilter(final RequestResponseLogFilterConfiguration configuration,
+    public RequestResponseLogFilter(
+            final RequestResponseLogFilterConfiguration configuration,
             final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
         super();
         this.configuration = configuration;
@@ -102,9 +105,10 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
      */
     @Override
     @SuppressWarnings("PMD.LawOfDemeter")
-    protected void doFilterInternal(final HttpServletRequest httpServletRequest, final HttpServletResponse response,
-            final FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            final HttpServletRequest httpServletRequest,
+            final HttpServletResponse response,
+            final FilterChain filterChain) throws ServletException, IOException {
         LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.", httpServletRequest.getDispatcherType(),
                 isInternalRedirect(httpServletRequest));
 
@@ -133,8 +137,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         }
     }
 
-    private void logRequest(final String requestUri, final ResettableHttpServletRequest wrappedRequest)
-            throws IOException {
+    private void logRequest(final String requestUri, final ResettableHttpServletRequest wrappedRequest) throws IOException {
         final int contentLength = wrappedRequest.getContentLength();
         final String contentType = wrappedRequest.getContentType();
 
@@ -146,10 +149,9 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
             } else {
                 if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
                     // In case of file upload the request reader has already been accessed, so skip
-                    writeToFile(logDir, format("%s.in", RequestId.get()), wrappedRequest.getInputStream());
+                    writeToFile("%s.in", wrappedRequest.getInputStream());
                 }
             }
-
         } finally {
             wrappedRequest.reset();
         }
@@ -157,7 +159,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     }
 
     private void logResponse(final String request, final HttpServletRequest servletRequest,
-            final ContentCachingWrappedResponse wrappedResponse, final HttpStatus httpStatus)
+                             final ContentCachingWrappedResponse wrappedResponse, final HttpStatus httpStatus)
             throws IOException {
 
         final int contentLength = wrappedResponse.getContentSize();
@@ -170,15 +172,24 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
 
         if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
             LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
-        } else if (mayLogToFile()) {
-            writeToFile(logDir, format("%s.out", RequestId.get()), wrappedResponse.getContentInputStream());
+        } else {
+            writeToFile("%s.out", wrappedResponse.getContentInputStream());
         }
         KibanaLogFields.unsetLogType();
     }
 
+    private void writeToFile(final String fileNamePattern, final InputStream contentInputStream) throws IOException {
+        if (mayLogToFile()) {
+            LogUtil.writeToFile(logDir, format(fileNamePattern, RequestId.get()), contentInputStream);
+        }
+    }
+
     @SuppressWarnings("PMD.LawOfDemeter")
-    private String getResponseLogString(final HttpServletRequest servletRequest, final ContentCachingResponseWrapper response,
-            final HttpStatus httpStatus, final int contentSize)
+    private String getResponseLogString(
+            final HttpServletRequest servletRequest,
+            final ContentCachingResponseWrapper response,
+            final HttpStatus httpStatus,
+            final int contentSize)
             throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream(contentSize)) {
             IOUtils.copy(response.getContentInputStream(), baos);
