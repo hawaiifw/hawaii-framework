@@ -18,6 +18,9 @@ openssl aes-256-cbc -K $encrypted_30f4b87b093a_key -iv $encrypted_30f4b87b093a_i
 
 echo "Publishing archives..."
 
+# The parameter org.gradle.internal.publish.checksums.insecure=true disables signing with sha256 and sha512 hashes.
+# These maven-metadata hashes prevent releasing on Sonatype, because they can't be overwritten in the releases
+# repository.
 ./gradlew publish -Dorg.gradle.internal.publish.checksums.insecure=true -Psigning.keyId="$SIGNING_KEY" -Psigning.password="$SIGNING_PASSWORD" -Psigning.secretKeyRingFile="${TRAVIS_BUILD_DIR}/secring.gpg"
 
 # Deploy api and reference documentation to gh-pages
