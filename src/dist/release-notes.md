@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.M13
+* Make the fallbackToFile configuration apply to both request and response
+
 ## 3.0.0.M12
 * Move hamcrest, jasypt and bouncycastle to api dependencies
 
