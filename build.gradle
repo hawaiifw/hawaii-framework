@@ -2,6 +2,7 @@ import java.time.Duration
 
 buildscript {
     ext {
+        apacheCxfVersion = "3.3.1"
         asciidoctorjVersion = "1.5.7"
         asciidoctorjDiagramVersion = "1.5.9"
         asciidoctorjPdfVersion = "1.5.0-alpha.16"
@@ -392,6 +393,7 @@ project("hawaii-logging") {
         implementation "org.springframework:spring-web"
         implementation "org.springframework.boot:spring-boot"
         implementation "org.springframework.boot:spring-boot-autoconfigure"
+        compileOnly "org.apache.cxf:cxf-rt-features-logging:${apacheCxfVersion}"
         compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
