@@ -105,9 +105,10 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
      */
     @Override
     @SuppressWarnings("PMD.LawOfDemeter")
-    protected void doFilterInternal(final HttpServletRequest httpServletRequest, final HttpServletResponse response,
-            final FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            final HttpServletRequest httpServletRequest,
+            final HttpServletResponse response,
+            final FilterChain filterChain) throws ServletException, IOException {
         LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.", httpServletRequest.getDispatcherType(),
                 isInternalRedirect(httpServletRequest));
 
@@ -130,14 +131,13 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
                 markAsInternalRedirect(wrappedRequest);
             } else {
                 unmarkAsInternalRedirect(wrappedRequest);
-                logResponse(requestUri, wrappedRequest, wrappedResponse, HttpStatus.valueOf(wrappedResponse.getStatusCode()));
+                logResponse(requestUri, wrappedRequest, wrappedResponse, HttpStatus.valueOf(wrappedResponse.getStatus()));
                 wrappedResponse.copyBodyToResponse();
             }
         }
     }
 
-    private void logRequest(final String requestUri, final ResettableHttpServletRequest wrappedRequest)
-            throws IOException {
+    private void logRequest(final String requestUri, final ResettableHttpServletRequest wrappedRequest) throws IOException {
         final int contentLength = wrappedRequest.getContentLength();
         final String contentType = wrappedRequest.getContentType();
 
@@ -159,7 +159,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     }
 
     private void logResponse(final String request, final HttpServletRequest servletRequest,
-            final ContentCachingWrappedResponse wrappedResponse, final HttpStatus httpStatus)
+                             final ContentCachingWrappedResponse wrappedResponse, final HttpStatus httpStatus)
             throws IOException {
 
         final int contentLength = wrappedResponse.getContentSize();
@@ -185,8 +185,11 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     }
 
     @SuppressWarnings("PMD.LawOfDemeter")
-    private String getResponseLogString(final HttpServletRequest servletRequest, final ContentCachingResponseWrapper response,
-            final HttpStatus httpStatus, final int contentSize)
+    private String getResponseLogString(
+            final HttpServletRequest servletRequest,
+            final ContentCachingResponseWrapper response,
+            final HttpStatus httpStatus,
+            final int contentSize)
             throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream(contentSize)) {
             IOUtils.copy(response.getContentInputStream(), baos);
