@@ -15,7 +15,6 @@ public class PropertiesDefaultProfileTestBase {
 
     static {
         DEFAULT_HAWAII_PROPERTIES = new HashMap<>();
-        DEFAULT_HAWAII_PROPERTIES.put("logging.file", "log/hawaii.log");
         DEFAULT_HAWAII_PROPERTIES.put("logging.level.org.springframework", "INFO");
         DEFAULT_HAWAII_PROPERTIES.put("logging.level.org.hawaiiframework", "INFO");
         DEFAULT_HAWAII_PROPERTIES.put("spring.jackson.date-format", "com.fasterxml.jackson.databind.util.ISO8601DateFormat");

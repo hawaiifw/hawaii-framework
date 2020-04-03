@@ -19,14 +19,14 @@ package org.hawaiiframework.async.timeout;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.TaskStatistics;
-import org.hawaiiframework.logging.model.KibanaLogContext;
-import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.hawaiiframework.async.task_listener.TaskListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.OrderComparator;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
-
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TASK_ID;
 
 /**
  * The strategy is used by the {@link TimeoutGuardTask} to stop a running guarded task.
@@ -44,6 +44,7 @@ public class SharedTaskContext {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SharedTaskContext.class);
 
+    private static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
     /**
      * The registered task removal strategy.
      */
@@ -77,9 +78,9 @@ public class SharedTaskContext {
     private final ExecutorConfigurationProperties executorConfigurationProperties;
 
     /**
-     * Kibana log context needed.
+     * The set of task contexts, shared data between caller and async task.
      */
-    private final KibanaLogContext logContext;
+    private final List<TaskListener> taskListeners;
 
     /**
      * The executors statistics.
@@ -105,13 +106,15 @@ public class SharedTaskContext {
     public SharedTaskContext(final String taskName,
                              final ExecutorConfigurationProperties executorConfigurationProperties,
                              final ExecutorStatistics executorStatistics,
-                             final KibanaLogContext logContext) {
+                             final List<TaskListener> taskListeners) {
         this.taskName = taskName;
         this.executorConfigurationProperties = executorConfigurationProperties;
-        this.logContext = logContext;
+        this.taskListeners = taskListeners;
         this.taskId = UUID.randomUUID().toString();
         this.taskStatistics = new TaskStatistics();
         this.executorStatistics = executorStatistics;
+
+        taskListeners.forEach(context -> context.setSharedTaskContext(this));
     }
 
     /**
@@ -195,6 +198,8 @@ public class SharedTaskContext {
             LOGGER.debug("Aborting task '{}' with id '{}.", getTaskName(), getTaskId());
             abortBusinessTask();
         }
+
+        taskListeners.stream().sorted(ORDER_COMPARATOR).forEach(TaskListener::timeout);
     }
 
     /**
@@ -216,6 +221,17 @@ public class SharedTaskContext {
     }
 
     /**
+     * Signal the start of the task's execution.
+     */
+    public void startExecution() {
+        taskStatistics.startExecution();
+        taskListeners.stream().sorted(ORDER_COMPARATOR).forEach(listener -> {
+            logListener(listener, "startExecution()");
+            listener.startExecution();
+        });
+    }
+
+    /**
      * This method is invoked when the guarded task is finished.
      * <p>
      * It will perform cleanups. The finish should always be invoked.
@@ -225,6 +241,19 @@ public class SharedTaskContext {
             timeoutGuardTaskRemoveStrategy.invoke();
         }
         taskStatistics.stopExecution();
+        taskListeners.stream().sorted(Collections.reverseOrder(ORDER_COMPARATOR)).forEach(listener -> {
+            logListener(listener, "finish()");
+            try {
+                listener.finish();
+            } catch (Throwable ignored) {
+                // Do nothing.
+            }
+        });
+        SharedTaskContextHolder.remove();
+    }
+
+    private void logListener(final TaskListener listener, final String method) {
+        LOGGER.trace("Calling listener '{}#{}'.", listener.getClass().getSimpleName(), method);
     }
 
     /**
@@ -234,32 +263,4 @@ public class SharedTaskContext {
         return taskStatistics;
     }
 
-    /**
-     * Signal the start of the task's execution.
-     */
-    public void startExecution() {
-        taskStatistics.startExecution();
-    }
-
-    /**
-     * Registers log fields using the current log context.
-     */
-    public void registerLogFields() {
-        KibanaLogFields.populateFromContext(logContext);
-        setSharedLogFields();
-    }
-
-    /**
-     * Clears the kibana log fields.
-     */
-    public void removeLogFields() {
-        KibanaLogFields.clear();
-    }
-
-    /**
-     * Set the default log fields of the shared task context.
-     */
-    private void setSharedLogFields() {
-        KibanaLogFields.set(TASK_ID, taskId);
-    }
 }

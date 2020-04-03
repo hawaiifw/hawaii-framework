@@ -308,8 +308,11 @@ project("hawaii-async") {
         implementation "org.springframework:spring-context"
         implementation "org.springframework.boot:spring-boot"
         implementation "org.apache.httpcomponents:httpclient"
+        implementation "org.springframework.boot:spring-boot-autoconfigure"
         implementation "org.yaml:snakeyaml"
         compileOnly "org.springframework:spring-web"
+        compileOnly "io.opentracing:opentracing-api:0.33.0"
+        testCompile "org.springframework:spring-context"
     }
 }
 
@@ -370,6 +373,8 @@ project("hawaii-core") {
         compileOnly "org.springframework:spring-context"
         compileOnly "org.springframework:spring-web"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+        compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         testImplementation "javax.servlet:javax.servlet-api"
         testImplementation "org.springframework:spring-core"
         testImplementation "org.springframework:spring-web"
@@ -391,6 +396,8 @@ project("hawaii-logging") {
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
         compileOnly "org.springframework:spring-webmvc"
+        compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
+        compileOnly "io.opentracing.contrib:opentracing-api-extensions:0.6.0"
         testImplementation "org.apache.commons:commons-text:${commonsTextVersion}"
         testImplementation "org.powermock:powermock-api-mockito2:${powerMockVersion}"
         testImplementation "org.powermock:powermock-module-junit4:${powerMockVersion}"

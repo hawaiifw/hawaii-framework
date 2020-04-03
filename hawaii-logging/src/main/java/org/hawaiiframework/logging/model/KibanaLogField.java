@@ -39,4 +39,5 @@ public interface KibanaLogField {
     default boolean matches(String key) {
         return key != null && key.equalsIgnoreCase(getLogName());
     }
+
 }

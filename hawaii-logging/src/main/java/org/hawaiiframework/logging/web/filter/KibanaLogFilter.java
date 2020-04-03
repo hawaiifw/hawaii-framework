@@ -15,6 +15,7 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.slf4j.Logger;
@@ -66,11 +67,11 @@ public class KibanaLogFilter extends AbstractGenericFilterBean {
     }
 
     private void setDefaultLogFields(final HttpServletRequest request) {
-        KibanaLogFields.setLogType(START);
-        KibanaLogFields.set(METHOD, request.getMethod());
-        KibanaLogFields.set(URI, request.getRequestURI());
-        KibanaLogFields.set(CLIENT_IP, clientIpResolver.getClientIp(request));
-        LOGGER.info("Start request '{}', '{}'", request.getMethod(), request.getRequestURI());
-        KibanaLogFields.unsetLogType();
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(START)) {
+            KibanaLogFields.set(METHOD, request.getMethod());
+            KibanaLogFields.set(URI, request.getRequestURI());
+            KibanaLogFields.set(CLIENT_IP, clientIpResolver.getClientIp(request));
+            LOGGER.info("Start request '{}', '{}'", request.getMethod(), request.getRequestURI());
+        }
     }
 }

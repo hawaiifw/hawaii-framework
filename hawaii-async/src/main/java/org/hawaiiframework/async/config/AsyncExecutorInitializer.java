@@ -22,6 +22,7 @@ import org.hawaiiframework.async.AbortableTaskDecorator;
 import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.ExecutorProperties;
+import org.hawaiiframework.async.task_listener.TaskListenerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -29,6 +30,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import static org.hawaiiframework.async.AsyncExecutorConfiguration.ASYNC_TIMEOUT_EXECUTOR;
@@ -47,7 +49,7 @@ public class AsyncExecutorInitializer {
     /**
      * The logger to use.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DelegatingExecutorFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AsyncExecutorInitializer.class);
 
     /**
      * The default executor.
@@ -75,7 +77,7 @@ public class AsyncExecutorInitializer {
      * @param configuration The executor configuration.
      */
     public AsyncExecutorInitializer(final ConfigurableListableBeanFactory beanFactory,
-        final ExecutorConfigurationProperties configuration) {
+            final ExecutorConfigurationProperties configuration) {
         this.beanFactory = beanFactory;
         this.configuration = configuration;
     }
@@ -85,7 +87,7 @@ public class AsyncExecutorInitializer {
      */
     public void initializeExecutors() {
         final ScheduledThreadPoolExecutor asyncTimeoutExecutor =
-            (ScheduledThreadPoolExecutor) beanFactory.getBean(ASYNC_TIMEOUT_EXECUTOR);
+                (ScheduledThreadPoolExecutor) beanFactory.getBean(ASYNC_TIMEOUT_EXECUTOR);
         asyncTimeoutExecutor.setThreadFactory(new BasicThreadFactory.Builder().namingPattern("async-timeout-%d").daemon(true).build());
         beanFactory.initializeBean(asyncTimeoutExecutor, ASYNC_TIMEOUT_EXECUTOR);
 
@@ -98,7 +100,8 @@ public class AsyncExecutorInitializer {
     }
 
     private void registerDefaultExecutor(final ThreadPoolTaskExecutor executor) {
-        defaultExecutor = new DelegatingExecutor(executor, configuration, configuration.getDefaultExecutor());
+        final Map<String, TaskListenerFactory> beansOfType = beanFactory.getBeansOfType(TaskListenerFactory.class);
+        defaultExecutor = new DelegatingExecutor(executor, configuration, beansOfType.values(), configuration.getDefaultExecutor());
     }
 
     @SuppressWarnings("PMD.CommentRequired")
@@ -114,7 +117,7 @@ public class AsyncExecutorInitializer {
      * @param timeoutExecutor       the timeout executor.
      */
     private ThreadPoolTaskExecutor initializeExecutor(final ExecutorProperties executorConfiguration,
-        final ScheduledThreadPoolExecutor timeoutExecutor) {
+            final ScheduledThreadPoolExecutor timeoutExecutor) {
         LOGGER.info("Creating executor '{}'.", executorConfiguration);
         final ThreadPoolTaskExecutor taskExecutor = (ThreadPoolTaskExecutor) beanFactory.getBean(executorConfiguration.getName());
         taskExecutor.setThreadFactory(null);

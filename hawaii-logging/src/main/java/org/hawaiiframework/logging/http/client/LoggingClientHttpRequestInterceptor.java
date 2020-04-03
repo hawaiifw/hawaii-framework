@@ -15,6 +15,7 @@
  */
 package org.hawaiiframework.logging.http.client;
 
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.slf4j.Logger;
@@ -83,20 +84,20 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
             logResponse(response);
             return response;
         } catch (IOException t) {
-            KibanaLogFields.setLogType(CALL_END);
-            KibanaLogFields.setCallResult(TIME_OUT);
-            LOGGER.info("Got timeout from backend.");
+            KibanaLogFields.callResult(TIME_OUT);
+            try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_END)) {
+                LOGGER.info("Got timeout from backend.");
+            }
             throw t;
         }
     }
 
     private void logRequest(final HttpRequest request, final byte[] body) {
-        KibanaLogFields.set(CALL_METHOD, request.getMethodValue());
-        KibanaLogFields.setLogType(CALL_REQUEST_BODY);
-        LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
-                httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
-
-        KibanaLogFields.unsetLogType();
+        try (AutoCloseableKibanaLogField callMethod = KibanaLogFields.tagCloseable(CALL_METHOD, request.getMethodValue());
+                AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_REQUEST_BODY)) {
+            LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
+                    httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
+        }
     }
 
     private void logResponse(final ClientHttpResponse response) throws IOException {
@@ -108,16 +109,15 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     }
 
     private void logResponse(final HttpStatus statusCode, final String statusText, final HttpHeaders headers, final String body) {
-        KibanaLogFields.setLogType(CALL_RESPONSE_BODY);
-        if (statusCode.is2xxSuccessful() || statusCode.is3xxRedirection()) {
-            KibanaLogFields.setCallResult(SUCCESS);
-        } else {
-            KibanaLogFields.setCallResult(BACKEND_FAILURE);
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_RESPONSE_BODY)) {
+            if (statusCode.is2xxSuccessful() || statusCode.is3xxRedirection()) {
+                KibanaLogFields.callResult(SUCCESS);
+            } else {
+                KibanaLogFields.callResult(BACKEND_FAILURE);
+            }
+
+            LOGGER.info("Got response '{} {}':\n{}", statusCode, statusText, httpRequestResponseLogUtil.createLogString(headers, body));
         }
-
-        LOGGER.info("Got response '{} {}':\n{}", statusCode, statusText, httpRequestResponseLogUtil.createLogString(headers, body));
-
-        KibanaLogFields.unsetLogType();
     }
 
     private String readResponseBody(final ClientHttpResponse response) throws IOException {

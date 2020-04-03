@@ -16,20 +16,11 @@
 
 package org.hawaiiframework.async;
 
-import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
-import org.hawaiiframework.logging.model.KibanaLogFields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_DURATION;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_ID;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_TYPE;
-import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
-import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
 
 /**
  * Delegating Runnable that copies the MDC to the executing thread before running the delegate.
@@ -39,11 +30,6 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
  * @since 2.0.0
  */
 public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
-
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbortableTaskRunnable.class);
 
     /**
      * The delegate.
@@ -66,37 +52,8 @@ public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
      */
     @Override
     protected void doRun() {
-        sharedTaskContext.startExecution();
-
-        final String taskId = sharedTaskContext.getTaskId();
-
-        KibanaLogFields.setLogType(CALL_START);
-        KibanaLogFields.set(CALL_ID, taskId);
-        KibanaLogFields.set(CALL_TYPE, sharedTaskContext.getTaskName());
-
-        LOGGER.info("Performing task '{}' with id '{}'.", sharedTaskContext.getTaskName(), taskId);
-
-        KibanaLogFields.unsetLogType();
-
-        try {
-            delegate.run();
-        } finally {
-            sharedTaskContext.finish();
-            final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
-            final String duration = formatTime(taskStatistics.getTotalTime());
-            KibanaLogFields.setLogType(CALL_END);
-            KibanaLogFields.set(CALL_DURATION, duration);
-            LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).", sharedTaskContext.getTaskName(),
-                taskId,
-                duration,
-                formatTime(taskStatistics.getQueueTime()),
-                formatTime(taskStatistics.getExecutionTime()));
-            KibanaLogFields.unsetLogType();
-        }
+        delegate.run();
     }
 
-    private String formatTime(final double time) {
-        return String.format("%.2f", time / 1E6);
-    }
 
 }
