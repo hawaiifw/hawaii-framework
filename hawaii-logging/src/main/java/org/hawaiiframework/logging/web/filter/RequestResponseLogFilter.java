@@ -16,7 +16,8 @@
 package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
-import org.hawaiiframework.logging.config.RequestResponseLogFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterProperties;
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
@@ -82,7 +83,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     /**
      * The configuration for the logging.
      */
-    private final RequestResponseLogFilterConfiguration configuration;
+    private final RequestResponseLogFilterProperties configuration;
 
     /**
      * The request response log util.
@@ -92,8 +93,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     /**
      * The constructor.
      */
-    public RequestResponseLogFilter(
-            final RequestResponseLogFilterConfiguration configuration,
+    public RequestResponseLogFilter(final RequestResponseLogFilterProperties configuration,
             final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
         super();
         this.configuration = configuration;
@@ -141,21 +141,21 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         final int contentLength = wrappedRequest.getContentLength();
         final String contentType = wrappedRequest.getContentType();
 
-        KibanaLogFields.setLogType(REQUEST_BODY);
-        LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
-        try {
-            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
-                LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
-            } else {
-                if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
-                    // In case of file upload the request reader has already been accessed, so skip
-                    writeToFile("%s.in", wrappedRequest.getInputStream());
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(REQUEST_BODY)) {
+            LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
+            try {
+                if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+                    LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
+                } else {
+                    if (!MediaType.MULTIPART_FORM_DATA.includes(MediaType.valueOf(contentType))) {
+                        // In case of file upload the request reader has already been accessed, so skip
+                        writeToFile("%s.in", wrappedRequest.getInputStream());
+                    }
                 }
+            } finally {
+                wrappedRequest.reset();
             }
-        } finally {
-            wrappedRequest.reset();
         }
-        KibanaLogFields.unsetLogType();
     }
 
     private void logResponse(final String request, final HttpServletRequest servletRequest,
@@ -166,16 +166,16 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         final String contentType = wrappedResponse.getContentType();
 
         KibanaLogFields.set(HTTP_STATUS, httpStatus.value());
-        KibanaLogFields.setLogType(RESPONSE_BODY);
-        LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
-                httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
+        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(RESPONSE_BODY)) {
+            LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
+                    httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
 
-        if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
-            LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
-        } else {
-            writeToFile("%s.out", wrappedResponse.getContentInputStream());
+            if (mayLogLength(contentLength) && mayLogContentType(contentType)) {
+                LOGGER.info("Response is:\n{}", getResponseLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
+            } else {
+                writeToFile("%s.out", wrappedResponse.getContentInputStream());
+            }
         }
-        KibanaLogFields.unsetLogType();
     }
 
     private void writeToFile(final String fileNamePattern, final InputStream contentInputStream) throws IOException {

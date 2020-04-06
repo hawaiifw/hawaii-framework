@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.logging.config;
+package org.hawaiiframework.logging.config.filter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.Locale;
  * @since 2.0.0
  */
 @SuppressWarnings("PMD.DataClass")
-public class RequestResponseLogFilterConfiguration extends LoggingFilterProperties {
+public class RequestResponseLogFilterProperties extends LoggingFilterProperties {
 
     /**
      * Write large output and non matched output to a file?

@@ -1,5 +1,10 @@
 # Release Notes #
 
+## 3.0.0.M14
+* Added opentracing
+* Refactored SQL logging
+* Added logging of SOAP requests and responses
+
 ## 3.0.0.M13
 * Make the fallbackToFile configuration apply to both request and response
 

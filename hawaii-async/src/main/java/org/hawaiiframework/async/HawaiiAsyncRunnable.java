@@ -43,14 +43,11 @@ public abstract class HawaiiAsyncRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            // Also registers KibanaLogFields
             SharedTaskContextHolder.register(sharedTaskContext);
-            sharedTaskContext.registerLogFields();
-
+            sharedTaskContext.startExecution();
             doRun();
         } finally {
-            sharedTaskContext.removeLogFields();
-            SharedTaskContextHolder.remove();
+            sharedTaskContext.finish();
         }
     }
 

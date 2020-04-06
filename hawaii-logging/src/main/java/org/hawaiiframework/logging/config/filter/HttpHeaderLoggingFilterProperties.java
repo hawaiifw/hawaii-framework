@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.logging.config;
+package org.hawaiiframework.logging.config.filter;
 
 /**
  * Extension of basic LoggingFilterProperties that also holds the name of a HTTP header
@@ -27,6 +27,7 @@ package org.hawaiiframework.logging.config;
  * @author Wouter Eerdekens
  * @since 2.0.0
  */
+
 public class HttpHeaderLoggingFilterProperties extends LoggingFilterProperties {
 
     /**

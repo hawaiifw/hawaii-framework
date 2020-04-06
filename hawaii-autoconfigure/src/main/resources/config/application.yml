@@ -7,17 +7,22 @@ spring:
       write-dates-as-timestamps: false
       write-date-timestamps-as-nanoseconds: false
 logging:
-  file: log/hawaii.log
   level:
     org.hawaiiframework: INFO
     org.springframework: INFO
 hawaii:
   time:
+    # Enable creation of the `HawaiiTime` bean.
     enabled: true
+    # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
     timezone: UTC
   async:
+    # location of the Hawaii async configuration file
     configuration: ./config/async-config.yml
   logging:
+    opentracing:
+      # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
+      enabled: true
     filters:
       kibana-log-cleanup:
         enabled: true
@@ -25,6 +30,10 @@ hawaii:
       request-duration:
         enabled: true
         order: -800
+      opentracing-response:
+        # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -790
       kibana-log:
         enabled: true
         order: -700
@@ -52,6 +61,10 @@ hawaii:
         - text/plain
         - text/xml
         - application/vnd.spring-boot.actuator.v1+json
+      container-name:
+        enabled: true
+        http-header: X-Hawaii-Hostname
+        hostname: ${HOSTNAME:localhost}
       user-details:
         enabled: true
         order: 110

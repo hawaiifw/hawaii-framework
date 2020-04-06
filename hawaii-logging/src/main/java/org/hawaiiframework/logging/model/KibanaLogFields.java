@@ -40,15 +40,15 @@ public final class KibanaLogFields {
     /**
      * Set the field KibanaLogTypeNames.LOG_TYPE to the given {@code value}.
      */
-    public static void setLogType(final KibanaLogTypeNames value) {
-        set(LOG_TYPE, value.toString());
+    public static AutoCloseableKibanaLogField logType(final KibanaLogTypeNames value) {
+        return tagCloseable(LOG_TYPE, value.toString());
     }
 
     /**
      * Set the field KibanaLogTypeNames.LOG_TYPE to the given {@code value}.
      */
-    public static void setCallResult(final KibanaLogCallResultTypes value) {
-        set(CALL_RESULT, value.toString());
+    public static KibanaLogField callResult(final KibanaLogCallResultTypes value) {
+        return set(CALL_RESULT, value.toString());
     }
 
     /**
@@ -61,15 +61,30 @@ public final class KibanaLogFields {
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
-    public static void set(final KibanaLogField field, final int value) {
-        set(field, Integer.toString(value));
+    public static KibanaLogField set(final KibanaLogField field, final int value) {
+        return set(field, Integer.toString(value));
     }
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
-    public static void set(final KibanaLogField field, final String value) {
+    public static KibanaLogField set(final KibanaLogField field, final String value) {
+        return tag(field, value);
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}.
+     */
+    public static KibanaLogField tag(final KibanaLogField field, final String value) {
         MDC.put(field.getLogName(), value);
+        return field;
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     */
+    public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final String value) {
+        return new AutoCloseableKibanaLogField(tag(field, value));
     }
 
     /**
