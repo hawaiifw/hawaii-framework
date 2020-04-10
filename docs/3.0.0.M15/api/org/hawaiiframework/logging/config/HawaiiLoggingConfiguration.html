@@ -214,7 +214,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../http/client/LoggingClientHttpRequestInterceptor.html" title="class in org.hawaiiframework.logging.http.client">LoggingClientHttpRequestInterceptor</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loggingClientHttpRequestInterceptor()">loggingClientHttpRequestInterceptor</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loggingClientHttpRequestInterceptor(org.hawaiiframework.logging.http.HawaiiRequestResponseLogger)">loggingClientHttpRequestInterceptor</a></span>&#8203;(<a href="../http/HawaiiRequestResponseLogger.html" title="interface in org.hawaiiframework.logging.http">HawaiiRequestResponseLogger</a>&nbsp;hawaiiRequestResponseLogger)</code></th>
 <td class="colLast">
 <div class="block">Create a <a href="../http/client/LoggingClientHttpRequestInterceptor.html" title="class in org.hawaiiframework.logging.http.client"><code>LoggingClientHttpRequestInterceptor</code></a> bean.</div>
 </td>
@@ -287,6 +287,21 @@ public&nbsp;<a href="../util/HttpRequestResponseLogUtil.html" title="class in or
 public&nbsp;<a href="HawaiiLoggingConfigurationProperties.html" title="class in org.hawaiiframework.logging.config">HawaiiLoggingConfigurationProperties</a>&nbsp;hawaiiLoggingConfigurationProperties()</pre>
 </li>
 </ul>
+<a id="loggingClientHttpRequestInterceptor(org.hawaiiframework.logging.http.HawaiiRequestResponseLogger)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>loggingClientHttpRequestInterceptor</h4>
+<pre class="methodSignature">@Bean
+public&nbsp;<a href="../http/client/LoggingClientHttpRequestInterceptor.html" title="class in org.hawaiiframework.logging.http.client">LoggingClientHttpRequestInterceptor</a>&nbsp;loggingClientHttpRequestInterceptor&#8203;(<a href="../http/HawaiiRequestResponseLogger.html" title="interface in org.hawaiiframework.logging.http">HawaiiRequestResponseLogger</a>&nbsp;hawaiiRequestResponseLogger)</pre>
+<div class="block">Create a <a href="../http/client/LoggingClientHttpRequestInterceptor.html" title="class in org.hawaiiframework.logging.http.client"><code>LoggingClientHttpRequestInterceptor</code></a> bean.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the bean.</dd>
+</dl>
+</li>
+</ul>
 <a id="hawaiiLogger(org.hawaiiframework.logging.util.HttpRequestResponseLogUtil,org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties)">
 <!--   -->
 </a>
@@ -294,23 +309,9 @@ public&nbsp;<a href="HawaiiLoggingConfigurationProperties.html" title="class in 
 <li class="blockList">
 <h4>hawaiiLogger</h4>
 <pre class="methodSignature">@Bean
+@ConditionalOnMissingBean(<a href="../http/HawaiiRequestResponseLogger.html" title="interface in org.hawaiiframework.logging.http">HawaiiRequestResponseLogger.class</a>)
 public&nbsp;<a href="../http/HawaiiRequestResponseLogger.html" title="interface in org.hawaiiframework.logging.http">HawaiiRequestResponseLogger</a>&nbsp;hawaiiLogger&#8203;(<a href="../util/HttpRequestResponseLogUtil.html" title="class in org.hawaiiframework.logging.util">HttpRequestResponseLogUtil</a>&nbsp;requestResponseLogUtil,
                                                 <a href="HawaiiLoggingConfigurationProperties.html" title="class in org.hawaiiframework.logging.config">HawaiiLoggingConfigurationProperties</a>&nbsp;hawaiiLoggingConfigurationProperties)</pre>
-</li>
-</ul>
-<a id="loggingClientHttpRequestInterceptor()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>loggingClientHttpRequestInterceptor</h4>
-<pre class="methodSignature">@Bean
-public&nbsp;<a href="../http/client/LoggingClientHttpRequestInterceptor.html" title="class in org.hawaiiframework.logging.http.client">LoggingClientHttpRequestInterceptor</a>&nbsp;loggingClientHttpRequestInterceptor()</pre>
-<div class="block">Create a <a href="../http/client/LoggingClientHttpRequestInterceptor.html" title="class in org.hawaiiframework.logging.http.client"><code>LoggingClientHttpRequestInterceptor</code></a> bean.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the bean.</dd>
-</dl>
 </li>
 </ul>
 <a id="busConfiguration()">
