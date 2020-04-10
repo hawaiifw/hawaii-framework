@@ -167,6 +167,10 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     private String getContentType(final HttpRequest request) {
         final HttpHeaders httpHeaders = getHttpHeaders(request);
         final MediaType contentType = getMediaType(httpHeaders);
+
+        if (contentType == null) {
+            return null;
+        }
         return getContentTypeAsString(contentType);
     }
 

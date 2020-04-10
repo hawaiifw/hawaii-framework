@@ -24,6 +24,7 @@ import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -65,19 +66,21 @@ public class HawaiiLoggingConfiguration {
         return new HawaiiLoggingConfigurationProperties();
     }
 
-    @Bean
-    public HawaiiRequestResponseLogger hawaiiLogger(final HttpRequestResponseLogUtil requestResponseLogUtil,
-            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        return new DefaultHawaiiRequestResponseLogger(requestResponseLogUtil, hawaiiLoggingConfigurationProperties);
-    }
-
     /**
      * Create a {@link LoggingClientHttpRequestInterceptor} bean.
      * @return the bean.
      */
     @Bean
-    public LoggingClientHttpRequestInterceptor loggingClientHttpRequestInterceptor() {
-        return new LoggingClientHttpRequestInterceptor(hawaiiLogger(httpRequestResponseLogUtil(), hawaiiLoggingConfigurationProperties()));
+    public LoggingClientHttpRequestInterceptor loggingClientHttpRequestInterceptor(
+            final HawaiiRequestResponseLogger hawaiiRequestResponseLogger) {
+        return new LoggingClientHttpRequestInterceptor(hawaiiRequestResponseLogger);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(HawaiiRequestResponseLogger.class)
+    public HawaiiRequestResponseLogger hawaiiLogger(final HttpRequestResponseLogUtil requestResponseLogUtil,
+            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new DefaultHawaiiRequestResponseLogger(requestResponseLogUtil, hawaiiLoggingConfigurationProperties);
     }
 
     /**
