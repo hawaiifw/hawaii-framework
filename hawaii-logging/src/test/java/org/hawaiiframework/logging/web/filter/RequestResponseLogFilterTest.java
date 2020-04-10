@@ -15,7 +15,8 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterProperties;
+import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
+import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,9 +69,10 @@ public class RequestResponseLogFilterTest {
         when(request.getQueryString()).thenReturn(A_QUERY_STRING);
 
         final HttpRequestResponseLogUtil httpRequestResponseLogUtil = mock(HttpRequestResponseLogUtil.class);
-        when(httpRequestResponseLogUtil.getRequestUri(request)).thenReturn("some uri");
 
-        filter = new RequestResponseLogFilter(mock(RequestResponseLogFilterProperties.class), httpRequestResponseLogUtil);
+        final DefaultHawaiiRequestResponseLogger logger = new DefaultHawaiiRequestResponseLogger(httpRequestResponseLogUtil, mock(HawaiiLoggingConfigurationProperties.class));
+
+        filter = new RequestResponseLogFilter(logger);
 
 
     }
@@ -88,7 +90,7 @@ public class RequestResponseLogFilterTest {
         final List<Object> allValues = captor.getAllValues();
         String loggedUrl = (String) allValues.get(0);
 
-        assertThat(loggedUrl, is(equalTo("some uri")));
+        assertThat(loggedUrl, is(equalTo(A_REQUEST_URI)));
     }
 
 }

@@ -34,15 +34,15 @@ public class KibanaLogFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public KibanaLogFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public KibanaLogFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -53,7 +53,7 @@ public class KibanaLogFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
     public KibanaLogFilter kibanaLogFilter() {
-        return new KibanaLogFilter(createClientIpResolver(hawaiiLoggingConfigurationProperties.getKibanaLog()));
+        return new KibanaLogFilter(createClientIpResolver(hawaiiLoggingFilterConfigurationProperties.getKibanaLog()));
     }
 
     /**
@@ -65,7 +65,7 @@ public class KibanaLogFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
     public FilterRegistrationBean<KibanaLogFilter> kibanaLogFilterRegistration(final KibanaLogFilter kibanaLogFilter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getKibanaLog();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getKibanaLog();
         return createFilterRegistrationBean(kibanaLogFilter, filterProperties);
     }
 

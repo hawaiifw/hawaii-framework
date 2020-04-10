@@ -16,6 +16,7 @@
 package org.hawaiiframework.logging.config;
 
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.HawaiiLoggingFilterConfigurationProperties;
 import org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.OpentracingResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration;
@@ -24,6 +25,7 @@ import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfigu
 import org.hawaiiframework.logging.config.filter.TransactionIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -31,6 +33,7 @@ import org.springframework.context.annotation.Import;
  * Configuration that includes all filter configurations.
  */
 @Configuration
+@EnableConfigurationProperties(HawaiiLoggingFilterConfigurationProperties.class)
 @Import({
         ContainerNameHttpHeaderFilterConfiguration.class,
         KibanaLogCleanupFilterConfiguration.class,

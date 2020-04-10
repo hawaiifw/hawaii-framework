@@ -18,10 +18,16 @@ package org.hawaiiframework.logging.util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +35,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hawaiiframework.logging.util.LogUtil.indent;
 
 /**
@@ -95,7 +103,7 @@ public class HttpRequestResponseLogUtil {
      * For example: {@code GET /doc/test.html HTTP/1.1}.
      */
     public String createRequestLine(final String request, final String protocol) {
-        return String.format("%s %s", request, protocol);
+        return format("%s %s", request, protocol);
     }
 
     /**
@@ -139,6 +147,18 @@ public class HttpRequestResponseLogUtil {
     @SuppressWarnings("PMD.LawOfDemeter")
     public String createLogString(final String requestLine, final HttpHeaders headers, final byte[] body, final Charset charset) {
         return createLogString(requestLine, headers, new String(body, charset));
+    }
+
+    @SuppressWarnings("PMD.LawOfDemeter")
+    public String createLogString(final HttpServletRequest servletRequest,
+            final ContentCachingResponseWrapper response,
+            final HttpStatus httpStatus,
+            final int contentSize) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(contentSize)) {
+            final String statusLine = format("%s %s %s", servletRequest.getProtocol(), httpStatus.value(), httpStatus.getReasonPhrase());
+            final HttpHeaders headers = getHeaders(response);
+            return createLogString(statusLine, headers, baos.toByteArray(), response.getCharacterEncoding());
+        }
     }
 
     /**
@@ -230,5 +250,25 @@ public class HttpRequestResponseLogUtil {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public String getResponseBody(final ClientHttpResponse response) throws IOException {
+        final StringBuilder inputStringBuilder = new StringBuilder();
+
+        return getResponseBody(inputStringBuilder, response);
+    }
+
+    private String getResponseBody(final StringBuilder inputStringBuilder, final ClientHttpResponse response) throws IOException {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(response.getBody(), UTF_8);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                inputStringBuilder.append(line);
+                inputStringBuilder.append(NEW_LINE);
+                line = bufferedReader.readLine();
+            }
+        }
+
+        return inputStringBuilder.toString();
     }
 }

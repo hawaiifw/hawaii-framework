@@ -34,15 +34,15 @@ public class TransactionTypeFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public TransactionTypeFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public TransactionTypeFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -67,7 +67,7 @@ public class TransactionTypeFilterConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-name", name = "enabled")
     public FilterRegistrationBean<TransactionTypeFilter> transactionTypeFilterRegistration(
             final TransactionTypeFilter transactionNameFilter) {
-        final var filterProperties = hawaiiLoggingConfigurationProperties.getTransactionType();
+        final var filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionType();
         return createFilterRegistrationBean(transactionNameFilter, filterProperties);
     }
 }

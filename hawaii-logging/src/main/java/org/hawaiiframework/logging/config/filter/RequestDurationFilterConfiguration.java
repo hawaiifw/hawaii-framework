@@ -33,15 +33,15 @@ public class RequestDurationFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public RequestDurationFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public RequestDurationFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -65,7 +65,7 @@ public class RequestDurationFilterConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled")
     public FilterRegistrationBean<RequestDurationFilter> requestDurationFilterRegistration(
             final RequestDurationFilter requestDurationFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestDuration();
+        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestDuration();
         return createFilterRegistrationBean(requestDurationFilter, filterProperties);
     }
 }
