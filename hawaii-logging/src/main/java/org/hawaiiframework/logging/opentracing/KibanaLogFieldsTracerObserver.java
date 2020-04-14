@@ -52,7 +52,7 @@ public class KibanaLogFieldsTracerObserver implements TracerObserver {
         KibanaLogFields.set(OpentracingKibanaLogField.SPAN_ID, spanData.getSpanId());
         KibanaLogFields.set(OpentracingKibanaLogField.TRACE_ID, spanData.getTraceId());
         addTagsToKibanaFields(spanData.getTags());
-        LOGGER.debug("Start of span '{}'.", spanData.getSpanId());
+        LOGGER.debug("Start of span '{} with trace id {}'.", spanData.getSpanId(), spanData.getTraceId());
         return spanObserver;
     }
 }
