@@ -153,19 +153,17 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
 
 
-    public String getContentType(final ClientHttpResponse response) throws IOException {
-
-        if (response.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-            return null;
-        }
-
+    public String getContentType(final ClientHttpResponse response) {
         final HttpHeaders httpHeaders = getHttpHeaders(response);
-        final MediaType contentType = getMediaType(httpHeaders);
-        return getContentTypeAsString(contentType);
+        return getContentType(httpHeaders);
     }
 
     public String getContentType(final HttpRequest request) {
         final HttpHeaders httpHeaders = getHttpHeaders(request);
+        return getContentType(httpHeaders);
+    }
+
+    private String getContentType(final HttpHeaders httpHeaders) {
         final MediaType contentType = getMediaType(httpHeaders);
 
         if (contentType == null) {
