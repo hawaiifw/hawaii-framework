@@ -62,7 +62,8 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
             final String contentType = getContentType(request);
             if (contentTypeCanBeLogged(contentType)) {
-                logContent(request, body);
+                LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
+                        httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
             }
         }
     }
@@ -77,7 +78,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
             try {
                 if (contentTypeCanBeLogged(contentType)) {
-                    logContent(wrappedRequest);
+                    LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
                 }
             } finally {
                 wrappedRequest.reset();
@@ -88,7 +89,11 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     @Override
     public void logResponse(final ClientHttpResponse response) throws IOException {
         if (contentTypeCanBeLogged(getContentType(response))) {
-            logContent(response);
+            final HttpStatus statusCode = response.getStatusCode();
+            final String statusText = response.getStatusText();
+
+            final String body = httpRequestResponseLogUtil.getResponseBody(response);
+            logResponse(statusCode, statusText, response.getHeaders(), body);
         }
     }
 
@@ -107,7 +112,8 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
                     httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
             if (contentTypeCanBeLogged(contentType)) {
-                logContent(servletRequest, wrappedResponse);
+                LOGGER.info("Response is:\n{}",
+                        httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
             }
         }
     }
@@ -123,35 +129,6 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             LOGGER.info("Got response '{} {}':\n{}", statusCode, statusText, httpRequestResponseLogUtil.createLogString(headers, body));
         }
     }
-
-    private void logContent(final HttpRequest request, final byte[] body) {
-        LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
-                httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
-    }
-
-    private void logContent(final ResettableHttpServletRequest wrappedRequest) throws IOException {
-        final String requestUri = wrappedRequest.getRequestURI();
-        LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
-    }
-
-    private void logContent(final HttpServletRequest servletRequest,
-            final ContentCachingWrappedResponse wrappedResponse) throws IOException {
-        final int contentLength = wrappedResponse.getContentSize();
-        final HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
-
-        LOGGER.info("Response is:\n{}",
-                httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
-    }
-
-    private void logContent(final ClientHttpResponse response) throws IOException {
-        final HttpStatus statusCode = response.getStatusCode();
-        final String statusText = response.getStatusText();
-
-        final String body = httpRequestResponseLogUtil.getResponseBody(response);
-        logResponse(statusCode, statusText, response.getHeaders(), body);
-    }
-
-
 
     public String getContentType(final ClientHttpResponse response) {
         final HttpHeaders httpHeaders = getHttpHeaders(response);
@@ -190,7 +167,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     }
 
     public boolean contentTypeCanBeLogged(final String contentType) {
-        //Assume nothing has ben configured so we allow everything
+        //Assume nothing has been configured so we allow everything
         if (getAllowedContentTypes() == null || getAllowedContentTypes().isEmpty()) {
             return true;
         } else {
