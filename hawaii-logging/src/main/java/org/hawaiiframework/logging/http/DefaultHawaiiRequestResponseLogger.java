@@ -124,17 +124,17 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         }
     }
 
-    public void logContent(final HttpRequest request, final byte[] body) {
+    private void logContent(final HttpRequest request, final byte[] body) {
         LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
                 httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
     }
 
-    public void logContent(final ResettableHttpServletRequest wrappedRequest) throws IOException {
+    private void logContent(final ResettableHttpServletRequest wrappedRequest) throws IOException {
         final String requestUri = wrappedRequest.getRequestURI();
         LOGGER.info("Request is:\n{}", httpRequestResponseLogUtil.formatRequest(requestUri, wrappedRequest));
     }
 
-    public void logContent(final HttpServletRequest servletRequest,
+    private void logContent(final HttpServletRequest servletRequest,
             final ContentCachingWrappedResponse wrappedResponse) throws IOException {
         final int contentLength = wrappedResponse.getContentSize();
         final HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
@@ -143,7 +143,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
                 httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
     }
 
-    public void logContent(final ClientHttpResponse response) throws IOException {
+    private void logContent(final ClientHttpResponse response) throws IOException {
         final HttpStatus statusCode = response.getStatusCode();
         final String statusText = response.getStatusText();
 
