@@ -33,15 +33,15 @@ public class RequestIdFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public RequestIdFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public RequestIdFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -52,7 +52,7 @@ public class RequestIdFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
     public RequestIdFilter requestIdFilter() {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestId();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestId();
         return new RequestIdFilter(filterProperties.getHttpHeader());
     }
 
@@ -64,7 +64,7 @@ public class RequestIdFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
     public FilterRegistrationBean<RequestIdFilter> requestIdFilterRegistration(final RequestIdFilter requestIdFilter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestId();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestId();
         return createFilterRegistrationBean(requestIdFilter, filterProperties);
     }
 

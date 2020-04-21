@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "hawaii.logging.filters")
 @SuppressWarnings("PMD.DataClass")
-public class HawaiiLoggingConfigurationProperties {
+public class HawaiiLoggingFilterConfigurationProperties {
 
     /**
      * Configuration properties for the Kibana log filter.

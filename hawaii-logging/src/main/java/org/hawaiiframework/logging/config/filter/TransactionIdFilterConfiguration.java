@@ -33,15 +33,15 @@ public class TransactionIdFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public TransactionIdFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public TransactionIdFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -52,7 +52,7 @@ public class TransactionIdFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled")
     public TransactionIdFilter transactionIdFilter() {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getTransactionId();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionId();
         return new TransactionIdFilter(filterProperties.getHttpHeader());
     }
 
@@ -65,7 +65,7 @@ public class TransactionIdFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled")
     public FilterRegistrationBean<TransactionIdFilter> transactionIdFilterRegistration(final TransactionIdFilter transactionIdFilter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getTransactionId();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionId();
         return createFilterRegistrationBean(transactionIdFilter, filterProperties);
     }
 

@@ -19,10 +19,12 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
-import org.hawaiiframework.logging.config.filter.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.http.client.LoggingClientHttpRequestInterceptor;
+import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
+import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -55,21 +57,30 @@ public class HawaiiLoggingConfiguration {
      * @return the bean.
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
     public HttpRequestResponseLogUtil httpRequestResponseLogUtil() {
         return new HttpRequestResponseLogUtil();
     }
 
+    @Bean
+    public HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties() {
+        return new HawaiiLoggingConfigurationProperties();
+    }
+
     /**
      * Create a {@link LoggingClientHttpRequestInterceptor} bean.
-     *
-     * @param requestResponseLogUtil The HTTP request response log utility.
      * @return the bean.
      */
     @Bean
     public LoggingClientHttpRequestInterceptor loggingClientHttpRequestInterceptor(
-            final HttpRequestResponseLogUtil requestResponseLogUtil) {
-        return new LoggingClientHttpRequestInterceptor(requestResponseLogUtil);
+            final HawaiiRequestResponseLogger hawaiiRequestResponseLogger) {
+        return new LoggingClientHttpRequestInterceptor(hawaiiRequestResponseLogger);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(HawaiiRequestResponseLogger.class)
+    public HawaiiRequestResponseLogger hawaiiLogger(final HttpRequestResponseLogUtil requestResponseLogUtil,
+            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new DefaultHawaiiRequestResponseLogger(requestResponseLogUtil, hawaiiLoggingConfigurationProperties);
     }
 
     /**

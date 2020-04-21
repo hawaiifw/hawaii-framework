@@ -93,7 +93,7 @@ public class HawaiiStringEncryptor implements StringEncryptor {
         }
     }
 
-    private Cipher initCipher(final int mode, final String key, final String initVector)
+    protected Cipher initCipher(final int mode, final String key, final String initVector)
             throws GeneralSecurityException {
         final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
 

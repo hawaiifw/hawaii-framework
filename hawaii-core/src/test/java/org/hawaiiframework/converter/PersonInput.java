@@ -1,7 +1,5 @@
 package org.hawaiiframework.converter;
 
-import java.util.List;
-
 /**
  * Sample bean to convert.
  */

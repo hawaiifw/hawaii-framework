@@ -32,15 +32,16 @@ public class ContainerNameHttpHeaderFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public ContainerNameHttpHeaderFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public ContainerNameHttpHeaderFilterConfiguration(
+            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -51,7 +52,7 @@ public class ContainerNameHttpHeaderFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled")
     public ContainerNameHttpHeaderFilter containerNameHttpHeaderFilter() {
-        final ContainerNameHttpHeaderFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getContainerName();
+        final ContainerNameHttpHeaderFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getContainerName();
         return new ContainerNameHttpHeaderFilter(filterProperties);
     }
 
@@ -66,7 +67,7 @@ public class ContainerNameHttpHeaderFilterConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled")
     public FilterRegistrationBean<ContainerNameHttpHeaderFilter> containerNameHttpHeaderFilterRegistration(
             final ContainerNameHttpHeaderFilter filter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getContainerName();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getContainerName();
         return createFilterRegistrationBean(filter, filterProperties);
     }
 

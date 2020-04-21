@@ -39,15 +39,16 @@ public class OpentracingResponseFilterConfiguration {
     /**
      * The the logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * Autowired constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties the logging configuration properties
+     * @param hawaiiLoggingFilterConfigurationProperties the logging configuration properties
      */
-    public OpentracingResponseFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public OpentracingResponseFilterConfiguration(
+            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -81,7 +82,7 @@ public class OpentracingResponseFilterConfiguration {
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.opentracing-response", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<OpentracingResponseFilter> opentracingResponseFilterRegistration(
             final OpentracingResponseFilter opentracingResponseFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getOpentracingResponse();
+        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getOpentracingResponse();
         return createFilterRegistrationBean(opentracingResponseFilter, filterProperties);
     }
 }

@@ -16,7 +16,7 @@
 
 package org.hawaiiframework.logging.config.filter;
 
-import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
+import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -34,15 +34,20 @@ public class RequestResponseLogFilterConfiguration {
     /**
      * The logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+
+    private final HawaiiRequestResponseLogger hawaiiLogger;
 
     /**
      * The constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties The logging configuration properties.
+     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
      */
-    public RequestResponseLogFilterConfiguration(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+    public RequestResponseLogFilterConfiguration(
+            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties,
+            final HawaiiRequestResponseLogger hawaiiLogger) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
+        this.hawaiiLogger = hawaiiLogger;
     }
 
     /**
@@ -52,20 +57,20 @@ public class RequestResponseLogFilterConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
-    public RequestResponseLogFilter requestResponseLogFilter(final HttpRequestResponseLogUtil httpRequestResponseLogUtil) {
-        return new RequestResponseLogFilter(hawaiiLoggingConfigurationProperties.getRequestResponse(), httpRequestResponseLogUtil);
+    public RequestResponseLogFilter requestResponseLogFilter() {
+        return new RequestResponseLogFilter(hawaiiLogger);
     }
 
     /**
      * Create and register the {@link RequestResponseLogFilter} bean.
      *
-     * @return the {@link #requestResponseLogFilter(HttpRequestResponseLogUtil)} bean, wrapped in a {@link FilterRegistrationBean}
+     * @return the requestResponseLogFilter bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
     public FilterRegistrationBean<RequestResponseLogFilter> requestResponseLogFilterRegistration(
             final RequestResponseLogFilter requestResponseLogFilter) {
-        final RequestResponseLogFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getRequestResponse();
+        final RequestResponseLogFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestResponse();
         return createFilterRegistrationBean(requestResponseLogFilter, filterProperties);
     }
 

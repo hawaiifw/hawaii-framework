@@ -38,16 +38,16 @@ public class UserDetailsFilterConfiguration {
     /**
      * The the logging configuration properties.
      */
-    private final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties;
+    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
      * Autowired constructor.
      *
-     * @param hawaiiLoggingConfigurationProperties the logging configuration properties
+     * @param hawaiiLoggingFilterConfigurationProperties the logging configuration properties
      */
     UserDetailsFilterConfiguration(
-            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        this.hawaiiLoggingConfigurationProperties = hawaiiLoggingConfigurationProperties;
+            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
+        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
     }
 
     /**
@@ -70,7 +70,7 @@ public class UserDetailsFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
     public FilterRegistrationBean<UserDetailsFilter> userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingConfigurationProperties.getUserDetails();
+        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getUserDetails();
         final FilterRegistrationBean<UserDetailsFilter> result = new FilterRegistrationBean<>(userDetailsFilter);
         result.setOrder(filterProperties.getOrder());
         result.setDispatcherTypes(EnumSet.of(DispatcherType.REQUEST));
