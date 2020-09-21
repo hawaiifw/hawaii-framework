@@ -60,8 +60,9 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         try (AutoCloseableKibanaLogField callMethod = KibanaLogFields.tagCloseable(CALL_METHOD, request.getMethodValue());
                 AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_REQUEST_BODY)) {
 
+            // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
             final String contentType = getContentType(request);
-            if (contentTypeCanBeLogged(contentType)) {
+            if (contentType == null || contentTypeCanBeLogged(contentType)) {
                 LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
                         httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
             }
