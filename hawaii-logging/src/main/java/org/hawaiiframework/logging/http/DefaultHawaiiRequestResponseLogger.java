@@ -112,9 +112,9 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(RESPONSE_BODY)) {
             LOGGER.info("Response '{}' is '{} {}' with content type '{}' and size of '{}' bytes.", request,
                     httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
-            if (contentTypeCanBeLogged(contentType)) {
+            if (contentTypeCanBeLogged(contentType) && contentLength != 0) {
                 LOGGER.info("Response is:\n{}",
-                        httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
+                        httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus));
             }
         }
     }
