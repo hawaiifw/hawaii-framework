@@ -114,7 +114,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
                     httpStatus.value(), httpStatus.getReasonPhrase(), contentType, contentLength);
             if (contentTypeCanBeLogged(contentType)) {
                 LOGGER.info("Response is:\n{}",
-                        httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus, contentLength));
+                        httpRequestResponseLogUtil.createLogString(servletRequest, wrappedResponse, httpStatus));
             }
         }
     }

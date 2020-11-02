@@ -25,7 +25,6 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -152,13 +151,11 @@ public class HttpRequestResponseLogUtil {
     @SuppressWarnings("PMD.LawOfDemeter")
     public String createLogString(final HttpServletRequest servletRequest,
             final ContentCachingResponseWrapper response,
-            final HttpStatus httpStatus,
-            final int contentSize) throws IOException {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(contentSize)) {
-            final String statusLine = format("%s %s %s", servletRequest.getProtocol(), httpStatus.value(), httpStatus.getReasonPhrase());
-            final HttpHeaders headers = getHeaders(response);
-            return createLogString(statusLine, headers, baos.toByteArray(), response.getCharacterEncoding());
-        }
+            final HttpStatus httpStatus) {
+
+        final String statusLine = format("%s %s %s", servletRequest.getProtocol(), httpStatus.value(), httpStatus.getReasonPhrase());
+        final HttpHeaders headers = getHeaders(response);
+        return createLogString(statusLine, headers, response.getContentAsByteArray(), response.getCharacterEncoding());
     }
 
     /**
