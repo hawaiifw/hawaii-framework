@@ -39,8 +39,10 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
 @Import({
+        CxfLoggingConfiguration.class,
         DataSourceProxyConfiguration.class,
         HawaiiLoggingFilterConfiguration.class,
+        ScheduledConfiguration.class,
         StatementLoggerQueryExecutionListenerConfiguration.class
 })
 public class HawaiiLoggingConfiguration {

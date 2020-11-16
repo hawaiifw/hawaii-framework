@@ -394,6 +394,7 @@ project("hawaii-logging") {
         implementation "org.springframework.boot:spring-boot"
         implementation "org.springframework.boot:spring-boot-autoconfigure"
         implementation "org.apache.cxf:cxf-rt-features-logging:${apacheCxfVersion}"
+        compileOnly "org.aspectj:aspectjrt"
         compileOnly "ch.qos.logback:logback-core:${logbackVersion}"
         compileOnly "ch.qos.logback:logback-classic:${logbackVersion}"
         compileOnly "org.springframework.security:spring-security-core"
