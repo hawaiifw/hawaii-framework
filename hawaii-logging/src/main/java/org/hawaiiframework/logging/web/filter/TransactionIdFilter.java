@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_ID;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
