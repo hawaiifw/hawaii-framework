@@ -27,6 +27,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link KibanaLogCleanupFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled", matchIfMissing = true)
 @Configuration
 public class KibanaLogCleanupFilterConfiguration {
 
@@ -51,7 +52,7 @@ public class KibanaLogCleanupFilterConfiguration {
      * @return the {@link KibanaLogCleanupFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled", matchIfMissing = true)
     public KibanaLogCleanupFilter kibanaLogCleanupFilter() {
         return new KibanaLogCleanupFilter();
     }
@@ -63,7 +64,7 @@ public class KibanaLogCleanupFilterConfiguration {
      * @return the {@link #kibanaLogCleanupFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log-cleanup", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<KibanaLogCleanupFilter> kibanaLogCleanupFilterRegistration(
             final KibanaLogCleanupFilter kibanaLogCleanupFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getKibanaLogCleanup();

@@ -28,6 +28,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link KibanaLogFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled", matchIfMissing = true)
 @Configuration
 public class KibanaLogFilterConfiguration {
 
@@ -51,7 +52,7 @@ public class KibanaLogFilterConfiguration {
      * @return the {@link KibanaLogFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled", matchIfMissing = true)
     public KibanaLogFilter kibanaLogFilter() {
         return new KibanaLogFilter(createClientIpResolver(hawaiiLoggingFilterConfigurationProperties.getKibanaLog()));
     }
@@ -63,7 +64,7 @@ public class KibanaLogFilterConfiguration {
      * @return the {@link KibanaLogFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.kibana-log", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<KibanaLogFilter> kibanaLogFilterRegistration(final KibanaLogFilter kibanaLogFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getKibanaLog();
         return createFilterRegistrationBean(kibanaLogFilter, filterProperties);

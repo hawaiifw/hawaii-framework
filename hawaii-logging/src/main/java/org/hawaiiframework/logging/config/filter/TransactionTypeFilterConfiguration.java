@@ -28,6 +28,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link TransactionTypeFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled", matchIfMissing = true)
 @Configuration
 public class TransactionTypeFilterConfiguration {
 
@@ -52,7 +53,7 @@ public class TransactionTypeFilterConfiguration {
      * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled", matchIfMissing = true)
     public TransactionTypeFilter transactionTypeFilter(final ApplicationContext applicationContext) {
         return new TransactionTypeFilter(applicationContext);
     }
@@ -64,7 +65,7 @@ public class TransactionTypeFilterConfiguration {
      * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-name", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<TransactionTypeFilter> transactionTypeFilterRegistration(
             final TransactionTypeFilter transactionNameFilter) {
         final var filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionType();

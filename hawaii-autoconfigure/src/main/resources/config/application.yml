@@ -30,6 +30,7 @@ hawaii:
     - text/plain
     - text/xml
     - application/vnd.spring-boot.actuator.v1+json
+    - application/vnd.spring-boot.actuator.v3+json
     filters:
       kibana-log-cleanup:
         enabled: true
@@ -37,6 +38,11 @@ hawaii:
       request-duration:
         enabled: true
         order: -800
+      container-name:
+        enabled: true
+        order: -791
+        http-header: X-Hawaii-Hostname
+        hostname: ${HOSTNAME:localhost}
       opentracing-response:
         # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
         enabled: true
@@ -59,10 +65,6 @@ hawaii:
       request-response:
         enabled: true
         order: -300
-      container-name:
-        enabled: true
-        http-header: X-Hawaii-Hostname
-        hostname: ${HOSTNAME:localhost}
       user-details:
         enabled: true
         order: 110

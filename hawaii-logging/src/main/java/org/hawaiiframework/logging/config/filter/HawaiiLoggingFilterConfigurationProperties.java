@@ -53,7 +53,7 @@ public class HawaiiLoggingFilterConfigurationProperties {
      * Configuration properties for the request-response logging filter.
      */
     @NestedConfigurationProperty
-    private RequestResponseLogFilterProperties requestResponse;
+    private LoggingFilterProperties requestResponse;
 
     /**
      * Configuration properties for the request id logging filter.
@@ -150,7 +150,7 @@ public class HawaiiLoggingFilterConfigurationProperties {
      *
      * @return the properties
      */
-    public RequestResponseLogFilterProperties getRequestResponse() {
+    public LoggingFilterProperties getRequestResponse() {
         return requestResponse;
     }
 
@@ -159,7 +159,7 @@ public class HawaiiLoggingFilterConfigurationProperties {
      *
      * @param requestResponse the properties
      */
-    public void setRequestResponse(final RequestResponseLogFilterProperties requestResponse) {
+    public void setRequestResponse(final LoggingFilterProperties requestResponse) {
         this.requestResponse = requestResponse;
     }
 

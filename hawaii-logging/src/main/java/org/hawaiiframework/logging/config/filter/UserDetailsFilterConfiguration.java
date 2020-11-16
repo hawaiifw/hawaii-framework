@@ -30,6 +30,7 @@ import java.util.EnumSet;
 /**
  * Configures the {@link UserDetailsFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled", matchIfMissing = true)
 @Configuration
 @ConditionalOnClass(UserDetails.class)
 public class UserDetailsFilterConfiguration {
@@ -56,7 +57,7 @@ public class UserDetailsFilterConfiguration {
      * @return the {@link UserDetailsFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled", matchIfMissing = true)
     public UserDetailsFilter userDetailsFilter() {
         return new UserDetailsFilter();
     }
@@ -67,8 +68,8 @@ public class UserDetailsFilterConfiguration {
      * @param userDetailsFilter the user details filter
      * @return the {@link #userDetailsFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled", matchIfMissing = true)
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled")
     public FilterRegistrationBean<UserDetailsFilter> userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getUserDetails();
         final FilterRegistrationBean<UserDetailsFilter> result = new FilterRegistrationBean<>(userDetailsFilter);

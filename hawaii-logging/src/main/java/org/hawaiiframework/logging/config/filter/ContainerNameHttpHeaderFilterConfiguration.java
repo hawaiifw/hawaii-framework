@@ -26,6 +26,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link ContainerNameHttpHeaderFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled", matchIfMissing = true)
 @Configuration
 public class ContainerNameHttpHeaderFilterConfiguration {
 
@@ -50,7 +51,7 @@ public class ContainerNameHttpHeaderFilterConfiguration {
      * @return the {@link ContainerNameHttpHeaderFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled", matchIfMissing = true)
     public ContainerNameHttpHeaderFilter containerNameHttpHeaderFilter() {
         final ContainerNameHttpHeaderFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getContainerName();
         return new ContainerNameHttpHeaderFilter(filterProperties);
@@ -64,7 +65,7 @@ public class ContainerNameHttpHeaderFilterConfiguration {
      * @return the {@link #containerNameHttpHeaderFilter()} bean, wrapped in a {@link ContainerNameHttpHeaderFilter}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<ContainerNameHttpHeaderFilter> containerNameHttpHeaderFilterRegistration(
             final ContainerNameHttpHeaderFilter filter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getContainerName();

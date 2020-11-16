@@ -17,6 +17,7 @@
 package org.hawaiiframework.logging.web.filter;
 
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterProperties;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
  * Filter class that will be added in the Tomcat filter chain to add a http response header to every response.
@@ -65,11 +68,12 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
         throws ServletException, IOException {
+        if (!isInternalRedirect(request)) {
+            LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
 
-        LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
-
-        if (!response.containsHeader(headerName)) {
-            response.addHeader(headerName, hostname);
+            if (!response.containsHeader(headerName)) {
+                response.addHeader(headerName, hostname);
+            }
         }
 
         filterChain.doFilter(request, response);

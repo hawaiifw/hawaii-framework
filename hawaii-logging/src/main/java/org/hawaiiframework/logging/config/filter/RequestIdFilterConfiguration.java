@@ -27,6 +27,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link RequestIdFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled", matchIfMissing = true)
 @Configuration
 public class RequestIdFilterConfiguration {
 
@@ -50,7 +51,7 @@ public class RequestIdFilterConfiguration {
      * @return the {@link RequestIdFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled", matchIfMissing = true)
     public RequestIdFilter requestIdFilter() {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestId();
         return new RequestIdFilter(filterProperties.getHttpHeader());
@@ -62,7 +63,7 @@ public class RequestIdFilterConfiguration {
      * @return the {@link #requestIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<RequestIdFilter> requestIdFilterRegistration(final RequestIdFilter requestIdFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestId();
         return createFilterRegistrationBean(requestIdFilter, filterProperties);

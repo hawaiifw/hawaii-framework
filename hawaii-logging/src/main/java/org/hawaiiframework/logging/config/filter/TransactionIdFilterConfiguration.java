@@ -27,6 +27,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link TransactionIdFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled", matchIfMissing = true)
 @Configuration
 public class TransactionIdFilterConfiguration {
 
@@ -50,7 +51,7 @@ public class TransactionIdFilterConfiguration {
      * @return the {@link TransactionIdFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled", matchIfMissing = true)
     public TransactionIdFilter transactionIdFilter() {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionId();
         return new TransactionIdFilter(filterProperties.getHttpHeader());
@@ -63,7 +64,7 @@ public class TransactionIdFilterConfiguration {
      * @return the {@link #transactionIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-id", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<TransactionIdFilter> transactionIdFilterRegistration(final TransactionIdFilter transactionIdFilter) {
         final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionId();
         return createFilterRegistrationBean(transactionIdFilter, filterProperties);

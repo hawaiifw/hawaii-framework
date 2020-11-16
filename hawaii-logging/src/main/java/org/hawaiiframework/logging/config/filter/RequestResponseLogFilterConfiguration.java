@@ -28,6 +28,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link RequestResponseLogFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled", matchIfMissing = true)
 @Configuration
 public class RequestResponseLogFilterConfiguration {
 
@@ -56,7 +57,7 @@ public class RequestResponseLogFilterConfiguration {
      * @return the {@link RequestResponseLogFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled", matchIfMissing = true)
     public RequestResponseLogFilter requestResponseLogFilter() {
         return new RequestResponseLogFilter(hawaiiLogger);
     }
@@ -67,10 +68,10 @@ public class RequestResponseLogFilterConfiguration {
      * @return the requestResponseLogFilter bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<RequestResponseLogFilter> requestResponseLogFilterRegistration(
             final RequestResponseLogFilter requestResponseLogFilter) {
-        final RequestResponseLogFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestResponse();
+        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestResponse();
         return createFilterRegistrationBean(requestResponseLogFilter, filterProperties);
     }
 

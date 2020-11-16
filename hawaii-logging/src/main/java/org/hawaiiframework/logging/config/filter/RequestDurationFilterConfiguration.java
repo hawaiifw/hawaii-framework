@@ -27,6 +27,7 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
 /**
  * Configures the {@link RequestDurationFilter}.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled", matchIfMissing = true)
 @Configuration
 public class RequestDurationFilterConfiguration {
 
@@ -50,7 +51,7 @@ public class RequestDurationFilterConfiguration {
      * @return the {@link RequestDurationFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled", matchIfMissing = true)
     public RequestDurationFilter requestDurationFilter() {
         return new RequestDurationFilter();
     }
@@ -62,7 +63,7 @@ public class RequestDurationFilterConfiguration {
      * @return the {@link #requestDurationFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled")
+    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<RequestDurationFilter> requestDurationFilterRegistration(
             final RequestDurationFilter requestDurationFilter) {
         final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestDuration();
