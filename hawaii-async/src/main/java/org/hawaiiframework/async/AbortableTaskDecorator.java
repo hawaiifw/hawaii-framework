@@ -100,7 +100,8 @@ public class AbortableTaskDecorator implements TaskDecorator {
     private Runnable createGuardedTask(final Runnable runnable, final SharedTaskContext sharedTaskContext) {
         final Runnable guardedTask = new AbortableTaskRunnable(runnable, sharedTaskContext);
 
-        sharedTaskContext.setTaskRemoveStrategy(new TaskRemoveStrategy(taskExecutor.getThreadPoolExecutor(), guardedTask, "guarded"));
+        sharedTaskContext.setTaskRemoveStrategy(
+                new TaskRemoveStrategy(taskExecutor.getThreadPoolExecutor(), guardedTask, "guarded", sharedTaskContext.getTaskId()));
 
         return guardedTask;
     }
@@ -113,14 +114,16 @@ public class AbortableTaskDecorator implements TaskDecorator {
      */
     private void createTimeoutGuardTask(final SharedTaskContext sharedTaskContext) {
         final Integer timeout = sharedTaskContext.getTimeout();
+        final String taskId = sharedTaskContext.getTaskId();
         LOGGER.debug("Setting timeout of '{}' second(s) for task '{}' with id '{}'.", timeout, sharedTaskContext.getTaskName(),
-                sharedTaskContext.getTaskId());
+                taskId);
 
         final TimeoutGuardTask timeoutGuardTask = new TimeoutGuardTask(sharedTaskContext);
         final RunnableScheduledFuture<?> scheduledTimeoutGuardTask =
                 (RunnableScheduledFuture) timeoutExecutor.schedule(timeoutGuardTask, timeout, TimeUnit.SECONDS);
 
         sharedTaskContext
-                .setTimeoutGuardTaskRemoveStrategy(new TaskRemoveStrategy(timeoutExecutor, scheduledTimeoutGuardTask, "timeout guard"));
+                .setTimeoutGuardTaskRemoveStrategy(new TaskRemoveStrategy(timeoutExecutor, scheduledTimeoutGuardTask, "timeout guard",
+                        taskId));
     }
 }

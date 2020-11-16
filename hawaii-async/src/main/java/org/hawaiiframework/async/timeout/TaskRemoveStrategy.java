@@ -24,10 +24,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * Removes the scheduled task from the executor's queue.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class TaskRemoveStrategy implements TaskAbortStrategy {
 
@@ -52,16 +51,23 @@ public class TaskRemoveStrategy implements TaskAbortStrategy {
     private final String taskType;
 
     /**
+     * The task id.
+     */
+    private final String taskId;
+
+    /**
      * Create a new instance.
      *
      * @param executor The executor executing or queueing the {@code task}.
      * @param task     The task.
      * @param taskType The type of the task.
+     * @param taskId   The task id.
      */
-    public TaskRemoveStrategy(final ThreadPoolExecutor executor, final Runnable task, final String taskType) {
+    public TaskRemoveStrategy(final ThreadPoolExecutor executor, final Runnable task, final String taskType, final String taskId) {
         this.executor = executor;
         this.task = task;
         this.taskType = taskType;
+        this.taskId = taskId;
     }
 
     /**
@@ -69,13 +75,7 @@ public class TaskRemoveStrategy implements TaskAbortStrategy {
      */
     @Override
     public boolean invoke() {
-        final SharedTaskContext sharedTaskContext = SharedTaskContextHolder.get();
-
-        return remove(sharedTaskContext);
-    }
-
-    private boolean remove(final SharedTaskContext sharedTaskContext) {
-        LOGGER.trace("Removing {} task with id '{}'.", taskType, sharedTaskContext.getTaskId());
+        LOGGER.trace("Removing {} task with id '{}'.", taskType, taskId);
         final boolean wasRemoved = executor.remove(task);
         LOGGER.trace("Removal was {}successful.", wasRemoved ? "" : "not ");
 
