@@ -22,6 +22,7 @@ import org.hawaiiframework.logging.config.filter.OpentracingResponseFilterConfig
 import org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.SoftwareVersionLogFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.TransactionIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration;
@@ -41,6 +42,7 @@ import org.springframework.context.annotation.Import;
         RequestDurationFilterConfiguration.class,
         RequestIdFilterConfiguration.class,
         RequestResponseLogFilterConfiguration.class,
+        SoftwareVersionLogFilterConfiguration.class,
         TransactionIdFilterConfiguration.class,
         TransactionTypeFilterConfiguration.class,
         UserDetailsFilterConfiguration.class

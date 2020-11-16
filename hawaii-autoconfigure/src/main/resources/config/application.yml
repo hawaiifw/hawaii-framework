@@ -38,6 +38,9 @@ hawaii:
       request-duration:
         enabled: true
         order: -800
+      software-version:
+        enabled: true
+        order: -792
       container-name:
         enabled: true
         order: -791

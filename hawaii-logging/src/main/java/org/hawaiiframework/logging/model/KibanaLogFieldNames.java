@@ -28,6 +28,8 @@ public enum KibanaLogFieldNames implements KibanaLogField {
 
     SESSION_ID("session_id"),
 
+    SOFTWARE_VERSION("software_version"),
+
     TX_ID("tx_id"),
     TX_TYPE("tx_type"),
     // Deprecated, left in place for current usage of kibana.

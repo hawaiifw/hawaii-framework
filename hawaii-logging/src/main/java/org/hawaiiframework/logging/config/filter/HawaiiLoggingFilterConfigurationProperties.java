@@ -62,6 +62,12 @@ public class HawaiiLoggingFilterConfigurationProperties {
     private HttpHeaderLoggingFilterProperties requestId;
 
     /**
+     * Configuration properties for the software version filter.
+     */
+    @NestedConfigurationProperty
+    private LoggingFilterProperties softwareVersion;
+
+    /**
      * Configuration properties for the transaction id logging filter.
      */
     @NestedConfigurationProperty
@@ -179,6 +185,24 @@ public class HawaiiLoggingFilterConfigurationProperties {
      */
     public void setRequestId(final HttpHeaderLoggingFilterProperties requestId) {
         this.requestId = requestId;
+    }
+
+    /**
+     * Getter for the software version logging filter properties.
+     *
+     * @return the properties
+     */
+    public LoggingFilterProperties getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    /**
+     * Setter for the software version logging filter properties.
+     *
+     * @param softwareVersion the properties
+     */
+    public void setSoftwareVersion(final LoggingFilterProperties softwareVersion) {
+        this.softwareVersion = softwareVersion;
     }
 
     /**
