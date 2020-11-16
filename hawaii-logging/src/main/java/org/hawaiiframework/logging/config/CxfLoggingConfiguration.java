@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
  * Configures the Apache CXF bus to use logging interceptors.
  */
 @ConditionalOnClass(name = "org.apache.cxf.Bus")
-@ConditionalOnProperty(name = "hawaii.logging.soap.enabled")
+@ConditionalOnProperty(prefix = "hawaii.logging.soap", name = "enabled", matchIfMissing = true)
 @Configuration
 public class CxfLoggingConfiguration {
 
