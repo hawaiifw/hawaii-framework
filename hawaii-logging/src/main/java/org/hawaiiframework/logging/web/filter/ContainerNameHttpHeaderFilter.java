@@ -17,7 +17,6 @@
 package org.hawaiiframework.logging.web.filter;
 
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterProperties;
-import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
