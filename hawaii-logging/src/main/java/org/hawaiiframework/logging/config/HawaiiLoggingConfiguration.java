@@ -15,17 +15,12 @@
  */
 package org.hawaiiframework.logging.config;
 
-import org.apache.cxf.Bus;
-import org.apache.cxf.BusFactory;
-import org.apache.cxf.ext.logging.LoggingInInterceptor;
-import org.apache.cxf.ext.logging.LoggingOutInterceptor;
-import org.hawaiiframework.logging.http.client.LoggingClientHttpRequestInterceptor;
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
+import org.hawaiiframework.logging.http.client.LoggingClientHttpRequestInterceptor;
 import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,30 +78,5 @@ public class HawaiiLoggingConfiguration {
         return new DefaultHawaiiRequestResponseLogger(requestResponseLogUtil, hawaiiLoggingConfigurationProperties);
     }
 
-    /**
-     * Configures the Apache CXF bus to use logging interceptors.
-     * @return the Apache CXF bus.
-     */
-    @Bean
-    @ConditionalOnProperty(name = "hawaii.logging.soap.enabled")
-    public Bus busConfiguration() {
-        final Bus bus = BusFactory.getDefaultBus();
-        bus.getInInterceptors().add(loggingInInterceptor());
-        bus.getInFaultInterceptors().add(loggingInInterceptor());
-        bus.getOutInterceptors().add(loggingOutInterceptor());
-        bus.getOutFaultInterceptors().add(loggingOutInterceptor());
-        return bus;
-    }
 
-    private LoggingInInterceptor loggingInInterceptor() {
-        final LoggingInInterceptor inInterceptor = new LoggingInInterceptor();
-        inInterceptor.setPrettyLogging(true);
-        return inInterceptor;
-    }
-
-    private LoggingOutInterceptor loggingOutInterceptor() {
-        final LoggingOutInterceptor outInterceptor = new LoggingOutInterceptor();
-        outInterceptor.setPrettyLogging(true);
-        return outInterceptor;
-    }
 }
