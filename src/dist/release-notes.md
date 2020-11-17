@@ -1,5 +1,13 @@
 # Release Notes #
 
+## 3.0.0.M18
+* Enable logging by default, even for missing properties.
+* Added software version kibana log field & logger.
+* Do not require Apache CXF to be present on the classpath for logging to work.
+* Added wrapper around scheduled tasks to add a kibana tx_id.
+* Fixed NPE in TaskRemoveStrategy.
+* Added GuardedMethod, to allow different threads to have only one thread active for a method / set of methods.
+
 ## 3.0.0.M14
 * Added opentracing
 * Refactored SQL logging
