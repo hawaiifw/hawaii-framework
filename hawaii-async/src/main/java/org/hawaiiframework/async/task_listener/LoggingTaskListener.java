@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_DURATION;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
 
 /**
@@ -62,7 +63,7 @@ public class LoggingTaskListener implements TaskListener {
         final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
         final String duration = formatTime(taskStatistics.getTotalTime());
 
-        try (AutoCloseableKibanaLogField callEnd = KibanaLogFields.logType(CALL_START);
+        try (AutoCloseableKibanaLogField callEnd = KibanaLogFields.logType(CALL_END);
                 AutoCloseableKibanaLogField durationField = KibanaLogFields.tagCloseable(CALL_DURATION, duration)) {
 
             LOGGER.info("Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).",
