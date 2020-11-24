@@ -1,6 +1,10 @@
 # Release Notes #
 
 ## 3.0.0.M18
+* Always log that a response was received for an HTTP call done to another service.
+* Adjusted log message and added stacktrace when receiving an IO exception for HTTP calls to other services. 
+
+## 3.0.0.M18
 * Enable logging by default, even for missing properties.
 * Added software version kibana log field & logger.
 * Do not require Apache CXF to be present on the classpath for logging to work.
