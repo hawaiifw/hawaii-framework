@@ -11,13 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.BACKEND_FAILURE;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.SUCCESS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_METHOD;
@@ -30,14 +34,12 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.RESPONSE_BODY
 /**
  * General logger.
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponseLogger {
 
     /**
      * The logger to use.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultHawaiiRequestResponseLogger.class);
-
 
     /**
      * The request/response log util to use for generating log statements.
@@ -55,25 +57,14 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         this.configuration = configuration;
     }
 
-    @Override
-    public void logRequest(final HttpRequest request, final byte[] body) {
-        try (AutoCloseableKibanaLogField callMethod = KibanaLogFields.tagCloseable(CALL_METHOD, request.getMethodValue());
-                AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_REQUEST_BODY)) {
-
-            // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
-            final String contentType = getContentType(request);
-            if (contentType == null || contentTypeCanBeLogged(contentType)) {
-                LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
-                        httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
-            }
-        }
-    }
-
+    /**
+     * Log incoming request.
+     */
     @Override
     public void logRequest(final ResettableHttpServletRequest wrappedRequest) throws IOException {
         final String requestUri = wrappedRequest.getRequestURI();
         final int contentLength = wrappedRequest.getContentLength();
-        final String contentType = wrappedRequest.getContentType();
+        final MediaType contentType = getContentType(wrappedRequest);
 
         try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(REQUEST_BODY)) {
             LOGGER.info("Invoked '{}' with content type '{}' and size of '{}' bytes.", requestUri, contentType, contentLength);
@@ -87,17 +78,26 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         }
     }
 
+    /**
+     * Log outgoing request.
+     */
     @Override
-    public void logResponse(final ClientHttpResponse response) throws IOException {
-        if (contentTypeCanBeLogged(getContentType(response))) {
-            final HttpStatus statusCode = response.getStatusCode();
-            final String statusText = response.getStatusText();
+    public void logRequest(final HttpRequest request, final byte[] body) {
+        try (AutoCloseableKibanaLogField callMethod = KibanaLogFields.tagCloseable(CALL_METHOD, request.getMethodValue());
+                AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_REQUEST_BODY)) {
 
-            final String body = httpRequestResponseLogUtil.getResponseBody(response);
-            logResponse(statusCode, statusText, response.getHeaders(), body);
+            // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
+            final MediaType contentType = getContentType(request);
+            if (contentType == null || contentTypeCanBeLogged(contentType)) {
+                LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
+                        httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
+            }
         }
     }
 
+    /**
+     * Log response of incoming request.
+     */
     @Override
     public void logResponse(final HttpServletRequest servletRequest,
             final ContentCachingWrappedResponse wrappedResponse)
@@ -105,7 +105,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
         final String request = httpRequestResponseLogUtil.getRequestUri(servletRequest);
         final int contentLength = wrappedResponse.getContentSize();
-        final String contentType = wrappedResponse.getContentType();
+        final MediaType contentType = getContentType(wrappedResponse);
         final HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
 
         KibanaLogFields.set(HTTP_STATUS, httpStatus.value());
@@ -119,61 +119,77 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         }
     }
 
-    private void logResponse(final HttpStatus statusCode, final String statusText, final HttpHeaders headers, final String body) {
+    /**
+     * Log response of an outgoing request.
+     */
+    @Override
+    public void logResponse(final ClientHttpResponse response) throws IOException {
+        final HttpStatus httpStatus = response.getStatusCode();
+        final MediaType contentType = getContentType(response);
+
+        LOGGER.info("Got response '{} {}' with content type '{}'.", httpStatus.value(), httpStatus.getReasonPhrase(), contentType);
+        if (contentTypeCanBeLogged(contentType)) {
+            logResponse(httpStatus, response);
+        }
+    }
+
+    private void logResponse(final HttpStatus httpStatus, final ClientHttpResponse response) throws IOException {
         try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_RESPONSE_BODY)) {
-            if (statusCode.is2xxSuccessful() || statusCode.is3xxRedirection()) {
+            if (httpStatus.is2xxSuccessful() || httpStatus.is3xxRedirection()) {
                 KibanaLogFields.callResult(SUCCESS);
             } else {
                 KibanaLogFields.callResult(BACKEND_FAILURE);
             }
+            final String body = httpRequestResponseLogUtil.getResponseBody(response);
+            final String logString = httpRequestResponseLogUtil.createLogString(response.getHeaders(), body);
 
-            LOGGER.info("Got response '{} {}':\n{}", statusCode, statusText, httpRequestResponseLogUtil.createLogString(headers, body));
+            LOGGER.info("Got response '{} {}':\n{}", httpStatus, httpStatus.getReasonPhrase(), logString);
         }
     }
 
-    public String getContentType(final ClientHttpResponse response) {
-        final HttpHeaders httpHeaders = getHttpHeaders(response);
-        return getContentType(httpHeaders);
+    private MediaType getContentType(final HttpRequest request) {
+        return getContentType(request.getHeaders());
     }
 
-    public String getContentType(final HttpRequest request) {
-        final HttpHeaders httpHeaders = getHttpHeaders(request);
-        return getContentType(httpHeaders);
+    private MediaType getContentType(final ClientHttpResponse response) {
+        return getContentType(response.getHeaders());
     }
 
-    private String getContentType(final HttpHeaders httpHeaders) {
-        final MediaType contentType = getMediaType(httpHeaders);
-
-        if (contentType == null) {
-            return null;
-        }
-        return getContentTypeAsString(contentType);
-    }
-
-    private HttpHeaders getHttpHeaders(final ClientHttpResponse response) {
-        return response.getHeaders();
-    }
-
-    private HttpHeaders getHttpHeaders(final HttpRequest request) {
-        return request.getHeaders();
-    }
-
-
-    private MediaType getMediaType(final HttpHeaders httpHeaders) {
+    private MediaType getContentType(final HttpHeaders httpHeaders) {
         return httpHeaders.getContentType();
     }
 
-    private String getContentTypeAsString(final MediaType mediaType) {
-        return mediaType.getType() + '/' + mediaType.getSubtype();
+    private MediaType getContentType(final ServletRequest wrappedRequest) {
+        return parse(wrappedRequest.getContentType());
     }
 
-    public boolean contentTypeCanBeLogged(final String contentType) {
-        //Assume nothing has been configured so we allow everything
+    private MediaType getContentType(final ServletResponse response) {
+        return parse(response.getContentType());
+    }
+
+    private MediaType parse(final String contentType) {
+        if (isNotBlank(contentType)) {
+            try {
+                return MediaType.parseMediaType(contentType);
+            } catch (InvalidMediaTypeException exception) {
+                LOGGER.info("Got error parsing content type '{}'.", contentType, exception);
+            }
+        }
+
+        return null;
+    }
+
+    private boolean contentTypeCanBeLogged(final MediaType contentType) {
+        // If nothing is configured, then all content types are allowed.
         if (getAllowedContentTypes() == null || getAllowedContentTypes().isEmpty()) {
             return true;
         } else {
-            return getAllowedContentTypes().contains(contentType);
+            return getAllowedContentTypes().contains(asString(contentType));
         }
+    }
+
+    private String asString(final MediaType mediaType) {
+        return mediaType.getType() + '/' + mediaType.getSubtype();
     }
 
     private List<String> getAllowedContentTypes() {

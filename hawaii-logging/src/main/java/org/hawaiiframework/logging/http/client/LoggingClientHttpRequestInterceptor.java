@@ -66,9 +66,12 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
             hawaiiRequestResponseLogger.logResponse(response);
             return response;
         } catch (IOException t) {
+            /*
+             * We should detect a time-out properly. Most likely this _is_ a timeout, however, this is not certain.
+             */
             KibanaLogFields.callResult(TIME_OUT);
             try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_END)) {
-                LOGGER.info("Got timeout from backend.");
+                LOGGER.info("Got IO exception during call, most likely a timeout from backend.", t);
             }
             throw t;
         }
