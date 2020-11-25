@@ -88,7 +88,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
             // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
             final MediaType contentType = getContentType(request);
-            if (contentType == null || contentTypeCanBeLogged(contentType)) {
+            if (contentTypeCanBeLogged(contentType)) {
                 LOGGER.info("Called '{} {}':\n{}", request.getMethod(), request.getURI(),
                         httpRequestResponseLogUtil.createLogString(request.getHeaders(), body));
             }
@@ -181,7 +181,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
     private boolean contentTypeCanBeLogged(final MediaType contentType) {
         // If nothing is configured, then all content types are allowed.
-        if (getAllowedContentTypes() == null || getAllowedContentTypes().isEmpty()) {
+        if (contentType == null || getAllowedContentTypes() == null || getAllowedContentTypes().isEmpty()) {
             return true;
         } else {
             return getAllowedContentTypes().contains(asString(contentType));
