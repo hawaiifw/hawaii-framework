@@ -143,7 +143,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             final String body = httpRequestResponseLogUtil.getResponseBody(response);
             final String logString = httpRequestResponseLogUtil.createLogString(response.getHeaders(), body);
 
-            LOGGER.info("Got response '{} {}':\n{}", httpStatus, httpStatus.getReasonPhrase(), logString);
+            LOGGER.info("Got response '{}':\n{}", httpStatus, logString);
         }
     }
 
