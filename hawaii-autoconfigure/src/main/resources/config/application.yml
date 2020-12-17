@@ -18,7 +18,8 @@ hawaii:
     timezone: UTC
   async:
     # location of the Hawaii async configuration file
-    configuration: ./config/async-config.yml
+    #  async:
+    configuration: ${ASYNC_CONFIG:./config/async-config.yml}
   logging:
     opentracing:
       # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
@@ -46,10 +47,19 @@ hawaii:
         order: -791
         http-header: X-Hawaii-Hostname
         hostname: ${HOSTNAME:localhost}
+      oidc:
+        # Must set explicitly to false if oidc is not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -790
       opentracing-response:
         # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
         enabled: true
         order: -790
+      open-telemetry-response:
+        # Must set explicitly to false if open telemetry is not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -790
+        http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:trace-id}
       kibana-log:
         enabled: true
         order: -700
@@ -68,6 +78,7 @@ hawaii:
       request-response:
         enabled: true
         order: -300
+
       user-details:
         enabled: true
         order: 110

@@ -17,6 +17,7 @@
 package org.hawaiiframework.logging.web.filter;
 
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterProperties;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HOST_NAME;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
- * Filter class that will be added in the Tomcat filter chain to add a http response header to every response.
+ * Filter class that will be added in the servlet filter chain to add a http response header to every response.
  * This response header will be the value of the $HOSTNAME environment variable, to show in the frontend in which container this
  * application is running.
  */
@@ -68,6 +70,7 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
         throws ServletException, IOException {
         if (!isInternalRedirect(request)) {
+            KibanaLogFields.set(HOST_NAME, hostname);
             LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
 
             if (!response.containsHeader(headerName)) {

@@ -28,12 +28,15 @@ public enum KibanaLogFieldNames implements KibanaLogField {
 
     SESSION_ID("session_id"),
 
+    HOST_NAME("host_name"),
     SOFTWARE_VERSION("software_version"),
 
     TX_ID("tx_id"),
     TX_TYPE("tx_type"),
     // Deprecated, left in place for current usage of kibana.
     TX_DURATION("tx_duration"),
+    TX_REQUEST_SIZE("tx_request_size"),
+    TX_RESPONSE_SIZE("tx_response_size"),
 
     REQUEST_ID("req_id"),
     REQUEST_DURATION("req_duration"),
@@ -62,6 +65,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     LOG_LOCATION("log_loc"),
 
     MESSAGE("message");
+
 
     /**
      * The logging key for this MDC entry.

@@ -18,6 +18,10 @@ package org.hawaiiframework.logging.model;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_RESULT;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 
@@ -75,18 +79,51 @@ public final class KibanaLogFields {
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
+    public static KibanaLogField set(final KibanaLogField field, final Collection<String> values) {
+        return tag(field, values);
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}.
+     */
     public static KibanaLogField tag(final KibanaLogField field, final String value) {
+        if (isBlank(value)) {
+            unset(field);
+            return field;
+        }
         MDC.put(field.getLogName(), value);
         return field;
     }
 
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}.
+     */
+    public static KibanaLogField tag(final KibanaLogField field, final Collection<String> values) {
+        if (values == null || values.isEmpty()) {
+            return tag(field, (String) null);
+        }
+        final String value = values.stream().map(s -> String.format("'%s'", s)).collect(Collectors.joining(", ", "[", "]"));
+        return tag(field, value);
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     */
+    public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final int value) {
+        return tagCloseable(field, Integer.toString(value));
+    }
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
      */
     public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final String value) {
         return new AutoCloseableKibanaLogField(tag(field, value));
     }
-
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     */
+    public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final Collection<String> values) {
+        return new AutoCloseableKibanaLogField(tag(field, values));
+    }
     /**
      * Retrieves the value for the {@code field}. It will return {@code null} if no value is set.
      */

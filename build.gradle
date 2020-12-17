@@ -401,6 +401,8 @@ project("hawaii-logging") {
         compileOnly "org.springframework:spring-webmvc"
         compileOnly "net.ttddyy:datasource-proxy:${dataSourceProxyVersion}"
         compileOnly "io.opentracing.contrib:opentracing-api-extensions:0.6.0"
+        compileOnly "io.opentelemetry:opentelemetry-api:0.12.0"
+        compileOnly "com.nimbusds:nimbus-jose-jwt:9.2"
         testImplementation "org.apache.commons:commons-text:${commonsTextVersion}"
         testImplementation "org.powermock:powermock-api-mockito2:${powerMockVersion}"
         testImplementation "org.powermock:powermock-module-junit4:${powerMockVersion}"

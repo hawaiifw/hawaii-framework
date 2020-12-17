@@ -1,6 +1,11 @@
 # Release Notes #
 
-## 3.0.0.M18
+## 3.0.0.M21
+* Added Open Telemetry trace id to a servlet response.
+* Added OIDC fields to Kibana logging.
+* Added extra fields to Kibana logging.
+
+## 3.0.0.M19
 * Always log that a response was received for an HTTP call done to another service.
 * Adjusted log message and added stacktrace when receiving an IO exception for HTTP calls to other services. 
 

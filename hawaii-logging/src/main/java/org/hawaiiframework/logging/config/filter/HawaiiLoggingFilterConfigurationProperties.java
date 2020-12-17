@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,6 +96,18 @@ public class HawaiiLoggingFilterConfigurationProperties {
      */
     @NestedConfigurationProperty
     private LoggingFilterProperties opentracingResponse;
+
+    /**
+     * Configuration properties for the request id logging filter.
+     */
+    @NestedConfigurationProperty
+    private HttpHeaderLoggingFilterProperties openTelemetryResponse;
+
+    /**
+     * Configuration properties for the Kibana OIDC logging.
+     */
+    @NestedConfigurationProperty
+    private LoggingFilterProperties oidc;
 
     /**
      * Getter for the Kibana log filter properties.
@@ -282,5 +294,21 @@ public class HawaiiLoggingFilterConfigurationProperties {
 
     public void setOpentracingResponse(final LoggingFilterProperties opentracingResponse) {
         this.opentracingResponse = opentracingResponse;
+    }
+
+    public HttpHeaderLoggingFilterProperties getOpenTelemetryResponse() {
+        return openTelemetryResponse;
+    }
+
+    public void setOpenTelemetryResponse(final HttpHeaderLoggingFilterProperties openTelemetryResponse) {
+        this.openTelemetryResponse = openTelemetryResponse;
+    }
+
+    public LoggingFilterProperties getOidc() {
+        return oidc;
+    }
+
+    public void setOidc(final LoggingFilterProperties oidc) {
+        this.oidc = oidc;
     }
 }

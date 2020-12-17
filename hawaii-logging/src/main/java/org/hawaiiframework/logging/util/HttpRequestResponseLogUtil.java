@@ -101,8 +101,8 @@ public class HttpRequestResponseLogUtil {
      * <p>
      * For example: {@code GET /doc/test.html HTTP/1.1}.
      */
-    public String createRequestLine(final String request, final String protocol) {
-        return format("%s %s", request, protocol);
+    public String createRequestLine(final String method, final String request, final String protocol) {
+        return format("%s %s %s", method, request, protocol);
     }
 
     /**
@@ -110,27 +110,6 @@ public class HttpRequestResponseLogUtil {
      */
     public String createLogString(final HttpHeaders headers, final String body) {
         return createLogString(null, headers, body.getBytes(Charset.defaultCharset()), Charset.defaultCharset());
-    }
-
-    /**
-     * Create a log string for the given {@code headers} and {@code body} with the platform's default charset.
-     */
-    public String createLogString(final HttpHeaders headers, final byte[] body) {
-        return createLogString(null, headers, body, Charset.defaultCharset());
-    }
-
-    /**
-     * Create a log string for the given {@code headers} and {@code body} with the given {@code characterEncoding}.
-     */
-    public String createLogString(final HttpHeaders headers, final byte[] body, final String characterEncoding) {
-        return createLogString(null, headers, body, Charset.forName(characterEncoding));
-    }
-
-    /**
-     * Create a log string for the given {@code headers} and {@code body} with the given {@code charset}.
-     */
-    public String createLogString(final HttpHeaders headers, final byte[] body, final Charset charset) {
-        return createLogString(null, headers, body, charset);
     }
 
     /**
@@ -153,7 +132,7 @@ public class HttpRequestResponseLogUtil {
             final ContentCachingResponseWrapper response,
             final HttpStatus httpStatus) {
 
-        final String statusLine = format("%s %s %s", servletRequest.getProtocol(), httpStatus.value(), httpStatus.getReasonPhrase());
+        final String statusLine = format("%s %s", servletRequest.getProtocol(), httpStatus);
         final HttpHeaders headers = getHeaders(response);
         return createLogString(statusLine, headers, response.getContentAsByteArray(), response.getCharacterEncoding());
     }
@@ -210,11 +189,16 @@ public class HttpRequestResponseLogUtil {
      * Note that this will read the request! Use {@link org.hawaiiframework.logging.web.filter.ResettableHttpServletRequest} for instance
      * to reset the input.
      */
-    public String formatRequest(final String request, final HttpServletRequest servletRequest) throws IOException {
-        final String requestLine = createRequestLine(request, servletRequest.getProtocol());
+    public String formatRequest(final String method, final String request, final HttpServletRequest servletRequest) throws IOException {
+        final String requestLine = createRequestLine(method, request, servletRequest.getProtocol());
         final HttpHeaders headers = getHeaders(servletRequest);
         final String body = getPostBody(servletRequest);
         return createLogString(requestLine, headers, body);
+    }
+
+    public String formatRequest(final String method, final String requestUri, final HttpHeaders headers, final byte[] body) {
+        final String requestLine = createRequestLine(method, requestUri, "");
+        return createLogString(requestLine, headers, body, Charset.defaultCharset());
     }
 
     private String getPostBody(final HttpServletRequest servletRequest) throws IOException {

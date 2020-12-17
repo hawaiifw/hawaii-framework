@@ -18,9 +18,13 @@ package org.hawaiiframework.logging.model;
 import org.junit.After;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER;
 
 public class KibanaLogFieldsTest {
     @Test
@@ -36,6 +40,18 @@ public class KibanaLogFieldsTest {
                 assertThat(String.format("Kibana log string should contain %s", mdcKey.getLogName()), KibanaLogFields.getValuesAsLogString(), containsString(mdcKey.getLogName()));
             }
         }
+    }
+
+    @Test
+    public void testTagWithList() {
+        KibanaLogFields.tag(USER, List.of("a", "b", "c"));
+        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER), is("['a', 'b', 'c']"));
+    }
+
+    @Test
+    public void setWithList() {
+        KibanaLogFields.set(USER, List.of("a", "b", "c"));
+        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER), is("['a', 'b', 'c']"));
     }
 
     @After
