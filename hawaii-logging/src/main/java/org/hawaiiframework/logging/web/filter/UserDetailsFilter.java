@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER_NAME;
 
 /**
  * A filter that adds the logged in user (UserDetails) to the Kibana Log Fields.
@@ -59,7 +59,7 @@ public class UserDetailsFilter extends OncePerRequestFilter {
             if (principal instanceof UserDetails) {
                 final UserDetails userDetails = (UserDetails) principal;
                 final String username = userDetails.getUsername();
-                KibanaLogFields.set(USER, username);
+                KibanaLogFields.tag(USER_NAME, username);
                 LOGGER.debug("User has user name '{}'.", username);
             }
         }

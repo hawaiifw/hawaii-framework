@@ -60,7 +60,7 @@ hawaii:
         enabled: true
         order: -790
         http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:trace-id}
-      kibana-log:
+      client-ip-log:
         enabled: true
         order: -700
         http-header: X-Hawaii-Frontend-IP-Address

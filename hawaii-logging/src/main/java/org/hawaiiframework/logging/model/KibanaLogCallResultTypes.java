@@ -23,7 +23,7 @@ package org.hawaiiframework.logging.model;
  */
 public enum KibanaLogCallResultTypes {
     SUCCESS,
-    TIME_OUT,
-    BACKEND_FAILURE,
+    TIMEOUT,
+    FAILURE,
     CACHED
 }

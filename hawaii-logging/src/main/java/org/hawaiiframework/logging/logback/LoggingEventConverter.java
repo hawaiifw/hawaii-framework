@@ -19,7 +19,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import org.hawaiiframework.logging.model.KibanaLogFields;
-import org.hawaiiframework.logging.util.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import static org.hawaiiframework.logging.logback.CharacterConstants.NEW_LINE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_LOCATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.THREAD;
+import static org.hawaiiframework.logging.util.IndentUtil.indent;
 
 /**
  * Converts logging events to a readable log format.
@@ -79,8 +79,8 @@ public class LoggingEventConverter {
      * @return a nicely formatted String.
      */
     public String convert(final LoggingEvent event) {
-        KibanaLogFields.set(LOG_LOCATION, getLogLocation(getFirstElement(event)));
-        KibanaLogFields.set(THREAD, event.getThreadName());
+        KibanaLogFields.tag(LOG_LOCATION, getLogLocation(getFirstElement(event)));
+        KibanaLogFields.tag(THREAD, event.getThreadName());
 
         final StringBuilder message = new StringBuilder(event.getFormattedMessage());
         if (event.getThrowableProxy() != null) {
@@ -88,7 +88,7 @@ public class LoggingEventConverter {
             message.append(NEW_LINE).append(iThrowableProxyConverter.convert(throwable));
         }
 
-        return createLogLine(getTimestamp(event), getLogLevel(event.getLevel()), LogUtil.indent(message.toString(), INDENT));
+        return createLogLine(getTimestamp(event), getLogLevel(event.getLevel()), indent(message.toString(), INDENT));
     }
 
     private String getTimestamp(final LoggingEvent event) {

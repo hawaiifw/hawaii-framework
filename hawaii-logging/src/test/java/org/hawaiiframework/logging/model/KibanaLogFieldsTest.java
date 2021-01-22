@@ -24,13 +24,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER_NAME;
 
 public class KibanaLogFieldsTest {
     @Test
     public void testMdcKeysShouldContainAllMdcKeysExceptLogType() {
         for (final KibanaLogFieldNames fieldName : KibanaLogFieldNames.values()) {
-            KibanaLogFields.set(fieldName, "test");
+            KibanaLogFields.tag(fieldName, "test");
         }
 
         for (final KibanaLogFieldNames mdcKey : KibanaLogFieldNames.values()) {
@@ -44,14 +44,14 @@ public class KibanaLogFieldsTest {
 
     @Test
     public void testTagWithList() {
-        KibanaLogFields.tag(USER, List.of("a", "b", "c"));
-        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER), is("['a', 'b', 'c']"));
+        KibanaLogFields.tag(USER_NAME, List.of("a", "b", "c"));
+        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER_NAME), is("['a', 'b', 'c']"));
     }
 
     @Test
     public void setWithList() {
-        KibanaLogFields.set(USER, List.of("a", "b", "c"));
-        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER), is("['a', 'b', 'c']"));
+        KibanaLogFields.tag(USER_NAME, List.of("a", "b", "c"));
+        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER_NAME), is("['a', 'b', 'c']"));
     }
 
     @After

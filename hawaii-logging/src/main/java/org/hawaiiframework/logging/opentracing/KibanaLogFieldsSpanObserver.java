@@ -40,7 +40,7 @@ public class KibanaLogFieldsSpanObserver implements SpanObserver {
     @Override
     public void onSetOperationName(final SpanData spanData, final String operationName) {
         LOGGER.debug("onSetOperationName(spanData, '{}')", operationName);
-        KibanaLogFields.set(SPAN_OPERATION_NAME, operationName);
+        KibanaLogFields.tag(SPAN_OPERATION_NAME, operationName);
     }
 
     @Override

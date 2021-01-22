@@ -73,7 +73,7 @@ public class TransactionIdFilter extends AbstractGenericFilterBean {
             final UUID uuid = uuidResolver.resolve(request, headerName);
 
             TransactionId.set(uuid);
-            KibanaLogFields.set(TX_ID, TransactionId.get());
+            KibanaLogFields.tag(TX_ID, TransactionId.get());
 
             LOGGER.debug("Set '{}' with value '{};.", TX_ID.getLogName(), uuid);
         }

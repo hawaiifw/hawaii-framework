@@ -25,7 +25,7 @@ public final class OpentracingKibanaUtil {
     public static void addTagToKibanaFields(final String key, final Object value) {
         final OpentracingKibanaLogField field = OpentracingKibanaLogField.fromKey(key);
         if (field != null) {
-            KibanaLogFields.set(field, tagValueToString(value));
+            KibanaLogFields.tag(field, tagValueToString(value));
         }
     }
 

@@ -32,7 +32,7 @@ public class AutoCloseableKibanaLogField implements KibanaLogField, AutoCloseabl
 
     @Override
     public void close() {
-        KibanaLogFields.unset(this);
+        KibanaLogFields.clear(this);
     }
 
 }

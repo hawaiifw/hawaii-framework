@@ -15,11 +15,13 @@
  */
 package org.hawaiiframework.logging.config.filter;
 
+import org.hawaiiframework.logging.web.filter.ClientIpLogFilter;
+
 /**
  * Extension of basic LoggingFilterProperties that also holds the name of a HTTP header
  * that the filter can use.
  *
- * @see org.hawaiiframework.logging.web.filter.KibanaLogFilter
+ * @see ClientIpLogFilter
  * @see org.hawaiiframework.logging.web.filter.RequestIdFilter
  * @see org.hawaiiframework.logging.web.filter.TransactionIdFilter
  *

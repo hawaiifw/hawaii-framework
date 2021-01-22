@@ -15,9 +15,8 @@
  */
 package org.hawaiiframework.logging.http.client;
 
-import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
-import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpRequest;
@@ -27,7 +26,10 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.TIME_OUT;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.FAILURE;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.TIMEOUT;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_STATUS;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
 
 /**
@@ -69,14 +71,18 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
             /*
              * We should detect a time-out properly. Most likely this _is_ a timeout, however, this is not certain.
              */
-            KibanaLogFields.callResult(TIME_OUT);
-            try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(CALL_END)) {
-                LOGGER.info("Got IO exception during call, most likely a timeout from backend.", t);
-            }
+            KibanaLogFields.tag(CALL_STATUS, TIMEOUT);
+            KibanaLogFields.tag(LOG_TYPE, CALL_END);
+            LOGGER.info("Got IO exception during call, most likely a timeout from backend.", t);
             throw t;
+        } catch (Throwable t) {
+            KibanaLogFields.tag(CALL_STATUS, FAILURE);
+            KibanaLogFields.tag(LOG_TYPE, CALL_END);
+            LOGGER.info("Got exception during call, most likely a configuration issue.", t);
+            throw t;
+        } finally {
+            KibanaLogFields.clear(CALL_STATUS, LOG_TYPE);
         }
     }
-
-
 
 }

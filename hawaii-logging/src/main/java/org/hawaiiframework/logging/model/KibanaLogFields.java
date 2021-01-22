@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_RESULT;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 
 /**
  * Class that holds the extra fields used for Kibana logging.
@@ -42,45 +40,17 @@ public final class KibanaLogFields {
     }
 
     /**
-     * Set the field KibanaLogTypeNames.LOG_TYPE to the given {@code value}.
+     * Sets the Kibana log field {@code field} to the {@code value}.
      */
-    public static AutoCloseableKibanaLogField logType(final KibanaLogTypeNames value) {
-        return tagCloseable(LOG_TYPE, value.toString());
-    }
-
-    /**
-     * Set the field KibanaLogTypeNames.LOG_TYPE to the given {@code value}.
-     */
-    public static KibanaLogField callResult(final KibanaLogCallResultTypes value) {
-        return set(CALL_RESULT, value.toString());
-    }
-
-    /**
-     * Removes the value for the field KibanaLogTypeNames.LOG_TYPE.
-     */
-    public static void unsetLogType() {
-        unset(LOG_TYPE);
+    public static KibanaLogField tag(final KibanaLogField field, final Enum<?> value) {
+        return tag(field, value.toString());
     }
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
      */
-    public static KibanaLogField set(final KibanaLogField field, final int value) {
-        return set(field, Integer.toString(value));
-    }
-
-    /**
-     * Sets the Kibana log field {@code field} to the {@code value}.
-     */
-    public static KibanaLogField set(final KibanaLogField field, final String value) {
-        return tag(field, value);
-    }
-
-    /**
-     * Sets the Kibana log field {@code field} to the {@code value}.
-     */
-    public static KibanaLogField set(final KibanaLogField field, final Collection<String> values) {
-        return tag(field, values);
+    public static KibanaLogField tag(final KibanaLogField field, final int value) {
+        return tag(field, Integer.toString(value));
     }
 
     /**
@@ -88,7 +58,7 @@ public final class KibanaLogFields {
      */
     public static KibanaLogField tag(final KibanaLogField field, final String value) {
         if (isBlank(value)) {
-            unset(field);
+            clear(field);
             return field;
         }
         MDC.put(field.getLogName(), value);
@@ -109,9 +79,17 @@ public final class KibanaLogFields {
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
      */
+    public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final Enum<?> value) {
+        return tagCloseable(field, value.toString());
+    }
+
+    /**
+     * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     */
     public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final int value) {
         return tagCloseable(field, Integer.toString(value));
     }
+
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
      */
@@ -141,8 +119,17 @@ public final class KibanaLogFields {
     /**
      * Removes the value for the field {@code field}.
      */
-    public static void unset(final KibanaLogField field) {
+    public static void clear(final KibanaLogField field) {
         MDC.remove(field.getLogName());
+    }
+
+    /**
+     * Removes the value for the fields {@code fields}.
+     */
+    public static void clear(final KibanaLogField... fields) {
+        for (final KibanaLogField field : fields) {
+            MDC.remove(field.getLogName());
+        }
     }
 
     /**

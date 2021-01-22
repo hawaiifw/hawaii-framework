@@ -52,9 +52,9 @@ public class KibanaLogFieldsTaskListener implements TaskListener {
     public void startExecution() {
         KibanaLogFields.populateFromContext(kibanaLogContext);
         final String taskId = sharedTaskContext.getTaskId();
-        KibanaLogFields.set(TASK_ID, taskId);
-        KibanaLogFields.set(CALL_ID, taskId);
-        KibanaLogFields.set(CALL_TYPE, sharedTaskContext.getTaskName());
+        KibanaLogFields.tag(TASK_ID, taskId);
+        KibanaLogFields.tag(CALL_ID, taskId);
+        KibanaLogFields.tag(CALL_TYPE, sharedTaskContext.getTaskName());
     }
 
     @Override

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
@@ -72,10 +73,10 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
             LOGGER.info("Could not read start timestamp from request!");
             return;
         }
-        try (AutoCloseableKibanaLogField endField = KibanaLogFields.logType(END)) {
+        try (AutoCloseableKibanaLogField endField = KibanaLogFields.tagCloseable(LOG_TYPE, END)) {
             final String duration = String.format("%.2f", (System.nanoTime() - start) / 1E6);
-            KibanaLogFields.set(TX_DURATION, duration);
-            KibanaLogFields.set(REQUEST_DURATION, duration);
+            KibanaLogFields.tag(TX_DURATION, duration);
+            KibanaLogFields.tag(REQUEST_DURATION, duration);
             LOGGER.info("Duration '{}' ms.", duration);
         }
     }

@@ -18,7 +18,9 @@ package org.hawaiiframework.logging.config;
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.http.client.LoggingClientHttpRequestInterceptor;
-import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -49,13 +51,35 @@ public class HawaiiLoggingConfiguration {
 
 
     /**
-     * Create a {@link HttpRequestResponseLogUtil} bean.
+     * Create a {@link HttpRequestResponseHeadersLogUtil} bean.
      *
      * @return the bean.
      */
     @Bean
-    public HttpRequestResponseLogUtil httpRequestResponseLogUtil() {
-        return new HttpRequestResponseLogUtil();
+    public HttpRequestResponseHeadersLogUtil httpRequestResponseHeadersLogUtil() {
+        return new HttpRequestResponseHeadersLogUtil();
+    }
+
+
+    /**
+     * Create a {@link HttpRequestResponseBodyLogUtil} bean.
+     *
+     * @return the bean.
+     */
+    @Bean
+    public HttpRequestResponseBodyLogUtil httpRequestResponseLogBodyUtil() {
+        return new HttpRequestResponseBodyLogUtil();
+    }
+
+
+    /**
+     * Create a {@link HttpRequestResponseDebugLogUtil} bean.
+     *
+     * @return the bean.
+     */
+    @Bean
+    public HttpRequestResponseDebugLogUtil debugLogUtil() {
+        return new HttpRequestResponseDebugLogUtil();
     }
 
     @Bean
@@ -75,10 +99,12 @@ public class HawaiiLoggingConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HawaiiRequestResponseLogger.class)
-    public HawaiiRequestResponseLogger hawaiiLogger(final HttpRequestResponseLogUtil requestResponseLogUtil,
+    public HawaiiRequestResponseLogger hawaiiLogger(
+            final HttpRequestResponseHeadersLogUtil headersLogUtil,
+            final HttpRequestResponseBodyLogUtil bodyLogUtil,
+            final HttpRequestResponseDebugLogUtil debugLogUtil,
             final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        return new DefaultHawaiiRequestResponseLogger(requestResponseLogUtil, hawaiiLoggingConfigurationProperties);
+        return new DefaultHawaiiRequestResponseLogger(headersLogUtil, bodyLogUtil, debugLogUtil,
+                hawaiiLoggingConfigurationProperties);
     }
-
-
 }

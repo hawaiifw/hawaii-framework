@@ -67,7 +67,7 @@ public class RequestIdFilter extends AbstractGenericFilterBean {
             final UUID uuid = UUID.randomUUID();
 
             RequestId.set(uuid);
-            KibanaLogFields.set(REQUEST_ID, RequestId.get());
+            KibanaLogFields.tag(REQUEST_ID, RequestId.get());
 
             LOGGER.debug("Set '{}' with value '{};.", REQUEST_ID.getLogName(), uuid);
         }

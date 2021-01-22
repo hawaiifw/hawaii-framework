@@ -15,7 +15,6 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.slf4j.Logger;
@@ -28,10 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CLIENT_IP;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.METHOD;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.URI;
-import static org.hawaiiframework.logging.model.KibanaLogTypeNames.START;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
 
 /**
  * A filter that sets some Kibana Log Fields.
@@ -39,12 +36,12 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.START;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class KibanaLogFilter extends AbstractGenericFilterBean {
+public class ClientIpLogFilter extends AbstractGenericFilterBean {
 
     /**
      * The Logger.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientIpLogFilter.class);
 
     /**
      * HostResolver for this class.
@@ -52,7 +49,7 @@ public class KibanaLogFilter extends AbstractGenericFilterBean {
     private final ClientIpResolver clientIpResolver;
 
     @Autowired
-    public KibanaLogFilter(final ClientIpResolver clientIpResolver) {
+    public ClientIpLogFilter(final ClientIpResolver clientIpResolver) {
         this.clientIpResolver = clientIpResolver;
     }
 
@@ -67,11 +64,10 @@ public class KibanaLogFilter extends AbstractGenericFilterBean {
     }
 
     private void setDefaultLogFields(final HttpServletRequest request) {
-        try (AutoCloseableKibanaLogField kibanaLogField = KibanaLogFields.logType(START)) {
-            KibanaLogFields.set(METHOD, request.getMethod());
-            KibanaLogFields.set(URI, request.getRequestURI());
-            KibanaLogFields.set(CLIENT_IP, clientIpResolver.getClientIp(request));
-            LOGGER.info("Start request '{}', '{}'", request.getMethod(), request.getRequestURI());
+        if (!isInternalRedirect(request)) {
+            final String clientIp = clientIpResolver.getClientIp(request);
+            KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
+            LOGGER.info("Client ip is '{}'.", clientIp);
         }
     }
 }

@@ -31,31 +31,49 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     HOST_NAME("host_name"),
     SOFTWARE_VERSION("software_version"),
 
-    TX_ID("tx_id"),
-    TX_TYPE("tx_type"),
-    // Deprecated, left in place for current usage of kibana.
-    TX_DURATION("tx_duration"),
-    TX_REQUEST_SIZE("tx_request_size"),
-    TX_RESPONSE_SIZE("tx_response_size"),
-
     REQUEST_ID("req_id"),
     REQUEST_DURATION("req_duration"),
 
+
+    TX_ID("tx_id"),
+    TX_TYPE("tx_type"),
+    TX_REQUEST_IP("tx_request_ip"),
+
+    TX_REQUEST_METHOD("tx_request_method"),
+    TX_REQUEST_URI("tx_request_uri"),
+    TX_REQUEST_SIZE("tx_request_size"),
+
+    TX_REQUEST_HEADERS("tx_request_headers"),
+    TX_REQUEST_BODY("tx_request_body"),
+
+    TX_RESPONSE_SIZE("tx_response_size"),
+    TX_RESPONSE_HEADERS("tx_response_headers"),
+    TX_RESPONSE_BODY("tx_response_body"),
+
+    TX_DURATION("tx_duration"),
+    TX_STATUS("tx_status"),
+
     CALL_ID("call_id"),
     CALL_TYPE("call_type"),
-    CALL_METHOD("call_method"),
+
+    CALL_REQUEST_METHOD("call_request_method"),
+    CALL_REQUEST_URI("call_request_uri"),
+    CALL_REQUEST_SIZE("call_request_size"),
+
+    CALL_REQUEST_HEADERS("call_request_headers"),
+    CALL_REQUEST_BODY("call_request_body"),
+
+    CALL_RESPONSE_SIZE("call_response_size"),
+    CALL_RESPONSE_HEADERS("call_response_headers"),
+    CALL_RESPONSE_BODY("call_response_body"),
+
     CALL_DURATION("call_duration"),
-    CALL_RESULT("call_result"),
+    CALL_STATUS("call_status"),
 
     TASK_ID("task_id"),
 
-    URI("uri"),
-    METHOD("method"),
-    USER("user_name"),
 
-    HTTP_STATUS("tx_status"),
-
-    CLIENT_IP("client_ip"),
+    USER_NAME("user_name"),
 
     LOG_TYPE("log_type"),
 

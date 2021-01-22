@@ -99,7 +99,7 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
             final var nameController = handler.getBeanType().getSimpleName();
             final var value = nameController + "." + nameMethod;
 
-            KibanaLogFields.set(TX_TYPE, value);
+            KibanaLogFields.tag(TX_TYPE, value);
             LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), value);
         }
     }

@@ -54,10 +54,10 @@ public class ScheduledAspect {
             final UUID uuid = UUID.randomUUID();
 
             RequestId.set(uuid);
-            KibanaLogFields.set(REQUEST_ID, RequestId.get());
+            KibanaLogFields.tag(REQUEST_ID, RequestId.get());
 
             TransactionId.set(uuid);
-            KibanaLogFields.set(TX_ID, TransactionId.get());
+            KibanaLogFields.tag(TX_ID, TransactionId.get());
 
             LOGGER.trace("Started scheduled task with tx id '{}'.", TransactionId.get());
             return pjp.proceed();
@@ -67,6 +67,7 @@ public class ScheduledAspect {
         } finally {
             RequestId.remove();
             TransactionId.remove();
+            KibanaLogFields.clear();
         }
     }
 }

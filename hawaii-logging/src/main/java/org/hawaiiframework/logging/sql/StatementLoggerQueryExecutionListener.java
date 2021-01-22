@@ -20,6 +20,7 @@ import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.listener.QueryExecutionListener;
 import net.ttddyy.dsproxy.proxy.ParameterSetOperation;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.sql.OrderedQueryExecutionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,10 @@ import java.util.List;
 
 import static net.ttddyy.dsproxy.proxy.ParameterSetOperation.isSetNullParameterOperation;
 import static org.apache.commons.lang3.StringUtils.chomp;
-import static org.hawaiiframework.logging.util.LogUtil.indent;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.FAILURE;
+import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.SUCCESS;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_STATUS;
+import static org.hawaiiframework.logging.util.IndentUtil.indent;
 
 /**
  * A listener for logging purposes.
@@ -82,7 +86,7 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
         if (value.endsWith("," + LINE_SEPARATOR)) {
             value = value.substring(0, value.length() - 1 - LINE_SEPARATOR.length());
         }
-        LOGGER.info(indent(value, "  "));
+        LOGGER.info(indent(value));
     }
 
     /**
@@ -93,10 +97,22 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
         if (SqlStatementLogging.isSuppressed()) {
             return;
         }
-        LOGGER.debug("Execution of query took '{}' msec.", execInfo.getElapsedTime());
-        if (!execInfo.isSuccess()) {
+        /*
+         * Note, logging of the results itself stumbles upon the problem that the (returned) result set (execInfo.result) must
+         * be able to be reset. This must be done while creating the prepared statement, which is outside the control of this class.
+         *
+         * There is no generic setting available in Spring (JDBC) that sets the result set type.
+         *
+         * So logging of the result cannot be done here.
+         */
+        if (execInfo.isSuccess()) {
+            KibanaLogFields.tag(CALL_STATUS, SUCCESS);
+        } else {
+            KibanaLogFields.tag(CALL_STATUS, FAILURE);
             logFailure(execInfo.getThrowable());
         }
+        LOGGER.info("Execution of query took '{}' msec.", execInfo.getElapsedTime());
+        KibanaLogFields.clear(CALL_STATUS);
     }
 
     private void logFailure(final Throwable throwable) {

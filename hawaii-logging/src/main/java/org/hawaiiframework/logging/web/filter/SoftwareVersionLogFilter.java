@@ -68,7 +68,7 @@ public class SoftwareVersionLogFilter extends AbstractGenericFilterBean {
             final String version = buildProperties.getVersion();
 
             LOGGER.info("Software Build version '{}'.", version);
-            KibanaLogFields.set(SOFTWARE_VERSION, version);
+            KibanaLogFields.tag(SOFTWARE_VERSION, version);
         }
         // Do filter
         filterChain.doFilter(request, response);

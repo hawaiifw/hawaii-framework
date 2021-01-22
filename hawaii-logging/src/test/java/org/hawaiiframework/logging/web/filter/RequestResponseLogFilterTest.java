@@ -17,7 +17,9 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
-import org.hawaiiframework.logging.util.HttpRequestResponseLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +37,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -75,9 +76,13 @@ public class RequestResponseLogFilterTest {
         when(request.getContentType()).thenReturn(A_CONTENT_TYPE);
         when(request.getMethod()).thenReturn(A_METHOD);
 
-        final HttpRequestResponseLogUtil httpRequestResponseLogUtil = mock(HttpRequestResponseLogUtil.class);
+        final HttpRequestResponseHeadersLogUtil headersLogUtil = mock(HttpRequestResponseHeadersLogUtil.class);
+        final HttpRequestResponseBodyLogUtil bodyLogUtil = mock(HttpRequestResponseBodyLogUtil.class);
+        final HttpRequestResponseDebugLogUtil debugLogUtil = mock(HttpRequestResponseDebugLogUtil.class);
 
-        final DefaultHawaiiRequestResponseLogger logger = new DefaultHawaiiRequestResponseLogger(httpRequestResponseLogUtil, mock(HawaiiLoggingConfigurationProperties.class));
+        final DefaultHawaiiRequestResponseLogger logger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,
+                bodyLogUtil,
+                debugLogUtil, mock(HawaiiLoggingConfigurationProperties.class));
 
         filter = new RequestResponseLogFilter(logger);
     }

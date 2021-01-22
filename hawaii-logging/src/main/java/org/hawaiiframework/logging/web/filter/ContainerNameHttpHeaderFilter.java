@@ -70,7 +70,7 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
         throws ServletException, IOException {
         if (!isInternalRedirect(request)) {
-            KibanaLogFields.set(HOST_NAME, hostname);
+            KibanaLogFields.tag(HOST_NAME, hostname);
             LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
 
             if (!response.containsHeader(headerName)) {
