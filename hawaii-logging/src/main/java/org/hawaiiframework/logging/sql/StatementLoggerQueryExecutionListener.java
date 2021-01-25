@@ -33,6 +33,7 @@ import static net.ttddyy.dsproxy.proxy.ParameterSetOperation.isSetNullParameterO
 import static org.apache.commons.lang3.StringUtils.chomp;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.FAILURE;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.SUCCESS;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_STATUS;
 import static org.hawaiiframework.logging.util.IndentUtil.indent;
 
@@ -86,7 +87,9 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
         if (value.endsWith("," + LINE_SEPARATOR)) {
             value = value.substring(0, value.length() - 1 - LINE_SEPARATOR.length());
         }
+        KibanaLogFields.tag(CALL_REQUEST_BODY, value);
         LOGGER.info(indent(value));
+        KibanaLogFields.clear(CALL_REQUEST_BODY);
     }
 
     /**

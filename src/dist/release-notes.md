@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 3.0.0.M22
+*  Tag input and output of calls (incoming / outbound) in Kibana fields instead of log message body.
+
 ## 3.0.0.M21
 * Added Open Telemetry trace id to a servlet response.
 * Added OIDC fields to Kibana logging.
