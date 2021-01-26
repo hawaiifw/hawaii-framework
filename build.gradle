@@ -25,7 +25,7 @@ buildscript {
         propdepsPluginVersion = "0.0.10.RELEASE"
         spotbugsPluginVersion = "2.0.0"
         spotbugsToolVersion = "3.1.12"
-        springBootVersion = "2.2.5.RELEASE"
+        springBootVersion = "2.4.1"
         versionsPluginVersion = "0.21.0"
         nexusStagingVersion = "0.21.1"
         nexusPublishVersion = "0.4.0"
