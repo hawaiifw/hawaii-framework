@@ -1,5 +1,9 @@
 # Release Notes #
 
+## 3.0.0.M23
+* Fixed issue with application configuration for client IP logging.
+* Use Spring Boot 2.4.1 by default.
+
 ## 3.0.0.M22
 *  Tag input and output of calls (incoming / outbound) in Kibana fields instead of log message body.
 
