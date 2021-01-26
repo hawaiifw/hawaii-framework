@@ -40,6 +40,12 @@ This section provides a list of available Hawaii application properties.
         opentracing:
           # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
           enabled: true
+        allowed-content-types:
+        - application/json
+        - text/plain
+        - text/xml
+        - application/vnd.spring-boot.actuator.v1+json
+        - application/vnd.spring-boot.actuator.v3+json
         filters:
           kibana-log-cleanup:
             enabled: true
@@ -47,11 +53,29 @@ This section provides a list of available Hawaii application properties.
           request-duration:
             enabled: true
             order: -800
+          software-version:
+            enabled: true
+            order: -792
+          container-name:
+            enabled: true
+            order: -791
+            http-header: X-Hawaii-Hostname
+            hostname: ${HOSTNAME:localhost}
+          oidc:
+            # Must set explicitly to false if oidc is not required. If the property is not present, the default is "enabled = true".
+            enabled: true
+            order: -790
           opentracing-response:
             # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
             enabled: true
             order: -790
-          kibana-log:
+          open-telemetry-response:
+            # Must set explicitly to false if open telemetry is not required. If the property is not present, the default is "enabled = true".
+            enabled: true
+            order: -790
+            http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:trace-id}
+          client-ip-log:
+            # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
             enabled: true
             order: -700
             http-header: X-Hawaii-Frontend-IP-Address
@@ -69,19 +93,7 @@ This section provides a list of available Hawaii application properties.
           request-response:
             enabled: true
             order: -300
-            fallback-to-file: true
-            directory: /tmp
-            max-log-size: 50k
-            # For console logging, the allowed content types, empty means allow all.
-            allowed-content-types:
-            - application/json
-            - text/plain
-            - text/xml
-            - application/vnd.spring-boot.actuator.v1+json
-          container-name:
-            enabled: true
-            http-header: X-Hawaii-Hostname
-            hostname: ${HOSTNAME:localhost}
+
           user-details:
             enabled: true
             order: 110

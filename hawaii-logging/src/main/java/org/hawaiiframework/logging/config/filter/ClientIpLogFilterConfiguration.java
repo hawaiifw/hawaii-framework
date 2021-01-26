@@ -54,7 +54,7 @@ public class ClientIpLogFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.client-ip-log", name = "enabled", matchIfMissing = true)
     public ClientIpLogFilter kibanaLogFilter() {
-        return new ClientIpLogFilter(createClientIpResolver(hawaiiLoggingFilterConfigurationProperties.getKibanaLog()));
+        return new ClientIpLogFilter(createClientIpResolver(hawaiiLoggingFilterConfigurationProperties.getClientIpLog()));
     }
 
     /**
@@ -66,7 +66,7 @@ public class ClientIpLogFilterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "hawaii.logging.filters.client-ip-log", name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<ClientIpLogFilter> kibanaLogFilterRegistration(final ClientIpLogFilter clientIpLogFilter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getKibanaLog();
+        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getClientIpLog();
         return createFilterRegistrationBean(clientIpLogFilter, filterProperties);
     }
 

@@ -35,7 +35,7 @@ public class HawaiiLoggingFilterConfigurationProperties {
      * Configuration properties for the Kibana log filter.
      */
     @NestedConfigurationProperty
-    private HttpHeaderLoggingFilterProperties kibanaLog;
+    private HttpHeaderLoggingFilterProperties clientIpLog;
 
     /**
      * Configuration properties for the Kibana log cleanup filter.
@@ -110,21 +110,21 @@ public class HawaiiLoggingFilterConfigurationProperties {
     private LoggingFilterProperties oidc;
 
     /**
-     * Getter for the Kibana log filter properties.
+     * Getter for the client ip log filter properties.
      *
      * @return the properties
      */
-    public HttpHeaderLoggingFilterProperties getKibanaLog() {
-        return kibanaLog;
+    public HttpHeaderLoggingFilterProperties getClientIpLog() {
+        return clientIpLog;
     }
 
     /**
-     * Setter for the Kibana log filter properties.
+     * Setter for the client ip log filter properties.
      *
-     * @param kibanaLog the properties
+     * @param clientIpLog the properties
      */
-    public void setKibanaLog(final HttpHeaderLoggingFilterProperties kibanaLog) {
-        this.kibanaLog = kibanaLog;
+    public void setClientIpLog(final HttpHeaderLoggingFilterProperties clientIpLog) {
+        this.clientIpLog = clientIpLog;
     }
 
     /**

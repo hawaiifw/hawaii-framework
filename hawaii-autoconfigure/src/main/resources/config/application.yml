@@ -61,6 +61,7 @@ hawaii:
         order: -790
         http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:trace-id}
       client-ip-log:
+        # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
         enabled: true
         order: -700
         http-header: X-Hawaii-Frontend-IP-Address
