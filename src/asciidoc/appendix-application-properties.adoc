@@ -40,12 +40,17 @@ This section provides a list of available Hawaii application properties.
         opentracing:
           # Must set explicitly to false if opentracing is not required. If the property is not present, the default is "enabled = true".
           enabled: true
+        # For console logging, the allowed content types, empty means allow all,
+        # including binary files, so not a good idea.
         allowed-content-types:
         - application/json
         - text/plain
         - text/xml
         - application/vnd.spring-boot.actuator.v1+json
         - application/vnd.spring-boot.actuator.v3+json
+        fields-to-mask:
+          - password
+          - keyPassphrase
         filters:
           kibana-log-cleanup:
             enabled: true
@@ -80,32 +85,31 @@ This section provides a list of available Hawaii application properties.
             order: -700
             http-header: X-Hawaii-Frontend-IP-Address
           transaction-type:
+            # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
             enabled: true
             order: -600
+          business-transaction-id:
+            # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
+            enabled: true
+            order: -500
+            http-header: X-Hawaii-Business-Tx-Id
           transaction-id:
+            # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
             enabled: true
             order: -500
             http-header: X-Hawaii-Tx-Id
           request-id:
+            # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
             enabled: true
             order: -400
             http-header: X-Hawaii-Request-Id
           request-response:
+            # Must set explicitly to false if client ip logging is not required. If the property is not present, the default is "enabled = true".
             enabled: true
             order: -300
 
           user-details:
             enabled: true
             order: 110
-
-    ---
-
-    spring:
-      profiles: dev
-      jackson:
-        serialization.indent-output: true
-    logging:
-      level:
-        org.hawaiiframework: DEBUG
 
 ----
