@@ -18,17 +18,17 @@ package org.hawaiiframework.logging.model;
 import java.util.UUID;
 
 /**
- * Class that holds a request id in a ThreadLocal.
+ * Class that holds a transaction id in a ThreadLocal.
  */
 @SuppressWarnings("PMD.ClassNamingConventions")
-public final class RequestId {
+public final class BusinessTransactionId {
 
     /**
      * The thread local id.
      */
     private static final ThreadLocal<UUID> ID = new InheritableThreadLocal<>();
 
-    private RequestId() {
+    private BusinessTransactionId() {
         // private constructor for utility class.
     }
 
@@ -37,14 +37,15 @@ public final class RequestId {
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public static String get() {
-        if (ID.get() == null) {
+        final UUID uuid = ID.get();
+        if (uuid == null) {
             return null;
         }
-        return ID.get().toString();
+        return uuid.toString();
     }
 
     /**
-     * Set the request id.
+     * Set the transaction id.
      */
     public static void set(final UUID value) {
         ID.set(value);

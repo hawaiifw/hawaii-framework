@@ -34,6 +34,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
     REQUEST_ID("req_id"),
     REQUEST_DURATION("req_duration"),
 
+    BUSINESS_TX_ID("business_tx_id"),
 
     TX_ID("tx_id"),
     TX_TYPE("tx_type"),

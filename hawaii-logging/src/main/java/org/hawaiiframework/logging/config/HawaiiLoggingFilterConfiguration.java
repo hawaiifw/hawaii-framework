@@ -15,6 +15,7 @@
  */
 package org.hawaiiframework.logging.config;
 
+import org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.HawaiiLoggingFilterConfigurationProperties;
 import org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration;
@@ -39,6 +40,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @EnableConfigurationProperties(HawaiiLoggingFilterConfigurationProperties.class)
 @Import({
+        BusinessTransactionIdFilterConfiguration.class,
         ClientIpLogFilterConfiguration.class,
         ContainerNameHttpHeaderFilterConfiguration.class,
         KibanaLogCleanupFilterConfiguration.class,

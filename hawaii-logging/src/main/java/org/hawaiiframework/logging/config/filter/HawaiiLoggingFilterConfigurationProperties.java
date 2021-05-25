@@ -74,6 +74,12 @@ public class HawaiiLoggingFilterConfigurationProperties {
     private HttpHeaderLoggingFilterProperties transactionId;
 
     /**
+     * Configuration properties for the business transaction id logging filter.
+     */
+    @NestedConfigurationProperty
+    private HttpHeaderLoggingFilterProperties businessTransactionId;
+
+    /**
      * Configuration properties for the transaction type logging filter.
      */
     @NestedConfigurationProperty
@@ -233,6 +239,15 @@ public class HawaiiLoggingFilterConfigurationProperties {
      */
     public void setTransactionId(final HttpHeaderLoggingFilterProperties transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public HttpHeaderLoggingFilterProperties getBusinessTransactionId() {
+        return businessTransactionId;
+    }
+
+    public void setBusinessTransactionId(
+        final HttpHeaderLoggingFilterProperties businessTransactionId) {
+        this.businessTransactionId = businessTransactionId;
     }
 
     /**
