@@ -51,8 +51,10 @@ public class PasswordMaskerUtil {
      * @param fieldsToMask The list of fields to mask.
      */
     public PasswordMaskerUtil(final Collection<String> fieldsToMask) {
-        if (fieldsToMask != null) {
+        if (fieldsToMask != null && !fieldsToMask.isEmpty()) {
             this.fieldsToMask.addAll(fieldsToMask);
+        } else {
+            this.fieldsToMask.add("password");
         }
     }
 
