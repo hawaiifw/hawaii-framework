@@ -1,4 +1,8 @@
 # Release Notes #
+## 3.0.0.M24
+* Configure field names for password masking (instead of just hard coded 'password').
+* Added business transaction filters, like normal transaction filters. A business transaction is more like a session and spans multiple transactions.
+* Moved HTTP client header providers for business transaction id and transaction id into the logging library (from async).
 
 ## 3.0.0.M23
 * Fixed issue with application configuration for client IP logging.
