@@ -6,15 +6,8 @@
       "credentials": {
         "type": "password string",
         "password": "{{PASSWORD}}"
-      }
-    }
-    {
-      "first_name": "Mickey",
-      "last_name": "Mouse",
-      "credentials": {
-        "type": "password string",
-        "password": "{{PASSWORD}}"
-      }
+      },
+      "xml": " <emailAddress>ciamdatapl116@mailinator.com</emailAddress>\n                <password>{{XML_ESCAPED_PASSWORD}}</password> <!--Zero or more repetitions:-->\n                <keyPassphrase>{{XML_ESCAPED_PASSWORD}}</keyPassphrase> <!--Zero or more repetitions:-->"
     }
   ]
 }

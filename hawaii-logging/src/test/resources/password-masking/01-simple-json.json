@@ -1,3 +1,4 @@
 {
-  "password": "{{PASSWORD}}"
+  "password": "{{PASSWORD}}",
+  "keyPassphrase": "{{PASSWORD}}"
 }

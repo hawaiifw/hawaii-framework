@@ -36,15 +36,25 @@ import java.util.List;
  * @since 3.0.0
  */
 public class HttpRequestResponseHeadersLogUtil {
-    /**
-     * Masks passwords in json strings.
-     */
-    private static final PasswordMaskerUtil PASSWORD_MASKER = new PasswordMaskerUtil();
 
     /**
      * The configured newline to look for.
      */
     private static final String NEW_LINE = System.getProperty("line.separator");
+
+    /**
+     * Masks passwords in json strings.
+     */
+    private final PasswordMaskerUtil passwordMasker;
+
+    /**
+     * The constructor for the log utility.
+     *
+     * @param passwordMasker The password masker utility.
+     */
+    public HttpRequestResponseHeadersLogUtil(final PasswordMaskerUtil passwordMasker) {
+        this.passwordMasker = passwordMasker;
+    }
 
     /**
      * Get request headers.
@@ -131,7 +141,7 @@ public class HttpRequestResponseHeadersLogUtil {
         final String value = builder.toString();
 
         // remove clear text password values and indent the multi line body.
-        return PASSWORD_MASKER.maskPasswordsIn(value);
+        return passwordMasker.maskPasswordsIn(value);
     }
 
     private void appendHeaders(final StringBuilder builder, final HttpHeaders headers) {

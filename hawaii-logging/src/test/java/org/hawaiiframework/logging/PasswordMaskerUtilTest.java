@@ -15,9 +15,12 @@
  */
 package org.hawaiiframework.logging;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hawaiiframework.logging.util.PasswordMaskerUtil;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -38,8 +41,16 @@ public class PasswordMaskerUtilTest {
     private static final String PASSWORD = "%5Ji!@00Aade'_),.:{}[] '(*\"&^%$#@!";
     private static final String MASKED_PASSWORD = "***";
 
-    private PasswordMaskerUtil passwordMaskerUtil = new PasswordMaskerUtil();
+    private PasswordMaskerUtil passwordMaskerUtil;
 
+    @Before
+    public void setUp() {
+        final List<String> fieldsToMask = new ArrayList<>();
+        fieldsToMask.add("password");
+        fieldsToMask.add("keyPassphrase");
+
+        passwordMaskerUtil = new PasswordMaskerUtil(fieldsToMask);
+    }
 
     @Test
     public void test() throws Exception {

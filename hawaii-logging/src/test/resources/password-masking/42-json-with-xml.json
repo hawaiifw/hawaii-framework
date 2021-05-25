@@ -2,5 +2,4 @@
   "request-parameters": "username=2e47b943-ee52-49c1-b4ed-8b79ecaa5f3a&grant_type=sms&password={{URI_ESCAPED_PASSWORD}}&some_random_other_stuff",
   "some_text": "This is a password ....",
   "xml": "<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header xmlns:ns="http://www.vodafone.com/nl/common/1.0" xmlns:v2="http://webservices.vodafone.nl/identitymanagement/v2"/><soapenv:Body xmlns:ns="http://www.vodafone.com/nl/common/1.0" xmlns:v2="http://webservices.vodafone.nl/identitymanagement/v2"><v2:createOnlineUserV2><createOnlineUserV2Request><traceIdentifier><ns:applicationID>11125</ns:applicationID><ns:referenceID>11135</ns:referenceID></traceIdentifier><emailAddress>ciamdatapl116@mailinator.com</emailAddress><password>{{XML_ESCAPED_PASSWORD}}</password> <!--Zero or more repetitions:--><contactID>950120044</contactID> <!--Optional:--><confirmed>true</confirmed> <!--Optional:--><securityQuestion>string</securityQuestion> <!--Optional:--><securityAnswer>string</securityAnswer></createOnlineUserV2Request></v2:createOnlineUserV2></soapenv:Body></soapenv:Envelope>"
-
 }

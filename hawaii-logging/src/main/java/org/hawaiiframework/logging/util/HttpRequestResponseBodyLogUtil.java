@@ -44,14 +44,23 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class HttpRequestResponseBodyLogUtil {
 
     /**
-     * Masks passwords in json strings.
-     */
-    private static final PasswordMaskerUtil PASSWORD_MASKER = new PasswordMaskerUtil();
-
-    /**
      * The configured newline to look for.
      */
     private static final String NEW_LINE = System.getProperty("line.separator");
+
+    /**
+     * Masks passwords in json, xml and query strings.
+     */
+    private final PasswordMaskerUtil passwordMasker;
+
+    /**
+     * The constructor for the log utility.
+     *
+     * @param passwordMasker The password masker utility.
+     */
+    public HttpRequestResponseBodyLogUtil(final PasswordMaskerUtil passwordMasker) {
+        this.passwordMasker = passwordMasker;
+    }
 
     /**
      * Get the request body.
@@ -62,8 +71,7 @@ public class HttpRequestResponseBodyLogUtil {
      * @throws IOException In case the body could not be read.
      */
     public String getTxRequestBody(final HttpServletRequest servletRequest) throws IOException {
-        final String body = getPostBody(servletRequest);
-        return PASSWORD_MASKER.maskPasswordsIn(body);
+        return maskPasswords(getPostBody(servletRequest));
     }
 
     /**
@@ -74,7 +82,7 @@ public class HttpRequestResponseBodyLogUtil {
      * @return The body.
      */
     public String getTxResponseBody(final ContentCachingWrappedResponse servletResponse) {
-        return toString(servletResponse.getContentAsByteArray(), servletResponse.getCharacterEncoding());
+        return maskPasswords(toString(servletResponse.getContentAsByteArray(), servletResponse.getCharacterEncoding()));
     }
 
     /**
@@ -85,7 +93,7 @@ public class HttpRequestResponseBodyLogUtil {
      * @return The body.
      */
     public String getCallRequestBody(final byte[] body) {
-        return toString(body, Charset.defaultCharset());
+        return maskPasswords(toString(body, Charset.defaultCharset()));
     }
 
     /**
@@ -98,7 +106,7 @@ public class HttpRequestResponseBodyLogUtil {
     public String getCallResponseBody(final ClientHttpResponse response) throws IOException {
         final StringBuilder inputStringBuilder = new StringBuilder();
 
-        return getResponseBody(inputStringBuilder, response);
+        return maskPasswords(getResponseBody(inputStringBuilder, response));
     }
 
     private String toString(final byte[] body, final String charset) {
@@ -153,5 +161,9 @@ public class HttpRequestResponseBodyLogUtil {
         }
 
         return inputStringBuilder.toString();
+    }
+
+    private String maskPasswords(final String input) {
+        return passwordMasker.maskPasswordsIn(input);
     }
 }

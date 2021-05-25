@@ -16,7 +16,10 @@
 package org.hawaiiframework.logging.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class the mask passwords in a string, so log files will not contain plain text (or encrypted) passwords.
@@ -38,19 +41,43 @@ public class PasswordMaskerUtil {
     }
 
     /**
+     * The list of fields to mask.
+     */
+    private final Set<String> fieldsToMask = new HashSet<>();
+
+    /**
+     * The constructor.
+     *
+     * @param fieldsToMask The list of fields to mask.
+     */
+    public PasswordMaskerUtil(final Collection<String> fieldsToMask) {
+        if (fieldsToMask != null) {
+            this.fieldsToMask.addAll(fieldsToMask);
+        }
+    }
+
+    /**
      * Mask the password with {@code ***} in the {@code input}.
      */
     public String maskPasswordsIn(final String input) {
-        final MaskedPasswordBuilder builder = new MaskedPasswordBuilder(input);
+        String masked = input;
+        for (final String fieldToMask : fieldsToMask) {
+            masked = maskPasswords(masked, fieldToMask);
+        }
+        return masked;
+    }
+
+    private String maskPasswords(final String input, final String pattern) {
+        final MaskedPasswordBuilder builder = new MaskedPasswordBuilder(input, pattern);
         if (!builder.findNextPassword()) {
             return input;
         }
         builder.reset();
-        return maskPassword(builder);
+        return maskPasswords(builder);
     }
 
     @SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD"})
-    private String maskPassword(final MaskedPasswordBuilder builder) {
+    private String maskPasswords(final MaskedPasswordBuilder builder) {
 
         while (builder.findNextPassword()) {
             while (builder.hasNext()) {

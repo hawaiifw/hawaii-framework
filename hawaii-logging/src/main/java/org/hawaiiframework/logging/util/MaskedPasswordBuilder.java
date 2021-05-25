@@ -26,22 +26,22 @@ import static java.util.Objects.requireNonNull;
 public class MaskedPasswordBuilder {
 
     /**
-     * The field to search for.
-     */
-    private static final String PASSWORD = "password";
-
-    /**
-     * The length of the search field.
-     */
-    private static final int PASSWORD_LENGTH = PASSWORD.length();
-
-    /**
      * Constant for the masked password.
      */
     private static final String MASKED_PASSWORD = "***";
 
     /**
-     * The string that contains the string {@link MaskedPasswordBuilder#PASSWORD}.
+     * The pattern to search for.
+     */
+    private final String pattern;
+
+    /**
+     * The length of the search pattern.
+     */
+    private final int patternLength;
+
+    /**
+     * The string that contains the {@link MaskedPasswordBuilder#pattern} string.
      */
     private final String stringToMask;
 
@@ -69,8 +69,10 @@ public class MaskedPasswordBuilder {
     /**
      * The constructor.
      */
-    public MaskedPasswordBuilder(final String stringToMask) {
+    public MaskedPasswordBuilder(final String stringToMask, final String pattern) {
         this.stringToMask = requireNonNull(stringToMask);
+        this.pattern = pattern;
+        this.patternLength = pattern.length();
     }
 
     /**
@@ -135,7 +137,7 @@ public class MaskedPasswordBuilder {
      * Appends the password mask at the {@code index}.
      */
     public void maskPasswordAt(final Integer index) {
-        result.append(stringToMask.substring(lastAddedIndex, index));
+        result.append(stringToMask, lastAddedIndex, index);
         result.append(MASKED_PASSWORD);
         lastAddedIndex = currentIndex;
     }
@@ -151,11 +153,11 @@ public class MaskedPasswordBuilder {
      * Returns {@code true} if there is another password to be found in the string to mask.
      */
     public boolean findNextPassword() {
-        final int index = stringToMask.indexOf(PASSWORD, currentIndex);
+        final int index = stringToMask.indexOf(pattern, currentIndex);
         if (index <= -1) {
             return false;
         }
-        currentIndex = index + PASSWORD_LENGTH;
+        currentIndex = index + patternLength;
         return true;
     }
 

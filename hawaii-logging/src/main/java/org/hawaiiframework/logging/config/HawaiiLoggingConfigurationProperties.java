@@ -14,6 +14,8 @@ public class HawaiiLoggingConfigurationProperties {
 
     private List<String> allowedContentTypes;
 
+    private List<String> fieldsToMask;
+
     public List<String> getAllowedContentTypes() {
         return allowedContentTypes;
     }
@@ -22,4 +24,11 @@ public class HawaiiLoggingConfigurationProperties {
         this.allowedContentTypes = allowedContentTypes;
     }
 
+    public List<String> getFieldsToMask() {
+        return fieldsToMask;
+    }
+
+    public void setFieldsToMask(final List<String> fieldsToMask) {
+        this.fieldsToMask = fieldsToMask;
+    }
 }

@@ -18,9 +18,10 @@ package org.hawaiiframework.logging.config;
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.http.client.LoggingClientHttpRequestInterceptor;
+import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
-import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
+import org.hawaiiframework.logging.util.PasswordMaskerUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -49,6 +50,15 @@ import org.springframework.context.annotation.Import;
 })
 public class HawaiiLoggingConfiguration {
 
+    /**
+     * Create a {@link PasswordMaskerUtil} bean.
+     *
+     * @return the bean.
+     */
+    @Bean
+    public PasswordMaskerUtil passwordMaskerUtil(final HawaiiLoggingConfigurationProperties properties) {
+        return new PasswordMaskerUtil(properties.getFieldsToMask());
+    }
 
     /**
      * Create a {@link HttpRequestResponseHeadersLogUtil} bean.
@@ -56,10 +66,9 @@ public class HawaiiLoggingConfiguration {
      * @return the bean.
      */
     @Bean
-    public HttpRequestResponseHeadersLogUtil httpRequestResponseHeadersLogUtil() {
-        return new HttpRequestResponseHeadersLogUtil();
+    public HttpRequestResponseHeadersLogUtil httpRequestResponseHeadersLogUtil(final PasswordMaskerUtil passwordMasker) {
+        return new HttpRequestResponseHeadersLogUtil(passwordMasker);
     }
-
 
     /**
      * Create a {@link HttpRequestResponseBodyLogUtil} bean.
@@ -67,10 +76,9 @@ public class HawaiiLoggingConfiguration {
      * @return the bean.
      */
     @Bean
-    public HttpRequestResponseBodyLogUtil httpRequestResponseLogBodyUtil() {
-        return new HttpRequestResponseBodyLogUtil();
+    public HttpRequestResponseBodyLogUtil httpRequestResponseLogBodyUtil(final PasswordMaskerUtil passwordMasker) {
+        return new HttpRequestResponseBodyLogUtil(passwordMasker);
     }
-
 
     /**
      * Create a {@link HttpRequestResponseDebugLogUtil} bean.
@@ -82,13 +90,9 @@ public class HawaiiLoggingConfiguration {
         return new HttpRequestResponseDebugLogUtil();
     }
 
-    @Bean
-    public HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties() {
-        return new HawaiiLoggingConfigurationProperties();
-    }
-
     /**
      * Create a {@link LoggingClientHttpRequestInterceptor} bean.
+     *
      * @return the bean.
      */
     @Bean

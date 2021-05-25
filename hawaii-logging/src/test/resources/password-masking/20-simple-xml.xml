@@ -10,6 +10,7 @@
                 </traceIdentifier>
                 <emailAddress>ciamdatapl116@mailinator.com</emailAddress>
                 <password>{{XML_ESCAPED_PASSWORD}}</password> <!--Zero or more repetitions:-->
+                <keyPassphrase>{{XML_ESCAPED_PASSWORD}}</keyPassphrase> <!--Zero or more repetitions:-->
                 <contactID>950120044</contactID> <!--Optional:-->
                 <confirmed>true</confirmed> <!--Optional:-->
                 <securityQuestion>string</securityQuestion> <!--Optional:-->

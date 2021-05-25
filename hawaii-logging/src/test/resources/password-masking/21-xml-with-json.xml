@@ -19,6 +19,7 @@
                     "password": "{{XML_ESCAPED_PASSWORD}}",
                     "new_password": "{{XML_ESCAPED_PASSWORD}}",
                     "password_check": "{{XML_ESCAPED_PASSWORD}}"
+                    "keyPassphrase": "{{XML_ESCAPED_PASSWORD}}"
                     }
                     },
                     {
