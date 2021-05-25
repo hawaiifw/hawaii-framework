@@ -1,5 +1,6 @@
-package org.hawaiiframework.async.http;
+package org.hawaiiframework.logging.http.client;
 
+import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.logging.model.KibanaLogFieldNames;
 import org.hawaiiframework.logging.model.KibanaLogFields;
@@ -7,8 +8,6 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-
-import java.io.IOException;
 
 
 /**
@@ -44,6 +43,8 @@ public class TransactionIdSupplierHttpRequestInterceptor implements ClientHttpRe
     @Override
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
         throws IOException {
+        // Read the value from the log fields, since for thread pool style execution, this should be populated,
+        // whereas the thread local variable might not be.
         final String txId = KibanaLogFields.get(KibanaLogFieldNames.TX_ID);
         if (StringUtils.isNotBlank(txId)) {
             request.getHeaders().add(headerName, txId);

@@ -19,9 +19,6 @@ import java.util.UUID;
 
 /**
  * Class that holds a transaction id in a ThreadLocal.
- *
- * @author Rutger Lubbers
- * @since 2.0.0
  */
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class TransactionId {
@@ -29,7 +26,7 @@ public final class TransactionId {
     /**
      * The thread local id.
      */
-    private static ThreadLocal<UUID> id = new InheritableThreadLocal<>();
+    private static final ThreadLocal<UUID> ID = new InheritableThreadLocal<>();
 
     private TransactionId() {
         // private constructor for utility class.
@@ -40,21 +37,25 @@ public final class TransactionId {
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public static String get() {
-        return id.get().toString();
+        final UUID uuid = ID.get();
+        if (uuid == null) {
+            return null;
+        }
+        return uuid.toString();
     }
 
     /**
      * Set the transaction id.
      */
     public static void set(final UUID value) {
-        id.set(value);
+        ID.set(value);
     }
 
     /**
      * Clear the thread local.
      */
     public static void remove() {
-        id.remove();
+        ID.remove();
     }
 
 }
