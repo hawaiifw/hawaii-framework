@@ -38,21 +38,41 @@ public class HawaiiRestAutoConfiguration {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Create a validation error resource assembler.
+     *
+     * @return The validation error resource assembler bean.
+     */
     @Bean
     public ValidationErrorResourceAssembler validationErrorResourceAssembler() {
         return new ValidationErrorResourceAssembler(objectMapper);
     }
 
+    /**
+     * Create an exception response factory.
+     *
+     * @return The exception response factory bean.
+     */
     @Bean
     public ExceptionResponseFactory exceptionResponseFactory() {
         return new DefaultExceptionResponseFactory();
     }
 
+    /**
+     * Create a Hawaii response exception handler.
+     *
+     * @return The Hawaii response exception handler bean.
+     */
     @Bean
     public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler() {
         return new HawaiiResponseEntityExceptionHandler(validationErrorResourceAssembler(), exceptionResponseFactory());
     }
 
+    /**
+     * Create a host resolver bean.
+     *
+     * @return The host resolver bean.
+     */
     @Bean
     public HostResolver hostResolver() {
         return new HostResolver();

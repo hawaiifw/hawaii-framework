@@ -24,9 +24,7 @@ import org.hawaiiframework.async.task_listener.KibanaLogFieldsTaskListenerFactor
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -41,6 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -53,10 +52,6 @@ public class AsyncExecutorConfigurationTest {
 
     @Mock
     private AsyncPropertiesLoader loader;
-
-    @Rule
-    public ExpectedException thrown= ExpectedException.none();
-
     private DefaultListableBeanFactory beanFactory;
     private ExecutorProperties defaultExecutorProperties;
 
@@ -111,7 +106,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(taskExecutor);
 
         DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
@@ -148,7 +143,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor executor =
-            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(executor);
 
 
@@ -194,7 +189,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor executor =
-            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
         assertNotNull(executor);
 
 
@@ -218,7 +213,7 @@ public class AsyncExecutorConfigurationTest {
     }
 
     private Runnable createRunnable(final CountDownLatch taskLatch, final CountDownLatch testLatch,
-        final TaskAbortStrategy taskAbortStrategy) {
+            final TaskAbortStrategy taskAbortStrategy) {
         return () -> {
             try {
                 SharedTaskContextHolder.setTaskAbortStrategy(taskAbortStrategy);
@@ -231,7 +226,7 @@ public class AsyncExecutorConfigurationTest {
     }
 
     private ExecutorProperties addExecutorProperties(final String executorName, int corePoolSize, int maxPoolSize, int maxPendingRequests,
-        int keepAliveSeconds) {
+            int keepAliveSeconds) {
         ExecutorProperties executorProperties = new ExecutorProperties();
         executorProperties.setName(executorName);
         executorProperties.setCorePoolSize(corePoolSize);
@@ -255,7 +250,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
         DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
@@ -306,7 +301,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
         DelegatingExecutor defaultExecutor = (DelegatingExecutor) configuration.getAsyncExecutor();
         assertEquals(0, defaultExecutor.getActiveCount());
@@ -339,7 +334,7 @@ public class AsyncExecutorConfigurationTest {
 
         // wait for async task to complete.
         while (asyncTimeoutExecutor.getQueue().size() == 1) {
-            Thread.sleep(10);
+            Thread.sleep(30);
         }
         // The task should have remove its guard.
         assertEquals(0, asyncTimeoutExecutor.getQueue().size());
@@ -368,7 +363,7 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor taskExecutor =
-            (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
+                (DelegatingExecutor) beanFactory.getBean(systemProperties.getName() + "." + taskProperties.getMethod());
 
 
         final CountDownLatch taskLatch = new CountDownLatch(1);
@@ -382,8 +377,7 @@ public class AsyncExecutorConfigurationTest {
         taskExecutor.execute(createRunnable(taskLatch, testLatch, null));
         taskExecutor.execute(createRunnable(taskLatch, testLatch, null));
 
-        thrown.expect(TaskRejectedException.class);
-        taskExecutor.execute(createRunnable(taskLatch, testLatch, null));
+        assertThrows(TaskRejectedException.class, () -> taskExecutor.execute(createRunnable(taskLatch, testLatch, null)));
     }
 
     @Test
@@ -409,10 +403,10 @@ public class AsyncExecutorConfigurationTest {
         doIt();
 
         DelegatingExecutor mochaTaskExecutor =
-            (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-mocha");
+                (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-mocha");
 
         DelegatingExecutor waterTaskExecutor =
-            (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-water");
+                (DelegatingExecutor) beanFactory.getBean("coffee-bar.serve-water");
 
         final CountDownLatch taskLatch = new CountDownLatch(1);
         final CountDownLatch mochaLatch = new CountDownLatch(1);

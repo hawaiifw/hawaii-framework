@@ -1,5 +1,6 @@
 package org.hawaiiframework.async;
 
+import jakarta.validation.constraints.NotNull;
 import org.hawaiiframework.async.exception.HawaiiTaskExecutionException;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
@@ -33,6 +34,56 @@ public final class AsyncUtil {
      */
     private AsyncUtil() {
         // Util constructor.
+    }
+
+    /**
+     * Delegates to {@link CompletableFuture#get()}.
+     *
+     * @param future The completable future to get the value from.
+     * @param <T>    The type to return
+     * @return the result value
+     */
+    public static <T> T get(@NotNull final CompletableFuture<T> future) {
+        requireNonNull(future);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException exception) {
+            throw handleException(exception);
+        }
+    }
+
+    /**
+     * Delegates to {@link CompletableFuture#get(long, TimeUnit)}}.
+     *
+     * @param future  The completable future to get the value from.
+     * @param timeout the maximum time to wait
+     * @param unit    the time unit of the timeout argument
+     * @param <T>     The type to return
+     * @return the result value
+     */
+    public static <T> T get(@NotNull final CompletableFuture<T> future, @NotNull final Long timeout,
+            @NotNull final TimeUnit unit) {
+        requireNonNull(future);
+        requireNonNull(timeout);
+        requireNonNull(unit);
+        try {
+            return future.get(timeout, unit);
+        } catch (InterruptedException | ExecutionException | TimeoutException exception) {
+            throw handleException(exception);
+        }
+    }
+
+    /**
+     * Delegates to {@link CompletableFuture#getNow(Object)}.
+     *
+     * @param future        The completable future to get the value from.
+     * @param valueIfAbsent The value to return if not completed
+     * @param <T>           The type to return
+     * @return the result value, if completed, else the given valueIfAbsent
+     */
+    public static <T> T getNow(@NotNull final CompletableFuture<T> future, final T valueIfAbsent) {
+        requireNonNull(future);
+        return future.getNow(valueIfAbsent);
     }
 
     /**
@@ -135,22 +186,6 @@ public final class AsyncUtil {
         }
     }
 
-    private static HawaiiException handleException(final Exception exception) {
-        if (exception instanceof ExecutionException) {
-            return handleExecutionException(exception);
-        }
-
-        return new HawaiiTaskExecutionException(exception);
-    }
-
-    private static HawaiiException handleExecutionException(final Exception exception) {
-        final Throwable cause = exception.getCause();
-        if (cause instanceof HawaiiException) {
-            return (HawaiiException) cause;
-        }
-        return new HawaiiTaskExecutionException(cause);
-    }
-
     /**
      * Applies the asynchronous {@code function} to each element of {@code inputs}. It then awaits the completion of the
      * calls and returns the function's returns.
@@ -226,7 +261,7 @@ public final class AsyncUtil {
         }
 
         for (final CompletableFuture<T> future : futures) {
-            results.add(HawaiiAsyncUtil.get(future));
+            results.add(get(future));
         }
         return results;
     }
@@ -245,8 +280,24 @@ public final class AsyncUtil {
         }
 
         final CompletableFuture<?> combinedFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[] {}));
-        HawaiiAsyncUtil.get(combinedFuture);
+        get(combinedFuture);
 
         return futures;
+    }
+
+    private static HawaiiException handleException(final Exception exception) {
+        if (exception instanceof ExecutionException) {
+            return handleExecutionException(exception);
+        }
+
+        return new HawaiiTaskExecutionException(exception);
+    }
+
+    private static HawaiiException handleExecutionException(final Exception exception) {
+        final Throwable cause = exception.getCause();
+        if (cause instanceof HawaiiException) {
+            return (HawaiiException) cause;
+        }
+        return new HawaiiTaskExecutionException(cause);
     }
 }

@@ -16,7 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import jakarta.servlet.DispatcherType;
 import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -24,32 +27,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.servlet.DispatcherType;
 import java.util.EnumSet;
+
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link UserDetailsFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled", matchIfMissing = true)
 @Configuration
 @ConditionalOnClass(UserDetails.class)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class UserDetailsFilterConfiguration {
 
-
     /**
-     * The the logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.user-details";
 
-    /**
-     * Autowired constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties the logging configuration properties
-     */
-    UserDetailsFilterConfiguration(
-            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(UserDetailsFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
 
     /**
      * Create the {@link UserDetailsFilter} bean.
@@ -57,8 +57,9 @@ public class UserDetailsFilterConfiguration {
      * @return the {@link UserDetailsFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public UserDetailsFilter userDetailsFilter() {
+        LOGGER.trace("Configuration: order '{}'.", filterOrder);
         return new UserDetailsFilter();
     }
 
@@ -68,13 +69,9 @@ public class UserDetailsFilterConfiguration {
      * @param userDetailsFilter the user details filter
      * @return the {@link #userDetailsFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.user-details", name = "enabled", matchIfMissing = true)
     @Bean
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<UserDetailsFilter> userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getUserDetails();
-        final FilterRegistrationBean<UserDetailsFilter> result = new FilterRegistrationBean<>(userDetailsFilter);
-        result.setOrder(filterProperties.getOrder());
-        result.setDispatcherTypes(EnumSet.of(DispatcherType.REQUEST));
-        return result;
+        return createFilterRegistrationBean(userDetailsFilter, filterOrder, EnumSet.of(DispatcherType.REQUEST));
     }
 }

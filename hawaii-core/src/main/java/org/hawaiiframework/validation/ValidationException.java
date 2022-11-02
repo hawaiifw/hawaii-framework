@@ -18,6 +18,7 @@ package org.hawaiiframework.validation;
 
 import org.hawaiiframework.exception.HawaiiException;
 
+import java.io.Serial;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -28,6 +29,12 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class ValidationException extends HawaiiException {
+
+    /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = 7243575134936095351L;
 
     private final ValidationResult validationResult;
 

@@ -16,12 +16,13 @@
 
 package org.hawaiiframework.async.http;
 
+import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,10 +32,9 @@ import static java.util.Objects.requireNonNull;
  * It extends the (default) {@link HttpComponentsClientHttpRequestFactory} and uses the postProcessHttpRequest method to register
  * the {@link TaskAbortStrategy}.
  *
- * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
+ * @since 2.0.0
  */
 public class HawaiiHttpComponentsClientHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
 
@@ -42,12 +42,18 @@ public class HawaiiHttpComponentsClientHttpRequestFactory extends HttpComponents
      * {@inheritDoc}
      * <p>
      * Register the abort strategy for this request.
+     *
+     * @param request The request to register.
      */
     @Override
-    protected void postProcessHttpRequest(@NotNull final HttpUriRequest request) {
+    protected void postProcessHttpRequest(@NotNull final ClassicHttpRequest request) {
         requireNonNull(request);
-        super.postProcessHttpRequest(request);
-        SharedTaskContextHolder.setTaskAbortStrategy(new HttpComponentHttpRequestTaskAbortStrategy(request));
+        if (request instanceof HttpUriRequest httpUriRequest) {
+            super.postProcessHttpRequest(request);
+            SharedTaskContextHolder.setTaskAbortStrategy(new HttpComponentHttpRequestTaskAbortStrategy(httpUriRequest));
+        } else {
+            throw new IllegalArgumentException("Request not supported.");
+        }
     }
 
 }

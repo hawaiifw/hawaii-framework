@@ -16,63 +16,64 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link RequestResponseLogFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class RequestResponseLogFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-response";
 
-    private final HawaiiRequestResponseLogger hawaiiLogger;
+    private static final Logger LOGGER = getLogger(RequestResponseLogFilterConfiguration.class);
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
-     */
-    public RequestResponseLogFilterConfiguration(
-            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties,
-            final HawaiiRequestResponseLogger hawaiiLogger) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-        this.hawaiiLogger = hawaiiLogger;
-    }
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
 
     /**
      * Create the request/response logging filter bean.
      *
+     * @param filterVoter  The filter voter.
+     * @param hawaiiLogger The logger.
      * @return the {@link RequestResponseLogFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled", matchIfMissing = true)
-    public RequestResponseLogFilter requestResponseLogFilter() {
-        return new RequestResponseLogFilter(hawaiiLogger);
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+    public RequestResponseLogFilter requestResponseLogFilter(
+            final FilterVoter filterVoter,
+            final HawaiiRequestResponseLogger hawaiiLogger) {
+        LOGGER.trace("Configuration: order '{}'.", filterOrder);
+        return new RequestResponseLogFilter(hawaiiLogger, filterVoter);
     }
 
     /**
      * Create and register the {@link RequestResponseLogFilter} bean.
      *
+     * @param requestResponseLogFilter The filter to register.
      * @return the requestResponseLogFilter bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-response", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<RequestResponseLogFilter> requestResponseLogFilterRegistration(
             final RequestResponseLogFilter requestResponseLogFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestResponse();
-        return createFilterRegistrationBean(requestResponseLogFilter, filterProperties);
+        return createFilterRegistrationBean(requestResponseLogFilter, filterOrder);
     }
 
 }

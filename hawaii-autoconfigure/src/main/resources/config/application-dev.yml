@@ -1,6 +1,0 @@
-spring:
-  jackson:
-    serialization.indent-output: true
-logging:
-  level:
-    org.hawaiiframework: DEBUG

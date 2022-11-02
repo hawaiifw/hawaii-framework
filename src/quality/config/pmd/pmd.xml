@@ -62,6 +62,11 @@
         <exclude name="StdCyclomaticComplexity"/>
         <exclude name="AvoidUncheckedExceptionsInSignatures"/>
     </rule>
+    <rule ref="category/java/design.xml/CognitiveComplexity">
+        <properties>
+            <property name="reportLevel" value="30"/>
+        </properties>
+    </rule>
     <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>
             <property name="problemDepth" value="4"/>
@@ -104,13 +109,13 @@
         <exclude name="AvoidCatchingThrowable"/>
         <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="DataflowAnomalyAnalysis"/>
-        <exclude name="DoNotCallSystemExit"/> <!-- earlier j2ee group-->
+        <!--        <exclude name="DoNotCallSystemExit"/> --> <!-- earlier j2ee group-->
         <exclude name="EmptyFinalizer"/>
         <exclude name="FinalizeOnlyCallsSuperFinalize"/>
         <exclude name="FinalizeDoesNotCallSuperFinalize"/>
         <exclude name="JUnitSpelling"/>
         <exclude name="JUnitStaticSuite"/>
-        <exclude name="InvalidSlf4jMessageFormat"/>
+        <!--        <exclude name="InvalidSlf4jMessageFormat"/>-->
         <exclude name="LoggerIsNotStaticFinal"/>
         <exclude name="MissingSerialVersionUID"/>
         <exclude name="NullAssignment"/> <!-- disabled due to false positive for initialization with ternary operator -->

@@ -69,7 +69,7 @@ public class Tuple1<T1> implements Tuple, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Tuple1 other = (Tuple1) o;
+        final Tuple1<?> other = (Tuple1) o;
         return Objects.equals(this.element1, other.element1);
     }
 

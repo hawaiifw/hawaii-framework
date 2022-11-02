@@ -15,7 +15,8 @@
  */
 package org.hawaiiframework.cache;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -98,7 +99,7 @@ public interface Cache<T> {
      * @param key   The (not null) key to store the object under.
      * @param value The (not null) object to store.
      */
-    default void putEternally(@NotNull String key, @NotNull T value) {
+    default void putEternally(@NotNull final String key, @NotNull final T value) {
         put(key, value, Duration.ofMillis(Long.MAX_VALUE));
     }
 
@@ -116,7 +117,7 @@ public interface Cache<T> {
      * @param key The (never null) key to retrieve the value with.
      * @return The <code>Optional</code> for the value.
      */
-    default Optional<T> optional(@NotNull String key) {
+    default Optional<T> optional(@NotNull final String key) {
         return Optional.ofNullable(get(key));
     }
 

@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.exception;
 
+import java.io.Serial;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -23,6 +25,12 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
  * @since 2.0.0
  */
 public class BadRequestException extends HttpException {
+
+    /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = -4395628375914269570L;
 
     /**
      * Constructs a new {@code BadRequestException}.

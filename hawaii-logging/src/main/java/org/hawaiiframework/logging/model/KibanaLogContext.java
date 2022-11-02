@@ -27,6 +27,8 @@ public final class KibanaLogContext {
 
     /**
      * Returns the copied context map.
+     *
+     * @return The context map.
      */
     public Map<String, String> getContextMap() {
         return contextMap;

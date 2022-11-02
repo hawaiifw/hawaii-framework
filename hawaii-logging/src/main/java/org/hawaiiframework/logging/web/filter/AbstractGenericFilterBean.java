@@ -17,12 +17,13 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -39,21 +40,31 @@ public abstract class AbstractGenericFilterBean extends GenericFilterBean {
 
     /**
      * {@inheritDoc}
+     *
+     * @param request     The servlet request.
+     * @param response    The servlet response.
+     * @param filterChain The filter chain.
+     * @throws ServletException if an I/O related error has occurred during the processing
+     * @throws IOException      if an exception occurs that interferes with the filter's normal operation
      */
     @Override
     public final void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+        if (!(request instanceof final HttpServletRequest httpRequest) || !(response instanceof final HttpServletResponse httpResponse)) {
             throw new ServletException("AbstractGenericFilterBean just supports HTTP requests");
         }
-        final HttpServletRequest httpRequest = (HttpServletRequest) request;
-        final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         doFilterInternal(httpRequest, httpResponse, filterChain);
     }
 
     /**
      * Same contract as for {@code doFilter}.
+     *
+     * @param httpRequest  The http servlet request.
+     * @param httpResponse The http servlet response.
+     * @param filterChain  The filter chain.
+     * @throws ServletException if an I/O related error has occurred during the processing
+     * @throws IOException      if an exception occurs that interferes with the filter's normal operation
      */
     protected abstract void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
             FilterChain filterChain) throws ServletException, IOException;

@@ -16,34 +16,39 @@
 package org.hawaiiframework.logging.config.filter;
 
 import org.hawaiiframework.logging.web.filter.ContainerNameHttpHeaderFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration.CONFIG_PREFIX;
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link ContainerNameHttpHeaderFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class ContainerNameHttpHeaderFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.container-name";
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
-     */
-    public ContainerNameHttpHeaderFilterConfiguration(
-            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(ContainerNameHttpHeaderFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    private String headerName;
+
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
+
+    @Value("${" + CONFIG_PREFIX + ".hostname}")
+    private String hostname;
 
     /**
      * Create the {@link ContainerNameHttpHeaderFilter} bean.
@@ -51,12 +56,11 @@ public class ContainerNameHttpHeaderFilterConfiguration {
      * @return the {@link ContainerNameHttpHeaderFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public ContainerNameHttpHeaderFilter containerNameHttpHeaderFilter() {
-        final ContainerNameHttpHeaderFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getContainerName();
-        return new ContainerNameHttpHeaderFilter(filterProperties);
+        LOGGER.trace("Configuration: header '{}', order '{}', hostname '{}'.", headerName, filterOrder, hostname);
+        return new ContainerNameHttpHeaderFilter(headerName, hostname);
     }
-
 
     /**
      * Register the {@link ContainerNameHttpHeaderFilter} bean.
@@ -65,11 +69,9 @@ public class ContainerNameHttpHeaderFilterConfiguration {
      * @return the {@link #containerNameHttpHeaderFilter()} bean, wrapped in a {@link ContainerNameHttpHeaderFilter}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.container-name", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<ContainerNameHttpHeaderFilter> containerNameHttpHeaderFilterRegistration(
             final ContainerNameHttpHeaderFilter filter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getContainerName();
-        return createFilterRegistrationBean(filter, filterProperties);
+        return createFilterRegistrationBean(filter, filterOrder);
     }
-
 }

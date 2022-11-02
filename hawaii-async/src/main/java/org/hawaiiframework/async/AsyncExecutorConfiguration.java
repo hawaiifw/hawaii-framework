@@ -30,6 +30,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -46,23 +47,22 @@ import java.util.concurrent.Executor;
 /**
  * Configuration class to set up asynchronous executors.
  * <p>
- * <p>The loaded configuration properties are themselves registered as a bean, so they may be in other classes
- * needing them, see {@link #EXECUTOR_CONFIGURATION_PROPERTIES}.</p>
- * <p>
+ * The loaded configuration properties are themselves registered as a bean, so they may be in other classes
+ * needing them, see {@link #EXECUTOR_CONFIGURATION_PROPERTIES}.
  * <p>For each configured task a bean {@link DelegatingExecutor} with the name <code>{system_name}.{task_name}</code> is created. The
- * task's configured executor is set in the {@link DelegatingExecutor} as it's delegate.</p>
+ * task's configured executor is set in the {@link DelegatingExecutor} as its delegate.
  * <p>
- * <p>A method annotated with {@link org.springframework.scheduling.annotation.Async} can specify its full task name,
+ * A method annotated with {@link org.springframework.scheduling.annotation.Async} can specify its full task name,
  * i.e. <code>{system_name}.{task_name}</code> as the annotation value. The corresponding delegating executor bean will be retrieved by this
  * name.
- * <p>
- * <b>NOTE:</b> each async task <b>MUST</b> be specified in the configuration, otherwise an exception will be raised.
+ * <p><b>NOTE:</b> each async task <b>MUST</b> be specified in the configuration, otherwise an exception will be raised.
  *
  * @author Rutger Lubbers
  * @author Paul Klos
  * @since 2.0.0
  */
 @Configuration
+@ConditionalOnProperty(prefix = "hawaii.async", name = "enabled", matchIfMissing = true)
 @Import({DataSourceProxyConfiguration.class, TaskListenerFactoryConfiguration.class})
 @EnableAsync
 public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostProcessor, AsyncConfigurer, EnvironmentAware {
@@ -131,7 +131,7 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
     /**
      * {@inheritDoc}
      * <p>
-     * <p>Configured method names are aliased to their corresponding executor, such that bean lookup works.</p>
+     * Configured method names are aliased to their corresponding executor, such that bean lookup works.
      */
     @Override
     public void postProcessBeanFactory(@NonNull final ConfigurableListableBeanFactory beanFactory) throws BeansException {
@@ -144,7 +144,7 @@ public class AsyncExecutorConfiguration implements BeanDefinitionRegistryPostPro
         defaultExecutor = executorInitializer.getDefaultExecutor();
 
         final DelegatingExecutorFactory delegatingExecutorFactory =
-            new DelegatingExecutorFactory(beanFactory, registrar, properties, executorNames);
+                new DelegatingExecutorFactory(beanFactory, registrar, properties, executorNames);
         delegatingExecutorFactory.createDelegatingExecutors();
     }
 

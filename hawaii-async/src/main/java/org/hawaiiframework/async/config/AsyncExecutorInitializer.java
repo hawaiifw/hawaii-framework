@@ -104,6 +104,11 @@ public class AsyncExecutorInitializer {
         defaultExecutor = new DelegatingExecutor(executor, configuration, beansOfType.values(), configuration.getDefaultExecutor());
     }
 
+    /**
+     * Get the executor to configure.
+     *
+     * @return The task executor.
+     */
     @SuppressWarnings("PMD.CommentRequired")
     public TaskExecutor getDefaultExecutor() {
         return defaultExecutor;

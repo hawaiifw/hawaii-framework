@@ -17,33 +17,36 @@
 package org.hawaiiframework.logging.config.filter;
 
 import org.hawaiiframework.logging.web.filter.RequestIdFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.RequestIdFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link RequestIdFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class RequestIdFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-id";
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
-     */
-    public RequestIdFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(RequestIdFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    private String headerName;
+
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
 
     /**
      * Create the {@link RequestIdFilter} bean.
@@ -51,22 +54,22 @@ public class RequestIdFilterConfiguration {
      * @return the {@link RequestIdFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public RequestIdFilter requestIdFilter() {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestId();
-        return new RequestIdFilter(filterProperties.getHttpHeader());
+        LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
+        return new RequestIdFilter(headerName);
     }
 
     /**
      * Register the {@link RequestIdFilter} bean.
      *
+     * @param requestIdFilter the {@link RequestIdFilter} bean.
      * @return the {@link #requestIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-id", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<RequestIdFilter> requestIdFilterRegistration(final RequestIdFilter requestIdFilter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestId();
-        return createFilterRegistrationBean(requestIdFilter, filterProperties);
+        return createFilterRegistrationBean(requestIdFilter, filterOrder);
     }
 
 

@@ -15,60 +15,55 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
+import org.hawaiiframework.logging.config.MediaTypeVoter;
+import org.hawaiiframework.logging.config.PathVoter;
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.atLeastOnce;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggerFactory.class)
 public class RequestResponseLogFilterTest {
 
     private static final String A_REQUEST_URI = "/idm/rest/public/registration/customer";
     private static final String A_QUERY_STRING = "token=4a8ff079-9223-41cc-a072-9c8656216479&bla=bladiebla";
     private static final String A_METHOD = "POST";
     private static final String A_CONTENT_TYPE = "text/plain";
-    
+
     private RequestResponseLogFilter filter;
     private Logger logger;
+
+    private TestLogAppender testLogAppender;
+
     private HttpServletRequest request;
+    private HttpServletResponse response;
 
     @Before
     public void setup() {
-        logger = mock(Logger.class);
+        testLogAppender = new TestLogAppender();
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        logger.addAppender(testLogAppender);
 
-        PowerMockito.mockStatic(LoggerFactory.class);
-        Mockito.when(LoggerFactory.getLogger(any(Class.class))).thenReturn(logger);
-        Mockito.when(LoggerFactory.getLogger(anyString())).thenReturn(logger);
+        testLogAppender.start();
 
         request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(A_REQUEST_URI);
@@ -76,46 +71,38 @@ public class RequestResponseLogFilterTest {
         when(request.getContentType()).thenReturn(A_CONTENT_TYPE);
         when(request.getMethod()).thenReturn(A_METHOD);
 
+        response = mock(HttpServletResponse.class);
+        when(response.getStatus()).thenReturn(200);
+
         final HttpRequestResponseHeadersLogUtil headersLogUtil = mock(HttpRequestResponseHeadersLogUtil.class);
         final HttpRequestResponseBodyLogUtil bodyLogUtil = mock(HttpRequestResponseBodyLogUtil.class);
         final HttpRequestResponseDebugLogUtil debugLogUtil = mock(HttpRequestResponseDebugLogUtil.class);
 
-        final DefaultHawaiiRequestResponseLogger logger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,
-                bodyLogUtil,
-                debugLogUtil, mock(HawaiiLoggingConfigurationProperties.class));
 
-        filter = new RequestResponseLogFilter(logger);
+        final HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
+        final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties);
+        final PathVoter pathVoter = new PathVoter(properties);
+
+        final DefaultHawaiiRequestResponseLogger requestResponseLogger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,
+                bodyLogUtil,
+                debugLogUtil, mediaTypeVoter);
+        final FilterVoter filterVoter = new FilterVoter(mediaTypeVoter, pathVoter);
+        filter = new RequestResponseLogFilter(requestResponseLogger, filterVoter);
     }
 
     @Test
     public void thatRequestParamsAreLogged() throws ServletException, IOException {
-        final ArgumentCaptor<Object> method = ArgumentCaptor.forClass(Object.class);
-        final ArgumentCaptor<Object> url = ArgumentCaptor.forClass(Object.class);
-        final ArgumentCaptor<Object> contentType = ArgumentCaptor.forClass(Object.class);
-        final ArgumentCaptor<Object> size = ArgumentCaptor.forClass(Object.class);
-        final HttpServletResponse response = mock(HttpServletResponse.class);
-        // Keep otherwise log will fail.
-        when(response.getStatus()).thenReturn(200);
-
         filter.doFilterInternal(request, response, mock(FilterChain.class));
 
-        verify(logger, atLeastOnce()).info(eq("Invoked '{} {}' with content type '{}' and size of '{}' bytes."), method.capture(), url.capture(), contentType.capture(), size.capture());
+        final String message = "Invoked '{} {}' with content type '{}' and size of '{}' bytes.";
+        final ILoggingEvent logEvent = testLogAppender.findEventForMessage(message);
+        assertThat(logEvent, notNullValue());
 
-        assertThat(get(method), is(equalTo(A_METHOD)));
-        assertThat(get(url), is(equalTo(A_REQUEST_URI)));
-        assertThat(getMediaType(contentType), is(equalTo(MediaType.parseMediaType(A_CONTENT_TYPE))));
-        assertThat(getInt(size), is(equalTo(0)));
+        final Object[] argumentArray = logEvent.getArgumentArray();
+        assertThat((String) argumentArray[0], is("POST"));
+        assertThat((String) argumentArray[1], is(A_REQUEST_URI));
+        assertThat(argumentArray[2], is(A_CONTENT_TYPE));
+        assertThat((int) argumentArray[3], is(0));
     }
 
-    private String get(final ArgumentCaptor<Object> captor) {
-        return (String) captor.getAllValues().get(0);
-    }
-
-    private Integer getInt(final ArgumentCaptor<Object> captor) {
-        return (Integer) captor.getAllValues().get(0);
-    }
-
-    private MediaType getMediaType(final ArgumentCaptor<Object> captor) {
-        return (MediaType) captor.getAllValues().get(0);
-    }
 }

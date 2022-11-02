@@ -17,7 +17,7 @@ package org.hawaiiframework.logging.util;
 
 /**
  * Class that tries to mask a password in a string.
- *
+ * <p>
  * The implementation tries to mask a field for a specific format, for instance JSON or XML.
  *
  * @author Rutger Lubbers
@@ -27,6 +27,9 @@ public interface PasswordMasker {
 
     /**
      * Did the masked find a match and could it be masked?
+     *
+     * @param builder a "string builder" that builds a string without the password fields.
+     * @return whether some masking has been done.
      */
     boolean matches(MaskedPasswordBuilder builder);
 }

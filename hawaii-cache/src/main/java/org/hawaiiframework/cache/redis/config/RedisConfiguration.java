@@ -110,7 +110,7 @@ public class RedisConfiguration {
         return new HawaiiRedisCacheBuilder(properties, jedisConnectionFactory, hawaiiTime);
     }
 
-    private <T extends GenericObjectPoolConfig> T applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration,
+    private <T extends GenericObjectPoolConfig<?>> T applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration,
             final Class<T> type) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         final T temp = type.getDeclaredConstructor().newInstance();
         poolConfiguration.applyTo(temp);

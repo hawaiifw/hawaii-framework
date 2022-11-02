@@ -15,15 +15,17 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.info.BuildProperties;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.SOFTWARE_VERSION;
@@ -47,12 +49,18 @@ public class SoftwareVersionLogFilter extends AbstractGenericFilterBean {
      */
     private final BuildProperties buildProperties;
 
+    private final FilterVoter filterVoter;
+
     /**
      * The constructor.
+     *
+     * @param buildProperties The build properties to get the version from.
+     * @param filterVoter     The filter voter.
      */
-    public SoftwareVersionLogFilter(final BuildProperties buildProperties) {
+    public SoftwareVersionLogFilter(final BuildProperties buildProperties, final FilterVoter filterVoter) {
         super();
         this.buildProperties = buildProperties;
+        this.filterVoter = filterVoter;
     }
 
     /**
@@ -64,12 +72,13 @@ public class SoftwareVersionLogFilter extends AbstractGenericFilterBean {
             final HttpServletResponse response,
             final FilterChain filterChain) throws ServletException, IOException {
 
-        if (!isInternalRedirect(request)) {
+        if (filterVoter.enabled(request) && !isInternalRedirect(request)) {
             final String version = buildProperties.getVersion();
 
             LOGGER.info("Software Build version '{}'.", version);
             KibanaLogFields.tag(SOFTWARE_VERSION, version);
         }
+
         // Do filter
         filterChain.doFilter(request, response);
     }

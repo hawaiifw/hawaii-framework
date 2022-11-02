@@ -19,6 +19,8 @@ package org.hawaiiframework.web.exception;
 import org.hawaiiframework.exception.HawaiiException;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serial;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -26,6 +28,12 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class HttpException extends HawaiiException {
+
+    /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = -5505430727908889048L;
 
     private final HttpStatus httpStatus;
 

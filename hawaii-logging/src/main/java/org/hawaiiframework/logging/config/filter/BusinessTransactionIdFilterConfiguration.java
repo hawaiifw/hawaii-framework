@@ -16,36 +16,38 @@
 
 package org.hawaiiframework.logging.config.filter;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-
 import org.hawaiiframework.logging.web.filter.BusinessTransactionIdFilter;
 import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConfiguration.CONFIG_PREFIX;
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Configures the {@link TransactionIdFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.business-transaction-id", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class BusinessTransactionIdFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.business-transaction-id";
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
-     */
-    public BusinessTransactionIdFilterConfiguration(
-            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(BusinessTransactionIdFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    private String headerName;
+
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
 
     /**
      * Create the {@link TransactionIdFilter} bean.
@@ -53,10 +55,10 @@ public class BusinessTransactionIdFilterConfiguration {
      * @return the {@link TransactionIdFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.business-transaction-id", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public BusinessTransactionIdFilter businessTransactionIdFilter() {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getBusinessTransactionId();
-        return new BusinessTransactionIdFilter(filterProperties.getHttpHeader());
+        LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
+        return new BusinessTransactionIdFilter(headerName);
     }
 
     /**
@@ -66,11 +68,10 @@ public class BusinessTransactionIdFilterConfiguration {
      * @return the {@link #businessTransactionIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.business-transaction-id", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<BusinessTransactionIdFilter> businessTransactionIdFilterRegistration(
             final BusinessTransactionIdFilter businessTransactionIdFilter) {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getBusinessTransactionId();
-        return createFilterRegistrationBean(businessTransactionIdFilter, filterProperties);
+        return createFilterRegistrationBean(businessTransactionIdFilter, filterOrder);
     }
 
 }

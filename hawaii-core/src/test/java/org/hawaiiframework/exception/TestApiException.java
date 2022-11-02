@@ -15,7 +15,15 @@
  */
 package org.hawaiiframework.exception;
 
+import java.io.Serial;
+
 public class TestApiException extends ApiException {
+
+    /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = 1364163403888317961L;
 
     private static final ApiError error = new ApiError() {
 

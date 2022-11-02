@@ -36,7 +36,7 @@ public interface KibanaLogField {
      * @param key the key to match
      * @return true if not null and if the supplied key equals this key.
      */
-    default boolean matches(String key) {
+    default boolean matches(final String key) {
         return key != null && key.equalsIgnoreCase(getLogName());
     }
 

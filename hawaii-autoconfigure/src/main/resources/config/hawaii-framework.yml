@@ -1,0 +1,101 @@
+spring:
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+    # property-naming-strategy: KEBAB_CASE
+    # this fails the spring cloud config server-client communication
+    serialization:
+      indent-output: false
+      write-dates-as-timestamps: false
+      write-date-timestamps-as-nanoseconds: false
+hawaii:
+  async:
+    # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+    enabled: true
+    # location of the Hawaii async configuration file
+    configuration: ${ASYNC_CONFIG:./config/async-config.yml}
+  crypto:
+    # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+    enabled: true
+    init:
+  logging:
+    # For console logging, the allowed content types, empty means allow all,
+    # including binary files, so not a good idea.
+    allowed-content-types:
+      - application/json
+      - application/graphql+json,
+      - application/vnd.spring-boot.actuator.v1+json
+      - application/vnd.spring-boot.actuator.v3+json
+      - application/vnd.spring-cloud.config-server.v2+json,
+      - multipart/form-data
+      - text/plain
+      - text/xml
+    exclude-paths:
+      - /actuator/*
+    fields-to-mask:
+      - password
+      - keyPassphrase
+    filters:
+      kibana-log-cleanup:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1400
+      request-duration:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1300
+      software-version:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1200
+      container-name:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1100
+        http-header: X-Hawaii-Hostname
+        hostname: ${HOSTNAME:localhost}
+      open-telemetry-response:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1000
+        http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:traceid}
+      oidc:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -900
+      client-ip-log:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -800
+        http-header: X-Hawaii-Frontend-IP-Address
+      transaction-type:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -700
+      business-transaction-id:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -600
+        http-header: X-Hawaii-Business-Tx-Id
+      transaction-id:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -500
+        http-header: X-Hawaii-Tx-Id
+      request-id:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -400
+        http-header: X-Hawaii-Request-Id
+      request-response:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -300
+      user-details:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: 200
+  time:
+    # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+    enabled: true
+    # The timezone to use like `UTC`, `Europe/Amsterdam` or `GMT+1`.
+    timezone: UTC

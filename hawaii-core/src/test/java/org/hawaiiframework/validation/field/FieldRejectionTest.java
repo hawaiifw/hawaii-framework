@@ -19,14 +19,15 @@ package org.hawaiiframework.validation.field;
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.validation.ValidationResult;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
+import java.util.Objects;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
 
 /**
  * Tests for {@link FieldRejection}.
@@ -34,15 +35,13 @@ import static org.junit.Assert.assertThat;
  * @author Rutger Lubbers
  */
 public class FieldRejectionTest {
+
     private static final String FIELD_NAME = "some_name";
 
     private static final String INVALID = "invalid";
     private static final String REQUIRED = "required";
 
     private static final String ERR_CODE = "some_error_code";
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private ValidationResult validationResult;
 
@@ -77,21 +76,22 @@ public class FieldRejectionTest {
         validationResult
                 .rejectField(FIELD_NAME, actual)
                 .whenNull()
-                .orWhen(h -> h==null, ERR_CODE);
+                .orWhen(Objects::isNull, ERR_CODE);
 
         assureErrorHas(FIELD_NAME, REQUIRED);
     }
 
     @Test
     public void testThatOrderDoesMatter() {
-        thrown.expect(NullPointerException.class);
-
-        String actual = null;
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .orWhen(String::length, is(greaterThan(10)), ERR_CODE)
-                .or()
-                .whenNull();
+        assertThrows(NullPointerException.class, () -> {
+                    String actual = null;
+                    validationResult
+                            .rejectField(FIELD_NAME, actual)
+                            .orWhen(String::length, is(greaterThan(10)), ERR_CODE)
+                            .or()
+                            .whenNull();
+                }
+        );
     }
 
     @Test
@@ -101,7 +101,7 @@ public class FieldRejectionTest {
                 .rejectField(FIELD_NAME, actual)
                 .whenNull()
                 .or()
-                .when(h -> h==null, ERR_CODE);
+                .when(Objects::isNull, ERR_CODE);
 
         assureErrorHas(FIELD_NAME, REQUIRED);
     }

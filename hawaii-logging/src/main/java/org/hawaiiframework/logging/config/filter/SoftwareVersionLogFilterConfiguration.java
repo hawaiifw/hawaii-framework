@@ -16,8 +16,11 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.web.filter.SoftwareVersionLogFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -25,6 +28,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.SoftwareVersionLogFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link SoftwareVersionLogFilter}.
@@ -32,57 +37,46 @@ import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUt
  * @author Rutger Lubbers
  * @since 3.0.0.M18
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.software-version", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnBean(BuildProperties.class)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class SoftwareVersionLogFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.software-version";
 
+    private static final Logger LOGGER = getLogger(SoftwareVersionLogFilterConfiguration.class);
 
-    /**
-     * The build properties.
-     */
-    private final BuildProperties buildProperties;
-
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The filter configuration properties.
-     * @param buildProperties  The build properties.
-     */
-    @Autowired
-    public SoftwareVersionLogFilterConfiguration(
-            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties,
-            final BuildProperties buildProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-        this.buildProperties = buildProperties;
-    }
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
 
     /**
      * Create the software version logging filter bean.
      *
+     * @param buildProperties The build properties.
+     * @param filterVoter     The filter voter.
      * @return the {@link SoftwareVersionLogFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.software-version", name = "enabled", matchIfMissing = true)
-    public SoftwareVersionLogFilter softwareVersionLogFilter() {
-        return new SoftwareVersionLogFilter(buildProperties);
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+    public SoftwareVersionLogFilter softwareVersionLogFilter(final BuildProperties buildProperties, final FilterVoter filterVoter) {
+        LOGGER.trace("Configuration: order '{}'.", filterOrder);
+        return new SoftwareVersionLogFilter(buildProperties, filterVoter);
     }
 
     /**
      * Create and register the {@link SoftwareVersionLogFilter} bean.
      *
+     * @param softwareVersionLogFilter The filter to register.
      * @return the  {@link SoftwareVersionLogFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.software-version", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<SoftwareVersionLogFilter> softwareVersionLogFilterRegistration(
             final SoftwareVersionLogFilter softwareVersionLogFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getSoftwareVersion();
-        return createFilterRegistrationBean(softwareVersionLogFilter, filterProperties);
+        return createFilterRegistrationBean(softwareVersionLogFilter, filterOrder);
     }
 
 }

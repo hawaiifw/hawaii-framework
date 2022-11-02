@@ -16,33 +16,20 @@
 
 package org.hawaiiframework.boot.autoconfigure.jackson;
 
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.context.annotation.Bean;
+import org.hawaiiframework.jackson.HawaiiJacksonConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
+@ConditionalOnClass({JavaTimeModule.class, JsonOrgModule.class})
+@Import(HawaiiJacksonConfiguration.class)
 @Configuration
 public class HawaiiJacksonAutoConfiguration {
 
-    /**
-     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects with {@link ObjectMapper}.
-     */
-    @Bean
-    public JavaTimeModule javaTimeModule() {
-        return new JavaTimeModule();
-    }
-
-    /**
-     * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with {@link ObjectMapper}.
-     */
-    @Bean
-    public JsonOrgModule jsonOrgModule() {
-        return new JsonOrgModule();
-    }
 }

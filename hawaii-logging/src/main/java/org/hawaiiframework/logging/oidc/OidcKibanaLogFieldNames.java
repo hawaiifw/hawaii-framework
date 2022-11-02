@@ -27,9 +27,21 @@ import java.util.Arrays;
  * @since 3.0.0.M21
  */
 public enum OidcKibanaLogFieldNames implements KibanaLogField {
+    /**
+     * The subject.
+     */
     SUBJECT("sub"),
+    /**
+     * The audience.
+     */
     AUDIENCE("aud"),
+    /**
+     * The authorized party.
+     */
     AUTHORIZED_PARTY("azp"),
+    /**
+     * The user id.
+     */
     USER_ID("user_id");
 
     /**

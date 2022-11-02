@@ -15,8 +15,9 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,8 @@ public class ResettableServletInputStream extends ServletInputStream {
 
     /**
      * The constructor.
+     *
+     * @param rawData A copy of another servlet input stream.
      */
     public ResettableServletInputStream(final byte[] rawData) {
         super();
@@ -85,6 +88,8 @@ public class ResettableServletInputStream extends ServletInputStream {
 
     /**
      * Set the input to use for the stream.
+     *
+     * @throws IOException in case the stream cannot be reset.
      */
     @Override
     public void reset() throws IOException {

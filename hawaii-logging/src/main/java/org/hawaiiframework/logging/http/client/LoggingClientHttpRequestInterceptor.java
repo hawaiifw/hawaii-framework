@@ -51,6 +51,8 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
 
     /**
      * The constructor.
+     *
+     * @param hawaiiLogger The logger to use.
      */
     public LoggingClientHttpRequestInterceptor(final HawaiiRequestResponseLogger hawaiiLogger) {
         this.hawaiiRequestResponseLogger = hawaiiLogger;

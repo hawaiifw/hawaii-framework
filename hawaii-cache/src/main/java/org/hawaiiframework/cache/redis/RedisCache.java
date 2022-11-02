@@ -15,13 +15,13 @@
  */
 package org.hawaiiframework.cache.redis;
 
+import jakarta.validation.constraints.NotNull;
 import org.hawaiiframework.cache.Cache;
 import org.hawaiiframework.time.HawaiiTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -15,14 +15,15 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
@@ -51,11 +52,20 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     private final HawaiiRequestResponseLogger hawaiiLogger;
 
     /**
-     * The constructor.
+     * The filter voter.
      */
-    public RequestResponseLogFilter(final HawaiiRequestResponseLogger hawaiiLogger) {
+    private final FilterVoter filterVoter;
+
+    /**
+     * The constructor.
+     *
+     * @param hawaiiLogger The request response logger.
+     * @param filterVoter  The filter voter.
+     */
+    public RequestResponseLogFilter(final HawaiiRequestResponseLogger hawaiiLogger, final FilterVoter filterVoter) {
         super();
         this.hawaiiLogger = hawaiiLogger;
+        this.filterVoter = filterVoter;
     }
 
     /**
@@ -65,30 +75,34 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     @SuppressWarnings("PMD.LawOfDemeter")
     protected void doFilterInternal(
             final HttpServletRequest httpServletRequest,
-            final HttpServletResponse response,
+            final HttpServletResponse httpServletResponse,
             final FilterChain filterChain) throws ServletException, IOException {
         LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.", httpServletRequest.getDispatcherType(),
                 isInternalRedirect(httpServletRequest));
 
+        if (!filterVoter.enabled(httpServletRequest)) {
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        } else {
 
-        // Create a new wrapped request, which we can use to get the body from.
-        final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(response);
-        final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
+            // Create a new wrapped request, which we can use to get the body from.
+            final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(httpServletResponse);
+            final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
 
-        if (!isInternalRedirect(httpServletRequest)) {
-            hawaiiLogger.logRequest(wrappedRequest);
-        }
+            if (!isInternalRedirect(httpServletRequest)) {
+                hawaiiLogger.logRequest(wrappedRequest);
+            }
 
-        // Do filter
-        try {
-            filterChain.doFilter(wrappedRequest, wrappedResponse);
-        } finally {
-            if (wrappedResponse.isRedirect()) {
-                markAsInternalRedirect(wrappedRequest);
-            } else {
-                unmarkAsInternalRedirect(wrappedRequest);
-                hawaiiLogger.logResponse(wrappedRequest, wrappedResponse);
-                wrappedResponse.copyBodyToResponse();
+            // Do filter
+            try {
+                filterChain.doFilter(wrappedRequest, wrappedResponse);
+            } finally {
+                if (wrappedResponse.isRedirect()) {
+                    markAsInternalRedirect(wrappedRequest);
+                } else {
+                    unmarkAsInternalRedirect(wrappedRequest);
+                    hawaiiLogger.logResponse(wrappedRequest, wrappedResponse);
+                    wrappedResponse.copyBodyToResponse();
+                }
             }
         }
     }

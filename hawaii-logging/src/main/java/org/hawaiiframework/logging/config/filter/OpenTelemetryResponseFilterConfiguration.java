@@ -18,6 +18,8 @@ package org.hawaiiframework.logging.config.filter;
 
 import io.opentelemetry.api.trace.Tracer;
 import org.hawaiiframework.logging.opentelemetry.OpenTelemetryResponseFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -25,29 +27,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.OpenTelemetryResponseFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configuration to add open telemetry trace ids to the http servlet responses.
  */
 @Configuration
 @ConditionalOnClass(Tracer.class)
-@ConditionalOnProperty(prefix = "hawaii.logging.open-telemetry-response", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class OpenTelemetryResponseFilterConfiguration {
 
     /**
-     * The the logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.open-telemetry-response";
 
-    /**
-     * Autowired constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties the logging configuration properties
-     */
-    public OpenTelemetryResponseFilterConfiguration(
-            final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(OpenTelemetryResponseFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    private String headerName;
+
+    @Value("${" + CONFIG_PREFIX + ".order}")
+    private int filterOrder;
 
     /**
      * Create the {@link OpenTelemetryResponseFilter} bean.
@@ -55,10 +57,10 @@ public class OpenTelemetryResponseFilterConfiguration {
      * @return the {@link OpenTelemetryResponseFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.open-telemetry-response", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public OpenTelemetryResponseFilter openTelemetryResponseFilter() {
-        final HttpHeaderLoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getOpenTelemetryResponse();
-        return new OpenTelemetryResponseFilter(filterProperties.getHttpHeader());
+        LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
+        return new OpenTelemetryResponseFilter(headerName);
     }
 
     /**
@@ -68,10 +70,9 @@ public class OpenTelemetryResponseFilterConfiguration {
      * @return the {@link #openTelemetryResponseFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.open-telemetry-response", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<OpenTelemetryResponseFilter> openTelemetryResponseFilterRegistration(
             final OpenTelemetryResponseFilter openTelemetryResponseFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getOpenTelemetryResponse();
-        return createFilterRegistrationBean(openTelemetryResponseFilter, filterProperties);
+        return createFilterRegistrationBean(openTelemetryResponseFilter, filterOrder);
     }
 }

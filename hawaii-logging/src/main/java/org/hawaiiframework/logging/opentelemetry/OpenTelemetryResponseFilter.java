@@ -22,10 +22,11 @@ import org.hawaiiframework.logging.web.filter.AbstractGenericFilterBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -52,7 +53,7 @@ public class OpenTelemetryResponseFilter extends AbstractGenericFilterBean {
      * @param headerName the name of the header to response with.
      */
     public OpenTelemetryResponseFilter(final String headerName) {
-        this.headerName = StringUtils.defaultString(headerName, "trace-id");
+        this.headerName = StringUtils.defaultString(headerName, "traceid");
         LOGGER.info("Configured to use '{}'.", this.headerName);
     }
 
@@ -72,7 +73,7 @@ public class OpenTelemetryResponseFilter extends AbstractGenericFilterBean {
     }
 
     private void addHeader(final HttpServletResponse response, final SpanContext context) {
-        addHeader(response, context.getTraceIdAsHexString());
+        addHeader(response, context.getTraceId());
     }
 
     private void addHeader(final HttpServletResponse response, final String value) {

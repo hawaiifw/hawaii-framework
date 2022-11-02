@@ -21,10 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
@@ -48,6 +49,11 @@ public class ClientIpLogFilter extends AbstractGenericFilterBean {
      */
     private final ClientIpResolver clientIpResolver;
 
+    /**
+     * The constructor.
+     *
+     * @param clientIpResolver HostResolver for this class.
+     */
     @Autowired
     public ClientIpLogFilter(final ClientIpResolver clientIpResolver) {
         this.clientIpResolver = clientIpResolver;
@@ -67,7 +73,7 @@ public class ClientIpLogFilter extends AbstractGenericFilterBean {
         if (!isInternalRedirect(request)) {
             final String clientIp = clientIpResolver.getClientIp(request);
             KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
-            LOGGER.info("Client ip is '{}'.", clientIp);
+            LOGGER.debug("Client ip is '{}'.", clientIp);
         }
     }
 }

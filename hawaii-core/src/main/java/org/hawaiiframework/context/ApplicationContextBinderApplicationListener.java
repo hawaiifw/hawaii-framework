@@ -28,7 +28,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ApplicationContextBinderApplicationListener implements ApplicationListener {
+public class ApplicationContextBinderApplicationListener implements ApplicationListener<ApplicationEvent> {
 
     @Override
     public void onApplicationEvent(final ApplicationEvent event) {

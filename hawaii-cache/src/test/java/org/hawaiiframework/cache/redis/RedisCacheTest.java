@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -60,10 +61,6 @@ public class RedisCacheTest {
     @Mock
     private ValueOperations<String, Foo> mockOperations;
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
-
     /**
      * Object to be tested.
      */
@@ -77,7 +74,7 @@ public class RedisCacheTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        //        MockitoAnnotations.openMocks(this);
         when(mockTemplate.opsForValue()).thenReturn(mockOperations);
         this.hawaiiTime = new HawaiiTime();
         this.redisCache = new RedisCache<>(mockTemplate, hawaiiTime, defaultExpiry, keyPrefix);
@@ -155,7 +152,7 @@ public class RedisCacheTest {
         redisCache.putEternally(testObject.bar, testObject);
 
         for (var entry : tests.entrySet()) {
-            assertThrows(NullPointerException.class, entry.getKey(), entry.getValue());
+            assertThrows("Expected NPE for '" + entry.getKey() + "'", NullPointerException.class, () -> entry.getValue().run());
         }
 
         //Verify if redis template is called appropriately
@@ -174,17 +171,10 @@ public class RedisCacheTest {
 
     @Test
     public void getProducesNullPointerOnPassingNull() {
-        //Test if get produces an error
-        List<Runnable> tests = new ArrayList<>();
-        tests.add(() -> redisCache.get(null));
+        assertThrows(NullPointerException.class, () -> redisCache.get(null));
 
         //Passing calls
         redisCache.get(testObject.bar);
-
-        for (Runnable item : tests) {
-            exception.expect(NullPointerException.class);
-            item.run();
-        }
 
         //Verify if redis template is called appropriately
         verify(mockTemplate.opsForValue(), times(1)).get(eq(fullKey));
@@ -198,22 +188,14 @@ public class RedisCacheTest {
 
         //Verify if redis template is called x times
         verify(mockTemplate, times(2)).delete(eq(fullKey));
-
     }
 
     @Test
     public void removeProducesNullPointerOnPassingNull() {
-        //Test if get produces an error
-        List<Runnable> tests = new ArrayList<>();
-        tests.add(() -> redisCache.remove(null));
+        assertThrows(NullPointerException.class, () -> redisCache.remove(null));
 
         //Passing calls
         redisCache.remove(testObject.bar);
-
-        for (Runnable item : tests) {
-            exception.expect(NullPointerException.class);
-            item.run();
-        }
 
         //Verify if redis template is called appropriately
         verify(mockTemplate, times(1)).delete(eq(fullKey));
@@ -221,19 +203,6 @@ public class RedisCacheTest {
 
     private String constructKey(String key) {
         return keyPrefix + key;
-    }
-
-    public static void assertThrows(Class<? extends Exception> expectedException, String failingMessage, Runnable action) {
-        try {
-            action.run();
-            fail("Fail at: " + failingMessage + ", expected action to throw " + expectedException.getSimpleName() + " but it did not.");
-        } catch (Exception e) {
-            if (!expectedException.isInstance(e)) {
-                fail("Fail at: " + failingMessage + ", Expected action should have thrown: " + expectedException.getSimpleName()
-                        + ", but was: " + e.getClass()
-                        .getSimpleName());
-            }
-        }
     }
 
     private class Foo {

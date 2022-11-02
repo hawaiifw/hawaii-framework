@@ -17,18 +17,28 @@ import java.util.Map;
 @SuppressWarnings("PMD")
 public class YamlJavaBeanPropertyConstructor extends Constructor {
 
-    private final Map<Class<?>, Map<String, Property>> properties = new HashMap<Class<?>, Map<String, Property>>();
+    private final Map<Class<?>, Map<String, Property>> properties = new HashMap<>();
 
     private final PropertyUtils propertyUtils = new PropertyUtils();
 
+    /**
+     * The constructor.
+     *
+     * @param theRoot The root class.
+     */
     public YamlJavaBeanPropertyConstructor(final Class<?> theRoot) {
         super(theRoot);
         this.yamlClassConstructors.put(NodeId.mapping,
                 new CustomPropertyConstructMapping());
     }
 
-    public YamlJavaBeanPropertyConstructor(final Class<?> theRoot,
-                                           final Map<Class<?>, Map<String, String>> propertyAliases) {
+    /**
+     * The constructor.
+     *
+     * @param theRoot         The root class.
+     * @param propertyAliases The aliases.
+     */
+    public YamlJavaBeanPropertyConstructor(final Class<?> theRoot, final Map<Class<?>, Map<String, String>> propertyAliases) {
         this(theRoot);
         for (var keyValue : propertyAliases.entrySet()) {
             final Map<String, String> map = keyValue.getValue();
@@ -49,11 +59,7 @@ public class YamlJavaBeanPropertyConstructor extends Constructor {
      * @param name  the property name
      */
     protected final void addPropertyAlias(final String alias, final Class<?> type, final String name) {
-        Map<String, Property> typeMap = this.properties.get(type);
-        if (typeMap == null) {
-            typeMap = new HashMap<String, Property>();
-            this.properties.put(type, typeMap);
-        }
+        final Map<String, Property> typeMap = this.properties.computeIfAbsent(type, k -> new HashMap<>());
         typeMap.put(alias, this.propertyUtils.getProperty(type, name));
     }
 
@@ -64,8 +70,7 @@ public class YamlJavaBeanPropertyConstructor extends Constructor {
 
         @Override
         protected Property getProperty(final Class<?> type, final String name) {
-            final Map<String, Property> forType = YamlJavaBeanPropertyConstructor.this.properties
-                    .get(type);
+            final Map<String, Property> forType = YamlJavaBeanPropertyConstructor.this.properties.get(type);
             final Property property = forType == null ? null : forType.get(name);
             return property == null ? super.getProperty(type, name) : property;
         }

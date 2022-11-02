@@ -30,11 +30,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ResourceSqlQueryResolver}.
@@ -79,9 +79,9 @@ public class ResourceSqlQueryResolverTests {
     }
 
     @Test
-    public void testNonExistentFile() throws Exception {
+    public void testNonExistentFile() {
         String query = queryResolver.resolveSqlQuery(sqlFileName + "idontexist");
-        assertThat(query, isEmptyOrNullString());
+        assertThat(query, is(emptyOrNullString()));
     }
 
     @Test
@@ -146,12 +146,12 @@ public class ResourceSqlQueryResolverTests {
 
     /*
      * Subclass ResourceSqlQueryResolver to make doRefreshQueryHolder
-     * wait a while so we can test if contention between threads is
+     * wait a while, so we can test if contention between threads is
      * handled correctly.
      */
-    private class LongUpdatingQueryResolver extends ResourceSqlQueryResolver {
+    private static class LongUpdatingQueryResolver extends ResourceSqlQueryResolver {
 
-        private int waitMillis;
+        private final int waitMillis;
 
         private LongUpdatingQueryResolver(int waitMillis) {
             super(new FileSystemResourceLoader());

@@ -34,7 +34,7 @@ public interface TaskListener extends Ordered {
      *
      * @param sharedTaskContext the shared task context.
      */
-    default void setSharedTaskContext(SharedTaskContext sharedTaskContext) {
+    default void setSharedTaskContext(final SharedTaskContext sharedTaskContext) {
         // Default empty implementation.
     }
 

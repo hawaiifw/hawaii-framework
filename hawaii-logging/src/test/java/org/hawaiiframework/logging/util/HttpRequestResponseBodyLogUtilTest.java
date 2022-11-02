@@ -25,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.web.DelegatingServletInputStream;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

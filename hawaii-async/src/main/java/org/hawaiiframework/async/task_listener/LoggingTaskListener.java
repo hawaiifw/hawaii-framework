@@ -52,6 +52,7 @@ public class LoggingTaskListener implements TaskListener {
         this.sharedTaskContext = sharedTaskContext;
     }
 
+    @SuppressWarnings("try")
     @Override
     public void startExecution() {
         try (AutoCloseableKibanaLogField callStart = KibanaLogFields.tagCloseable(LOG_TYPE, CALL_START)) {
@@ -59,6 +60,7 @@ public class LoggingTaskListener implements TaskListener {
         }
     }
 
+    @SuppressWarnings("try")
     @Override
     public void finish() {
         final TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();

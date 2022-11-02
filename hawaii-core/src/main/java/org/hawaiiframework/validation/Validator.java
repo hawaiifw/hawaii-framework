@@ -40,7 +40,7 @@ public interface Validator<T> {
      * @param object the object to validate
      * @return the validation result
      */
-    default ValidationResult validate(T object) {
+    default ValidationResult validate(final T object) {
         final ValidationResult validationResult = new ValidationResult();
         validate(object, validationResult);
         return validationResult;
@@ -60,7 +60,7 @@ public interface Validator<T> {
      * @param object the object to validate
      * @throws ValidationException if the validation fails
      */
-    default void validateAndThrow(T object) throws ValidationException {
+    default void validateAndThrow(final T object) throws ValidationException {
         final ValidationResult validationResult = new ValidationResult();
         validateAndThrow(object, validationResult);
     }
@@ -72,7 +72,7 @@ public interface Validator<T> {
      * @param validationResult the contextual state about the validation process
      * @throws ValidationException if the validation fails
      */
-    default void validateAndThrow(T object, ValidationResult validationResult)
+    default void validateAndThrow(final T object, final ValidationResult validationResult)
             throws ValidationException {
         validate(object, validationResult);
         if (validationResult.hasErrors()) {
@@ -86,7 +86,7 @@ public interface Validator<T> {
      * @param object the object to validate
      * @return {@code true} if the validation of the supplied object succeeds
      */
-    default boolean isValid(T object) {
+    default boolean isValid(final T object) {
         return !validate(object).hasErrors();
     }
 }

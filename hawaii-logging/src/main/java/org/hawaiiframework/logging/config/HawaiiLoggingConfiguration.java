@@ -24,7 +24,7 @@ import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
 import org.hawaiiframework.logging.util.PasswordMaskerUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -40,22 +40,31 @@ import org.springframework.context.annotation.Import;
  * @since 2.0.0
  */
 @Configuration
-@EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
+//@EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
 @Import({
-        CxfLoggingConfiguration.class,
-        DataSourceProxyConfiguration.class,
-        HawaiiLoggingFilterConfiguration.class,
-        ScheduledConfiguration.class,
-        StatementLoggerQueryExecutionListenerConfiguration.class
+    CxfLoggingConfiguration.class,
+    DataSourceProxyConfiguration.class,
+    HawaiiLoggingFilterConfiguration.class,
+    ScheduledConfiguration.class,
+    StatementLoggerQueryExecutionListenerConfiguration.class
 })
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public class HawaiiLoggingConfiguration {
+
+    @Bean
+    @RefreshScope
+    public HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties() {
+        return new HawaiiLoggingConfigurationProperties();
+    }
 
     /**
      * Create a {@link PasswordMaskerUtil} bean.
      *
+     * @param properties the configuration properties.
      * @return the bean.
      */
     @Bean
+    @RefreshScope
     public PasswordMaskerUtil passwordMaskerUtil(final HawaiiLoggingConfigurationProperties properties) {
         return new PasswordMaskerUtil(properties.getFieldsToMask());
     }
@@ -63,9 +72,11 @@ public class HawaiiLoggingConfiguration {
     /**
      * Create a {@link HttpRequestResponseHeadersLogUtil} bean.
      *
+     * @param passwordMasker the password masker.
      * @return the bean.
      */
     @Bean
+    @RefreshScope
     public HttpRequestResponseHeadersLogUtil httpRequestResponseHeadersLogUtil(final PasswordMaskerUtil passwordMasker) {
         return new HttpRequestResponseHeadersLogUtil(passwordMasker);
     }
@@ -73,9 +84,11 @@ public class HawaiiLoggingConfiguration {
     /**
      * Create a {@link HttpRequestResponseBodyLogUtil} bean.
      *
+     * @param passwordMasker the password masker.
      * @return the bean.
      */
     @Bean
+    @RefreshScope
     public HttpRequestResponseBodyLogUtil httpRequestResponseLogBodyUtil(final PasswordMaskerUtil passwordMasker) {
         return new HttpRequestResponseBodyLogUtil(passwordMasker);
     }
@@ -93,22 +106,72 @@ public class HawaiiLoggingConfiguration {
     /**
      * Create a {@link LoggingClientHttpRequestInterceptor} bean.
      *
+     * @param hawaiiRequestResponseLogger The response logger.
      * @return the bean.
      */
     @Bean
+    @RefreshScope
     public LoggingClientHttpRequestInterceptor loggingClientHttpRequestInterceptor(
             final HawaiiRequestResponseLogger hawaiiRequestResponseLogger) {
         return new LoggingClientHttpRequestInterceptor(hawaiiRequestResponseLogger);
     }
 
+    /**
+     * Create a {@link HawaiiRequestResponseLogger} bean.
+     *
+     * @param headersLogUtil util for logging headers.
+     * @param bodyLogUtil    util for logging request/response bodies.
+     * @param debugLogUtil   util for extra debug log formatting.
+     * @param mediaTypeVoter a Media Type voter.
+     * @return a {@link HawaiiRequestResponseLogger} bean.
+     */
     @Bean
+    @RefreshScope
     @ConditionalOnMissingBean(HawaiiRequestResponseLogger.class)
-    public HawaiiRequestResponseLogger hawaiiLogger(
+    public HawaiiRequestResponseLogger hawaiiRequestResponseLogger(
             final HttpRequestResponseHeadersLogUtil headersLogUtil,
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
-            final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+            final MediaTypeVoter mediaTypeVoter) {
         return new DefaultHawaiiRequestResponseLogger(headersLogUtil, bodyLogUtil, debugLogUtil,
-                hawaiiLoggingConfigurationProperties);
+                mediaTypeVoter);
+    }
+
+    /**
+     * Create a Media Type voter.
+     *
+     * @param hawaiiLoggingConfigurationProperties The configuration properties.
+     * @return The bean.
+     */
+    @Bean
+    @RefreshScope
+    public MediaTypeVoter mediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties);
+    }
+
+    /**
+     * Create a path voter.
+     *
+     * @param hawaiiLoggingConfigurationProperties The configuration properties.
+     * @return The bean.
+     */
+    @Bean
+    @RefreshScope
+    public PathVoter pathVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new PathVoter(hawaiiLoggingConfigurationProperties);
+    }
+
+
+    /**
+     * Create a filter voter parameter.
+     *
+     * @param mediaTypeVoter The media type voter.
+     * @param pathVoter      The path voter.
+     * @return The bean.
+     */
+    @Bean
+    @RefreshScope
+    public FilterVoter filterVoter(final MediaTypeVoter mediaTypeVoter, final PathVoter pathVoter) {
+        return new FilterVoter(mediaTypeVoter, pathVoter);
     }
 }

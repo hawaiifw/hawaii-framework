@@ -16,11 +16,19 @@
 
 package org.hawaiiframework.exception;
 
+import java.io.Serial;
+
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 public class HawaiiException extends RuntimeException {
+
+    /**
+     * The serial verion UUID..
+     */
+    @Serial
+    private static final long serialVersionUID = 6463686875194124117L;
 
     /**
      * Constructs a new {@code HawaiiException}.

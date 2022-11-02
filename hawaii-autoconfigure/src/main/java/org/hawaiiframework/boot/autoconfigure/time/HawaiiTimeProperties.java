@@ -28,20 +28,40 @@ public class HawaiiTimeProperties {
 
     private boolean enabled = true;
 
-    private String timezone;
+    private String timezone = "UTC";
 
+    /**
+     * Whether hawaii time is enabled.
+     *
+     * @return whether the time is enabled.
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Whether hawaii time is enabled.
+     *
+     * @param enabled The flag to set.
+     */
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Retrieve the time zone.
+     *
+     * @return the time zone.
+     */
     public String getTimezone() {
         return timezone;
     }
 
+    /**
+     * Set the time zone.
+     *
+     * @param timezone The time zone to set.
+     */
     public void setTimezone(final String timezone) {
         this.timezone = timezone;
     }

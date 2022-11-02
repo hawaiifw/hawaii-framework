@@ -19,6 +19,10 @@ package org.hawaiiframework.cache.redis.config;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
+import java.time.Duration;
+
+import static java.time.temporal.ChronoUnit.MILLIS;
+
 /**
  * Configuration properties for an Apache Commons Generic Pool used by the redis configuration.
  *
@@ -180,17 +184,17 @@ public class RedisPoolConfigurationProperties {
      *
      * @param genericConfig the configuration to register with the settings from this instance.
      */
-    public void applyTo(final GenericObjectPoolConfig genericConfig) {
+    public void applyTo(final GenericObjectPoolConfig<?> genericConfig) {
         genericConfig.setBlockWhenExhausted(getBlockWhenExhausted());
         genericConfig.setMaxIdle(getMaxIdle());
         genericConfig.setMaxTotal(getMaxTotal());
         genericConfig.setMinIdle(getMinIdle());
-        genericConfig.setMaxWaitMillis(getMaxWaitMillis());
+        genericConfig.setMaxWait(Duration.of(getMaxWaitMillis(), MILLIS));
         genericConfig.setTestOnBorrow(getTestOnBorrow());
         genericConfig.setTestOnReturn(getTestOnReturn());
         genericConfig.setTestWhileIdle(getTestWhenIdle());
-        genericConfig.setTimeBetweenEvictionRunsMillis(getTimeBetweenEvictionRunsMillis());
+        genericConfig.setTimeBetweenEvictionRuns(Duration.of(getTimeBetweenEvictionRunsMillis(), MILLIS));
         genericConfig.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
-        genericConfig.setMinEvictableIdleTimeMillis(getMinEvictableIdleTimeMillis());
+        genericConfig.setMinEvictableIdleTime(Duration.of(getMinEvictableIdleTimeMillis(), MILLIS));
     }
 }

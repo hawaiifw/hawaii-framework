@@ -60,6 +60,9 @@ public class PasswordMaskerUtil {
 
     /**
      * Mask the password with {@code ***} in the {@code input}.
+     *
+     * @param input the input to mask passwords in.
+     * @return The masked result.
      */
     public String maskPasswordsIn(final String input) {
         String masked = input;

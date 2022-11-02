@@ -2,13 +2,11 @@ package org.hawaiiframework.async.task_listener;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 /**
  * Configuration for listeners.
  */
 @Configuration
-@Import(OpenTracingAsyncTaskListenerFactoryConfiguration.class)
 public class TaskListenerFactoryConfiguration {
 
     /**

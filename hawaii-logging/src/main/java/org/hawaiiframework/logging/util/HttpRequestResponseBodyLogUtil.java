@@ -20,7 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -102,6 +103,7 @@ public class HttpRequestResponseBodyLogUtil {
      *
      * @param response The http response.
      * @return The body.
+     * @throws IOException in case something went wrong getting the payload from the response.
      */
     public String getCallResponseBody(final ClientHttpResponse response) throws IOException {
         final StringBuilder inputStringBuilder = new StringBuilder();
