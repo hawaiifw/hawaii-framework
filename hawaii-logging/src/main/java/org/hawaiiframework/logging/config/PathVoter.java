@@ -45,7 +45,7 @@ public class PathVoter {
      */
     public PathVoter(final HawaiiLoggingConfigurationProperties properties) {
         excludedPaths = properties.getExcludePaths();
-        LOGGER.info("Created. Excluded paths '{}'.", excludedPaths);
+        LOGGER.info("Excluded paths '{}'.", excludedPaths);
     }
 
     /**

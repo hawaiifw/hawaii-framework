@@ -19,8 +19,9 @@ import org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConf
 import org.hawaiiframework.logging.config.filter.ClientIpLogFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.MicrometerTracingResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.OidcLogFilterConfiguration;
-import org.hawaiiframework.logging.config.filter.OpenTelemetryResponseFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.OpenTelemetryTraceIdResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfiguration;
@@ -39,9 +40,10 @@ import org.springframework.context.annotation.Import;
     BusinessTransactionIdFilterConfiguration.class,
     ClientIpLogFilterConfiguration.class,
     ContainerNameHttpHeaderFilterConfiguration.class,
+    MicrometerTracingResponseFilterConfiguration.class,
     KibanaLogCleanupFilterConfiguration.class,
     OidcLogFilterConfiguration.class,
-    OpenTelemetryResponseFilterConfiguration.class,
+    OpenTelemetryTraceIdResponseFilterConfiguration.class,
     RequestDurationFilterConfiguration.class,
     RequestIdFilterConfiguration.class,
     RequestResponseLogFilterConfiguration.class,

@@ -17,7 +17,7 @@
 package org.hawaiiframework.logging.config.filter;
 
 import io.opentelemetry.api.trace.Tracer;
-import org.hawaiiframework.logging.opentelemetry.OpenTelemetryResponseFilter;
+import org.hawaiiframework.logging.opentelemetry.OpenTelemetryTraceIdResponseFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.OpenTelemetryResponseFilterConfiguration.CONFIG_PREFIX;
+import static org.hawaiiframework.logging.config.filter.OpenTelemetryTraceIdResponseFilterConfiguration.CONFIG_PREFIX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -36,14 +36,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Configuration
 @ConditionalOnClass(Tracer.class)
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-public class OpenTelemetryResponseFilterConfiguration {
+public class OpenTelemetryTraceIdResponseFilterConfiguration {
 
     /**
      * The configuration properties' prefix.
      */
-    public static final String CONFIG_PREFIX = "hawaii.logging.open-telemetry-response";
+    public static final String CONFIG_PREFIX = "hawaii.logging.open-telemetry-tracing-response";
 
-    private static final Logger LOGGER = getLogger(OpenTelemetryResponseFilterConfiguration.class);
+    private static final Logger LOGGER = getLogger(OpenTelemetryTraceIdResponseFilterConfiguration.class);
 
     @Value("${" + CONFIG_PREFIX + ".http-header}")
     private String headerName;
@@ -52,27 +52,27 @@ public class OpenTelemetryResponseFilterConfiguration {
     private int filterOrder;
 
     /**
-     * Create the {@link OpenTelemetryResponseFilter} bean.
+     * Create the {@link OpenTelemetryTraceIdResponseFilter} bean.
      *
-     * @return the {@link OpenTelemetryResponseFilter} bean
+     * @return the {@link OpenTelemetryTraceIdResponseFilter} bean
      */
     @Bean
     @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public OpenTelemetryResponseFilter openTelemetryResponseFilter() {
+    public OpenTelemetryTraceIdResponseFilter openTelemetryTraceIdResponseFilter() {
         LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
-        return new OpenTelemetryResponseFilter(headerName);
+        return new OpenTelemetryTraceIdResponseFilter(headerName);
     }
 
     /**
-     * Register the {@link #openTelemetryResponseFilter()} bean.
+     * Register the {@link #openTelemetryTraceIdResponseFilter()} bean.
      *
      * @param openTelemetryResponseFilter the openTelemetryResponseFilter
-     * @return the {@link #openTelemetryResponseFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+     * @return the {@link #openTelemetryTraceIdResponseFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
     @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<OpenTelemetryResponseFilter> openTelemetryResponseFilterRegistration(
-            final OpenTelemetryResponseFilter openTelemetryResponseFilter) {
+    public FilterRegistrationBean<OpenTelemetryTraceIdResponseFilter> openTelemetryTraceIdResponseFilterFilterRegistrationBean(
+            final OpenTelemetryTraceIdResponseFilter openTelemetryResponseFilter) {
         return createFilterRegistrationBean(openTelemetryResponseFilter, filterOrder);
     }
 }

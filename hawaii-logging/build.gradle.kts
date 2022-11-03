@@ -8,10 +8,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
 
-    compileOnly("org.apache.cxf:cxf-rt-features-logging:${project.extra["apacheCxfVersion"]}")
-    compileOnly("org.aspectj:aspectjrt")
     compileOnly("ch.qos.logback:logback-core")
     compileOnly("ch.qos.logback:logback-classic")
+    compileOnly("io.micrometer:micrometer-tracing")
+    compileOnly("org.apache.cxf:cxf-rt-features-logging:${project.extra["apacheCxfVersion"]}")
+    compileOnly("org.aspectj:aspectjrt")
     compileOnly("org.springframework.cloud:spring-cloud-context:4.0.0-M5")
     compileOnly("org.springframework.security:spring-security-core")
     compileOnly("org.springframework:spring-webmvc")

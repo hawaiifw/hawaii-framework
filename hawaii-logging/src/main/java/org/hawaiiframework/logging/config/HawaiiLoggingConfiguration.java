@@ -51,6 +51,11 @@ import org.springframework.context.annotation.Import;
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public class HawaiiLoggingConfiguration {
 
+    /**
+     * Create a {@link HawaiiLoggingConfigurationProperties} bean.
+     *
+     * @return the bean.
+     */
     @Bean
     @RefreshScope
     public HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties() {

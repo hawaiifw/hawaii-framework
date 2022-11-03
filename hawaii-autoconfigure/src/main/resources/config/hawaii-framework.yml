@@ -53,7 +53,12 @@ hawaii:
         order: -1100
         http-header: X-Hawaii-Hostname
         hostname: ${HOSTNAME:localhost}
-      open-telemetry-response:
+      micrometer-tracing-response:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1000
+        http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:traceid}
+      open-telemetry-tracing-response:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
         order: -1000

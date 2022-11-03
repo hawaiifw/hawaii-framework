@@ -47,7 +47,7 @@ public class MediaTypeVoter {
      */
     public MediaTypeVoter(final HawaiiLoggingConfigurationProperties properties) {
         allowedContentTypes = properties.getAllowedContentTypes();
-        LOGGER.info("Created. Allowed content types: '{}'.", allowedContentTypes);
+        LOGGER.debug("Allowed content types: '{}'.", allowedContentTypes);
     }
 
     /**

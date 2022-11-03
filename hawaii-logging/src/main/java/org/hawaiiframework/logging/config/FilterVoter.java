@@ -52,8 +52,6 @@ public class FilterVoter {
     public FilterVoter(final MediaTypeVoter mediaTypeVoter, final PathVoter pathVoter) {
         this.mediaTypeVoter = mediaTypeVoter;
         this.pathVoter = pathVoter;
-
-        LOGGER.info("Created...");
     }
 
     /**

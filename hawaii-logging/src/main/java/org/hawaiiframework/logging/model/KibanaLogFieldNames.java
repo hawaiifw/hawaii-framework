@@ -189,7 +189,7 @@ public enum KibanaLogFieldNames implements KibanaLogField {
      */
     LEVEL("level"),
     /**
-     * The timesstamp.
+     * The timestamp.
      */
     TIMESTAMP("timestamp"),
     /**

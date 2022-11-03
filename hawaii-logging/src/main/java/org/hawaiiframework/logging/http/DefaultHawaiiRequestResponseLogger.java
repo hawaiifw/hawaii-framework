@@ -109,8 +109,6 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         this.headersLogUtil = headersLogUtil;
         this.debugLogUtil = debugLogUtil;
         this.mediaTypeVoter = mediaTypeVoter;
-
-        LOGGER.info("Created...");
     }
 
     /**
