@@ -32,7 +32,7 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that logs the duration of the request.
@@ -72,13 +72,13 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             request.setAttribute(START_TIMESTAMP, System.nanoTime());
         }
         try {
             filterChain.doFilter(request, response);
         } finally {
-            if (filterVoter.enabled(request) && !isInternalRedirect(request)) {
+            if (filterVoter.enabled(request) && isOriginalRequest(request)) {
                 logEnd((Long) request.getAttribute(START_TIMESTAMP));
             }
         }

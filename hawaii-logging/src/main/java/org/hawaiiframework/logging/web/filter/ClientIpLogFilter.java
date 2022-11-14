@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that sets some Kibana Log Fields.
@@ -70,7 +70,7 @@ public class ClientIpLogFilter extends AbstractGenericFilterBean {
     }
 
     private void setDefaultLogFields(final HttpServletRequest request) {
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             final String clientIp = clientIpResolver.getClientIp(request);
             KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
             LOGGER.debug("Client ip is '{}'.", clientIp);

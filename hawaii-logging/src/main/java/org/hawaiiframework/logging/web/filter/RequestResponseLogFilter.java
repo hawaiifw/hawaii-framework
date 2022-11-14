@@ -26,8 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsAsyncHandling;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsAsyncHandling;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsInternalRedirect;
 
 /**
@@ -78,32 +80,57 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
             final HttpServletResponse httpServletResponse,
             final FilterChain filterChain) throws ServletException, IOException {
         LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.", httpServletRequest.getDispatcherType(),
-                isInternalRedirect(httpServletRequest));
+                isOriginalRequest(httpServletRequest));
 
         if (!filterVoter.enabled(httpServletRequest)) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } else {
 
-            // Create a new wrapped request, which we can use to get the body from.
-            final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(httpServletResponse);
-            final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
-
-            if (!isInternalRedirect(httpServletRequest)) {
-                hawaiiLogger.logRequest(wrappedRequest);
+            if (isOriginalRequest(httpServletRequest)) {
+                final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(httpServletResponse);
+                final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
+                doFilter(wrappedRequest, wrappedResponse, filterChain);
+            } else {
+                doFilter((ResettableHttpServletRequest) httpServletRequest,
+                        (ContentCachingWrappedResponse) httpServletResponse,
+                        filterChain);
             }
+        }
+    }
 
-            // Do filter
-            try {
-                filterChain.doFilter(wrappedRequest, wrappedResponse);
-            } finally {
-                if (wrappedResponse.isRedirect()) {
-                    markAsInternalRedirect(wrappedRequest);
-                } else {
-                    unmarkAsInternalRedirect(wrappedRequest);
-                    hawaiiLogger.logResponse(wrappedRequest, wrappedResponse);
-                    wrappedResponse.copyBodyToResponse();
-                }
+    private void doFilter(final ResettableHttpServletRequest wrappedRequest, final ContentCachingWrappedResponse wrappedResponse,
+            final FilterChain filterChain)
+            throws IOException, ServletException {
+        hawaiiLogger.logRequest(wrappedRequest);
+
+        // Do filter
+        try {
+            filterChain.doFilter(wrappedRequest, wrappedResponse);
+        } finally {
+            handleInternalRedirect(wrappedResponse, wrappedRequest);
+            handleAsyncRequest(wrappedRequest);
+
+            if (isOriginalRequest(wrappedRequest)) {
+                hawaiiLogger.logResponse(wrappedRequest, wrappedResponse);
+                wrappedResponse.copyBodyToResponse();
             }
+        }
+    }
+
+    private static void handleAsyncRequest(final ResettableHttpServletRequest httpServletRequest) {
+        if (httpServletRequest.isAsyncStarted()) {
+            markAsAsyncHandling(httpServletRequest);
+        } else {
+            unmarkAsAsyncHandling(httpServletRequest);
+        }
+    }
+
+    private static void handleInternalRedirect(final ContentCachingWrappedResponse wrappedResponse,
+            final ResettableHttpServletRequest wrappedRequest) {
+        if (wrappedResponse.isRedirect()) {
+            markAsInternalRedirect(wrappedRequest);
+        } else {
+            unmarkAsInternalRedirect(wrappedRequest);
         }
     }
 

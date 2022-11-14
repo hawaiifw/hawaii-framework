@@ -60,6 +60,8 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_HEADERS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_SIZE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_STATUS;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isLogged;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markLogged;
 
 /**
  * General logger.
@@ -116,6 +118,10 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
      */
     @Override
     public void logRequest(final ResettableHttpServletRequest wrappedRequest) throws IOException {
+        if (isLogged(wrappedRequest)) {
+            return;
+        }
+        markLogged(wrappedRequest);
         final String method = wrappedRequest.getMethod();
         final String requestUri = wrappedRequest.getRequestURI();
         final int contentLength = wrappedRequest.getContentLength();

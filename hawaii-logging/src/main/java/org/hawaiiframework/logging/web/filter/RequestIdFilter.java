@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_ID;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns each request a unique request id and output the request id to the response header.
@@ -63,7 +63,7 @@ public class RequestIdFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             final UUID uuid = UUID.randomUUID();
 
             RequestId.set(uuid);
@@ -78,7 +78,7 @@ public class RequestIdFilter extends AbstractGenericFilterBean {
             }
             filterChain.doFilter(request, response);
         } finally {
-            if (!isInternalRedirect(request)) {
+            if (isOriginalRequest(request)) {
                 RequestId.remove();
             }
         }

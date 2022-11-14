@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns the transaction's name (class and method name) to the Kibana logger for each request.
@@ -67,7 +67,7 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain filterChain) throws ServletException, IOException {
 
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             logRequest(request);
         }
 

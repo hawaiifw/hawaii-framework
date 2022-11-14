@@ -16,7 +16,7 @@
 package org.hawaiiframework.logging.web.filter;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.BUSINESS_TX_ID;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -65,7 +65,7 @@ public class BusinessTransactionIdFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             final UUID uuid = uuidResolver.resolve(request, headerName);
 
             BusinessTransactionId.set(uuid);
@@ -80,7 +80,7 @@ public class BusinessTransactionIdFilter extends AbstractGenericFilterBean {
             }
             filterChain.doFilter(request, response);
         } finally {
-            if (!isInternalRedirect(request)) {
+            if (isOriginalRequest(request)) {
                 BusinessTransactionId.remove();
             }
         }

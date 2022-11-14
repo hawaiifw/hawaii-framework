@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HOST_NAME;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * Filter class that will be added in the servlet filter chain to add a http response header to every response.
@@ -69,7 +69,7 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             KibanaLogFields.tag(HOST_NAME, hostname);
             LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
 
