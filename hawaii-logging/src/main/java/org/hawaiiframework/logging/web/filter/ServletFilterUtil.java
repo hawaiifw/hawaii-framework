@@ -90,10 +90,21 @@ public final class ServletFilterUtil {
         request.setAttribute(ASYNC_ATTRIBUTE, false);
     }
 
+    /**
+     * Mark the request as logged.
+     *
+     * @param request The request to mark as logged.
+     */
     public static void markLogged(final HttpServletRequest request) {
         request.setAttribute(REQUEST_IS_LOGGED_ATTRIBUTE, true);
     }
 
+    /**
+     * Has the request been logged (marked as such).
+     *
+     * @param request The request the check.
+     * @return {@code true} if the {@link #markLogged(HttpServletRequest)} has been called.
+     */
     public static boolean isLogged(final HttpServletRequest request) {
         return get(request, REQUEST_IS_LOGGED_ATTRIBUTE);
     }
