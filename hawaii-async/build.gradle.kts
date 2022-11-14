@@ -2,7 +2,6 @@ description = "Hawaii Async"
 
 dependencies {
     api(project(":hawaii-logging"))
-    implementation("jakarta.validation:jakarta.validation-api:${project.extra["validationApiVersion"]}")
     implementation("net.ttddyy:datasource-proxy:${project.extra["dataSourceProxyVersion"]}")
     implementation("org.springframework:spring-core")
     implementation("org.springframework:spring-context")

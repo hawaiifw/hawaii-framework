@@ -1,10 +1,10 @@
 package org.hawaiiframework.async;
 
-import jakarta.validation.constraints.NotNull;
 import org.hawaiiframework.async.exception.HawaiiTaskExecutionException;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public final class AsyncUtil {
      * @param <T>    The type to return
      * @return the result value
      */
-    public static <T> T get(@NotNull final CompletableFuture<T> future) {
+    public static <T> T get(@NonNull final CompletableFuture<T> future) {
         requireNonNull(future);
         try {
             return future.get();
@@ -61,8 +61,8 @@ public final class AsyncUtil {
      * @param <T>     The type to return
      * @return the result value
      */
-    public static <T> T get(@NotNull final CompletableFuture<T> future, @NotNull final Long timeout,
-            @NotNull final TimeUnit unit) {
+    public static <T> T get(@NonNull final CompletableFuture<T> future, @NonNull final Long timeout,
+            @NonNull final TimeUnit unit) {
         requireNonNull(future);
         requireNonNull(timeout);
         requireNonNull(unit);
@@ -81,7 +81,7 @@ public final class AsyncUtil {
      * @param <T>           The type to return
      * @return the result value, if completed, else the given valueIfAbsent
      */
-    public static <T> T getNow(@NotNull final CompletableFuture<T> future, final T valueIfAbsent) {
+    public static <T> T getNow(@NonNull final CompletableFuture<T> future, final T valueIfAbsent) {
         requireNonNull(future);
         return future.getNow(valueIfAbsent);
     }

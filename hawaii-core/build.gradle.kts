@@ -20,10 +20,9 @@ dependencies {
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure")
     compileOnly("org.hibernate:hibernate-validator:${project.extra["hibernatorValidatorVersion"]}")
-    compileOnly("jakarta.validation:jakarta.validation-api:${project.extra["validationApiVersion"]}")
     compileOnly("net.ttddyy:datasource-proxy:${project.extra["dataSourceProxyVersion"]}")
 
-    testImplementation("javax.servlet:javax.servlet-api")
+    testImplementation("jakarta.servlet:jakarta.servlet-api")
     testImplementation("org.springframework:spring-core")
     testImplementation("org.springframework:spring-web")
     testImplementation("org.springframework:spring-webmvc")

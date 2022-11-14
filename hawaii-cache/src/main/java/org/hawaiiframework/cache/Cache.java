@@ -15,7 +15,7 @@
  */
 package org.hawaiiframework.cache;
 
-import jakarta.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -48,7 +48,7 @@ public interface Cache<T> {
      * @param key   The (not null) key to store the object under.
      * @param value The (not null) object to store.
      */
-    void put(@NotNull String key, @NotNull T value);
+    void put(@NonNull String key, @NonNull T value);
 
     /**
      * Put the object in the cache with the given <code>key</code> for the
@@ -60,7 +60,7 @@ public interface Cache<T> {
      * @param value    The (not null) object to store.
      * @param duration The (not null) duration to store the object for.
      */
-    void put(@NotNull String key, @NotNull T value, @NotNull Duration duration);
+    void put(@NonNull String key, @NonNull T value, @NonNull Duration duration);
 
     /**
      * Put the object in the cache with the given <code>key</code> for until
@@ -72,7 +72,7 @@ public interface Cache<T> {
      * @param value     The (not null) object to store.
      * @param expiresAt The (not null) expiry time.
      */
-    void put(@NotNull String key, @NotNull T value, @NotNull LocalDateTime expiresAt);
+    void put(@NonNull String key, @NonNull T value, @NonNull LocalDateTime expiresAt);
 
     /**
      * Put the object in the cache with the given <code>key</code> for until
@@ -84,7 +84,7 @@ public interface Cache<T> {
      * @param value     The (not null) object to store.
      * @param expiresAt The (not null) expiry time.
      */
-    void put(@NotNull String key, @NotNull T value, @NotNull ZonedDateTime expiresAt);
+    void put(@NonNull String key, @NonNull T value, @NonNull ZonedDateTime expiresAt);
 
     /**
      * Put the object in the cache with the given <code>key</code> for ever.
@@ -99,7 +99,7 @@ public interface Cache<T> {
      * @param key   The (not null) key to store the object under.
      * @param value The (not null) object to store.
      */
-    default void putEternally(@NotNull final String key, @NotNull final T value) {
+    default void putEternally(@NonNull final String key, @NonNull final T value) {
         put(key, value, Duration.ofMillis(Long.MAX_VALUE));
     }
 
@@ -109,7 +109,7 @@ public interface Cache<T> {
      * @param key The (never null) key to retrieve the value with.
      * @return The value, or <code>null</code> if the object is not found.
      */
-    T get(@NotNull String key);
+    T get(@NonNull String key);
 
     /**
      * Retrieve an optional for the object stored under the <code>key</code>.
@@ -117,7 +117,7 @@ public interface Cache<T> {
      * @param key The (never null) key to retrieve the value with.
      * @return The <code>Optional</code> for the value.
      */
-    default Optional<T> optional(@NotNull final String key) {
+    default Optional<T> optional(@NonNull final String key) {
         return Optional.ofNullable(get(key));
     }
 
@@ -126,6 +126,6 @@ public interface Cache<T> {
      *
      * @param key The key to remove.
      */
-    void remove(@NotNull String key);
+    void remove(@NonNull String key);
 
 }

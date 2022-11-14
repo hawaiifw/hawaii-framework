@@ -17,8 +17,7 @@
 package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.timeout.SharedTaskContext;
-
-import jakarta.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,7 +41,7 @@ public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
      * @param delegate          the delegate to run.
      * @param sharedTaskContext the abort strategy to set.
      */
-    public AbortableTaskRunnable(@NotNull final Runnable delegate, @NotNull final SharedTaskContext sharedTaskContext) {
+    public AbortableTaskRunnable(@NonNull final Runnable delegate, @NonNull final SharedTaskContext sharedTaskContext) {
         super(requireNonNull(sharedTaskContext));
         this.delegate = requireNonNull(delegate);
     }

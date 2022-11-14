@@ -21,8 +21,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-
-import jakarta.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,7 +45,7 @@ public class HawaiiHttpComponentsClientHttpRequestFactory extends HttpComponents
      * @param request The request to register.
      */
     @Override
-    protected void postProcessHttpRequest(@NotNull final ClassicHttpRequest request) {
+    protected void postProcessHttpRequest(@NonNull final ClassicHttpRequest request) {
         requireNonNull(request);
         if (request instanceof HttpUriRequest httpUriRequest) {
             super.postProcessHttpRequest(request);
