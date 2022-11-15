@@ -64,7 +64,7 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
         }
         final QueryInfo queryInfo = queryInfoList.get(0);
         final StringBuilder builder = new StringBuilder(128);
-        builder.append("Executing query:").append(LINE_SEPARATOR).append(queryInfo.getQuery());
+        builder.append(queryInfo.getQuery());
 
         boolean parameterHeaderAppended = false;
         for (final List<ParameterSetOperation> parameterSetOperations : queryInfo.getParametersList()) {
@@ -88,7 +88,7 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
             value = value.substring(0, value.length() - 1 - LINE_SEPARATOR.length());
         }
         KibanaLogFields.tag(CALL_REQUEST_BODY, value);
-        LOGGER.info(indent(value));
+        LOGGER.info("Executing query: {}{}", LINE_SEPARATOR, indent(value));
         KibanaLogFields.clear(CALL_REQUEST_BODY);
     }
 
