@@ -16,8 +16,8 @@
 
 package org.hawaiiframework.async.http;
 
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;

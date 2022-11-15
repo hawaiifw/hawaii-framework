@@ -6,6 +6,8 @@ dependencies {
     implementation("org.springframework:spring-web")
     implementation("org.springframework.boot:spring-boot")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("org.apache.commons:commons-lang3")
+    implementation("commons-io:commons-io:${project.extra["commonsIoVersion"]}")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
     compileOnly("ch.qos.logback:logback-core")

@@ -5,6 +5,7 @@ dependencies {
     api("org.hamcrest:hamcrest:${project.extra["hamcrestVersion"]}")
     api("org.bouncycastle:bcprov-jdk15on:${project.extra["bouncycastleVersion"]}")
     implementation("commons-codec:commons-codec")
+    implementation("org.apache.commons:commons-lang3")
 
     compileOnly("com.fasterxml.jackson.core:jackson-databind")
     compileOnly("com.fasterxml.jackson.datatype:jackson-datatype-json-org")

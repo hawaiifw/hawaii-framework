@@ -16,7 +16,7 @@
 
 package org.hawaiiframework.async.http;
 
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

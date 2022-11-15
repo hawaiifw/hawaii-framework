@@ -42,6 +42,7 @@ subprojects {
         extra.set("dataSourceProxyVersion", "1.8")
         extra.set("hamcrestVersion", "2.2")
         extra.set("hibernatorValidatorVersion", "8.0.0.Final")
+        extra.set("httpcomponentsClient5Version", "5.1.3")
         extra.set("jasyptVersion", "1.9.3")
         extra.set("orgJsonVersion", "20220924")
         extra.set("nimbusJoseJwtVersion", "9.25.6")
@@ -87,7 +88,6 @@ subprojects {
     }
 
     dependencyManagement {
-//        val springBootVersion = "3.0.0-M5"
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:${project.extra["springBootVersion"]}")
         }
@@ -98,13 +98,7 @@ subprojects {
     }
 
     dependencies {
-        // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
-        implementation("org.apache.httpcomponents.client5:httpclient5:5.1.3")
-        implementation("commons-io:commons-io:${project.extra["commonsIoVersion"]}")
-        implementation("org.apache.commons:commons-lang3")
-        implementation("org.slf4j:jcl-over-slf4j")
-        implementation("org.slf4j:slf4j-api")
-        implementation("org.json:json:${project.extra["orgJsonVersion"]}")
+        compileOnly("org.slf4j:slf4j-api")
 
         testImplementation("junit:junit")
         testImplementation("org.mockito:mockito-core")

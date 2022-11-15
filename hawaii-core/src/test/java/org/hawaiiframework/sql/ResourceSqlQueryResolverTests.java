@@ -15,14 +15,15 @@
  */
 package org.hawaiiframework.sql;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResourceLoader;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -46,18 +47,23 @@ public class ResourceSqlQueryResolverTests {
 
     private ResourceSqlQueryResolver queryResolver;
     private String sqlFileName;
-    private File sqlFile;
+    private Path sqlFile;
     private String prefix;
     private String suffix;
-
+    private String query1 = "QUERY1";
+    private String query2 = "QUERY2";
     @Before
     public void setup() throws Exception {
         queryResolver = new ResourceSqlQueryResolver(new FileSystemResourceLoader());
+
         suffix = ".sql";
-        sqlFile = File.createTempFile("junit-test", suffix);
+        sqlFile = Files.createTempFile("junit-test", suffix);
+
         // We're using a path outside the VM working dir, so prefix starts with file://
         prefix = "file:" + sqlFile.getParent() + '/';
-        sqlFileName = FilenameUtils.getBaseName(sqlFile.getName());
+
+        sqlFileName = sqlFile.getFileName().toString();
+        sqlFileName = sqlFileName.substring(0, sqlFileName.length() - suffix.length());
 
         queryResolver.setPrefix(prefix);
         queryResolver.setSuffix(suffix);
@@ -67,15 +73,19 @@ public class ResourceSqlQueryResolverTests {
     }
 
     @After
-    public void tearDown() {
-        sqlFile.delete();
+    public void tearDown() throws IOException {
+        Files.delete(sqlFile);
+    }
+
+    private void writeStringToFile(final String contents) throws IOException {
+        Files.writeString(sqlFile, contents);
     }
 
     @Test
     public void testFileIsReadOk() throws Exception {
-        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
+        writeStringToFile(query1);
         String query = queryResolver.resolveSqlQuery(sqlFileName);
-        assertThat(query, is(equalTo("QUERY1")));
+        assertThat(query, is(equalTo(query1)));
     }
 
     @Test
@@ -87,25 +97,26 @@ public class ResourceSqlQueryResolverTests {
     @Test
     public void testOldContentsAreReturnedWithinCacheTime() throws Exception {
         queryResolver.setCacheSeconds(20);
-        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
+
+        writeStringToFile(query1);
         String query = queryResolver.resolveSqlQuery(sqlFileName);
-        assertThat(query, is(equalTo("QUERY1")));
-        FileUtils.writeStringToFile(sqlFile, "QUERY2", "UTF-8");
+        assertThat(query, is(equalTo(query1)));
+        writeStringToFile(query2);
         query = queryResolver.resolveSqlQuery(sqlFileName);
-        assertThat(query, is(equalTo("QUERY1")));
+        assertThat(query, is(equalTo(query1)));
     }
 
     @Test
     public void testNewContentsAreReturnedAfterCacheTime() throws Exception {
         queryResolver.setCacheSeconds(1);
-        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
+        writeStringToFile(query1);
         String query = queryResolver.resolveSqlQuery(sqlFileName);
-        assertThat(query, is(equalTo("QUERY1")));
+        assertThat(query, is(equalTo(query1)));
         // make sure the file timestamp will be at least a second higher
         TimeUnit.SECONDS.sleep(1);
-        FileUtils.writeStringToFile(sqlFile, "QUERY2", "UTF-8");
+        writeStringToFile(query2);
         query = queryResolver.resolveSqlQuery(sqlFileName);
-        assertThat(query, is(equalTo("QUERY2")));
+        assertThat(query, is(equalTo(query2)));
     }
 
     @Test
@@ -118,19 +129,19 @@ public class ResourceSqlQueryResolverTests {
         queryResolver.setCacheSeconds(0);
 
         // Setup initial query
-        FileUtils.writeStringToFile(sqlFile, "QUERY1", "UTF-8");
+        writeStringToFile(query1);
         assertThat(queryResolver.resolveSqlQuery(sqlFileName), is(equalTo("QUERY1")));
 
         // make sure the file timestamp will be at least a second higher
         TimeUnit.SECONDS.sleep(1);
-        FileUtils.writeStringToFile(sqlFile, "QUERY2", "UTF-8");
+        writeStringToFile(query2);
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
         Callable<String> queryReader = () -> queryResolver.resolveSqlQuery(sqlFileName);
 
-        Future<String> query1 = executor.submit(queryReader);
-        Future<String> query2 = executor.submit(queryReader);
+        Future<String> future1 = executor.submit(queryReader);
+        Future<String> future2 = executor.submit(queryReader);
 
         /*
          * We don't know which thread will have returned the
@@ -138,9 +149,9 @@ public class ResourceSqlQueryResolverTests {
          * so just sort the result array and match it to the
          * array of expected values.
          */
-        String[] returnedQueries = {query1.get(), query2.get()};
+        String[] returnedQueries = {future1.get(), future2.get()};
         Arrays.sort(returnedQueries);
-        String[] expectedQueries = {"QUERY1", "QUERY2"};
+        String[] expectedQueries = {query1, query2};
         assertArrayEquals(expectedQueries, returnedQueries);
     }
 
