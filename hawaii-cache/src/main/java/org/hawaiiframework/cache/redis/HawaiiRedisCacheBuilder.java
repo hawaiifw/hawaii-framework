@@ -84,6 +84,7 @@ public class HawaiiRedisCacheBuilder {
      *
      * @param cacheConfiguration     The redis configuration
      * @param jedisConnectionFactory The Jedis connection factory
+     * @param hawaiiTime              The clock to use.
      */
     public HawaiiRedisCacheBuilder(final RedisConfigurationProperties cacheConfiguration,
             final JedisConnectionFactory jedisConnectionFactory, final HawaiiTime hawaiiTime) {

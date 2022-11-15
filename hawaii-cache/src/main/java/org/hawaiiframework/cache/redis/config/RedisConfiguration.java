@@ -65,6 +65,8 @@ public class RedisConfiguration {
     /**
      * Create a new {@link JedisConnectionFactory}.
      *
+     * @param sentinelConfiguration The redis sentinel configuration.
+     * @param poolConfig            The redis connection pool configuration.
      * @return a new {@link JedisConnectionFactory}.
      */
     @Bean
@@ -94,6 +96,7 @@ public class RedisConfiguration {
      * Creates a Jedis pool configuration.
      *
      * @return a Jedis pool config.
+     * @throws Exception in case of an error.
      */
     @Bean
     public JedisPoolConfig jedisPoolConfig() throws Exception {
@@ -103,6 +106,7 @@ public class RedisConfiguration {
     /**
      * Provides a {@link HawaiiRedisCacheBuilder}.
      *
+     * @param jedisConnectionFactory The jedis connection factory.
      * @return an instance of {@link HawaiiRedisCacheBuilder}
      */
     @Bean
