@@ -22,10 +22,11 @@ hawaii:
     # including binary files, so not a good idea.
     allowed-content-types:
       - application/json
-      - application/graphql+json,
+      - application/graphql+json
+      - application/hal+json
       - application/vnd.spring-boot.actuator.v1+json
       - application/vnd.spring-boot.actuator.v3+json
-      - application/vnd.spring-cloud.config-server.v2+json,
+      - application/vnd.spring-cloud.config-server.v2+json
       - multipart/form-data
       - text/plain
       - text/xml

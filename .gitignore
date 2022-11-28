@@ -19,3 +19,5 @@ tmp/
 
 # Ignore unencrypted key ring
 secring.gpg
+
+.tool-versions

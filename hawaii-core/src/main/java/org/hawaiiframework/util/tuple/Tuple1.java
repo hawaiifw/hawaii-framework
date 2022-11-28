@@ -16,7 +16,6 @@
 
 package org.hawaiiframework.util.tuple;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -27,9 +26,7 @@ import java.util.Objects;
  * @since 2.0.0
  */
 @SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
-public class Tuple1<T1> implements Tuple, Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Tuple1<T1> implements Tuple {
 
     private T1 element1;
 
