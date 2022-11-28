@@ -15,11 +15,16 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.springframework.http.MediaType;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM;
 
 /**
  * An extension of {@link ContentCachingResponseWrapper} that keeps track whether the response is a redirect.
@@ -29,10 +34,17 @@ import java.io.IOException;
  */
 public class ContentCachingWrappedResponse extends ContentCachingResponseWrapper {
 
+    private static final Logger LOGGER = getLogger(ContentCachingWrappedResponse.class);
+
     /**
      * Flag to indicate that the response is a redirect.
      */
     private boolean redirect;
+
+    /**
+     * Flag to indicate that the response is a stream.
+     */
+    private boolean streaming;
 
     /**
      * The constructor.
@@ -78,4 +90,26 @@ public class ContentCachingWrappedResponse extends ContentCachingResponseWrapper
     public boolean isRedirect() {
         return redirect;
     }
+
+    @Override
+    public void addHeader(final String name, final String value) {
+        super.addHeader(name, value);
+        if (isTextEventStreamHeader(name, value)) {
+            LOGGER.debug("Triggered streaming for this content-caching response.");
+            this.streaming = true;
+        }
+    }
+
+    private static boolean isTextEventStreamHeader(final String name, final String value) {
+        return CONTENT_TYPE.equals(name) && TEXT_EVENT_STREAM.equals(MediaType.valueOf(value));
+    }
+
+    @Override
+    public void flushBuffer() throws IOException {
+        if (streaming) {
+            copyBodyToResponse(false);
+            getResponse().flushBuffer();
+        }
+    }
+
 }
