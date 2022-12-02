@@ -26,6 +26,7 @@ public class HawaiiLoggingConfigurationProperties {
             parseMediaType("application/vnd.spring-boot.actuator.v1+json"),
             parseMediaType("application/vnd.spring-boot.actuator.v3+json"),
             parseMediaType("application/vnd.spring-cloud.config-server.v2+json"),
+            parseMediaType("application/x-www-form-urlencoded"),
             parseMediaType("multipart/form-data"),
             parseMediaType("text/plain"),
             parseMediaType("text/xml"));
@@ -34,7 +35,7 @@ public class HawaiiLoggingConfigurationProperties {
     private List<String> excludePaths = List.of("/actuator/*");
 
     // @Value("${" + CONFIG_PREFIX + ".fields-to-mask}")
-    private List<String> fieldsToMask = List.of("password", "keyPassphrase");
+    private List<String> fieldsToMask = List.of("password", "keyPassphrase", "client_secret", "secret");
 
     /**
      * Get the allowed content-types.

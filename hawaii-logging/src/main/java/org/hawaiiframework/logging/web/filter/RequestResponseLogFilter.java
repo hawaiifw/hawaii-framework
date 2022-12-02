@@ -90,10 +90,12 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
                 final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(httpServletResponse);
                 final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
                 doFilter(wrappedRequest, wrappedResponse, filterChain);
-            } else {
-                doFilter((ResettableHttpServletRequest) httpServletRequest,
+            } else if (httpServletRequest instanceof ResettableHttpServletRequest resettableHttpServletRequest) {
+                doFilter(resettableHttpServletRequest,
                         (ContentCachingWrappedResponse) httpServletResponse,
                         filterChain);
+            } else {
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
             }
         }
     }

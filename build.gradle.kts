@@ -72,7 +72,7 @@ subprojects {
 
         options.encoding = Charsets.UTF_8.name()
 
-        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Xlint:-processing", "-Werror"))
+        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Xlint:-processing", "-Werror", "-parameters"))
     }
 
     repositories {

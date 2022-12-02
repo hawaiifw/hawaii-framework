@@ -27,6 +27,7 @@ hawaii:
       - application/vnd.spring-boot.actuator.v1+json
       - application/vnd.spring-boot.actuator.v3+json
       - application/vnd.spring-cloud.config-server.v2+json
+      - application/x-www-form-urlencoded
       - multipart/form-data
       - text/plain
       - text/xml
