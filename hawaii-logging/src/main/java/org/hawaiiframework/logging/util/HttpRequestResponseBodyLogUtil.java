@@ -18,6 +18,7 @@ package org.hawaiiframework.logging.util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
+import org.slf4j.Logger;
 import org.springframework.http.client.ClientHttpResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpRetryException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Utility for logging requests / responses.
@@ -43,6 +46,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @since 2.0.0
  */
 public class HttpRequestResponseBodyLogUtil {
+
+    private static final Logger LOGGER = getLogger(HttpRequestResponseBodyLogUtil.class);
 
     /**
      * The configured newline to look for.
@@ -160,6 +165,11 @@ public class HttpRequestResponseBodyLogUtil {
                 inputStringBuilder.append(NEW_LINE);
                 line = bufferedReader.readLine();
             }
+        } catch (HttpRetryException httpRetryException) {
+            LOGGER.warn("Got retry exception.");
+            LOGGER.trace("Stacktrace is: ", httpRetryException);
+        } catch (IOException ex) {
+            LOGGER.warn("Could not get response body.", ex);
         }
 
         return inputStringBuilder.toString();
