@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -240,9 +241,10 @@ public final class AsyncUtil {
      * @param <T>      The return types.
      * @return A list of completable futures, or {@code null} if the input is null or empty.
      */
+    @SuppressWarnings("unchecked")
     public static <I, T> List<CompletableFuture<T>> asyncMap(final Collection<I> inputs, final Function<I, CompletableFuture<T>> function) {
         if (inputs == null || inputs.isEmpty()) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         return inputs.stream().map(function).collect(Collectors.toList());
     }

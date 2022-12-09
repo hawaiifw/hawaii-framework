@@ -40,7 +40,7 @@ public class OidcLogFilterConfiguration {
     /**
      * The configuration properties' prefix.
      */
-    public static final String CONFIG_PREFIX = "hawaii.logging.oidc";
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.oidc";
 
     private static final Logger LOGGER = getLogger(OidcLogFilterConfiguration.class);
 
