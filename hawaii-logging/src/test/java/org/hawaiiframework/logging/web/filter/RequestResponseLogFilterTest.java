@@ -39,6 +39,7 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hawaiiframework.logging.web.filter.RequestResponseLogFilter.WRAPPED_RESPONSE_ATTRIBUTE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -65,19 +66,19 @@ public class RequestResponseLogFilterTest {
 
         testLogAppender.start();
 
+        response = mock(ContentCachingWrappedResponse.class);
+        when(response.getStatus()).thenReturn(200);
+
         request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(A_REQUEST_URI);
         when(request.getQueryString()).thenReturn(A_QUERY_STRING);
         when(request.getContentType()).thenReturn(A_CONTENT_TYPE);
         when(request.getMethod()).thenReturn(A_METHOD);
-
-        response = mock(HttpServletResponse.class);
-        when(response.getStatus()).thenReturn(200);
+        when(request.getAttribute(WRAPPED_RESPONSE_ATTRIBUTE)).thenReturn(null, response);
 
         final HttpRequestResponseHeadersLogUtil headersLogUtil = mock(HttpRequestResponseHeadersLogUtil.class);
         final HttpRequestResponseBodyLogUtil bodyLogUtil = mock(HttpRequestResponseBodyLogUtil.class);
         final HttpRequestResponseDebugLogUtil debugLogUtil = mock(HttpRequestResponseDebugLogUtil.class);
-
 
         final HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
         final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties);
