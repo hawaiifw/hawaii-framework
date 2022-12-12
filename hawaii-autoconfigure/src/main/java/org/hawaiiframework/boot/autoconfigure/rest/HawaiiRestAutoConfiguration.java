@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hawaiiframework.web.exception.DefaultExceptionResponseFactory;
 import org.hawaiiframework.web.exception.ExceptionResponseFactory;
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
+import org.hawaiiframework.web.resource.ObjectErrorResourceAssembler;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.hawaiiframework.web.util.HostResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,16 @@ public class HawaiiRestAutoConfiguration {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    /**
+     * Create an object error resource assembler.
+     *
+     * @return The object error resource assembler bean.
+     */
+    @Bean
+    public ObjectErrorResourceAssembler objectErrorResourceAssembler() {
+        return new ObjectErrorResourceAssembler(objectMapper);
+    }
 
     /**
      * Create a validation error resource assembler.
@@ -65,7 +76,10 @@ public class HawaiiRestAutoConfiguration {
      */
     @Bean
     public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler() {
-        return new HawaiiResponseEntityExceptionHandler(validationErrorResourceAssembler(), exceptionResponseFactory());
+        return new HawaiiResponseEntityExceptionHandler(
+                objectErrorResourceAssembler(),
+                validationErrorResourceAssembler(),
+                exceptionResponseFactory());
     }
 
     /**

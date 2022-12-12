@@ -27,7 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +42,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
+import static org.springframework.http.HttpHeaders.EMPTY;
 
 /**
  * This class creates proper HTTP response bodies for exceptions.
@@ -65,13 +69,16 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler;
     private final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler;
     private final ExceptionResponseFactory exceptionResponseFactory;
     private final Map<String, ErrorResponseEnricher> errorResponseEnrichers = new ConcurrentHashMap<>();
 
     public HawaiiResponseEntityExceptionHandler(
+            final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler,
             final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler,
             final ExceptionResponseFactory exceptionResponseFactory) {
+        this.objectErrorResourceAssembler = objectErrorResourceAssembler;
         this.validationErrorResourceAssembler =
                 requireNonNull(validationErrorResourceAssembler, "'validationErrorResourceAssembler' must not be null");
         this.exceptionResponseFactory =
@@ -99,9 +106,28 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         return handleExceptionInternal(
                 e,
                 buildErrorResponseBody(e, status, request),
-                HttpHeaders.EMPTY,
+                EMPTY,
                 status,
                 request);
+    }
+
+    /**
+     * Handles {@code MethodArgumentNotValidException} instances.
+     * <p>
+     * The response status is: 400 Bad Request.
+     *
+     * @param ex      the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            final MethodArgumentNotValidException ex,
+            final HttpHeaders headers,
+            final HttpStatusCode status,
+            final WebRequest request) {
+
+        return handleExceptionInternal(ex, buildErrorResponseBody(ex, HttpStatus.valueOf(status.value()), request), EMPTY, status, request);
     }
 
     /**
@@ -117,7 +143,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity<Object> handleValidationException(final ValidationException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), HttpHeaders.EMPTY, status, request);
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
     }
 
     /**
@@ -133,7 +159,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity<Object> handleApiException(final ApiException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), HttpHeaders.EMPTY, status, request);
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
     }
 
     /**
@@ -226,6 +252,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     protected void configureResponseEnrichers() {
         addResponseEnricher(new ErrorResponseStatusEnricher());
         addResponseEnricher(new RequestInfoErrorResponseEnricher());
+        addResponseEnricher(new MethodArgumentNotValidResponseEnricher(objectErrorResourceAssembler));
         addResponseEnricher(new ValidationErrorResponseEnricher(validationErrorResourceAssembler));
         addResponseEnricher(new ApiErrorResponseEnricher());
     }

@@ -23,6 +23,7 @@ public class HawaiiLoggingConfigurationProperties {
     private List<MediaType> allowedContentTypes = List.of(parseMediaType("application/json"),
             parseMediaType("application/graphql+json"),
             parseMediaType("application/hal+json"),
+            parseMediaType("application/problem+json"),
             parseMediaType("application/vnd.spring-boot.actuator.v1+json"),
             parseMediaType("application/vnd.spring-boot.actuator.v3+json"),
             parseMediaType("application/vnd.spring-cloud.config-server.v2+json"),
