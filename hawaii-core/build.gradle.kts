@@ -19,6 +19,7 @@ dependencies {
     compileOnly("org.springframework:spring-jdbc")
     compileOnly("org.springframework:spring-web")
     compileOnly("org.springframework:spring-webmvc")
+    compileOnly("org.springframework.security:spring-security-core")
     compileOnly("org.springframework.boot:spring-boot-autoconfigure")
     compileOnly("org.hibernate:hibernate-validator:${project.extra["hibernatorValidatorVersion"]}")
     compileOnly("net.ttddyy:datasource-proxy:${project.extra["dataSourceProxyVersion"]}")

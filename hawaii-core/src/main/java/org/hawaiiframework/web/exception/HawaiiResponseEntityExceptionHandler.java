@@ -29,6 +29,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -122,12 +124,28 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            final MethodArgumentNotValidException ex,
-            final HttpHeaders headers,
-            final HttpStatusCode status,
-            final WebRequest request) {
+            @NonNull final MethodArgumentNotValidException ex,
+            @NonNull final HttpHeaders headers,
+            @NonNull final HttpStatusCode status,
+            @NonNull final WebRequest request) {
 
         return handleExceptionInternal(ex, buildErrorResponseBody(ex, HttpStatus.valueOf(status.value()), request), EMPTY, status, request);
+    }
+
+    /**
+     * Handles {@code AccessDeniedException} instances.
+     * <p>
+     * The response status is: 403 Forbidden.
+     *
+     * @param ex      the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    public ResponseEntity<Object> accessDeniedException(final AccessDeniedException ex, final WebRequest request) {
+        final HttpStatus status = HttpStatus.FORBIDDEN;
+        return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
     }
 
     /**
@@ -176,17 +194,6 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
     }
-
-    //    @Override
-    //    @NonNull
-    //    protected ResponseEntity<Object> handleExceptionInternal(
-    //            @NonNull final Exception ex,
-    //            final Object body,
-    //            @Nullable final HttpHeaders headers,
-    //            final HttpStatus status,
-    //            @NonNull final WebRequest request) {
-    //        return ResponseEntity.status(status).headers(headers).body(body);
-    //    }
 
     /**
      * Builds a meaningful response body for the given throwable, HTTP status and request.
