@@ -42,12 +42,15 @@ public class XmlAttributePasswordMasker implements PasswordMasker {
     public boolean matches(final MaskedPasswordBuilder builder) {
         if (builder.currentCharIs(GT)) {
             // Assumption: end of XML tag.
-            final Integer indexOfStartPassword = builder.getCurrentIndex();
+            builder.mark();
+            final int indexOfStartPassword = builder.getCurrentIndex();
             if (readUntilEndOfXmlValue(builder)) {
                 builder.maskPasswordAt(indexOfStartPassword + 1);
                 readUntilEndOfXmlTag(builder);
+                return true;
+            } else {
+                builder.reset();
             }
-            return true;
         }
         return false;
     }
@@ -59,10 +62,10 @@ public class XmlAttributePasswordMasker implements PasswordMasker {
      */
     private boolean readUntilEndOfXmlValue(final MaskedPasswordBuilder builder) {
         while (builder.hasNext()) {
-            builder.next();
             if (builder.currentCharIs(LT)) {
                 return true;
             }
+            builder.next();
         }
         return false;
     }
@@ -70,10 +73,10 @@ public class XmlAttributePasswordMasker implements PasswordMasker {
 
     private void readUntilEndOfXmlTag(final MaskedPasswordBuilder builder) {
         while (builder.hasNext()) {
-            builder.next();
             if (builder.currentCharIs(GT)) {
                 break;
             }
+            builder.next();
         }
     }
 }

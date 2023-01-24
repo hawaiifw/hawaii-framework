@@ -61,7 +61,7 @@ public class UriQueryStringPasswordMasker implements PasswordMasker {
     public boolean matches(final MaskedPasswordBuilder builder) {
         if (builder.currentCharIs(EQUALS)) {
             // Assumption: start of URI query string (post body).
-            final Integer indexOfStartPassword = builder.getCurrentIndex();
+            final int indexOfStartPassword = builder.getCurrentIndex();
             readUntilEndOfQueryParameterValue(builder);
 
             builder.maskPasswordAt(indexOfStartPassword + 1);
