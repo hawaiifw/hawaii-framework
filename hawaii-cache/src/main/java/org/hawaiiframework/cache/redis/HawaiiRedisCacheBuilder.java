@@ -127,14 +127,14 @@ public class HawaiiRedisCacheBuilder {
     }
 
     /**
-     * Sets the the timeout for the redis cache. When this is not set
+     * Sets the timeout for the redis cache. When this is not set the redis' server default will be used.
      *
-     * @param timeOutInMinutes the timeout in minutes to set.
+     * @param expiration the timeout in minutes to set.
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
-    public HawaiiRedisCacheBuilder withTimeOut(final Long timeOutInMinutes) {
+    public HawaiiRedisCacheBuilder withTimeOut(final Duration expiration) {
         return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                defaultExpiration);
+                expiration);
     }
 
     /**
