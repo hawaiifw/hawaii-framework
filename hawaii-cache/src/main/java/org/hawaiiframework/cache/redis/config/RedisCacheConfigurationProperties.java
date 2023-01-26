@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawaiiframework.boot.autoconfigure.cache;
+package org.hawaiiframework.cache.redis.config;
 
-import org.hawaiiframework.cache.redis.config.RedisConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 
+import java.time.Duration;
 
 /**
- * @author Richard Kohlen
- * @since 3.0.0
+ * Redis configuration properties.
  */
 @Configuration
-@ConditionalOnClass({RedisConfiguration.class, RedisConnectionFactory.class})
-@Import(RedisConfiguration.class)
-public class HawaiiRedisAutoConfiguration {
+@ConfigurationProperties(prefix = "spring.data.redis")
+public class RedisCacheConfigurationProperties {
 
+    /**
+     * The default expiration.
+     */
+    private Duration defaultExpiration;
+
+    public Duration getDefaultExpiration() {
+        return defaultExpiration;
+    }
+
+    public void setDefaultExpiration(final Duration defaultExpiration) {
+        this.defaultExpiration = defaultExpiration;
+    }
 }

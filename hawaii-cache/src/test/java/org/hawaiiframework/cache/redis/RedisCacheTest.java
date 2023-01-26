@@ -50,7 +50,7 @@ public class RedisCacheTest {
     private final String keyPrefix = "redisCacheTest_";
     private final Duration duration = Duration.ofMillis(1000);
     private final String fullKey;
-    private final Long defaultExpiry = 1L;
+    private final Duration defaultExpiry = Duration.ofMinutes(1L);
     private final Foo testObject;
 
     private HawaiiTime hawaiiTime;
@@ -81,43 +81,54 @@ public class RedisCacheTest {
     }
 
     @Test
-    public void put() {
-        //Test 2 parameter put
+    public void put1() {
         redisCache.put(testObject.bar, testObject);
-        //Test 3 parameter put Duration
-        redisCache.put(testObject.bar, testObject, duration);
-        //Test 3 parameter put HawaiiTime
 
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
+    }
+    @Test
+    public void put2() {
+        redisCache.put(testObject.bar, testObject, duration);
+
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
+        verify(mockTemplate, times(1)).expire(eq(fullKey), eq(duration));
+    }
+
+    @Test
+    public void put3() {
         hawaiiTime.useFixedClock(LocalDateTime.now());
         final var localDateTimeTest = LocalDateTime.now().plusMinutes(5);
-        final var zonedDateTimeTest = ZonedDateTime.now().plusMinutes(10);
         final var resultLocalDateTime = Duration.between(hawaiiTime.localDateTime(), localDateTimeTest).toMillis();
-        final var resultZonedDateTime = Duration.between(hawaiiTime.zonedDateTime(), zonedDateTimeTest).toMillis();
 
-        //Testing with local date time
         redisCache.put(testObject.bar, testObject, localDateTimeTest);
-        //Testing with zoned date time
-        redisCache.put(testObject.bar, testObject, zonedDateTimeTest);
-        //Test eternity put
-        redisCache.putEternally(testObject.bar, testObject);
-
-        //Test if the template is called with the right values.
-        verify(mockTemplate.opsForValue(), times(5)).set(fullKey, testObject);
-        verify(mockTemplate, times(1)).expire(eq(fullKey), any(Long.class), eq(TimeUnit.MINUTES));
-        verify(mockTemplate, times(4)).expire(eq(fullKey), any(Long.class), eq(TimeUnit.MILLISECONDS));
-
-        verify(mockTemplate, times(1)).expire(eq(fullKey), eq(defaultExpiry), eq(TimeUnit.MINUTES));
-        verify(mockTemplate, times(1)).expire(eq(fullKey), eq(duration.toMillis()), eq(TimeUnit.MILLISECONDS));
-        verify(mockTemplate, times(1)).expire(
-                eq(fullKey), eq(Duration.ofMillis(Long.MAX_VALUE).toMillis()), eq(TimeUnit.MILLISECONDS));
-
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
         verify(mockTemplate, times(1)).expire(
                 eq(fullKey), eq(resultLocalDateTime), eq(TimeUnit.MILLISECONDS));
+    }
+    @Test
+    public void put4() {
+        hawaiiTime.useFixedClock(LocalDateTime.now());
+        final var zonedDateTimeTest = ZonedDateTime.now().plusMinutes(10);
+        final var resultZonedDateTime = Duration.between(hawaiiTime.zonedDateTime(), zonedDateTimeTest).toMillis();
 
+        //Testing with zoned date time
+        redisCache.put(testObject.bar, testObject, zonedDateTimeTest);
+
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
         verify(mockTemplate, times(1)).expire(
                 eq(fullKey), eq(resultZonedDateTime), eq(TimeUnit.MILLISECONDS));
     }
 
+    @Test
+    public void put5() {
+        //Test eternity put
+        redisCache.putEternally(testObject.bar, testObject);
+
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
+        verify(mockTemplate, times(1)).expire(
+                eq(fullKey), eq(Duration.ofMillis(Long.MAX_VALUE)));
+
+    }
     @Test
     public void putProducesNullPointerOnPassingNull() {
         //Test if put produces an error

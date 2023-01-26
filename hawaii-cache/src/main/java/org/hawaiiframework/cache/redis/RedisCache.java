@@ -57,7 +57,7 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * The default expiration in minutes.
      */
-    private final Long defaultExpireInMinutes;
+    private final Duration defaultExpiration;
 
     /**
      * They key's prefix.
@@ -72,16 +72,16 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * Constructor.
      *
-     * @param redisTemplate          The redis template to use.
-     * @param hawaiiTime             the Hawaii time, used to get the current time.
-     * @param defaultExpireInMinutes The default time out in minutes.
-     * @param keyPrefix              They key's prefix.
+     * @param redisTemplate     The redis template to use.
+     * @param hawaiiTime        the Hawaii time, used to get the current time.
+     * @param defaultExpiration The default time out/expiration.
+     * @param keyPrefix         They key's prefix.
      */
-    public RedisCache(final RedisTemplate<String, T> redisTemplate, final HawaiiTime hawaiiTime, final Long defaultExpireInMinutes,
+    public RedisCache(final RedisTemplate<String, T> redisTemplate, final HawaiiTime hawaiiTime, final Duration defaultExpiration,
             final String keyPrefix) {
         this.hawaiiTime = hawaiiTime;
         this.redisTemplate = requireNonNull(redisTemplate);
-        this.defaultExpireInMinutes = defaultExpireInMinutes;
+        this.defaultExpiration = defaultExpiration;
         requireNonNull(keyPrefix);
         if (keyPrefix.endsWith(UNDERSCORE)) {
             this.keyPrefix = keyPrefix;
@@ -106,8 +106,8 @@ public class RedisCache<T> implements Cache<T> {
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}'.", cacheKey);
         redisTemplate.opsForValue().set(cacheKey, value);
-        if (defaultExpireInMinutes != null) {
-            redisTemplate.expire(cacheKey, defaultExpireInMinutes, TimeUnit.MINUTES);
+        if (defaultExpiration != null) {
+            redisTemplate.expire(cacheKey, defaultExpiration);
         }
     }
 
@@ -123,7 +123,7 @@ public class RedisCache<T> implements Cache<T> {
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}' with duration '{}'.", cacheKey, duration);
         redisTemplate.opsForValue().set(cacheKey, value);
-        redisTemplate.expire(cacheKey, duration.toMillis(), TimeUnit.MILLISECONDS);
+        redisTemplate.expire(cacheKey, duration);
     }
 
     /**

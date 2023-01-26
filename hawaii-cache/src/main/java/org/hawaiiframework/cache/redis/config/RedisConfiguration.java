@@ -15,20 +15,13 @@
  */
 package org.hawaiiframework.cache.redis.config;
 
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.hawaiiframework.cache.redis.HawaiiRedisCacheBuilder;
 import org.hawaiiframework.time.HawaiiTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisSentinelConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import redis.clients.jedis.JedisPoolConfig;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 /**
  * Redis configuration.
@@ -37,13 +30,13 @@ import java.util.HashSet;
  * @version 3.0.0
  */
 @Configuration
-@EnableConfigurationProperties(RedisConfigurationProperties.class)
+@EnableConfigurationProperties(RedisCacheConfigurationProperties.class)
 public class RedisConfiguration {
 
     /**
      * Redis configuration properties.
      */
-    private final RedisConfigurationProperties properties;
+    private final RedisCacheConfigurationProperties properties;
 
     /**
      * Hawaii time.
@@ -57,69 +50,19 @@ public class RedisConfiguration {
      * @param hawaiiTime The hawaii time.
      */
     @Autowired
-    public RedisConfiguration(final RedisConfigurationProperties properties, final HawaiiTime hawaiiTime) {
+    public RedisConfiguration(final RedisCacheConfigurationProperties properties, final HawaiiTime hawaiiTime) {
         this.properties = properties;
         this.hawaiiTime = hawaiiTime;
     }
 
     /**
-     * Create a new {@link JedisConnectionFactory}.
-     *
-     * @param sentinelConfiguration The redis sentinel configuration.
-     * @param poolConfig            The redis connection pool configuration.
-     * @return a new {@link JedisConnectionFactory}.
-     */
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory(final RedisSentinelConfiguration sentinelConfiguration,
-            final JedisPoolConfig poolConfig) {
-        final JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder()
-                .usePooling()
-                .poolConfig(poolConfig)
-                .build();
-        final JedisConnectionFactory jedisConnectionFactory =
-                new JedisConnectionFactory(sentinelConfiguration, jedisClientConfiguration);
-        jedisConnectionFactory.afterPropertiesSet();
-        return jedisConnectionFactory;
-    }
-
-    /**
-     * Creates a new redis sentinel configuration.
-     *
-     * @return a redis sentinel config.
-     */
-    @Bean
-    public RedisSentinelConfiguration redisSentinelConfiguration() {
-        return new RedisSentinelConfiguration(properties.getClusterMaster(), new HashSet<>(properties.getSentinelHostsAndPorts()));
-    }
-
-    /**
-     * Creates a Jedis pool configuration.
-     *
-     * @return a Jedis pool config.
-     * @throws Exception in case of an error.
-     */
-    @Bean
-    public JedisPoolConfig jedisPoolConfig() throws Exception {
-        return applyConfiguration(properties.getPoolConfiguration(), JedisPoolConfig.class);
-    }
-
-    /**
      * Provides a {@link HawaiiRedisCacheBuilder}.
      *
-     * @param jedisConnectionFactory The jedis connection factory.
+     * @param redisConnectionFactory The redis connection factory.
      * @return an instance of {@link HawaiiRedisCacheBuilder}
      */
     @Bean
-    public HawaiiRedisCacheBuilder hawaiiRedisCacheBuilder(final JedisConnectionFactory jedisConnectionFactory) {
-        return new HawaiiRedisCacheBuilder(properties, jedisConnectionFactory, hawaiiTime);
+    public HawaiiRedisCacheBuilder hawaiiRedisCacheBuilder(final RedisConnectionFactory redisConnectionFactory) {
+        return new HawaiiRedisCacheBuilder(properties, redisConnectionFactory, hawaiiTime);
     }
-
-    private <T extends GenericObjectPoolConfig<?>> T applyConfiguration(final RedisPoolConfigurationProperties poolConfiguration,
-            final Class<T> type) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        final T temp = type.getDeclaredConstructor().newInstance();
-        poolConfiguration.applyTo(temp);
-
-        return temp;
-    }
-
 }
