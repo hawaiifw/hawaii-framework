@@ -27,6 +27,14 @@ public final class HttpRequestLogging {
         THREAD_LOCAL_STORE.set(suppressor);
         return suppressor;
     }
+
+    /**
+     * Enable logging.
+     */
+    public static void enable() {
+        THREAD_LOCAL_STORE.remove();
+    }
+
     /**
      * Is logging enabled?
      *

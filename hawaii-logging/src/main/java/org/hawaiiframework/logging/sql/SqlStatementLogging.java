@@ -29,6 +29,13 @@ public final class SqlStatementLogging {
     }
 
     /**
+     * Enable logging.
+     */
+    public static void enable() {
+        THREAD_LOCAL_STORE.remove();
+    }
+
+    /**
      * Is logging suppressed?
      *
      * @return {@code true} if the logging is suppressed for this thread.
