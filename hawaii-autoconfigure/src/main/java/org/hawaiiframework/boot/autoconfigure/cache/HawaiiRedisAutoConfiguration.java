@@ -23,6 +23,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 
 /**
+ * Cache auto configuration.
+ *
  * @author Richard Kohlen
  * @since 3.0.0
  */

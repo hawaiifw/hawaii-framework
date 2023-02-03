@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
+ * Async auto configuration.
+ *
  * @author Paul Klos
  * @since 2.0.0
  */

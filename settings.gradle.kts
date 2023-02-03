@@ -16,8 +16,6 @@ val modules = arrayOf(
         "hawaii-cache",
         "hawaii-core",
         "hawaii-logging",
-        // "hawaii-security", (deprecated + removed)
-        // "hawaii-test" (deprecated + removed)
 )
 
 val starters = arrayOf(
@@ -45,9 +43,3 @@ starters.forEach { name ->
     val p = findProject(":${name}")
     p?.projectDir = File ("hawaii-starters/${name}");
 }
-
-//samples.forEach { name ->
-//    val p = findProject(":${name}")
-//    p?.projectDir = File ("samples/${name}");
-//    p?.name = "hawaii-samples-${name}"
-//}

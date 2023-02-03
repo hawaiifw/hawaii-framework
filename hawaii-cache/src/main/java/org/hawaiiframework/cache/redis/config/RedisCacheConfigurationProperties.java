@@ -23,6 +23,7 @@ import java.time.Duration;
 /**
  * Redis configuration properties.
  */
+@SuppressWarnings("constructor")
 @Configuration
 @ConfigurationProperties(prefix = "spring.data.redis")
 public class RedisCacheConfigurationProperties {
@@ -32,10 +33,20 @@ public class RedisCacheConfigurationProperties {
      */
     private Duration defaultExpiration;
 
+    /**
+     * Get the default expiration.
+     *
+     * @return The default expiration.
+     */
     public Duration getDefaultExpiration() {
         return defaultExpiration;
     }
 
+    /**
+     * set the default expiration.
+     *
+     * @param defaultExpiration The default expiration.
+     */
     public void setDefaultExpiration(final Duration defaultExpiration) {
         this.defaultExpiration = defaultExpiration;
     }

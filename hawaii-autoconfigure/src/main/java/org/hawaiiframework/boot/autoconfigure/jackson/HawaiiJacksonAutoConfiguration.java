@@ -24,6 +24,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
+ * Jackson auto configuration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

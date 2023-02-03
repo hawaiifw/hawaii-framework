@@ -1,5 +1,6 @@
 package org.hawaiiframework.logging.config;
 
+import org.hawaiiframework.logging.model.PathDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.MediaType;
 
@@ -33,7 +34,7 @@ public class HawaiiLoggingConfigurationProperties {
             parseMediaType("text/xml"));
 
     // @Value("${" + CONFIG_PREFIX + ".exclude-paths}")
-    private List<String> excludePaths = List.of("/actuator/*");
+    private List<PathDefinition> excludePaths = List.of(new PathDefinition("/actuator/*"));
 
     // @Value("${" + CONFIG_PREFIX + ".fields-to-mask}")
     private List<String> fieldsToMask = List.of("password", "keyPassphrase", "client_secret", "secret");
@@ -79,7 +80,7 @@ public class HawaiiLoggingConfigurationProperties {
      *
      * @return the paths to exclude.
      */
-    public List<String> getExcludePaths() {
+    public List<PathDefinition> getExcludePaths() {
         return excludePaths;
     }
 
@@ -88,7 +89,8 @@ public class HawaiiLoggingConfigurationProperties {
      *
      * @param excludePaths the paths to exclude.
      */
-    public void setExcludePaths(final List<String> excludePaths) {
+    public void setExcludePaths(final List<PathDefinition> excludePaths) {
         this.excludePaths = excludePaths;
     }
+
 }

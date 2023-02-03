@@ -137,9 +137,11 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     private void logResponse(final HttpServletRequest httpServletRequest) throws IOException {
         if (!httpServletRequest.isAsyncStarted()) {
             final ContentCachingWrappedResponse wrappedResponse = getStoredResponse(httpServletRequest);
-            hawaiiLogger.logResponse(httpServletRequest, wrappedResponse);
-            wrappedResponse.copyBodyToResponse();
-            handleInternalRedirect(wrappedResponse, httpServletRequest);
+            if (wrappedResponse != null) {
+                hawaiiLogger.logResponse(httpServletRequest, wrappedResponse);
+                wrappedResponse.copyBodyToResponse();
+                handleInternalRedirect(wrappedResponse, httpServletRequest);
+            }
         }
         handleAsyncRequest(httpServletRequest);
     }

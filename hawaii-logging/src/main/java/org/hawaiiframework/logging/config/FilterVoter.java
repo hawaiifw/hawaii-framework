@@ -41,17 +41,17 @@ public class FilterVoter {
     /**
      * The path voter.
      */
-    private final PathVoter pathVoter;
+    private final RequestVoter requestVoter;
 
     /**
      * The constructor.
      *
      * @param mediaTypeVoter The media type voter.
-     * @param pathVoter      The path voter.
+     * @param requestVoter   The request voter.
      */
-    public FilterVoter(final MediaTypeVoter mediaTypeVoter, final PathVoter pathVoter) {
+    public FilterVoter(final MediaTypeVoter mediaTypeVoter, final RequestVoter requestVoter) {
         this.mediaTypeVoter = mediaTypeVoter;
-        this.pathVoter = pathVoter;
+        this.requestVoter = requestVoter;
     }
 
     /**
@@ -64,10 +64,9 @@ public class FilterVoter {
         Boolean isEnabled = (Boolean) request.getAttribute(getAttributeName());
         LOGGER.trace("Got '{}' from attribute.", isEnabled);
         if (isEnabled == null) {
-            // must compute
             final boolean mediaTypeAllowed = mediaTypeVoter.mediaTypeAllowed(request.getContentType());
-            final boolean pathAllowed = pathVoter.pathAllowed(request.getServletPath());
-            isEnabled = mediaTypeAllowed && pathAllowed;
+            final boolean requestAllowed = requestVoter.allowed(request);
+            isEnabled = mediaTypeAllowed && requestAllowed;
             request.setAttribute(getAttributeName(), isEnabled);
         }
         LOGGER.trace("Is enabled: '{}'.", isEnabled);

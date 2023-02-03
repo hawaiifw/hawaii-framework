@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.config.HawaiiLoggingConfigurationProperties;
 import org.hawaiiframework.logging.config.MediaTypeVoter;
-import org.hawaiiframework.logging.config.PathVoter;
+import org.hawaiiframework.logging.config.RequestVoter;
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
@@ -32,7 +32,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 
 import java.io.IOException;
 
@@ -82,12 +81,12 @@ public class RequestResponseLogFilterTest {
 
         final HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
         final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties);
-        final PathVoter pathVoter = new PathVoter(properties);
+        final RequestVoter requestVoter = new RequestVoter(properties);
 
         final DefaultHawaiiRequestResponseLogger requestResponseLogger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,
                 bodyLogUtil,
                 debugLogUtil, mediaTypeVoter);
-        final FilterVoter filterVoter = new FilterVoter(mediaTypeVoter, pathVoter);
+        final FilterVoter filterVoter = new FilterVoter(mediaTypeVoter, requestVoter);
         filter = new RequestResponseLogFilter(requestResponseLogger, filterVoter);
     }
 

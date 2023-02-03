@@ -26,6 +26,8 @@ import org.springframework.context.annotation.Configuration;
 import java.time.ZoneId;
 
 /**
+ * {@link HawaiiTime} autoconfiguration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

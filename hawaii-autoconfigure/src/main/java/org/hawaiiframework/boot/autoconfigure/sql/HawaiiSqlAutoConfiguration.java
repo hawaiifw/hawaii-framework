@@ -22,6 +22,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
+ * SQL logging / interception auto configuration.
+ *
  * @author Rutger Lubbers
  * @since 6.0.0
  */

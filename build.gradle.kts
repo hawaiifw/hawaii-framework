@@ -68,11 +68,15 @@ subprojects {
     }
 
     tasks.withType<JavaCompile> {
-        options.isDeprecation = true
-
         options.encoding = Charsets.UTF_8.name()
 
-        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Xlint:-processing", "-Werror", "-parameters"))
+        options.isDeprecation = true
+        options.isWarnings = true
+
+        // javac -X
+        // javac --help-lint
+        //-missing-explicit-ctor"
+        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Werror", "-parameters" ))
     }
 
     repositories {
@@ -134,15 +138,15 @@ subprojects {
 
         options.memberLevel = JavadocMemberLevel.PROTECTED
         options.header = project.name
-        //        options["notree"]
+
         // Disabled, no equivalent found (yet)
         // options.author = true
         // options.links(javadocLinks)
-        // options.addBooleanOption("html5", true)
-        // options.addStringOption("Xdoclint:none", "-quiet")
+        val javadocOpts = options as CoreJavadocOptions
+        javadocOpts.addBooleanOption("html5", true)
+        javadocOpts.addStringOption("Xdoclint:none", "-quiet")
+        javadocOpts.addStringOption("Xlint:none")
 
-        // Suppress warnings due to cross-module @see and @link references;
-        // Note that global 'api' task does display all warnings.
         logging.captureStandardError(LogLevel.INFO)
         logging.captureStandardOutput(LogLevel.INFO)
     }
@@ -239,181 +243,4 @@ subprojects {
             }
         }
     }
-
-//        register("mavenJava", MavenPublication::class) {
-//            from(components["java"])
-//            artifact(tasks["sourcesJar"])
-//            artifact(tasks["javadocJar"])
-//        }
-//        mavenJava(MavenPublication) {
-//            from components.java
-//                    artifact tasks.sourcesJar
-//                    artifact tasks.javadocJar
-//
-//                    pom {
-//                        name = "Hawaii Framework"
-//                        packaging "jar"
-//                        description = "Hawaii Framework"
-//                        url = "https://github.com/hawaiifw/hawaii-framework"
-//
-//                        scm {
-//                            connection = "scm:git@github.com/hawaiifw/hawaii-framework.git"
-//                            developerConnection = "scm:git@github.com:hawaiifw/hawaii-framework.git"
-//                            url = "https://github.com/hawaiifw/hawaii-framework"
-//                        }
-//
-//                        licenses {
-//                            license {
-//                                name = "The Apache License, Version 2.0"
-//                                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-//                            }
-//                        }
-//
-//                        developers {
-//                            developer {
-//                                id = "marceloverdijk"
-//                                name = "Marcel Overdijk"
-//                                email = "marcel@overdijk.me"
-//                            }
-//                        }
-//                    }
-//        }
 }
-
-
-////    jar {
-////        manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-////        manifest.attributes["Implementation-Title"] = subproject.name
-////        manifest.attributes["Implementation-Version"] = subproject.version
-////
-////        from("${rootProject.projectDir}/src/dist") {
-////            include "license.txt"
-////            include "notice.txt"
-////            include "release-notes.md"
-////            into "META-INF"
-////            expand(copyright: new Date().format("yyyy"), version: project. version)
-////        }
-////    }
-////
-////    javadoc {
-////        description = "Generates project-level Javadoc API documentation."
-////
-////        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-////        options.author = true
-////        options.header = project.name
-////        options.links(javadocLinks)
-////        options.addBooleanOption("html5", true)
-////        options.addStringOption("Xdoclint:none", "-quiet")
-////
-////        // Suppress warnings due to cross-module @see and @link references;
-////        // Note that global 'api' task does display all warnings.
-////        logging.captureStandardError LogLevel . INFO
-////                logging.captureStandardOutput LogLevel . INFO // suppress "## warnings" message
-////    }
-//
-//    task sourcesJar (type: Jar, dependsOn: classes) {
-//    classifier = "sources"
-//    from sourceSets . main . allSource
-//}
-//
-//    task javadocJar (type: Jar, dependsOn: javadoc) {
-//    classifier = "javadoc"
-//    from javadoc . destinationDir
-//}
-//
-//    artifacts {
-//        archives sourcesJar
-//                archives javadocJar
-//    }
-//
-//    checkstyle {
-//        configDir = file("${rootProject.projectDir}/src/quality/config/checkstyle")
-//        ignoreFailures = false
-//        sourceSets = [sourceSets.main]
-//        toolVersion = checkstyleToolVersion
-//    }
-//
-//    pmd {
-//        ignoreFailures = false
-//        ruleSetFiles = files("${rootProject.projectDir}/src/quality/config/pmd/pmd.xml")
-//        ruleSets = [] // https://github.com/pmd/pmd/issues/876
-//        sourceSets = [sourceSets.main]
-//        toolVersion = pmdToolVersion
-//    }
-//
-//    spotbugs {
-//        excludeFilter = file("${rootProject.projectDir}/src/quality/config/spotbugs/exclude.xml")
-//        ignoreFailures = false
-//        sourceSets = [sourceSets.main]
-//        toolVersion = spotbugsToolVersion
-//    }
-//
-//    if (project.hasProperty("signing.keyId")) {
-//        signing {
-//            sign publishing . publications
-//        }
-//    }
-//
-//    publishing.publications {
-//        mavenJava(MavenPublication) {
-//            from components . java
-//                    artifact tasks . sourcesJar
-//                    artifact tasks . javadocJar
-//
-//                    pom {
-//                        name = "Hawaii Framework"
-//                        packaging "jar"
-//                        description = "Hawaii Framework"
-//                        url = "https://github.com/hawaiifw/hawaii-framework"
-//
-//                        scm {
-//                            connection = "scm:git@github.com/hawaiifw/hawaii-framework.git"
-//                            developerConnection = "scm:git@github.com:hawaiifw/hawaii-framework.git"
-//                            url = "https://github.com/hawaiifw/hawaii-framework"
-//                        }
-//
-//                        licenses {
-//                            license {
-//                                name = "The Apache License, Version 2.0"
-//                                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-//                            }
-//                        }
-//
-//                        developers {
-//                            developer {
-//                                id = "marceloverdijk"
-//                                name = "Marcel Overdijk"
-//                                email = "marcel@overdijk.me"
-//                            }
-//                        }
-//                    }
-//        }
-//    }
-//
-//    //io.codearte.gradle
-//    nexusStaging {
-//        packageGroup = 'org.hawaiiframework'
-//        numberOfRetries = 20
-//        delayBetweenRetriesInMillis = 3000
-//    }
-//
-//    nexusPublishing {
-//        repositories {
-//            sonatype {
-//                packageGroup = 'org.hawaiiframework'
-//                username = System.getenv("SONATYPE_OSSRH_USERNAME")
-//                password = System.getenv("SONATYPE_OSSRH_PASSWORD")
-//            }
-//        }
-//        connectTimeout = Duration.ofSeconds(1000)
-//        clientTimeout = Duration.ofSeconds(1000)
-//    }
-//
-//    tasks.withType(com.github.spotbugs.SpotBugsTask) {
-//        reports {
-//            xml.enabled = false
-//            html.enabled = true
-//        }
-//    }
-//}
-//

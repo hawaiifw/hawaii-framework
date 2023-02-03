@@ -41,13 +41,8 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 //@EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
-@Import({
-    CxfLoggingConfiguration.class,
-    DataSourceProxyConfiguration.class,
-    HawaiiLoggingFilterConfiguration.class,
-    ScheduledConfiguration.class,
-    StatementLoggerQueryExecutionListenerConfiguration.class
-})
+@Import({CxfLoggingConfiguration.class, DataSourceProxyConfiguration.class, HawaiiLoggingFilterConfiguration.class,
+    ScheduledConfiguration.class, StatementLoggerQueryExecutionListenerConfiguration.class})
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public class HawaiiLoggingConfiguration {
 
@@ -155,15 +150,15 @@ public class HawaiiLoggingConfiguration {
     }
 
     /**
-     * Create a path voter.
+     * Create a request voter.
      *
      * @param hawaiiLoggingConfigurationProperties The configuration properties.
      * @return The bean.
      */
     @Bean
     @RefreshScope
-    public PathVoter pathVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        return new PathVoter(hawaiiLoggingConfigurationProperties);
+    public RequestVoter requestVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new RequestVoter(hawaiiLoggingConfigurationProperties);
     }
 
 
@@ -171,12 +166,12 @@ public class HawaiiLoggingConfiguration {
      * Create a filter voter parameter.
      *
      * @param mediaTypeVoter The media type voter.
-     * @param pathVoter      The path voter.
+     * @param requestVoter   The request voter.
      * @return The bean.
      */
     @Bean
     @RefreshScope
-    public FilterVoter filterVoter(final MediaTypeVoter mediaTypeVoter, final PathVoter pathVoter) {
-        return new FilterVoter(mediaTypeVoter, pathVoter);
+    public FilterVoter filterVoter(final MediaTypeVoter mediaTypeVoter, final RequestVoter requestVoter) {
+        return new FilterVoter(mediaTypeVoter, requestVoter);
     }
 }
