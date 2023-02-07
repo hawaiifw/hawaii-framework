@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  * Be aware that third-party libraries being used by the application do obviously not use {@code HawaiiTime} and probably instantiate date
  * and time objects based on the {@code System} time.
  * <p>
- * Furthermore this class should be injected using constructor injection. This will provide the flexibility to test this object using the
+ * Furthermore, this class should be injected using constructor injection. This will provide the flexibility to test this object using
  * the fixed clock methods.
  *
  * @author Marcel Overdijk
@@ -60,8 +60,7 @@ public class HawaiiTime {
     private static final String INSTANT_MUST_NOT_BE_NULL = "'instant' must not be null";
     private static final String ZONE_MUST_NOT_BE_NULL = "'zone' must not be null";
 
-    private Clock clock;
-    private ZoneId zone;
+    private static final HawaiiZonedClock INSTANCE = new HawaiiZonedClock();
 
     /**
      * Constructs a new {@code HawaiiTime} with the default {@link #DEFAULT_ZONE}.
@@ -76,8 +75,7 @@ public class HawaiiTime {
      * @param zone the zone, not null
      */
     public HawaiiTime(final ZoneId zone) {
-        this.zone = requireNonNull(zone, ZONE_MUST_NOT_BE_NULL);
-        this.clock = Clock.system(zone);
+        this(Clock.system(requireNonNull(zone, ZONE_MUST_NOT_BE_NULL)));
     }
 
     /**
@@ -86,17 +84,20 @@ public class HawaiiTime {
      * @param clock the clock, not null
      */
     public HawaiiTime(final Clock clock) {
-        this.clock = requireNonNull(clock, CLOCK_MUST_NOT_BE_NULL);
-        this.zone = clock.getZone();
+        INSTANCE.setClock(requireNonNull(clock, CLOCK_MUST_NOT_BE_NULL));
+        INSTANCE.setZone(clock.getZone());
+        INSTANCE.setHawaiiTime(this);
     }
-
+    public static HawaiiTime getInstance() {
+        return INSTANCE.getHawaiiTime();
+    }
     /**
      * Returns the clock used by this {@code HawaiiTime}.
      *
      * @return the clock
      */
     public Clock getClock() {
-        return clock;
+        return INSTANCE.getClock();
     }
 
     /**
@@ -105,7 +106,7 @@ public class HawaiiTime {
      * @param clock the clock, not null
      */
     public void setClock(final Clock clock) {
-        this.clock = requireNonNull(clock, CLOCK_MUST_NOT_BE_NULL);
+        INSTANCE.setClock(requireNonNull(clock, CLOCK_MUST_NOT_BE_NULL));
     }
 
     /**
@@ -114,7 +115,7 @@ public class HawaiiTime {
      * @return the zone
      */
     public ZoneId getZone() {
-        return zone;
+        return INSTANCE.getZone();
     }
 
     /**
@@ -123,14 +124,14 @@ public class HawaiiTime {
      * @param zone the zone
      */
     public void setZone(final ZoneId zone) {
-        this.zone = zone;
+        INSTANCE.setZone(zone);
     }
 
     /**
-     * Calculates the difference between this instance and the provided {@link Instant}.
+     * Calculates the difference between this INSTANCE and the provided {@link Instant}.
      *
      * @param time which to compare
-     * @return the result of the of the difference calculation as a {@link Long}
+     * @return the result of the difference calculation as a {@link Long}
      */
     public Long between(final Instant time) {
         return Duration.between(instant(), time).toMillis();
@@ -152,7 +153,7 @@ public class HawaiiTime {
      * @param millis the millis since epoch
      */
     public void useFixedClock(final long millis) {
-        useFixedClock(Instant.ofEpochMilli(millis), this.zone);
+        useFixedClock(Instant.ofEpochMilli(millis), getZone());
     }
 
     /**
@@ -162,7 +163,7 @@ public class HawaiiTime {
      */
     public void useFixedClock(final LocalDateTime dateTime) {
         requireNonNull(dateTime, DATETIME_MUST_NOT_BE_NULL);
-        useFixedClock(dateTime.atZone(this.zone).toInstant(), this.zone);
+        useFixedClock(dateTime.atZone(getZone()).toInstant(), getZone());
     }
 
     /**
@@ -192,7 +193,7 @@ public class HawaiiTime {
      */
     protected void useFixedClock(final Instant instant) {
         requireNonNull(instant, INSTANT_MUST_NOT_BE_NULL);
-        setClock(Clock.fixed(instant, this.zone));
+        setClock(Clock.fixed(instant, getZone()));
     }
 
     /**
@@ -211,7 +212,7 @@ public class HawaiiTime {
      * Sets the system clock to be used.
      */
     public void useSystemClock() {
-        setClock(Clock.system(zone));
+        setClock(Clock.system(getZone()));
     }
 
     /**
@@ -220,7 +221,7 @@ public class HawaiiTime {
      * @return the {@code Instant}
      */
     public Instant instant() {
-        return Instant.now(this.clock);
+        return Instant.now(getClock());
     }
 
     /**
@@ -229,7 +230,7 @@ public class HawaiiTime {
      * @return the {@code LocalDate}
      */
     public LocalDate localDate() {
-        return LocalDate.now(this.clock);
+        return LocalDate.now(getClock());
     }
 
     /**
@@ -238,7 +239,7 @@ public class HawaiiTime {
      * @return the {@code LocalDateTime}
      */
     public LocalDateTime localDateTime() {
-        return LocalDateTime.now(this.clock);
+        return LocalDateTime.now(getClock());
     }
 
     /**
@@ -247,7 +248,7 @@ public class HawaiiTime {
      * @return the {@code LocalTime}
      */
     public LocalTime localTime() {
-        return LocalTime.now(this.clock);
+        return LocalTime.now(getClock());
     }
 
     /**
@@ -256,7 +257,7 @@ public class HawaiiTime {
      * @return the {@code millis}
      */
     public long millis() {
-        return this.clock.millis();
+        return getClock().millis();
     }
 
     /**
@@ -265,7 +266,7 @@ public class HawaiiTime {
      * @return the {@code MonthDay}
      */
     public MonthDay monthDay() {
-        return MonthDay.now(this.clock);
+        return MonthDay.now(getClock());
     }
 
     /**
@@ -274,7 +275,7 @@ public class HawaiiTime {
      * @return the {@code OffsetDateTime}
      */
     public OffsetDateTime offsetDateTime() {
-        return OffsetDateTime.now(this.clock);
+        return OffsetDateTime.now(getClock());
     }
 
     /**
@@ -283,7 +284,7 @@ public class HawaiiTime {
      * @return the {@code OffsetTime}
      */
     public OffsetTime offsetTime() {
-        return OffsetTime.now(this.clock);
+        return OffsetTime.now(getClock());
     }
 
     /**
@@ -292,7 +293,7 @@ public class HawaiiTime {
      * @return {@code Year}
      */
     public Year year() {
-        return Year.now(this.clock);
+        return Year.now(getClock());
     }
 
     /**
@@ -301,7 +302,7 @@ public class HawaiiTime {
      * @return the {@code YearMonth}
      */
     public YearMonth yearMonth() {
-        return YearMonth.now(this.clock);
+        return YearMonth.now(getClock());
     }
 
     /**
@@ -310,7 +311,7 @@ public class HawaiiTime {
      * @return the {@code ZonedDateTime}
      */
     public ZonedDateTime zonedDateTime() {
-        return ZonedDateTime.now(this.clock);
+        return ZonedDateTime.now(getClock());
     }
 
 }

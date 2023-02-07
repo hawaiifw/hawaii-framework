@@ -49,7 +49,7 @@ public class ScheduledAspect {
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Around("execution (@org.springframework.scheduling.annotation.Scheduled  * *.*(..))")
-    public Object traceBackgroundThread(final ProceedingJoinPoint pjp) throws Throwable {
+    public Object withTransactionId(final ProceedingJoinPoint pjp) throws Throwable {
         try {
             final UUID uuid = UUID.randomUUID();
 
@@ -62,7 +62,7 @@ public class ScheduledAspect {
             LOGGER.trace("Started scheduled task with tx id '{}'.", TransactionId.get());
             return pjp.proceed();
         } catch (Exception ex) {
-            LOGGER.error("Caught error '{}'.", ex, ex);
+            LOGGER.error("Caught error '{}'.", ex.getMessage(), ex);
             throw ex;
         } finally {
             RequestId.remove();
