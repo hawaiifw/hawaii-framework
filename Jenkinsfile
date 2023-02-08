@@ -2,9 +2,13 @@ import org.apache.commons.lang.RandomStringUtils
 
 pipeline {
     environment {
+        // General environment variables
         ARTIFACT_NAME = "hawaii-framework"
         BUILD_IMAGE = "eclipse-temurin:17-jdk-jammy"
         TZ = "Europe/Amsterdam"
+        // Credentials needed to push to internal Artifactory
+        // This will automatically populate ILIONXARTIFACTORY_USER_USR and ILIONXARTIFACTORY_USER_PSW too
+        ILIONXARTIFACTORY_USER = credentials('jenkins-artifactory-user')
     }
     agent any
     triggers {

@@ -251,8 +251,8 @@ subprojects {
                     url = uri("https://artifactory.ilionx.cloud/artifactory/libs-release-local/")
                 }
                 credentials {
-                    username = System.getenv("ILIONXARTIFACTORY_USERNAME")
-                    password = System.getenv("ILIONXARTIFACTORY_PASSWORD")
+                    username = System.getenv("ILIONXARTIFACTORY_USER_USR")
+                    password = System.getenv("ILIONXARTIFACTORY_USER_PSW")
                 }
             }
         }
