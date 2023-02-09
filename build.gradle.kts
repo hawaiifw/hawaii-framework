@@ -242,5 +242,19 @@ subprojects {
                 }
             }
         }
+        repositories {
+            maven {
+                name = "ilionxartifactory"
+                if (rootProject.version.toString().endsWith("-SNAPSHOT")) {
+                    url = uri("https://artifactory.ilionx.cloud/artifactory/libs-snapshot-local/")
+                } else {
+                    url = uri("https://artifactory.ilionx.cloud/artifactory/libs-release-local/")
+                }
+                credentials {
+                    username = System.getenv("ILIONXARTIFACTORY_USER_USR")
+                    password = System.getenv("ILIONXARTIFACTORY_USER_PSW")
+                }
+            }
+        }
     }
 }
