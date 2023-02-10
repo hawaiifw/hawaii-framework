@@ -19,13 +19,11 @@ package org.hawaiiframework.boot.autoconfigure;
 import org.hawaiiframework.context.ApplicationContextBinderApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-@PropertySource("classpath:/config/hawaii-framework.properties")
 @Configuration
 public class HawaiiAutoConfiguration {
 

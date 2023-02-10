@@ -244,7 +244,7 @@ subprojects {
         }
         repositories {
             maven {
-                name = "ilionxartifactory"
+                name = "ilionxArtifactory"
                 if (rootProject.version.toString().endsWith("-SNAPSHOT")) {
                     url = uri("https://artifactory.ilionx.cloud/artifactory/libs-snapshot-local/")
                 } else {
@@ -253,6 +253,25 @@ subprojects {
                 credentials {
                     username = System.getenv("ILIONXARTIFACTORY_USER_USR")
                     password = System.getenv("ILIONXARTIFACTORY_USER_PSW")
+                }
+            }
+            maven {
+                name = "cdaasJfrogArtifactory"
+                if (rootProject.version.toString().endsWith("-SNAPSHOT")) {
+                    url = uri("https://vzcdaas.jfrog.io/artifactory/win-libs-snapshots/")
+                } else {
+                    url = uri("https://vzcdaas.jfrog.io/artifactory/win-libs-releases/")
+                }
+
+                if (System.getenv("CDAAS_JFROG_ARTIFACTORY_PWD") != null) {
+                    credentials {
+                        username = System.getenv("CDAAS_JFROG_ARTIFACTORY_UID")
+                        password = System.getenv("CDAAS_JFROG_ARTIFACTORY_PWD")
+                    }
+                    authentication {
+                        create<BasicAuthentication>("basic")
+                    }
+
                 }
             }
         }
