@@ -262,16 +262,12 @@ subprojects {
                 } else {
                     url = uri("https://vzcdaas.jfrog.io/artifactory/win-libs-releases/")
                 }
-
-                if (System.getenv("CDAAS_JFROG_ARTIFACTORY_PWD") != null) {
-                    credentials {
-                        username = System.getenv("CDAAS_JFROG_ARTIFACTORY_UID")
-                        password = System.getenv("CDAAS_JFROG_ARTIFACTORY_PWD")
-                    }
-                    authentication {
-                        create<BasicAuthentication>("basic")
-                    }
-
+                credentials {
+                    username = System.getenv("CDAAS_JFROG_ARTIFACTORY_USER_USR")
+                    password = System.getenv("CDAAS_JFROG_ARTIFACTORY_USER_PSW")
+                }
+                authentication {
+                    create<BasicAuthentication>("basic")
                 }
             }
         }
