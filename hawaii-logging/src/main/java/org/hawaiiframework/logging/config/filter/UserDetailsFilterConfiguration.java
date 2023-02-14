@@ -48,7 +48,7 @@ public class UserDetailsFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(UserDetailsFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:200}")
     private int filterOrder;
 
     /**

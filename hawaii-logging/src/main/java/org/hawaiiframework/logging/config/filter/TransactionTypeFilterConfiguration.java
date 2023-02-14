@@ -43,7 +43,7 @@ public class TransactionTypeFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(TransactionTypeFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-700}")
     private int filterOrder;
 
     /**

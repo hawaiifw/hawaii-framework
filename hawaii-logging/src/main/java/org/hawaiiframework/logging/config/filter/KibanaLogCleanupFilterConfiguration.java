@@ -41,7 +41,7 @@ public class KibanaLogCleanupFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(KibanaLogCleanupFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-1400}")
     private int filterOrder;
 
     /**

@@ -41,13 +41,13 @@ public class ContainerNameHttpHeaderFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(ContainerNameHttpHeaderFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Hostname}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-1100}")
     private int filterOrder;
 
-    @Value("${" + CONFIG_PREFIX + ".hostname}")
+    @Value("${" + CONFIG_PREFIX + ".hostname:localhost}")
     private String hostname;
 
     /**

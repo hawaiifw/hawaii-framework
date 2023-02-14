@@ -45,10 +45,10 @@ public class OpenTelemetryTraceIdResponseFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(OpenTelemetryTraceIdResponseFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:-1000}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:traceid}")
     private int filterOrder;
 
     /**

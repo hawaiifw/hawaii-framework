@@ -49,7 +49,7 @@ public class SoftwareVersionLogFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(SoftwareVersionLogFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-1200}")
     private int filterOrder;
 
     /**

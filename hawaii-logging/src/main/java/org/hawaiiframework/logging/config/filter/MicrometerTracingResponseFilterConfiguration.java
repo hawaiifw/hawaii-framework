@@ -46,10 +46,10 @@ public class MicrometerTracingResponseFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(MicrometerTracingResponseFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:traceid}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-1000}")
     private int filterOrder;
 
     /**

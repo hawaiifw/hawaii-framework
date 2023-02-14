@@ -43,10 +43,10 @@ public class BusinessTransactionIdFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(BusinessTransactionIdFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Business-Tx-Id}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-600}")
     private int filterOrder;
 
     /**

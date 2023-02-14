@@ -43,7 +43,7 @@ public class RequestDurationFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(RequestDurationFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-1300}")
     private int filterOrder;
 
     /**

@@ -42,10 +42,10 @@ public class RequestIdFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(RequestIdFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Request-Id}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-400}")
     private int filterOrder;
 
     /**

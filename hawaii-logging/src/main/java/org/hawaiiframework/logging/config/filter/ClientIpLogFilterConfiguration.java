@@ -43,10 +43,10 @@ public class ClientIpLogFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(ClientIpLogFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Frontend-IP-Address}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-800}")
     private int filterOrder;
 
 

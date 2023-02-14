@@ -44,7 +44,7 @@ public class RequestResponseLogFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(RequestResponseLogFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-300}")
     private int filterOrder;
 
     /**

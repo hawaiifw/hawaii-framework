@@ -42,10 +42,10 @@ public class TransactionIdFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(TransactionIdFilterConfiguration.class);
     
-    @Value("${" + CONFIG_PREFIX + ".http-header}")
+    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Tx-Id}")
     private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order}")
+    @Value("${" + CONFIG_PREFIX + ".order:-500}")
     private int filterOrder;
 
     /**
