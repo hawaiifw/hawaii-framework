@@ -21,3 +21,5 @@ tmp/
 secring.gpg
 
 .tool-versions
+
+.secrets
