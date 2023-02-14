@@ -9,7 +9,8 @@ pipeline {
         // Credentials needed to push to internal Artifactory
         // This will automatically populate ILIONXARTIFACTORY_USER_USR and ILIONXARTIFACTORY_USER_PSW too
         ILIONXARTIFACTORY_USER = credentials('jenkins-artifactory-user')
-        CDAAS_JFROG_ARTIFACTORY_USER = credentials('CDAAS_JFROG_ARTIFACTORY')
+        // This will automatically populate CDAASJFROGARTIFACTORY_USER_USR and CDAASJFROGARTIFACTORY_USER_PSW too
+        CDAASJFROGARTIFACTORY_USER = credentials('vzcdaas-jfrogio-user')
     }
     agent any
     triggers {

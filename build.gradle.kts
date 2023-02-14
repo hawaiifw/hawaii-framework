@@ -263,8 +263,8 @@ subprojects {
                     url = uri("https://vzcdaas.jfrog.io/artifactory/win-libs-releases/")
                 }
                 credentials {
-                    username = System.getenv("CDAAS_JFROG_ARTIFACTORY_USER_USR")
-                    password = System.getenv("CDAAS_JFROG_ARTIFACTORY_USER_PSW")
+                    username = System.getenv("CDAASJFROGARTIFACTORY_USER_USR")
+                    password = System.getenv("CDAASJFROGARTIFACTORY_USER_PSW")
                 }
                 authentication {
                     create<BasicAuthentication>("basic")
