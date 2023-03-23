@@ -9,6 +9,7 @@ public interface GuardedMethodInvoker {
      * Invoke the invocation if it's not active.
      *
      * @param method The method to invoke.
+     * @return {@code true} if the invocation was attempted, {@code false} if another invocation was active.
      */
-    void invokeIfNotActive(GuardedMethod method);
+    boolean invokeIfNotActive(GuardedMethod method);
 }

@@ -29,14 +29,16 @@ public class GuardedMethodInvokerImpl implements GuardedMethodInvoker {
     }
 
     @Override
-    public void invokeIfNotActive(final GuardedMethod invocation) {
+    public boolean invokeIfNotActive(final GuardedMethod invocation) {
         if (semaphore.tryAcquire()) {
             try {
                 invocation.invoke();
             } finally {
                 semaphore.release();
             }
+            return true;
         }
+        return false;
     }
 
 }
