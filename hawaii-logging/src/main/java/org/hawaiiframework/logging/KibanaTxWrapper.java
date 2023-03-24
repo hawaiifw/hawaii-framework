@@ -16,12 +16,18 @@
 
 package org.hawaiiframework.logging;
 
+import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
+import static org.hawaiiframework.logging.model.KibanaLogFields.tagCloseable;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
+import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
 
 /**
  * Helper to start a hawaii transaction, for logging purposes.
@@ -43,41 +49,66 @@ public final class KibanaTxWrapper {
     /**
      * Wrap the call with a kibana transaction.
      *
-     * @param endPoint The endpoint's name.
+     * @param system   The system's name.
      * @param txName   The call's name.
      * @param supplier The actual code to invoke.
      * @param <T>      The return type.
      * @return The value returned by the {@code supplier}.
      */
     @SuppressWarnings({"unused", "try", "PMD.AvoidCatchingThrowable"})
-    public static <T> T kibanaTx(final String endPoint, final String txName, final Supplier<T> supplier) {
-        try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(endPoint, txName))) {
+    public static <T> T kibanaTx(final String system, final String txName, final Supplier<T> supplier) {
+        final long startTime = System.nanoTime();
+
+        try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
+            logStart();
             return supplier.get();
         } catch (Throwable throwable) {
             logError(throwable);
             throw throwable;
+        } finally {
+            logEnd(startTime);
         }
     }
 
     /**
      * Wrap the call with a kibana transaction.
      *
-     * @param endPoint The endpoint's name.
-     * @param txName   The call's name.
+     * @param system  The system's name.
+     * @param txName  The call's name.
      * @param wrapped The actual code to invoke.
      */
     @SuppressWarnings({"unused", "try", "PMD.AvoidCatchingThrowable"})
-    public static void kibanaTx(final String endPoint, final String txName, final WrappedInvocation wrapped) {
-        try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(endPoint, txName))) {
+    public static void kibanaTx(final String system, final String txName, final WrappedInvocation wrapped) {
+        final long startTime = System.nanoTime();
+
+        try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
+            logStart();
             wrapped.invoke();
         } catch (Throwable throwable) {
             logError(throwable);
             throw throwable;
+        } finally {
+            logEnd(startTime);
         }
     }
 
-    private static String getTxType(final String endPoint, final String txName) {
-        return format("%s.%s", endPoint, txName);
+    @SuppressWarnings("try")
+    private static void logStart() {
+        try (AutoCloseableKibanaLogField startTag = tagCloseable(LOG_TYPE, CALL_START)) {
+            LOGGER.info("Started tx.");
+        }
+    }
+    @SuppressWarnings("try")
+    private static void logEnd(final long startTime) {
+        final String duration = format("%.2f", (System.nanoTime() - startTime) / 1E6);
+        try (AutoCloseableKibanaLogField endTag = tagCloseable(LOG_TYPE, END);
+                AutoCloseableKibanaLogField durationTag = tagCloseable(TX_DURATION, duration)) {
+            LOGGER.info("Duration '{}' ms.", duration);
+        }
+    }
+
+    private static String getTxType(final String system, final String txName) {
+        return format("%s.%s", system, txName);
     }
 
     @SuppressWarnings("PMD.LawOfDemeter")
