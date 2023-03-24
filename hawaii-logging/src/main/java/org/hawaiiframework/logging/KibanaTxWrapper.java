@@ -18,6 +18,7 @@ package org.hawaiiframework.logging;
 
 import org.hawaiiframework.exception.HawaiiException;
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
+import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.util.Invocable;
 import org.hawaiiframework.util.Returnable;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import static java.lang.String.format;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFields.tagCloseable;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
@@ -106,7 +108,7 @@ public final class KibanaTxWrapper {
     @SuppressWarnings({"unused", "try"})
     private static void logStart() {
         try (AutoCloseableKibanaLogField startTag = tagCloseable(LOG_TYPE, CALL_START)) {
-            LOGGER.info("Started tx.");
+            LOGGER.info("Started '{}'.", KibanaLogFields.get(TX_TYPE));
         }
     }
 
