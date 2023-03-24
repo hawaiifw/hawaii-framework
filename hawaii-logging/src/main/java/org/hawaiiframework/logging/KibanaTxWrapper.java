@@ -17,6 +17,7 @@
 package org.hawaiiframework.logging;
 
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
+import org.hawaiiframework.util.Invocable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,15 +76,15 @@ public final class KibanaTxWrapper {
      *
      * @param system  The system's name.
      * @param txName  The call's name.
-     * @param wrapped The actual code to invoke.
+     * @param invocable The actual code to invoke.
      */
     @SuppressWarnings({"unused", "try", "PMD.AvoidCatchingThrowable"})
-    public static void kibanaTx(final String system, final String txName, final WrappedInvocation wrapped) {
+    public static void kibanaTx(final String system, final String txName, final Invocable invocable) throws Throwable {
         final long startTime = System.nanoTime();
 
         try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
             logStart();
-            wrapped.invoke();
+            invocable.invoke();
         } catch (Throwable throwable) {
             logError(throwable);
             throw throwable;
