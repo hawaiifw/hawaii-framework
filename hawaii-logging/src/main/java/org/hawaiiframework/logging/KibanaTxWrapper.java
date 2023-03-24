@@ -16,12 +16,12 @@
 
 package org.hawaiiframework.logging;
 
+import org.hawaiiframework.exception.HawaiiException;
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.util.Invocable;
+import org.hawaiiframework.util.Returnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
@@ -50,22 +50,25 @@ public final class KibanaTxWrapper {
     /**
      * Wrap the call with a kibana transaction.
      *
-     * @param system   The system's name.
-     * @param txName   The call's name.
-     * @param supplier The actual code to invoke.
-     * @param <T>      The return type.
+     * @param system     The system's name.
+     * @param txName     The call's name.
+     * @param returnable The actual code to invoke.
+     * @param <T>        The return type.
      * @return The value returned by the {@code supplier}.
      */
     @SuppressWarnings({"unused", "try", "PMD.AvoidCatchingThrowable"})
-    public static <T> T kibanaTx(final String system, final String txName, final Supplier<T> supplier) {
+    public static <T> T kibanaTx(final String system, final String txName, final Returnable<T> returnable) {
         final long startTime = System.nanoTime();
 
         try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
             logStart();
-            return supplier.get();
+            return returnable.invoke();
+        } catch (RuntimeException rethrown) {
+            logError(rethrown);
+            throw rethrown;
         } catch (Throwable throwable) {
             logError(throwable);
-            throw throwable;
+            throw new HawaiiException(throwable);
         } finally {
             logEnd(startTime);
         }
@@ -74,8 +77,8 @@ public final class KibanaTxWrapper {
     /**
      * Wrap the call with a kibana transaction.
      *
-     * @param system  The system's name.
-     * @param txName  The call's name.
+     * @param system    The system's name.
+     * @param txName    The call's name.
      * @param invocable The actual code to invoke.
      */
     @SuppressWarnings({"unused", "try", "PMD.AvoidCatchingThrowable"})
@@ -99,6 +102,7 @@ public final class KibanaTxWrapper {
             LOGGER.info("Started tx.");
         }
     }
+
     @SuppressWarnings("try")
     private static void logEnd(final long startTime) {
         final String duration = format("%.2f", (System.nanoTime() - startTime) / 1E6);
