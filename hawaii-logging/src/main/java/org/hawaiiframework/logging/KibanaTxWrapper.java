@@ -88,9 +88,12 @@ public final class KibanaTxWrapper {
         try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
             logStart();
             invocable.invoke();
+        } catch (RuntimeException rethrown) {
+            logError(rethrown);
+            throw rethrown;
         } catch (Throwable throwable) {
             logError(throwable);
-            throw throwable;
+            throw new HawaiiException(throwable);
         } finally {
             logEnd(startTime);
         }
