@@ -79,7 +79,7 @@ public final class KibanaTxWrapper {
      * @param invocable The actual code to invoke.
      */
     @SuppressWarnings({"unused", "try", "PMD.AvoidCatchingThrowable"})
-    public static void kibanaTx(final String system, final String txName, final Invocable invocable) throws Throwable {
+    public static void kibanaTx(final String system, final String txName, final Invocable invocable) {
         final long startTime = System.nanoTime();
 
         try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
