@@ -61,16 +61,18 @@ public final class KibanaTxWrapper {
         final long startTime = System.nanoTime();
 
         try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
-            logStart();
-            return returnable.invoke();
-        } catch (RuntimeException rethrown) {
-            logError(rethrown);
-            throw rethrown;
-        } catch (Throwable throwable) {
-            logError(throwable);
-            throw new HawaiiException(throwable);
-        } finally {
-            logEnd(startTime);
+            try {
+                logStart();
+                return returnable.invoke();
+            } catch (RuntimeException rethrown) {
+                logError(rethrown);
+                throw rethrown;
+            } catch (Throwable throwable) {
+                logError(throwable);
+                throw new HawaiiException(throwable);
+            } finally {
+                logEnd(startTime);
+            }
         }
     }
 
@@ -86,27 +88,29 @@ public final class KibanaTxWrapper {
         final long startTime = System.nanoTime();
 
         try (KibanaLogTransaction kibanaLogTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
-            logStart();
-            invocable.invoke();
-        } catch (RuntimeException rethrown) {
-            logError(rethrown);
-            throw rethrown;
-        } catch (Throwable throwable) {
-            logError(throwable);
-            throw new HawaiiException(throwable);
-        } finally {
-            logEnd(startTime);
+            try {
+                logStart();
+                invocable.invoke();
+            } catch (RuntimeException rethrown) {
+                logError(rethrown);
+                throw rethrown;
+            } catch (Throwable throwable) {
+                logError(throwable);
+                throw new HawaiiException(throwable);
+            } finally {
+                logEnd(startTime);
+            }
         }
     }
 
-    @SuppressWarnings("try")
+    @SuppressWarnings({"unused", "try"})
     private static void logStart() {
         try (AutoCloseableKibanaLogField startTag = tagCloseable(LOG_TYPE, CALL_START)) {
             LOGGER.info("Started tx.");
         }
     }
 
-    @SuppressWarnings("try")
+    @SuppressWarnings({"unused", "try"})
     private static void logEnd(final long startTime) {
         final String duration = format("%.2f", (System.nanoTime() - startTime) / 1E6);
         try (AutoCloseableKibanaLogField endTag = tagCloseable(LOG_TYPE, END);
