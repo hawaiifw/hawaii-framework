@@ -1,7 +1,9 @@
 package org.hawaiiframework.util.semaphore;
 
+import org.hawaiiframework.util.Invocable;
+
 /**
- * Guard that only one {@link GuardedMethod} is active at one point in time.
+ * Guard that only one {@link Invocable} is active at one point in time.
  */
 public interface GuardedMethodInvoker {
 
@@ -11,5 +13,5 @@ public interface GuardedMethodInvoker {
      * @param method The method to invoke.
      * @return {@code true} if the invocation was attempted, {@code false} if another invocation was active.
      */
-    boolean invokeIfNotActive(GuardedMethod method);
+    boolean invokeIfNotActive(Invocable method);
 }
