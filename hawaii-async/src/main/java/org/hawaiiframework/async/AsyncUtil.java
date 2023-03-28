@@ -2,6 +2,7 @@ package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.exception.HawaiiTaskExecutionException;
 import org.hawaiiframework.exception.HawaiiException;
+import org.hawaiiframework.util.Void;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;

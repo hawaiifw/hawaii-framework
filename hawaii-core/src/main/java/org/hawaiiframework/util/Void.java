@@ -1,4 +1,4 @@
-package org.hawaiiframework.async;
+package org.hawaiiframework.util;
 
 /**
  * Class that represents a void method invocation result.
