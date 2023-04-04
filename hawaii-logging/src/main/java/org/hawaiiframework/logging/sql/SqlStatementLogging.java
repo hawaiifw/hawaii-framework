@@ -23,8 +23,20 @@ public final class SqlStatementLogging {
      * @return The auto closeable state.
      */
     public static SqlLoggingState suppress() {
+        return suppress(true);
+    }
+
+    /**
+     * Suppress logging. The {@code suppressed} can be used to wire suppression into calling code.
+     *
+     * @param suppressed Flag to allow configuration of suppression.
+     * @return The auto closeable state.
+     */
+    public static SqlLoggingState suppress(final boolean suppressed) {
         final SqlLoggingState suppressor = new SqlLoggingState();
-        THREAD_LOCAL_STORE.set(suppressor);
+        if (suppressed) {
+            THREAD_LOCAL_STORE.set(suppressor);
+        }
         return suppressor;
     }
 
