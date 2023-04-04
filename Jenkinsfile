@@ -60,19 +60,19 @@ pipeline {
         }
     }
     post {
-        always {
-            // Save log files of the containers before we shut them down
-            sh "docker logs " + env.BUILD_CONTAINER + " > container-" + env.BUILD_CONTAINER + ".log 2>&1 || true"
-
-            // Clean up the various stuff we've created along the way
-            sh "docker rm -f " + env.BUILD_CONTAINER + " " + " || true"
-
-            // Save the log files as artifacts so we can look at them later
-            archiveArtifacts artifacts: "container-*.log"
-
-            // Clean up the container logs to they don't linger around for the next build
-            sh "rm -rf container-*.log || true"
-        }
+//        always {
+//            // Save log files of the containers before we shut them down
+//            sh "docker logs " + env.BUILD_CONTAINER + " > container-" + env.BUILD_CONTAINER + ".log 2>&1 || true"
+//
+//            // Clean up the various stuff we've created along the way
+//            sh "docker rm -f " + env.BUILD_CONTAINER + " " + " || true"
+//
+//            // Save the log files as artifacts so we can look at them later
+//            archiveArtifacts artifacts: "container-*.log"
+//
+//            // Clean up the container logs to they don't linger around for the next build
+//            sh "rm -rf container-*.log || true"
+//        }
         cleanup {
             script {
                 cleanWs()
