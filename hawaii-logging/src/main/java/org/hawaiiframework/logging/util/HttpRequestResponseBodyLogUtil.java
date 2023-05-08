@@ -15,13 +15,12 @@
  */
 package org.hawaiiframework.logging.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
 import org.slf4j.Logger;
 import org.springframework.http.client.ClientHttpResponse;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,6 +34,7 @@ import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Utility for logging requests / responses.
@@ -88,7 +88,14 @@ public class HttpRequestResponseBodyLogUtil {
      * @return The body.
      */
     public String getTxResponseBody(final ContentCachingWrappedResponse servletResponse) {
-        return maskPasswords(toString(servletResponse.getContentAsByteArray(), servletResponse.getCharacterEncoding()));
+        String characterEncoding = servletResponse.getCharacterEncoding();
+        if (APPLICATION_JSON_VALUE.equals(servletResponse.getContentType())) {
+            characterEncoding = "UTF-8";
+        }
+        if (characterEncoding == null || characterEncoding.isEmpty()) {
+            characterEncoding = Charset.defaultCharset().name();
+        }
+        return maskPasswords(toString(servletResponse.getContentAsByteArray(), characterEncoding));
     }
 
     /**
