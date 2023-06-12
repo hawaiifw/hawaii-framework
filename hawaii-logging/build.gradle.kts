@@ -15,7 +15,7 @@ dependencies {
     compileOnly("io.micrometer:micrometer-tracing")
     compileOnly("org.apache.cxf:cxf-rt-features-logging:${project.extra["apacheCxfVersion"]}")
     compileOnly("org.aspectj:aspectjrt")
-    compileOnly("org.springframework.cloud:spring-cloud-context:4.0.0-M5")
+    compileOnly("org.springframework.cloud:spring-cloud-context:4.0.3")
     compileOnly("org.springframework.security:spring-security-core")
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("net.ttddyy:datasource-proxy:${project.extra["dataSourceProxyVersion"]}")

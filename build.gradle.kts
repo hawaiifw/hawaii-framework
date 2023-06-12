@@ -7,15 +7,18 @@ plugins {
     // For publishing
     id("signing")
     id("maven-publish")
-    id("io.github.gradle-nexus.publish-plugin") version ("1.1.0")
+    //    id("io.github.gradle-nexus.publish-plugin") version ("1.1.0")
+    id("io.github.gradle-nexus.publish-plugin") version ("2.0.0-rc-1")
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
-    id("com.github.spotbugs") version ("5.0.13")
+    id("com.github.spotbugs") version ("5.0.14")
     id("pmd")
 
     // Dependency management
     id("io.spring.dependency-management") version ("1.1.0")
+
+    id("io.beekeeper.gradle.plugins.dependency-updates") version "0.14.0"
 }
 
 apply(plugin = "io.github.gradle-nexus.publish-plugin")
@@ -33,19 +36,19 @@ subprojects {
     project.group = "org.hawaiiframework"
 
     buildscript {
-        extra.set("springBootVersion", "3.0.0")
-        extra.set("apacheCxfVersion", "3.5.4")
+        extra.set("springBootVersion", "3.1.0")
+        extra.set("apacheCxfVersion", "4.0.2")
         extra.set("bouncycastleVersion", "1.70")
-        extra.set("commonsIoVersion", "2.11.0")
+        extra.set("commonsIoVersion", "2.13.0")
         extra.set("commonsTextVersion", "1.10.0")
-        extra.set("dataSourceProxyVersion", "1.8")
+        extra.set("dataSourceProxyVersion", "1.9")
         extra.set("hamcrestVersion", "2.2")
         extra.set("hibernatorValidatorVersion", "8.0.0.Final")
-        extra.set("httpcomponentsClient5Version", "5.1.3")
+        extra.set("httpcomponentsClient5Version", "5.2.1")
         extra.set("jasyptVersion", "1.9.3")
-        extra.set("nimbusJoseJwtVersion", "9.25.6")
-        extra.set("opentelemetryVersion", "1.19.0")
-        extra.set("orgJsonVersion", "20220924")
+        extra.set("nimbusJoseJwtVersion", "9.31")
+        extra.set("opentelemetryVersion", "1.27.0")
+        extra.set("orgJsonVersion", "20230227")
         extra.set("validationApiVersion", "3.0.2")
     }
 
@@ -81,12 +84,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven {
-            url = uri("https://repo.spring.io/milestone")
-        }
-        maven {
-            url = uri("https://repo.spring.io/snapshot")
-        }
         mavenLocal()
     }
 

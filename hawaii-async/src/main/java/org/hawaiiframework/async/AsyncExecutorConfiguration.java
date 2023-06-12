@@ -61,6 +61,7 @@ import java.util.concurrent.Executor;
  * @author Paul Klos
  * @since 2.0.0
  */
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
 @Configuration
 @ConditionalOnProperty(prefix = "hawaii.async", name = "enabled", matchIfMissing = true)
 @Import({DataSourceProxyConfiguration.class, TaskListenerFactoryConfiguration.class})
