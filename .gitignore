@@ -18,3 +18,8 @@ target/
 
 # Ignore unencrypted key ring
 secring.gpg
+
+#
+tmp/
+.secrets
+.tool-versions
