@@ -1,5 +1,7 @@
 package org.hawaiiframework.util.semaphore;
 
+import org.hawaiiframework.util.Invocable;
+
 import java.util.concurrent.Semaphore;
 
 /**
@@ -29,14 +31,16 @@ public class GuardedMethodInvokerImpl implements GuardedMethodInvoker {
     }
 
     @Override
-    public void invokeIfNotActive(final GuardedMethod invocation) {
+    public boolean invokeIfNotActive(final Invocable invocation) {
         if (semaphore.tryAcquire()) {
             try {
                 invocation.invoke();
             } finally {
                 semaphore.release();
             }
+            return true;
         }
+        return false;
     }
 
 }

@@ -17,12 +17,13 @@ package org.hawaiiframework.logging.web.filter;
 
 import org.apache.commons.io.IOUtils;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpUpgradeHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,6 +53,9 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
 
     /**
      * The constructor.
+     *
+     * @param request  The original request.
+     * @param response The (wrapped) response.
      */
     public ResettableHttpServletRequest(final HttpServletRequest request, final HttpServletResponse response) {
         super(request);
@@ -60,7 +64,9 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
-     * Reset the input stream so we can read it again.
+     * Reset the input stream, so we can read it again.
+     *
+     * @throws IOException in case reset fails.
      */
     public void reset() throws IOException {
         if (this.servletStream != null) {

@@ -77,7 +77,7 @@ public class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple5<T1, T2, T3, T4, T5> {
         if (!super.equals(o)) {
             return false;
         }
-        final Tuple6 other = (Tuple6) o;
+        final Tuple6<?, ?, ?, ?, ?, ?> other = (Tuple6) o;
         return Objects.equals(this.element6, other.element6);
     }
 

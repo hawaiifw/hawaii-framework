@@ -41,6 +41,10 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
+     *
+     * @param field The field to set.
+     * @param value The value to set.
+     * @return The field, set.
      */
     public static KibanaLogField tag(final KibanaLogField field, final Enum<?> value) {
         return tag(field, value.toString());
@@ -48,6 +52,10 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
+     *
+     * @param field The field to set.
+     * @param value The value to set.
+     * @return The field, set.
      */
     public static KibanaLogField tag(final KibanaLogField field, final int value) {
         return tag(field, Integer.toString(value));
@@ -55,6 +63,10 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
+     *
+     * @param field The field to set.
+     * @param value The value to set.
+     * @return The field, set.
      */
     public static KibanaLogField tag(final KibanaLogField field, final String value) {
         if (isBlank(value)) {
@@ -67,6 +79,10 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}.
+     *
+     * @param field  The field to set.
+     * @param values The values to set.
+     * @return The field, set.
      */
     public static KibanaLogField tag(final KibanaLogField field, final Collection<String> values) {
         if (values == null || values.isEmpty()) {
@@ -78,6 +94,10 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     *
+     * @param field The field to set.
+     * @param value The value to set.
+     * @return a closable field.
      */
     public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final Enum<?> value) {
         return tagCloseable(field, value.toString());
@@ -85,6 +105,10 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     *
+     * @param field The field to set.
+     * @param value The value to set.
+     * @return a closable field.
      */
     public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final int value) {
         return tagCloseable(field, Integer.toString(value));
@@ -92,18 +116,31 @@ public final class KibanaLogFields {
 
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     *
+     * @param field The field to set.
+     * @param value The value to set.
+     * @return a closable field.
      */
     public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final String value) {
         return new AutoCloseableKibanaLogField(tag(field, value));
     }
+
     /**
      * Sets the Kibana log field {@code field} to the {@code value}, returns an auto closeable.
+     *
+     * @param field  The field to set.
+     * @param values The value to set.
+     * @return a closable field.
      */
     public static AutoCloseableKibanaLogField tagCloseable(final KibanaLogField field, final Collection<String> values) {
         return new AutoCloseableKibanaLogField(tag(field, values));
     }
+
     /**
      * Retrieves the value for the {@code field}. It will return {@code null} if no value is set.
+     *
+     * @param field The field to retrieve the value for.
+     * @return The fields value, possibly {@code null}.
      */
     public static String get(final KibanaLogField field) {
         return getOrDefault(field, null);
@@ -111,6 +148,10 @@ public final class KibanaLogFields {
 
     /**
      * Retrieves the value for the {@code field}. It will return {@code defaultValue} if no value is set.
+     *
+     * @param field        The field to retrieve the value for.
+     * @param defaultValue The value if there is no value set.
+     * @return The field's value or the default.
      */
     public static String getOrDefault(final KibanaLogField field, final String defaultValue) {
         return StringUtils.defaultIfEmpty(MDC.get(field.getLogName()), defaultValue);
@@ -118,6 +159,8 @@ public final class KibanaLogFields {
 
     /**
      * Removes the value for the field {@code field}.
+     *
+     * @param field The field to remove.
      */
     public static void clear(final KibanaLogField field) {
         MDC.remove(field.getLogName());
@@ -125,6 +168,8 @@ public final class KibanaLogFields {
 
     /**
      * Removes the value for the fields {@code fields}.
+     *
+     * @param fields The fields to remove the values for.
      */
     public static void clear(final KibanaLogField... fields) {
         for (final KibanaLogField field : fields) {
@@ -164,6 +209,8 @@ public final class KibanaLogFields {
      * Update log fields based on the {@code KibanaLogContext}.
      * <p>
      * See {@link KibanaLogFields#getContext()}.
+     *
+     * @param logContext The context to copy.
      */
     public static void populateFromContext(final KibanaLogContext logContext) {
         if (logContext != null) {
@@ -175,6 +222,8 @@ public final class KibanaLogFields {
      * Create a new log context for the current thread's kibana log fields.
      * <p>
      * See {@link KibanaLogContext#registerKibanaLogFieldsInThisThread()}.
+     *
+     * @return a log context to use in another thread.
      */
     public static KibanaLogContext getContext() {
         return new KibanaLogContext();

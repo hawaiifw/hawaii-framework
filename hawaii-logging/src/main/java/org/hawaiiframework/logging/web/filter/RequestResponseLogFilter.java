@@ -13,24 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsAsyncHandling;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markAsInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsAsyncHandling;
 import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsInternalRedirect;
 
 /**
- * Filter that logs the input and output of each HTTP request. It also logs the duration of the request.
+ * Filter that logs the input and output of each HTTP request. It also logs the duration of the
+ * request.
  * <p>
  * For more inspiration see AbstractRequestLoggingFilter.
  *
@@ -39,6 +44,8 @@ import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.unmarkAsI
  */
 @SuppressWarnings("PMD.ExcessiveImports")
 public class RequestResponseLogFilter extends AbstractGenericFilterBean {
+
+    public static final String WRAPPED_RESPONSE_ATTRIBUTE = ContentCachingWrappedResponse.class.getName();
 
     /**
      * The logger to use.
@@ -51,11 +58,21 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     private final HawaiiRequestResponseLogger hawaiiLogger;
 
     /**
-     * The constructor.
+     * The filter voter.
      */
-    public RequestResponseLogFilter(final HawaiiRequestResponseLogger hawaiiLogger) {
+    private final FilterVoter filterVoter;
+
+    /**
+     * The constructor.
+     *
+     * @param hawaiiLogger The request response logger.
+     * @param filterVoter  The filter voter.
+     */
+    public RequestResponseLogFilter(final HawaiiRequestResponseLogger hawaiiLogger,
+            final FilterVoter filterVoter) {
         super();
         this.hawaiiLogger = hawaiiLogger;
+        this.filterVoter = filterVoter;
     }
 
     /**
@@ -65,31 +82,84 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
     @SuppressWarnings("PMD.LawOfDemeter")
     protected void doFilterInternal(
             final HttpServletRequest httpServletRequest,
-            final HttpServletResponse response,
+            final HttpServletResponse httpServletResponse,
             final FilterChain filterChain) throws ServletException, IOException {
-        LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.", httpServletRequest.getDispatcherType(),
-                isInternalRedirect(httpServletRequest));
+        LOGGER.trace("Request dispatcher type is '{}'; is forward is '{}'.",
+                httpServletRequest.getDispatcherType(),
+                isOriginalRequest(httpServletRequest));
 
 
-        // Create a new wrapped request, which we can use to get the body from.
-        final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(response);
-        final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
-
-        if (!isInternalRedirect(httpServletRequest)) {
-            hawaiiLogger.logRequest(wrappedRequest);
-        }
-
-        // Do filter
-        try {
-            filterChain.doFilter(wrappedRequest, wrappedResponse);
-        } finally {
-            if (wrappedResponse.isRedirect()) {
-                markAsInternalRedirect(wrappedRequest);
-            } else {
-                unmarkAsInternalRedirect(wrappedRequest);
-                hawaiiLogger.logResponse(wrappedRequest, wrappedResponse);
-                wrappedResponse.copyBodyToResponse();
+        if (!filterVoter.enabled(httpServletRequest) || hasWrappedResponse(httpServletRequest)) {
+            try {
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+            } finally {
+                logResponse(httpServletRequest);
             }
+        } else {
+            final ContentCachingWrappedResponse wrappedResponse = wrap(httpServletResponse);
+            final ResettableHttpServletRequest wrappedRequest = wrap(httpServletRequest, wrappedResponse);
+            storeResponse(wrappedRequest, wrappedResponse);
+
+            hawaiiLogger.logRequest(wrappedRequest);
+
+            try {
+                filterChain.doFilter(wrappedRequest, wrappedResponse);
+            } finally {
+                logResponse(httpServletRequest);
+            }
+        }
+    }
+
+    private static ResettableHttpServletRequest wrap(final HttpServletRequest httpServletRequest,
+            final ContentCachingWrappedResponse wrappedResponse) {
+        return new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
+    }
+
+    private static ContentCachingWrappedResponse wrap(final HttpServletResponse httpServletResponse) {
+        return new ContentCachingWrappedResponse(httpServletResponse);
+    }
+
+    private void storeResponse(final HttpServletRequest httpServletRequest,
+            final ContentCachingWrappedResponse wrappedResponse) {
+        httpServletRequest.setAttribute(WRAPPED_RESPONSE_ATTRIBUTE, wrappedResponse);
+    }
+
+    private boolean hasWrappedResponse(final HttpServletRequest httpServletRequest) {
+        return getStoredResponse(httpServletRequest) != null;
+    }
+
+    private ContentCachingWrappedResponse getStoredResponse(
+            final HttpServletRequest httpServletRequest) {
+        return (ContentCachingWrappedResponse) httpServletRequest.getAttribute(
+                WRAPPED_RESPONSE_ATTRIBUTE);
+    }
+
+    private void logResponse(final HttpServletRequest httpServletRequest) throws IOException {
+        if (!httpServletRequest.isAsyncStarted()) {
+            final ContentCachingWrappedResponse wrappedResponse = getStoredResponse(httpServletRequest);
+            if (wrappedResponse != null) {
+                hawaiiLogger.logResponse(httpServletRequest, wrappedResponse);
+                wrappedResponse.copyBodyToResponse();
+                handleInternalRedirect(wrappedResponse, httpServletRequest);
+            }
+        }
+        handleAsyncRequest(httpServletRequest);
+    }
+
+    private static void handleAsyncRequest(final HttpServletRequest httpServletRequest) {
+        if (httpServletRequest.isAsyncStarted()) {
+            markAsAsyncHandling(httpServletRequest);
+        } else {
+            unmarkAsAsyncHandling(httpServletRequest);
+        }
+    }
+
+    private static void handleInternalRedirect(final ContentCachingWrappedResponse wrappedResponse,
+            final HttpServletRequest httpServletRequest) {
+        if (wrappedResponse.isRedirect()) {
+            markAsInternalRedirect(httpServletRequest);
+        } else {
+            unmarkAsInternalRedirect(httpServletRequest);
         }
     }
 

@@ -16,12 +16,11 @@
 
 package org.hawaiiframework.async.http;
 
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -52,7 +51,7 @@ public class HttpComponentHttpRequestTaskAbortStrategy implements TaskAbortStrat
      *
      * @param request The request about to be executed (which we have to guard).
      */
-    public HttpComponentHttpRequestTaskAbortStrategy(@NotNull final HttpUriRequest request) {
+    public HttpComponentHttpRequestTaskAbortStrategy(@NonNull final HttpUriRequest request) {
         this.request = requireNonNull(request);
     }
 

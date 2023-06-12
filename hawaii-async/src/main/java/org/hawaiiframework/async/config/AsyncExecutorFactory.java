@@ -31,10 +31,11 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import static org.hawaiiframework.async.AsyncExecutorConfiguration.ASYNC_TIMEOUT_EXECUTOR;
 
 /**
- * Factory to create executors for the asynchronous execution of methods using the @{@link org.springframework.scheduling.annotation.Async}
+ * Factory to create executors for the asynchronous execution of methods using the {@link org.springframework.scheduling.annotation.Async}
  * annotation.
+ * <p>
+ * This factory creates the executors as defined in the {@code executors} section in the async configuration.
  *
- * This factory creates the executors as defined in the {@cod executors} section in the async configuration.
  * @author Rutger Lubbers
  * @author Paul Klos
  * @since 3.0.0
@@ -77,7 +78,7 @@ public class AsyncExecutorFactory {
         for (final ExecutorProperties executorProperties : properties.getExecutors()) {
             if (!executorNames.add(executorProperties.getName())) {
                 throw new HawaiiException(
-                    String.format("Configuration contained multiple definitions of '%s'.", executorProperties.getName()));
+                        String.format("Configuration contained multiple definitions of '%s'.", executorProperties.getName()));
             }
 
             LOGGER.info("Registering executor '{}'.", executorProperties);
@@ -85,6 +86,11 @@ public class AsyncExecutorFactory {
         }
     }
 
+    /**
+     * Get the executor names.
+     *
+     * @return The, never {@code null}, executor names.
+     */
     public Set<String> getExecutorNames() {
         return executorNames;
     }

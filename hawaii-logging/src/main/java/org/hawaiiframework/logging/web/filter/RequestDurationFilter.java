@@ -15,22 +15,24 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that logs the duration of the request.
@@ -51,28 +53,44 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
     private static final String START_TIMESTAMP = "start_timestamp";
 
     /**
+     * The filter voter.
+     */
+    private final FilterVoter filterVoter;
+
+    /**
+     * The constructor.
+     *
+     * @param filterVoter The filter voter.
+     */
+    public RequestDurationFilter(final FilterVoter filterVoter) {
+        this.filterVoter = filterVoter;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             request.setAttribute(START_TIMESTAMP, System.nanoTime());
         }
         try {
             filterChain.doFilter(request, response);
         } finally {
-            if (!isInternalRedirect(request)) {
+            if (filterVoter.enabled(request) && isOriginalRequest(request)) {
                 logEnd((Long) request.getAttribute(START_TIMESTAMP));
             }
         }
     }
 
+    @SuppressWarnings("try")
     private void logEnd(final Long start) {
         if (start == null) {
             LOGGER.info("Could not read start timestamp from request!");
             return;
         }
+
         try (AutoCloseableKibanaLogField endField = KibanaLogFields.tagCloseable(LOG_TYPE, END)) {
             final String duration = String.format("%.2f", (System.nanoTime() - start) / 1E6);
             KibanaLogFields.tag(TX_DURATION, duration);

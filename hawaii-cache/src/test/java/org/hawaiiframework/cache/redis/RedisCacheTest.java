@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -49,7 +50,7 @@ public class RedisCacheTest {
     private final String keyPrefix = "redisCacheTest_";
     private final Duration duration = Duration.ofMillis(1000);
     private final String fullKey;
-    private final Long defaultExpiry = 1L;
+    private final Duration defaultExpiry = Duration.ofMinutes(1L);
     private final Foo testObject;
 
     private HawaiiTime hawaiiTime;
@@ -59,10 +60,6 @@ public class RedisCacheTest {
 
     @Mock
     private ValueOperations<String, Foo> mockOperations;
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
 
     /**
      * Object to be tested.
@@ -77,50 +74,61 @@ public class RedisCacheTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        //        MockitoAnnotations.openMocks(this);
         when(mockTemplate.opsForValue()).thenReturn(mockOperations);
         this.hawaiiTime = new HawaiiTime();
         this.redisCache = new RedisCache<>(mockTemplate, hawaiiTime, defaultExpiry, keyPrefix);
     }
 
     @Test
-    public void put() {
-        //Test 2 parameter put
+    public void put1() {
         redisCache.put(testObject.bar, testObject);
-        //Test 3 parameter put Duration
-        redisCache.put(testObject.bar, testObject, duration);
-        //Test 3 parameter put HawaiiTime
 
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
+    }
+    @Test
+    public void put2() {
+        redisCache.put(testObject.bar, testObject, duration);
+
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
+        verify(mockTemplate, times(1)).expire(eq(fullKey), eq(duration));
+    }
+
+    @Test
+    public void put3() {
         hawaiiTime.useFixedClock(LocalDateTime.now());
         final var localDateTimeTest = LocalDateTime.now().plusMinutes(5);
-        final var zonedDateTimeTest = ZonedDateTime.now().plusMinutes(10);
         final var resultLocalDateTime = Duration.between(hawaiiTime.localDateTime(), localDateTimeTest).toMillis();
-        final var resultZonedDateTime = Duration.between(hawaiiTime.zonedDateTime(), zonedDateTimeTest).toMillis();
 
-        //Testing with local date time
         redisCache.put(testObject.bar, testObject, localDateTimeTest);
-        //Testing with zoned date time
-        redisCache.put(testObject.bar, testObject, zonedDateTimeTest);
-        //Test eternity put
-        redisCache.putEternally(testObject.bar, testObject);
-
-        //Test if the template is called with the right values.
-        verify(mockTemplate.opsForValue(), times(5)).set(fullKey, testObject);
-        verify(mockTemplate, times(1)).expire(eq(fullKey), any(Long.class), eq(TimeUnit.MINUTES));
-        verify(mockTemplate, times(4)).expire(eq(fullKey), any(Long.class), eq(TimeUnit.MILLISECONDS));
-
-        verify(mockTemplate, times(1)).expire(eq(fullKey), eq(defaultExpiry), eq(TimeUnit.MINUTES));
-        verify(mockTemplate, times(1)).expire(eq(fullKey), eq(duration.toMillis()), eq(TimeUnit.MILLISECONDS));
-        verify(mockTemplate, times(1)).expire(
-                eq(fullKey), eq(Duration.ofMillis(Long.MAX_VALUE).toMillis()), eq(TimeUnit.MILLISECONDS));
-
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
         verify(mockTemplate, times(1)).expire(
                 eq(fullKey), eq(resultLocalDateTime), eq(TimeUnit.MILLISECONDS));
+    }
+    @Test
+    public void put4() {
+        hawaiiTime.useFixedClock(LocalDateTime.now());
+        final var zonedDateTimeTest = ZonedDateTime.now().plusMinutes(10);
+        final var resultZonedDateTime = Duration.between(hawaiiTime.zonedDateTime(), zonedDateTimeTest).toMillis();
 
+        //Testing with zoned date time
+        redisCache.put(testObject.bar, testObject, zonedDateTimeTest);
+
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
         verify(mockTemplate, times(1)).expire(
                 eq(fullKey), eq(resultZonedDateTime), eq(TimeUnit.MILLISECONDS));
     }
 
+    @Test
+    public void put5() {
+        //Test eternity put
+        redisCache.putEternally(testObject.bar, testObject);
+
+        verify(mockTemplate.opsForValue(), times(1)).set(fullKey, testObject);
+        verify(mockTemplate, times(1)).expire(
+                eq(fullKey), eq(Duration.ofMillis(Long.MAX_VALUE)));
+
+    }
     @Test
     public void putProducesNullPointerOnPassingNull() {
         //Test if put produces an error
@@ -155,7 +163,7 @@ public class RedisCacheTest {
         redisCache.putEternally(testObject.bar, testObject);
 
         for (var entry : tests.entrySet()) {
-            assertThrows(NullPointerException.class, entry.getKey(), entry.getValue());
+            assertThrows("Expected NPE for '" + entry.getKey() + "'", NullPointerException.class, () -> entry.getValue().run());
         }
 
         //Verify if redis template is called appropriately
@@ -174,17 +182,10 @@ public class RedisCacheTest {
 
     @Test
     public void getProducesNullPointerOnPassingNull() {
-        //Test if get produces an error
-        List<Runnable> tests = new ArrayList<>();
-        tests.add(() -> redisCache.get(null));
+        assertThrows(NullPointerException.class, () -> redisCache.get(null));
 
         //Passing calls
         redisCache.get(testObject.bar);
-
-        for (Runnable item : tests) {
-            exception.expect(NullPointerException.class);
-            item.run();
-        }
 
         //Verify if redis template is called appropriately
         verify(mockTemplate.opsForValue(), times(1)).get(eq(fullKey));
@@ -198,22 +199,14 @@ public class RedisCacheTest {
 
         //Verify if redis template is called x times
         verify(mockTemplate, times(2)).delete(eq(fullKey));
-
     }
 
     @Test
     public void removeProducesNullPointerOnPassingNull() {
-        //Test if get produces an error
-        List<Runnable> tests = new ArrayList<>();
-        tests.add(() -> redisCache.remove(null));
+        assertThrows(NullPointerException.class, () -> redisCache.remove(null));
 
         //Passing calls
         redisCache.remove(testObject.bar);
-
-        for (Runnable item : tests) {
-            exception.expect(NullPointerException.class);
-            item.run();
-        }
 
         //Verify if redis template is called appropriately
         verify(mockTemplate, times(1)).delete(eq(fullKey));
@@ -221,19 +214,6 @@ public class RedisCacheTest {
 
     private String constructKey(String key) {
         return keyPrefix + key;
-    }
-
-    public static void assertThrows(Class<? extends Exception> expectedException, String failingMessage, Runnable action) {
-        try {
-            action.run();
-            fail("Fail at: " + failingMessage + ", expected action to throw " + expectedException.getSimpleName() + " but it did not.");
-        } catch (Exception e) {
-            if (!expectedException.isInstance(e)) {
-                fail("Fail at: " + failingMessage + ", Expected action should have thrown: " + expectedException.getSimpleName()
-                        + ", but was: " + e.getClass()
-                        .getSimpleName());
-            }
-        }
     }
 
     private class Foo {

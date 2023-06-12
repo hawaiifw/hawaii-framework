@@ -17,6 +17,8 @@
 package org.hawaiiframework.logging.config.filter;
 
 import org.hawaiiframework.logging.web.filter.TransactionTypeFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
@@ -24,27 +26,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link TransactionTypeFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class TransactionTypeFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.transaction-type";
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
-     */
-    public TransactionTypeFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(TransactionTypeFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".order:-700}")
+    private int filterOrder;
 
     /**
      * Create the {@link TransactionTypeFilter} bean.
@@ -53,8 +53,9 @@ public class TransactionTypeFilterConfiguration {
      * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public TransactionTypeFilter transactionTypeFilter(final ApplicationContext applicationContext) {
+        LOGGER.trace("Configuration: order '{}'.", filterOrder);
         return new TransactionTypeFilter(applicationContext);
     }
 
@@ -65,10 +66,9 @@ public class TransactionTypeFilterConfiguration {
      * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.transaction-type", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<TransactionTypeFilter> transactionTypeFilterRegistration(
             final TransactionTypeFilter transactionNameFilter) {
-        final var filterProperties = hawaiiLoggingFilterConfigurationProperties.getTransactionType();
-        return createFilterRegistrationBean(transactionNameFilter, filterProperties);
+        return createFilterRegistrationBean(transactionNameFilter, filterOrder);
     }
 }

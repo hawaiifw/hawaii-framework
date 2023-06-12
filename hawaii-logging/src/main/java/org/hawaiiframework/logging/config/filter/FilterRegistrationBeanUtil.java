@@ -16,18 +16,25 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import org.slf4j.Logger;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.Filter;
+
 import java.util.EnumSet;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Utility for registering filter registration beans for servlet filters.
  */
 public final class FilterRegistrationBeanUtil {
 
-    public static final EnumSet<DispatcherType> ALL_DISPATCHER_TYPES = EnumSet.allOf(DispatcherType.class);
+    private static final Logger LOGGER = getLogger(FilterRegistrationBeanUtil.class);
+
+
+    private static final EnumSet<DispatcherType> ALL_DISPATCHER_TYPES = EnumSet.allOf(DispatcherType.class);
 
     /**
      * Utility constructor.
@@ -39,33 +46,33 @@ public final class FilterRegistrationBeanUtil {
     /**
      * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
      *
-     * @param filter           the filter
-     * @param filterProperties the configuration properties
-     * @return the wrapped filter
+     * @param filter      the filter.
+     * @param filterOrder the filter's order.
+     * @param <T>         the specific filter type.
+     * @return the filter registration.
      */
     public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
             final T filter,
-            final LoggingFilterProperties filterProperties) {
-        final FilterRegistrationBean<T> result = new FilterRegistrationBean<>(filter);
-        result.setOrder(filterProperties.getOrder());
-        result.setDispatcherTypes(ALL_DISPATCHER_TYPES);
-        return result;
+            final int filterOrder) {
+        return createFilterRegistrationBean(filter, filterOrder, ALL_DISPATCHER_TYPES);
     }
 
     /**
      * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
      *
-     * @param filter           the filter
-     * @param filterProperties the configuration properties
-     * @param dispatcherTypes  the request dispatcher types the filter is used for
-     * @return the wrapped filter
+     * @param filter          the filter
+     * @param filterOrder     the filter's order.
+     * @param dispatcherTypes the request dispatcher types the filter is used for
+     * @param <T>             the specific filter type.
+     * @return the filter registration.
      */
     public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
             final T filter,
-            final LoggingFilterProperties filterProperties,
+            final int filterOrder,
             final EnumSet<DispatcherType> dispatcherTypes) {
+        LOGGER.trace("Setting filter order for '{}' to '{}'.", filter, filterOrder);
         final FilterRegistrationBean<T> result = new FilterRegistrationBean<>(filter);
-        result.setOrder(filterProperties.getOrder());
+        result.setOrder(filterOrder);
         result.setDispatcherTypes(dispatcherTypes);
         return result;
     }

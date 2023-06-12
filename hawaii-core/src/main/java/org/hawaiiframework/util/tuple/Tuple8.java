@@ -80,7 +80,7 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple7<T1, T2, T3, T
         if (!super.equals(o)) {
             return false;
         }
-        final Tuple8 other = (Tuple8) o;
+        final Tuple8<?, ?, ?, ?, ?, ?, ?, ?> other = (Tuple8) o;
         return Objects.equals(this.element8, other.element8);
     }
 

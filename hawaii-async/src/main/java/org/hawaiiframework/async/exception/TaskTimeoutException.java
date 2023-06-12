@@ -18,6 +18,8 @@ package org.hawaiiframework.async.exception;
 
 import org.hawaiiframework.exception.HawaiiException;
 
+import java.io.Serial;
+
 
 /**
  * Exception thrown when a task has been timed-out.
@@ -28,6 +30,12 @@ import org.hawaiiframework.exception.HawaiiException;
 public class TaskTimeoutException extends HawaiiException {
 
     /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = 7124314347993711382L;
+
+    /**
      * Constructs a new {@code TaskTimeoutException}.
      */
     public TaskTimeoutException() {
@@ -36,6 +44,8 @@ public class TaskTimeoutException extends HawaiiException {
 
     /**
      * Constructs a new {@code TaskTimeoutException} with the supplied {@code message}.
+     *
+     * @param message The exception message.
      */
     public TaskTimeoutException(final String message) {
         super(message);
@@ -43,6 +53,9 @@ public class TaskTimeoutException extends HawaiiException {
 
     /**
      * Constructs a new {@code TaskTimeoutException} with the supplied {@code message} and {@code cause}.
+     *
+     * @param message The exception message.
+     * @param cause   The exception cause.
      */
     public TaskTimeoutException(final String message, final Throwable cause) {
         super(message, cause);
@@ -50,6 +63,8 @@ public class TaskTimeoutException extends HawaiiException {
 
     /**
      * Constructs a new {@code TaskTimeoutException} with the supplied {@code cause}.
+     *
+     * @param cause The cause.
      */
     public TaskTimeoutException(final Throwable cause) {
         super(cause);

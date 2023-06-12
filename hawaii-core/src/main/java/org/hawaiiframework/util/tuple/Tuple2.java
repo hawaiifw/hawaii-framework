@@ -73,7 +73,7 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
         if (!super.equals(o)) {
             return false;
         }
-        final Tuple2 other = (Tuple2) o;
+        final Tuple2<?, ?> other = (Tuple2) o;
         return Objects.equals(this.element2, other.element2);
     }
 

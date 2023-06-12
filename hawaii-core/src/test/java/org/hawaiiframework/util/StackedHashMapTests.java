@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests for {@link StackedHashMap}.
@@ -87,7 +87,7 @@ public class StackedHashMapTests {
     public void testPeekReturnsCurrentMap() {
         map = new StackedHashMap<>();
         map.put("foo", "bar");
-        Map peekedMap = map.peek();
+        Map<Object, Object> peekedMap = map.peek();
         assertThat(peekedMap, is(equalTo(map)));
     }
 

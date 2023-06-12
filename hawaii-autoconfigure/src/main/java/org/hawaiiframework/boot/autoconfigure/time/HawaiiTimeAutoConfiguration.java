@@ -26,17 +26,24 @@ import org.springframework.context.annotation.Configuration;
 import java.time.ZoneId;
 
 /**
+ * {@link HawaiiTime} autoconfiguration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 @Configuration
-@ConditionalOnProperty(name = "hawaii.time.enabled")
+@ConditionalOnProperty(name = "hawaii.time.enabled", matchIfMissing = true)
 @EnableConfigurationProperties(HawaiiTimeProperties.class)
 public class HawaiiTimeAutoConfiguration {
 
     @Autowired
     private HawaiiTimeProperties properties;
 
+    /**
+     * Get the Hawaii Time bean.
+     *
+     * @return the hawaii time.
+     */
     @Bean
     public HawaiiTime hawaiiTime() {
         return new HawaiiTime(ZoneId.of(properties.getTimezone()));

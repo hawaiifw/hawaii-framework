@@ -1,0 +1,9 @@
+org.hawaiiframework.boot.autoconfigure.HawaiiAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.async.HawaiiAsyncAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.cache.HawaiiRedisAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.env.HawaiiEnvConfiguration
+org.hawaiiframework.boot.autoconfigure.jackson.HawaiiJacksonAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.logging.HawaiiLoggingAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.rest.HawaiiRestAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.sql.HawaiiSqlAutoConfiguration
+org.hawaiiframework.boot.autoconfigure.time.HawaiiTimeAutoConfiguration

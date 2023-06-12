@@ -48,6 +48,8 @@ public class ExecutorStatisticsView {
 
     /**
      * Create a view on {@link ExecutorStatistics}.
+     *
+     * @param statistics The statistics to use.
      */
     public ExecutorStatisticsView(final ExecutorStatistics statistics) {
         this.poolSize = statistics.getPoolSize();

@@ -27,9 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,6 +44,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
+import static org.springframework.http.HttpHeaders.EMPTY;
 
 /**
  * This class creates proper HTTP response bodies for exceptions.
@@ -61,18 +65,22 @@ import static java.util.Objects.requireNonNull;
  * @author Richard den Adel
  * @since 2.0.0
  */
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
 @ControllerAdvice
 public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler;
     private final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler;
     private final ExceptionResponseFactory exceptionResponseFactory;
     private final Map<String, ErrorResponseEnricher> errorResponseEnrichers = new ConcurrentHashMap<>();
 
     public HawaiiResponseEntityExceptionHandler(
+            final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler,
             final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler,
             final ExceptionResponseFactory exceptionResponseFactory) {
+        this.objectErrorResourceAssembler = objectErrorResourceAssembler;
         this.validationErrorResourceAssembler =
                 requireNonNull(validationErrorResourceAssembler, "'validationErrorResourceAssembler' must not be null");
         this.exceptionResponseFactory =
@@ -100,9 +108,44 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         return handleExceptionInternal(
                 e,
                 buildErrorResponseBody(e, status, request),
-                null,
+                EMPTY,
                 status,
                 request);
+    }
+
+    /**
+     * Handles {@code MethodArgumentNotValidException} instances.
+     * <p>
+     * The response status is: 400 Bad Request.
+     *
+     * @param ex      the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            @NonNull final MethodArgumentNotValidException ex,
+            @NonNull final HttpHeaders headers,
+            @NonNull final HttpStatusCode status,
+            @NonNull final WebRequest request) {
+
+        return handleExceptionInternal(ex, buildErrorResponseBody(ex, HttpStatus.valueOf(status.value()), request), EMPTY, status, request);
+    }
+
+    /**
+     * Handles {@code AccessDeniedException} instances.
+     * <p>
+     * The response status is: 403 Forbidden.
+     *
+     * @param ex      the exception
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    public ResponseEntity<Object> accessDeniedException(final AccessDeniedException ex, final WebRequest request) {
+        final HttpStatus status = HttpStatus.FORBIDDEN;
+        return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
     }
 
     /**
@@ -118,7 +161,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity<Object> handleValidationException(final ValidationException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), null, status, request);
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
     }
 
     /**
@@ -134,7 +177,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseBody
     public ResponseEntity<Object> handleApiException(final ApiException e, final WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), null, status, request);
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
     }
 
     /**
@@ -150,17 +193,6 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
         logger.error("Unhandled exception", t);
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
-    }
-
-    @Override
-    @NonNull
-    protected ResponseEntity<Object> handleExceptionInternal(
-            @NonNull final Exception ex,
-            final Object body,
-            @Nullable final HttpHeaders headers,
-            final HttpStatus status,
-            @NonNull final WebRequest request) {
-        return ResponseEntity.status(status).headers(headers).body(body);
     }
 
     /**
@@ -227,6 +259,7 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
     protected void configureResponseEnrichers() {
         addResponseEnricher(new ErrorResponseStatusEnricher());
         addResponseEnricher(new RequestInfoErrorResponseEnricher());
+        addResponseEnricher(new MethodArgumentNotValidResponseEnricher(objectErrorResourceAssembler));
         addResponseEnricher(new ValidationErrorResponseEnricher(validationErrorResourceAssembler));
         addResponseEnricher(new ApiErrorResponseEnricher());
     }

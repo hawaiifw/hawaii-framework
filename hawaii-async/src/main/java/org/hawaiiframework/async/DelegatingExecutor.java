@@ -25,13 +25,11 @@ import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.AsyncListenableTaskExecutor;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.util.concurrent.ListenableFuture;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -48,7 +46,7 @@ import java.util.stream.Collectors;
  * @author Paul Klos
  * @since 2.0.0
  */
-public class DelegatingExecutor implements AsyncListenableTaskExecutor, SchedulingTaskExecutor {
+public class DelegatingExecutor implements AsyncTaskExecutor, SchedulingTaskExecutor {
 
     /**
      * The serial version UID.
@@ -90,7 +88,7 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
      *
      * @param delegate                        the delegate
      * @param executorConfigurationProperties the configuration properties
-     * @param taskListenerFactories            The task context providers.
+     * @param taskListenerFactories           The task context providers.
      * @param taskName                        the task name
      */
     public DelegatingExecutor(
@@ -118,9 +116,12 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated see super class for explanation
      * <p>
      * Configures a {@link SharedTaskContextHolder} before delegating execution.
      */
+    @Deprecated
     @Override
     public void execute(@NonNull final Runnable task, final long startTimeout) {
         initializeTask();
@@ -142,33 +143,15 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
      * {@inheritDoc}
      * <p>
      * Configures a {@link SharedTaskContextHolder} before delegating execution.
+     *
+     * @param task The task to submit to be executed.
+     * @param <T>  The return type of the task.
+     * @return A future for the task.
      */
     @Override
     public <T> Future<T> submit(@NonNull final Callable<T> task) {
         initializeTask();
         return delegate.submit(task);
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Configures a {@link SharedTaskContextHolder} before delegating execution.
-     */
-    @Override
-    public ListenableFuture<?> submitListenable(final Runnable task) {
-        initializeTask();
-        return delegate.submitListenable(task);
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Configures a {@link SharedTaskContextHolder} before delegating execution.
-     */
-    @Override
-    public <T> ListenableFuture<T> submitListenable(@NotNull final Callable<T> task) {
-        initializeTask();
-        return delegate.submitListenable(task);
     }
 
     private void initializeTask() {
@@ -188,6 +171,8 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
 
     /**
      * Return the view on the statistics.
+     *
+     * @return A view on the executor's statistics.
      */
     public ExecutorStatisticsView getExecutorStatistics() {
         return new ExecutorStatisticsView(executorStatistics);
@@ -195,13 +180,19 @@ public class DelegatingExecutor implements AsyncListenableTaskExecutor, Scheduli
 
     /**
      * For testing purposes.
+     *
+     * @param executor The executor to check this delegate against.
+     * @return {@code true} if this delegating executor has the given {@code executor}.
      */
     public boolean hasDelegate(final ThreadPoolTaskExecutor executor) {
         return delegate.equals(executor);
     }
 
     /**
-     * For testing purposes.
+     * For testing purposes. Return the number of currently active threads.
+     *
+     * @return the number of threads
+     * @see java.util.concurrent.ThreadPoolExecutor#getActiveCount()
      */
     public int getActiveCount() {
         return delegate.getActiveCount();

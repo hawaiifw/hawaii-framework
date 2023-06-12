@@ -20,8 +20,8 @@ import org.hawaiiframework.time.HawaiiTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.lang.NonNull;
 
-import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -57,12 +57,12 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * The default expiration in minutes.
      */
-    private final Long defaultExpireInMinutes;
+    private final Duration defaultExpiration;
 
     /**
      * They key's prefix.
      */
-    private String keyPrefix;
+    private final String keyPrefix;
 
     /**
      * Hawaii time, used to get the current time.
@@ -72,16 +72,16 @@ public class RedisCache<T> implements Cache<T> {
     /**
      * Constructor.
      *
-     * @param redisTemplate          The redis template to use.
-     * @param hawaiiTime             the Hawaii time, used to get the current time.
-     * @param defaultExpireInMinutes The default time out in minutes.
-     * @param keyPrefix              They key's prefix.
+     * @param redisTemplate     The redis template to use.
+     * @param hawaiiTime        the Hawaii time, used to get the current time.
+     * @param defaultExpiration The default time out/expiration.
+     * @param keyPrefix         They key's prefix.
      */
-    public RedisCache(final RedisTemplate<String, T> redisTemplate, final HawaiiTime hawaiiTime, final Long defaultExpireInMinutes,
+    public RedisCache(final RedisTemplate<String, T> redisTemplate, final HawaiiTime hawaiiTime, final Duration defaultExpiration,
             final String keyPrefix) {
         this.hawaiiTime = hawaiiTime;
         this.redisTemplate = requireNonNull(redisTemplate);
-        this.defaultExpireInMinutes = defaultExpireInMinutes;
+        this.defaultExpiration = defaultExpiration;
         requireNonNull(keyPrefix);
         if (keyPrefix.endsWith(UNDERSCORE)) {
             this.keyPrefix = keyPrefix;
@@ -98,7 +98,7 @@ public class RedisCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
-    public void put(@NotNull final String key, @NotNull final T value) {
+    public void put(@NonNull final String key, @NonNull final T value) {
         requireNonNull(key, "Key should not be null");
         requireNonNull(value);
 
@@ -106,8 +106,8 @@ public class RedisCache<T> implements Cache<T> {
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}'.", cacheKey);
         redisTemplate.opsForValue().set(cacheKey, value);
-        if (defaultExpireInMinutes != null) {
-            redisTemplate.expire(cacheKey, defaultExpireInMinutes, TimeUnit.MINUTES);
+        if (defaultExpiration != null) {
+            redisTemplate.expire(cacheKey, defaultExpiration);
         }
     }
 
@@ -115,7 +115,7 @@ public class RedisCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
-    public void put(@NotNull final String key, @NotNull final T value, @NotNull final Duration duration) {
+    public void put(@NonNull final String key, @NonNull final T value, @NonNull final Duration duration) {
         requireNonNull(key);
         requireNonNull(value);
         requireNonNull(duration);
@@ -123,14 +123,14 @@ public class RedisCache<T> implements Cache<T> {
         final String cacheKey = getKey(key);
         LOGGER.debug("Putting '{}' with duration '{}'.", cacheKey, duration);
         redisTemplate.opsForValue().set(cacheKey, value);
-        redisTemplate.expire(cacheKey, duration.toMillis(), TimeUnit.MILLISECONDS);
+        redisTemplate.expire(cacheKey, duration);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void put(@NotNull final String key, @NotNull final T value, @NotNull final LocalDateTime expiresAt) {
+    public void put(@NonNull final String key, @NonNull final T value, @NonNull final LocalDateTime expiresAt) {
         requireNonNull(expiresAt);
         put(key, value, expiresAt.atZone(hawaiiTime.getZone()));
     }
@@ -139,12 +139,12 @@ public class RedisCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
-    public void put(@NotNull final String key, @NotNull final T value, @NotNull final ZonedDateTime expiresAt) {
+    public void put(@NonNull final String key, @NonNull final T value, @NonNull final ZonedDateTime expiresAt) {
         requireNonNull(expiresAt);
         putAndSetExpiry(key, value, expiresAt.toInstant());
     }
 
-    private void putAndSetExpiry(@NotNull final String key, @NotNull final T value, final Instant expiry) {
+    private void putAndSetExpiry(@NonNull final String key, @NonNull final T value, final Instant expiry) {
         requireNonNull(key);
         requireNonNull(value);
         final String cacheKey = getKey(key);
@@ -158,7 +158,7 @@ public class RedisCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
-    public T get(@NotNull final String key) {
+    public T get(@NonNull final String key) {
         requireNonNull(key);
 
         final String cacheKey = getKey(key);
@@ -170,7 +170,7 @@ public class RedisCache<T> implements Cache<T> {
      * {@inheritDoc}
      */
     @Override
-    public void remove(@NotNull final String key) {
+    public void remove(@NonNull final String key) {
         requireNonNull(key);
 
         final String cacheKey = getKey(key);

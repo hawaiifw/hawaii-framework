@@ -15,8 +15,6 @@
  */
 package org.hawaiiframework.logging;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hawaiiframework.logging.util.PasswordMaskerUtil;
@@ -30,13 +28,14 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class PasswordMaskerUtilTest {
-
 
     private static final String PASSWORD = "%5Ji!@00Aade'_),.:{}[] '(*\"&^%$#@!";
     private static final String MASKED_PASSWORD = "***";
@@ -72,7 +71,6 @@ public class PasswordMaskerUtilTest {
                 assertThat(output, is(equalTo(expectedOutput)));
             }
         }
-
     }
 
     private String getInput(final String content) throws UnsupportedEncodingException {

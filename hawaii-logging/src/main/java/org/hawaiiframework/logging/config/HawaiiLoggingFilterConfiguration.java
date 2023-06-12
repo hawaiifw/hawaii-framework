@@ -16,13 +16,12 @@
 package org.hawaiiframework.logging.config;
 
 import org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConfiguration;
-import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration;
-import org.hawaiiframework.logging.config.filter.HawaiiLoggingFilterConfigurationProperties;
-import org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.ClientIpLogFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.MicrometerTracingResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.OidcLogFilterConfiguration;
-import org.hawaiiframework.logging.config.filter.OpenTelemetryResponseFilterConfiguration;
-import org.hawaiiframework.logging.config.filter.OpentracingResponseFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.OpenTelemetryTraceIdResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfiguration;
@@ -30,7 +29,6 @@ import org.hawaiiframework.logging.config.filter.SoftwareVersionLogFilterConfigu
 import org.hawaiiframework.logging.config.filter.TransactionIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -38,22 +36,21 @@ import org.springframework.context.annotation.Import;
  * Configuration that includes all filter configurations.
  */
 @Configuration
-@EnableConfigurationProperties(HawaiiLoggingFilterConfigurationProperties.class)
 @Import({
-        BusinessTransactionIdFilterConfiguration.class,
-        ClientIpLogFilterConfiguration.class,
-        ContainerNameHttpHeaderFilterConfiguration.class,
-        KibanaLogCleanupFilterConfiguration.class,
-        OidcLogFilterConfiguration.class,
-        OpenTelemetryResponseFilterConfiguration.class,
-        OpentracingResponseFilterConfiguration.class,
-        RequestDurationFilterConfiguration.class,
-        RequestIdFilterConfiguration.class,
-        RequestResponseLogFilterConfiguration.class,
-        SoftwareVersionLogFilterConfiguration.class,
-        TransactionIdFilterConfiguration.class,
-        TransactionTypeFilterConfiguration.class,
-        UserDetailsFilterConfiguration.class
+    BusinessTransactionIdFilterConfiguration.class,
+    ClientIpLogFilterConfiguration.class,
+    ContainerNameHttpHeaderFilterConfiguration.class,
+    MicrometerTracingResponseFilterConfiguration.class,
+    KibanaLogCleanupFilterConfiguration.class,
+    OidcLogFilterConfiguration.class,
+    OpenTelemetryTraceIdResponseFilterConfiguration.class,
+    RequestDurationFilterConfiguration.class,
+    RequestIdFilterConfiguration.class,
+    RequestResponseLogFilterConfiguration.class,
+    SoftwareVersionLogFilterConfiguration.class,
+    TransactionIdFilterConfiguration.class,
+    TransactionTypeFilterConfiguration.class,
+    UserDetailsFilterConfiguration.class
 })
 public class HawaiiLoggingFilterConfiguration {
 

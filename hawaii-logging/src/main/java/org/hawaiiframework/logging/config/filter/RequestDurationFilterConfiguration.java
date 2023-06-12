@@ -16,57 +16,59 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.web.filter.RequestDurationFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link RequestDurationFilter}.
  */
-@ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled", matchIfMissing = true)
 @Configuration
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class RequestDurationFilterConfiguration {
 
     /**
-     * The logging configuration properties.
+     * The configuration properties' prefix.
      */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-duration";
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties The logging configuration properties.
-     */
-    public RequestDurationFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    private static final Logger LOGGER = getLogger(RequestDurationFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".order:-1300}")
+    private int filterOrder;
 
     /**
      * Create the {@link RequestDurationFilter} bean.
      *
+     * @param filterVoter The filter voter.
      * @return the {@link RequestDurationFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled", matchIfMissing = true)
-    public RequestDurationFilter requestDurationFilter() {
-        return new RequestDurationFilter();
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+    public RequestDurationFilter requestDurationFilter(final FilterVoter filterVoter) {
+        LOGGER.trace("Configuration: order '{}'.", filterOrder);
+        return new RequestDurationFilter(filterVoter);
     }
 
     /**
-     * Register the {@link #requestDurationFilter()} bean.
+     * Register the {@link #requestDurationFilter(FilterVoter)} bean.
      *
      * @param requestDurationFilter the request duration filter
-     * @return the {@link #requestDurationFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+     * @return the {@link #requestDurationFilter(FilterVoter)} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.filters.request-duration", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<RequestDurationFilter> requestDurationFilterRegistration(
             final RequestDurationFilter requestDurationFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getRequestDuration();
-        return createFilterRegistrationBean(requestDurationFilter, filterProperties);
+        return createFilterRegistrationBean(requestDurationFilter, filterOrder);
     }
 }

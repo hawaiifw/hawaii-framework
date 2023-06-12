@@ -18,15 +18,19 @@ package org.hawaiiframework.boot.autoconfigure.async;
 
 import org.hawaiiframework.async.AsyncExecutorConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
+ * Async auto configuration.
+ *
  * @author Paul Klos
  * @since 2.0.0
  */
 @Configuration
 @ConditionalOnClass(AsyncExecutorConfiguration.class)
+@ConditionalOnResource(resources = "${hawaii.async.configuration}")
 @Import(AsyncExecutorConfiguration.class)
 public class HawaiiAsyncAutoConfiguration {
 

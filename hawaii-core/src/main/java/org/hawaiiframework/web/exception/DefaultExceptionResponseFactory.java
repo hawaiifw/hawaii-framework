@@ -21,8 +21,10 @@ import org.hawaiiframework.exception.HawaiiException;
 import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ApiErrorResponseResource;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
+import org.hawaiiframework.web.resource.MethodArgumentNotValidResponseResource;
 import org.hawaiiframework.web.resource.ValidationErrorResponseResource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
  * Default implementation of {@link ExceptionResponseFactory}.
@@ -74,10 +76,12 @@ public class DefaultExceptionResponseFactory implements ExceptionResponseFactory
      */
     private ErrorResponseResource getErrorResponseResource(final Throwable throwable) {
         final ErrorResponseResource result;
-        if (throwable instanceof ApiException) {
-            result = new ApiErrorResponseResource((ApiException) throwable);
-        } else if (throwable instanceof ValidationException) {
-            result = new ValidationErrorResponseResource((ValidationException) throwable);
+        if (throwable instanceof ApiException apiException) {
+            result = new ApiErrorResponseResource(apiException);
+        } else if (throwable instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
+            result = new MethodArgumentNotValidResponseResource(methodArgumentNotValidException);
+        } else if (throwable instanceof ValidationException validationException) {
+            result = new ValidationErrorResponseResource(validationException);
         } else {
             result = null;
         }

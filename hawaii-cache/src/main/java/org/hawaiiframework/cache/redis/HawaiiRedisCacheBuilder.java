@@ -15,13 +15,15 @@
  */
 package org.hawaiiframework.cache.redis;
 
-import org.hawaiiframework.cache.redis.config.RedisConfigurationProperties;
+import org.hawaiiframework.cache.redis.config.RedisCacheConfigurationProperties;
 import org.hawaiiframework.time.HawaiiTime;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
 
 /**
  * Builder class for the creation of a {@link RedisCache}.
@@ -45,12 +47,12 @@ public class HawaiiRedisCacheBuilder {
     /**
      * The Redis configuration properties.
      */
-    private final RedisConfigurationProperties cacheConfiguration;
+    private final RedisCacheConfigurationProperties cacheConfiguration;
 
     /**
-     * Jedis connection factory.
+     * Redis connection factory.
      */
-    private final JedisConnectionFactory jedisConnectionFactory;
+    private final RedisConnectionFactory redisConnectionFactory;
 
     /**
      * The key prefix which is used by the redis cache to persist items to Redis.
@@ -73,65 +75,66 @@ public class HawaiiRedisCacheBuilder {
      */
     private final RedisSerializer<?> valueSerializer;
 
+
     /**
-     * The time out in minutes, when {@code null} the default timeout will be used. The default timeout is defined in the
-     * {@link RedisConfigurationProperties}.
+     * The default expiration.
      */
-    private final Long timeOutInMinutes;
+    private Duration defaultExpiration;
 
     /**
      * Constructor.
      *
      * @param cacheConfiguration     The redis configuration
-     * @param jedisConnectionFactory The Jedis connection factory
+     * @param redisConnectionFactory The redis connection factory
+     * @param hawaiiTime             The clock to use.
      */
-    public HawaiiRedisCacheBuilder(final RedisConfigurationProperties cacheConfiguration,
-            final JedisConnectionFactory jedisConnectionFactory, final HawaiiTime hawaiiTime) {
-        this(cacheConfiguration, jedisConnectionFactory, DEFAULT_PREFIX, hawaiiTime, new JdkSerializationRedisSerializer(), null);
+    public HawaiiRedisCacheBuilder(final RedisCacheConfigurationProperties cacheConfiguration,
+            final RedisConnectionFactory redisConnectionFactory, final HawaiiTime hawaiiTime) {
+        this(cacheConfiguration, redisConnectionFactory, DEFAULT_PREFIX, hawaiiTime, new JdkSerializationRedisSerializer(), null);
     }
 
-    private HawaiiRedisCacheBuilder(final RedisConfigurationProperties cacheConfiguration,
-            final JedisConnectionFactory jedisConnectionFactory, final String keyPrefix, final HawaiiTime hawaiiTime,
-            final RedisSerializer<?> valueSerializer, final Long timeOutInMinutes) {
+    private HawaiiRedisCacheBuilder(final RedisCacheConfigurationProperties cacheConfiguration,
+            final RedisConnectionFactory redisConnectionFactory, final String keyPrefix, final HawaiiTime hawaiiTime,
+            final RedisSerializer<?> valueSerializer, final Duration defaultExpiration) {
         this.cacheConfiguration = cacheConfiguration;
-        this.jedisConnectionFactory = jedisConnectionFactory;
+        this.redisConnectionFactory = redisConnectionFactory;
         this.keyPrefix = keyPrefix;
         this.hawaiiTime = hawaiiTime;
         this.valueSerializer = valueSerializer;
-        this.timeOutInMinutes = timeOutInMinutes;
+        this.defaultExpiration = defaultExpiration;
     }
 
     /**
-     * Sets the {@link RedisConfigurationProperties} for this builder.
+     * Sets the {@link RedisCacheConfigurationProperties} for this builder.
      *
      * @param cacheConfiguration the redis configuration properties
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
-    public HawaiiRedisCacheBuilder withCacheConfiguration(final RedisConfigurationProperties cacheConfiguration) {
-        return new HawaiiRedisCacheBuilder(cacheConfiguration, jedisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                timeOutInMinutes);
+    public HawaiiRedisCacheBuilder withCacheConfiguration(final RedisCacheConfigurationProperties cacheConfiguration) {
+        return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
+                defaultExpiration);
     }
 
     /**
-     * Sets the {@link JedisConnectionFactory} for this builder.
+     * Sets the {@link RedisConnectionFactory} for this builder.
      *
-     * @param jedisConnectionFactory the connection factory used to build the cache
+     * @param redisConnectionFactory the connection factory used to build the cache
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
-    public HawaiiRedisCacheBuilder withJedisConnectionFactory(final JedisConnectionFactory jedisConnectionFactory) {
-        return new HawaiiRedisCacheBuilder(cacheConfiguration, jedisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                timeOutInMinutes);
+    public HawaiiRedisCacheBuilder withRedisConnectionFactory(final RedisConnectionFactory redisConnectionFactory) {
+        return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
+                defaultExpiration);
     }
 
     /**
-     * Sets the the timeout for the redis cache. When this is not set
+     * Sets the timeout for the redis cache. When this is not set the redis' server default will be used.
      *
-     * @param timeOutInMinutes the timeout in minutes to set.
+     * @param expiration the timeout in minutes to set.
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
-    public HawaiiRedisCacheBuilder withTimeOut(final Long timeOutInMinutes) {
-        return new HawaiiRedisCacheBuilder(cacheConfiguration, jedisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                timeOutInMinutes);
+    public HawaiiRedisCacheBuilder withTimeOut(final Duration expiration) {
+        return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
+                expiration);
     }
 
     /**
@@ -141,8 +144,8 @@ public class HawaiiRedisCacheBuilder {
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
     public HawaiiRedisCacheBuilder withKeyPrefix(final String keyPrefix) {
-        return new HawaiiRedisCacheBuilder(cacheConfiguration, jedisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                timeOutInMinutes);
+        return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
+                defaultExpiration);
     }
 
     /**
@@ -152,8 +155,8 @@ public class HawaiiRedisCacheBuilder {
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
     public HawaiiRedisCacheBuilder withHawaiiTime(final HawaiiTime hawaiiTime) {
-        return new HawaiiRedisCacheBuilder(cacheConfiguration, jedisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                timeOutInMinutes);
+        return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
+                defaultExpiration);
     }
 
     /**
@@ -163,8 +166,8 @@ public class HawaiiRedisCacheBuilder {
      * @return new {@link HawaiiRedisCacheBuilder} with the new set values
      */
     public HawaiiRedisCacheBuilder withValueSerializer(final RedisSerializer<?> valueSerializer) {
-        return new HawaiiRedisCacheBuilder(cacheConfiguration, jedisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
-                timeOutInMinutes);
+        return new HawaiiRedisCacheBuilder(cacheConfiguration, redisConnectionFactory, keyPrefix, hawaiiTime, valueSerializer,
+                defaultExpiration);
     }
 
     /**
@@ -202,8 +205,8 @@ public class HawaiiRedisCacheBuilder {
      */
     private <V> RedisCache<V> generateRedisCache(final RedisTemplate<String, V> template, final HawaiiTime hawaiiTime,
             final String keyPrefix) {
-        final var timeout = timeOutInMinutes != null ? timeOutInMinutes : cacheConfiguration.getDefaultTimeOutInMinutes();
-        return new RedisCache<>(template, hawaiiTime, timeout, keyPrefix);
+        final var expiration = defaultExpiration != null ? defaultExpiration : cacheConfiguration.getDefaultExpiration();
+        return new RedisCache<>(template, hawaiiTime, expiration, keyPrefix);
     }
 
     /**
@@ -217,7 +220,7 @@ public class HawaiiRedisCacheBuilder {
     private <V> RedisTemplate<String, V> generateRedisTemplate(final RedisSerializer<String> keySerializer,
             final RedisSerializer<?> valueSerializer) {
         final RedisTemplate<String, V> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory);
+        template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(keySerializer);
         template.setValueSerializer(valueSerializer);
 

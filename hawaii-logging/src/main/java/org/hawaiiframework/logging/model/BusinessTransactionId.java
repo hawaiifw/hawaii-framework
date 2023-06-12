@@ -34,6 +34,8 @@ public final class BusinessTransactionId {
 
     /**
      * Return the id as string.
+     *
+     * @return The ID as string, or {@code null} if not set.
      */
     @SuppressWarnings("PMD.LawOfDemeter")
     public static String get() {
@@ -46,6 +48,8 @@ public final class BusinessTransactionId {
 
     /**
      * Set the transaction id.
+     *
+     * @param value The UUID to set.
      */
     public static void set(final UUID value) {
         ID.set(value);

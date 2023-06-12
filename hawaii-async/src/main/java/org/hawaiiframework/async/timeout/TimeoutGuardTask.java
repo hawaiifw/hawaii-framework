@@ -41,6 +41,8 @@ public class TimeoutGuardTask extends HawaiiAsyncRunnable {
 
     /**
      * Create a new {@link TimeoutGuardTask} instance with the given {@code taskExecutor}.
+     *
+     * @param sharedTaskContext The context to share, contains
      */
     public TimeoutGuardTask(final SharedTaskContext sharedTaskContext) {
         super(sharedTaskContext);

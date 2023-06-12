@@ -21,15 +21,15 @@ import org.hawaiiframework.logging.util.UuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns each request a unique transaction id and output the transaction id to the response header.
@@ -69,7 +69,7 @@ public class TransactionIdFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             final UUID uuid = uuidResolver.resolve(request, headerName);
 
             TransactionId.set(uuid);
@@ -84,7 +84,7 @@ public class TransactionIdFilter extends AbstractGenericFilterBean {
             }
             filterChain.doFilter(request, response);
         } finally {
-            if (!isInternalRedirect(request)) {
+            if (isOriginalRequest(request)) {
                 TransactionId.remove();
             }
         }

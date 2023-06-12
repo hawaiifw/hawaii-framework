@@ -1,4 +1,9 @@
 # Release Notes #
+
+## 6.0.0.M1
+* Use Spring Framework 6.0.0
+* Use Spring Boot 3.0.0
+
 ## 3.0.0.M24
 * Configure field names for password masking (instead of just hard coded 'password').
 * Added business transaction filters, like normal transaction filters. A business transaction is more like a session and spans multiple transactions.

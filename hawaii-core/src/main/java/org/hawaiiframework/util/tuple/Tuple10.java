@@ -83,7 +83,7 @@ public class Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
         if (!super.equals(o)) {
             return false;
         }
-        final Tuple10 other = (Tuple10) o;
+        final Tuple10<?, ?, ?, ?, ?, ?, ?, ?, ?, ?> other = (Tuple10) o;
         return Objects.equals(this.element10, other.element10);
     }
 

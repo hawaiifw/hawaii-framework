@@ -43,7 +43,7 @@ public interface ErrorResponseEnricher {
      * @param request the original web request
      * @param httpStatus the http status that will be returned
      */
-    default void enrich(ErrorResponseResource errorResponseResource, WebRequest request, HttpStatus httpStatus) {
+    default void enrich(final ErrorResponseResource errorResponseResource, final WebRequest request, final HttpStatus httpStatus) {
         doEnrich(errorResponseResource, errorResponseResource.getThrowable(), request, httpStatus);
     }
 

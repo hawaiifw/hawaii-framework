@@ -26,7 +26,7 @@ public final class IndentUtil {
     /**
      * The default indent to use if none specified.
      */
-    public static final String DEFAULT_INDENT = "  ";
+    public static final String DEFAULT_INDENTATION = "  ";
 
     /**
      * The configured newline to look for.
@@ -39,17 +39,24 @@ public final class IndentUtil {
     }
 
     /**
-     * Indent the {@code value} with the given {@code indent}.
+     * Indent the {@code value} with the default indent. See {@link IndentUtil#DEFAULT_INDENTATION}.
+     *
+     * @param value The value to indent.
+     * @return An indented string.
      */
     public static String indent(final String value) {
-        return indent(value, DEFAULT_INDENT);
+        return indent(value, DEFAULT_INDENTATION);
     }
 
     /**
      * Indent the {@code value} with the given {@code indent}.
+     *
+     * @param value       The value to indent.
+     * @param indentation The indentation.
+     * @return An indented string.
      */
-    public static String indent(final String value, final String indent) {
-        return indent + value.replace(NEW_LINE, String.format("%n%s", indent));
+    public static String indent(final String value, final String indentation) {
+        return indentation + value.replace(NEW_LINE, String.format("%n%s", indentation));
     }
 
 }

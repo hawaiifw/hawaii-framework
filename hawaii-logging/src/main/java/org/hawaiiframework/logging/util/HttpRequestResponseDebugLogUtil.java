@@ -15,9 +15,10 @@
  */
 package org.hawaiiframework.logging.util;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static java.lang.String.format;
 import static org.hawaiiframework.logging.util.IndentUtil.indent;
@@ -68,24 +69,71 @@ public class HttpRequestResponseDebugLogUtil {
         return indent(value);
     }
 
+    /**
+     * Create a servlet request log output, containing the request line, headers and body.
+     *
+     * @param servletRequest The request.
+     * @param headers        The headers.
+     * @param body           The body.
+     * @return a formatted multi-line string with the HTTP request.
+     */
     public String getTxRequestDebugOutput(final HttpServletRequest servletRequest, final String headers, final String body) {
         final String requestLine =
                 createRequestLine(servletRequest.getMethod(), servletRequest.getRequestURI(), servletRequest.getProtocol());
         return createLogString(requestLine, headers, body);
     }
 
+    /**
+     * Create a servlet response log output, containing the request line, headers and body.
+     *
+     * @param protocol   The request's protocol.
+     * @param httpStatus The http status.
+     * @param headers    The headers.
+     * @param body       The body.
+     * @return a formatted multi-line string with the HTTP response.
+     */
     public String getTxResponseDebugOutput(final String protocol, final HttpStatus httpStatus, final String headers, final String body) {
 
         final String statusLine = format("%s %s", protocol, httpStatus);
         return createLogString(statusLine, headers, body);
     }
 
+    /**
+     * Create a http request log output, containing the request line, headers and body.
+     *
+     * @param method     The method.
+     * @param requestUri The request URI.
+     * @param headers    The headers.
+     * @param body       The body.
+     * @return a formatted multi-line string with the HTTP request.
+     */
+    @SuppressWarnings("PMD.UseObjectForClearerAPI")
+    public String getCallRequestDebugOutput(final HttpMethod method, final String requestUri, final String headers, final String body) {
+        return getCallRequestDebugOutput(method.name(), requestUri, headers, body);
+    }
+
+    /**
+     * Create a http request log output, containing the request line, headers and body.
+     *
+     * @param method     The method.
+     * @param requestUri The request URI.
+     * @param headers    The headers.
+     * @param body       The body.
+     * @return a formatted multi-line string with the HTTP request.
+     */
     @SuppressWarnings("PMD.UseObjectForClearerAPI")
     public String getCallRequestDebugOutput(final String method, final String requestUri, final String headers, final String body) {
         final String requestLine = createRequestLine(method, requestUri, "");
         return createLogString(requestLine, headers, body);
     }
 
+    /**
+     * Create a http response log output.
+     *
+     * @param headers The headers.
+     * @param body    The body.
+     * @return a formatted multi-line string with the HTTP response.
+     */
     public String getCallResponseDebugOutput(final String headers, final String body) {
         return createLogString(null, headers, body);
     }

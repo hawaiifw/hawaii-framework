@@ -27,8 +27,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HawaiiAutoConfiguration {
 
+    /**
+     * The application context binder listener.
+     *
+     * @return the ApplicationContextBinderApplicationListener bean.
+     */
     @Bean
     public ApplicationContextBinderApplicationListener applicationContextBinderApplicationListener() {
         return new ApplicationContextBinderApplicationListener();
     }
+
 }

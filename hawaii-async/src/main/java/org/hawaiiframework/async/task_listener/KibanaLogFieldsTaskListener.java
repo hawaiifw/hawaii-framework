@@ -26,7 +26,7 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TASK_ID;
 
 /**
  * Task listener for Kibana log fields.
- *
+ * <p>
  * Ordered at -100.
  */
 public class KibanaLogFieldsTaskListener implements TaskListener {
@@ -34,6 +34,9 @@ public class KibanaLogFieldsTaskListener implements TaskListener {
     private final KibanaLogContext kibanaLogContext;
     private SharedTaskContext sharedTaskContext;
 
+    /**
+     * The constructor.
+     */
     public KibanaLogFieldsTaskListener() {
         kibanaLogContext = KibanaLogFields.getContext();
     }

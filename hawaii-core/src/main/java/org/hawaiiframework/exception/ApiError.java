@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.exception;
 
+import java.io.Serializable;
+
 /**
  * Interface that defines an API error of the application.
  *
@@ -26,7 +28,7 @@ package org.hawaiiframework.exception;
  * @author Paul Klos
  * @since 2.0.0
  */
-public interface ApiError {
+public interface ApiError extends Serializable {
 
     /**
      * Getter for the error code.

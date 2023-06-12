@@ -16,19 +16,18 @@
 
 package org.hawaiiframework.logging.web.filter;
 
-import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterProperties;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HOST_NAME;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * Filter class that will be added in the servlet filter chain to add a http response header to every response.
@@ -55,12 +54,13 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
     /**
      * Constructor.
      *
-     * @param config The configuration.
+     * @param headerName The header to set.
+     * @param hostName   The value to set.
      */
-    public ContainerNameHttpHeaderFilter(final ContainerNameHttpHeaderFilterProperties config) {
+    public ContainerNameHttpHeaderFilter(final String headerName, final String hostName) {
         super();
-        this.headerName = config.getHttpHeader();
-        this.hostname = config.getHostname();
+        this.headerName = headerName;
+        this.hostname = hostName;
     }
 
     /**
@@ -68,8 +68,8 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
      */
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-        throws ServletException, IOException {
-        if (!isInternalRedirect(request)) {
+            throws ServletException, IOException {
+        if (isOriginalRequest(request)) {
             KibanaLogFields.tag(HOST_NAME, hostname);
             LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
 

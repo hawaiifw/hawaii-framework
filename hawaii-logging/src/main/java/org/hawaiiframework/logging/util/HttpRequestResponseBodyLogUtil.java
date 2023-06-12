@@ -15,15 +15,17 @@
  */
 package org.hawaiiframework.logging.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
+import org.slf4j.Logger;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpRetryException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * Utility for logging requests / responses.
@@ -42,6 +46,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @since 2.0.0
  */
 public class HttpRequestResponseBodyLogUtil {
+
+    private static final Logger LOGGER = getLogger(HttpRequestResponseBodyLogUtil.class);
 
     /**
      * The configured newline to look for.
@@ -82,7 +88,14 @@ public class HttpRequestResponseBodyLogUtil {
      * @return The body.
      */
     public String getTxResponseBody(final ContentCachingWrappedResponse servletResponse) {
-        return maskPasswords(toString(servletResponse.getContentAsByteArray(), servletResponse.getCharacterEncoding()));
+        String characterEncoding = servletResponse.getCharacterEncoding();
+        if (APPLICATION_JSON_VALUE.equals(servletResponse.getContentType())) {
+            characterEncoding = "UTF-8";
+        }
+        if (characterEncoding == null || characterEncoding.isEmpty()) {
+            characterEncoding = Charset.defaultCharset().name();
+        }
+        return maskPasswords(toString(servletResponse.getContentAsByteArray(), characterEncoding));
     }
 
     /**
@@ -102,6 +115,7 @@ public class HttpRequestResponseBodyLogUtil {
      *
      * @param response The http response.
      * @return The body.
+     * @throws IOException in case something went wrong getting the payload from the response.
      */
     public String getCallResponseBody(final ClientHttpResponse response) throws IOException {
         final StringBuilder inputStringBuilder = new StringBuilder();
@@ -158,6 +172,11 @@ public class HttpRequestResponseBodyLogUtil {
                 inputStringBuilder.append(NEW_LINE);
                 line = bufferedReader.readLine();
             }
+        } catch (HttpRetryException httpRetryException) {
+            LOGGER.warn("Got retry exception.");
+            LOGGER.trace("Stacktrace is: ", httpRetryException);
+        } catch (IOException ex) {
+            LOGGER.warn("Could not get response body.", ex);
         }
 
         return inputStringBuilder.toString();

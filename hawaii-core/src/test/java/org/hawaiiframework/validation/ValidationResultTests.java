@@ -21,14 +21,14 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -57,7 +57,7 @@ public class ValidationResultTests {
 
     @Test
     public void testNewValidationResultHasNoNestedPath() {
-        assertThat(validationResult.getNestedPath(), isEmptyString());
+        assertThat(validationResult.getNestedPath(), is(emptyString()));
     }
 
     @Test

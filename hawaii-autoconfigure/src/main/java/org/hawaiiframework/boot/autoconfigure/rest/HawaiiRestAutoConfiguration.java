@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hawaiiframework.web.exception.DefaultExceptionResponseFactory;
 import org.hawaiiframework.web.exception.ExceptionResponseFactory;
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
+import org.hawaiiframework.web.resource.ObjectErrorResourceAssembler;
 import org.hawaiiframework.web.resource.ValidationErrorResourceAssembler;
 import org.hawaiiframework.web.util.HostResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,21 +39,54 @@ public class HawaiiRestAutoConfiguration {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Create an object error resource assembler.
+     *
+     * @return The object error resource assembler bean.
+     */
+    @Bean
+    public ObjectErrorResourceAssembler objectErrorResourceAssembler() {
+        return new ObjectErrorResourceAssembler(objectMapper);
+    }
+
+    /**
+     * Create a validation error resource assembler.
+     *
+     * @return The validation error resource assembler bean.
+     */
     @Bean
     public ValidationErrorResourceAssembler validationErrorResourceAssembler() {
         return new ValidationErrorResourceAssembler(objectMapper);
     }
 
+    /**
+     * Create an exception response factory.
+     *
+     * @return The exception response factory bean.
+     */
     @Bean
     public ExceptionResponseFactory exceptionResponseFactory() {
         return new DefaultExceptionResponseFactory();
     }
 
+    /**
+     * Create a Hawaii response exception handler.
+     *
+     * @return The Hawaii response exception handler bean.
+     */
     @Bean
     public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler() {
-        return new HawaiiResponseEntityExceptionHandler(validationErrorResourceAssembler(), exceptionResponseFactory());
+        return new HawaiiResponseEntityExceptionHandler(
+                objectErrorResourceAssembler(),
+                validationErrorResourceAssembler(),
+                exceptionResponseFactory());
     }
 
+    /**
+     * Create a host resolver bean.
+     *
+     * @return The host resolver bean.
+     */
     @Bean
     public HostResolver hostResolver() {
         return new HostResolver();

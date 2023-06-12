@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This enricher copies information from the original web request onto the error response resource.

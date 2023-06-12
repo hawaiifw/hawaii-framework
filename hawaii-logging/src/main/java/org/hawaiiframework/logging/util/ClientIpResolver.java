@@ -17,7 +17,7 @@ package org.hawaiiframework.logging.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Utility class to determine the client IP address.

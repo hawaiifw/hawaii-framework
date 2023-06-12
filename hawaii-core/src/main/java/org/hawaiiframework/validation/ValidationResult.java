@@ -21,6 +21,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hamcrest.Matcher;
 import org.hawaiiframework.validation.field.FieldRejection;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
@@ -40,18 +41,23 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class ValidationResult {
+public class ValidationResult implements Serializable {
+
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 6587801940281589895L;
 
     /**
      * The separator between path elements in a nested path, for example in "name" or "address.street".
      */
-    public static final String NESTED_PATH_SEPARATOR = ".";
+    private static final String NESTED_PATH_SEPARATOR = ".";
 
-    public static final String NESTED_PATH_INDEX_PREFIX = "[";
-    public static final String NESTED_PATH_INDEX_SUFFIX = "]";
+    private static final String NESTED_PATH_INDEX_PREFIX = "[";
+    private static final String NESTED_PATH_INDEX_SUFFIX = "]";
 
-    private final Deque<String> nestedPathStack = new ArrayDeque<>();
-    private final List<ValidationError> errors = new LinkedList<>();
+    private final transient Deque<String> nestedPathStack = new ArrayDeque<>();
+    private final transient List<ValidationError> errors = new LinkedList<>();
 
     /**
      * Returns the current nested path of this {@link ValidationResult}.

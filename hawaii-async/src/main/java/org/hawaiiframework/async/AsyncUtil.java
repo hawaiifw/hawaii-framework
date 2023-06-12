@@ -2,11 +2,14 @@ package org.hawaiiframework.async;
 
 import org.hawaiiframework.async.exception.HawaiiTaskExecutionException;
 import org.hawaiiframework.exception.HawaiiException;
+import org.hawaiiframework.util.Void;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -33,6 +36,56 @@ public final class AsyncUtil {
      */
     private AsyncUtil() {
         // Util constructor.
+    }
+
+    /**
+     * Delegates to {@link CompletableFuture#get()}.
+     *
+     * @param future The completable future to get the value from.
+     * @param <T>    The type to return
+     * @return the result value
+     */
+    public static <T> T get(@NonNull final CompletableFuture<T> future) {
+        requireNonNull(future);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException exception) {
+            throw handleException(exception);
+        }
+    }
+
+    /**
+     * Delegates to {@link CompletableFuture#get(long, TimeUnit)}}.
+     *
+     * @param future  The completable future to get the value from.
+     * @param timeout the maximum time to wait
+     * @param unit    the time unit of the timeout argument
+     * @param <T>     The type to return
+     * @return the result value
+     */
+    public static <T> T get(@NonNull final CompletableFuture<T> future, @NonNull final Long timeout,
+            @NonNull final TimeUnit unit) {
+        requireNonNull(future);
+        requireNonNull(timeout);
+        requireNonNull(unit);
+        try {
+            return future.get(timeout, unit);
+        } catch (InterruptedException | ExecutionException | TimeoutException exception) {
+            throw handleException(exception);
+        }
+    }
+
+    /**
+     * Delegates to {@link CompletableFuture#getNow(Object)}.
+     *
+     * @param future        The completable future to get the value from.
+     * @param valueIfAbsent The value to return if not completed
+     * @param <T>           The type to return
+     * @return the result value, if completed, else the given valueIfAbsent
+     */
+    public static <T> T getNow(@NonNull final CompletableFuture<T> future, final T valueIfAbsent) {
+        requireNonNull(future);
+        return future.getNow(valueIfAbsent);
     }
 
     /**
@@ -135,22 +188,6 @@ public final class AsyncUtil {
         }
     }
 
-    private static HawaiiException handleException(final Exception exception) {
-        if (exception instanceof ExecutionException) {
-            return handleExecutionException(exception);
-        }
-
-        return new HawaiiTaskExecutionException(exception);
-    }
-
-    private static HawaiiException handleExecutionException(final Exception exception) {
-        final Throwable cause = exception.getCause();
-        if (cause instanceof HawaiiException) {
-            return (HawaiiException) cause;
-        }
-        return new HawaiiTaskExecutionException(cause);
-    }
-
     /**
      * Applies the asynchronous {@code function} to each element of {@code inputs}. It then awaits the completion of the
      * calls and returns the function's returns.
@@ -205,9 +242,10 @@ public final class AsyncUtil {
      * @param <T>      The return types.
      * @return A list of completable futures, or {@code null} if the input is null or empty.
      */
+    @SuppressWarnings("unchecked")
     public static <I, T> List<CompletableFuture<T>> asyncMap(final Collection<I> inputs, final Function<I, CompletableFuture<T>> function) {
         if (inputs == null || inputs.isEmpty()) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         return inputs.stream().map(function).collect(Collectors.toList());
     }
@@ -226,7 +264,7 @@ public final class AsyncUtil {
         }
 
         for (final CompletableFuture<T> future : futures) {
-            results.add(HawaiiAsyncUtil.get(future));
+            results.add(get(future));
         }
         return results;
     }
@@ -245,8 +283,24 @@ public final class AsyncUtil {
         }
 
         final CompletableFuture<?> combinedFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[] {}));
-        HawaiiAsyncUtil.get(combinedFuture);
+        get(combinedFuture);
 
         return futures;
+    }
+
+    private static HawaiiException handleException(final Exception exception) {
+        if (exception instanceof ExecutionException) {
+            return handleExecutionException(exception);
+        }
+
+        return new HawaiiTaskExecutionException(exception);
+    }
+
+    private static HawaiiException handleExecutionException(final Exception exception) {
+        final Throwable cause = exception.getCause();
+        if (cause instanceof HawaiiException) {
+            return (HawaiiException) cause;
+        }
+        return new HawaiiTaskExecutionException(cause);
     }
 }

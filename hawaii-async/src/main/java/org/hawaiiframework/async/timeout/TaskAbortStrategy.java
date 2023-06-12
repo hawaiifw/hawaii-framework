@@ -34,6 +34,8 @@ public interface TaskAbortStrategy {
 
     /**
      * Invoke the strategy in order to abort the task (that registered this abort strategy).
+     *
+     * @return {@code true} if the task has been aborted.
      */
     boolean invoke();
 }

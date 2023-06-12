@@ -39,7 +39,7 @@ public class ErrorMessageResponseEnricher implements ErrorResponseEnricher {
             final WebRequest request,
             final HttpStatus httpStatus) {
         final String message = throwable.getMessage();
-        if (!StringUtils.isEmpty(message)) {
+        if (!StringUtils.hasText(message)) {
             errorResponseResource.setErrorMessage(message);
         }
     }

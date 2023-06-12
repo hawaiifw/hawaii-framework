@@ -1,20 +1,16 @@
 package org.hawaiiframework.converter;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
 
 public class AbstractModelConverterTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void assureThatNullObjectReturnsNull() {
@@ -45,8 +41,9 @@ public class AbstractModelConverterTest {
     public void assureThatNulListWillThrowAnException() {
         PersonModelConverter converter = new PersonModelConverter(DefaultNullListConversionStrategies.raiseError(PersonInput.class));
         List<PersonInput> source = null;
-        thrown.expect(IllegalArgumentException.class);
-        converter.convert(source);
+        assertThrows(IllegalArgumentException.class, () ->
+                converter.convert(source)
+        );
     }
 
 }

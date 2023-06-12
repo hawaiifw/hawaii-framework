@@ -17,7 +17,8 @@
 package org.hawaiiframework.logging.config.filter;
 
 import org.hawaiiframework.logging.oidc.OidcLogFilter;
-import org.hawaiiframework.logging.opentelemetry.OpenTelemetryResponseFilter;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -25,50 +26,50 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.OidcLogFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configuration to add OIDC fields to the Kibana log.
  */
 @Configuration
 @ConditionalOnClass(com.nimbusds.jwt.PlainJWT.class)
-@ConditionalOnProperty(prefix = "hawaii.logging.oidc", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class OidcLogFilterConfiguration {
-    /**
-     * The the logging configuration properties.
-     */
-    private final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties;
 
     /**
-     * Autowired constructor.
-     *
-     * @param hawaiiLoggingFilterConfigurationProperties the logging configuration properties
+     * The configuration properties' prefix.
      */
-    public OidcLogFilterConfiguration(final HawaiiLoggingFilterConfigurationProperties hawaiiLoggingFilterConfigurationProperties) {
-        this.hawaiiLoggingFilterConfigurationProperties = hawaiiLoggingFilterConfigurationProperties;
-    }
+    public static final String CONFIG_PREFIX = "hawaii.logging.filters.oidc";
+
+    private static final Logger LOGGER = getLogger(OidcLogFilterConfiguration.class);
+
+    @Value("${" + CONFIG_PREFIX + ".order:-900}")
+    private int filterOrder;
 
     /**
-     * Create the {@link OpenTelemetryResponseFilter} bean.
+     * Create the {@link OidcLogFilter} bean.
      *
-     * @return the {@link OpenTelemetryResponseFilter} bean
+     * @return the {@link OidcLogFilter} bean
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.oidc", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public OidcLogFilter oidcLogFilter() {
+        LOGGER.trace("Configuration: order '{}'.", filterOrder);
         return new OidcLogFilter();
     }
 
     /**
      * Register the {@link #oidcLogFilter()} bean.
      *
-     * @param oidcLogFilter the oidcLogFilter
+     * @param oidcLogFilter the {@link #oidcLogFilter()} bean.
      * @return the {@link #oidcLogFilter()} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
-    @ConditionalOnProperty(prefix = "hawaii.logging.oidc", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
     public FilterRegistrationBean<OidcLogFilter> oidcLogFilterRegistration(
             final OidcLogFilter oidcLogFilter) {
-        final LoggingFilterProperties filterProperties = hawaiiLoggingFilterConfigurationProperties.getOpenTelemetryResponse();
-        return createFilterRegistrationBean(oidcLogFilter, filterProperties);
+        return createFilterRegistrationBean(oidcLogFilter, filterOrder);
     }
+
 }

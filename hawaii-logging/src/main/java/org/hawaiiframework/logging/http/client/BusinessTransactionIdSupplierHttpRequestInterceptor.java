@@ -23,7 +23,7 @@ public class BusinessTransactionIdSupplierHttpRequestInterceptor implements Clie
     private final String headerName;
 
     /**
-     * Default constructor with 'X-Hawaii-Business-Tx-Id' as {@code headername}.
+     * Default constructor with 'X-Hawaii-Business-Tx-Id' as {@code headerName}.
      */
     public BusinessTransactionIdSupplierHttpRequestInterceptor() {
         this("X-Hawaii-Business-Tx-Id");

@@ -19,13 +19,13 @@ import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that cleans up the Kibana Log Fields.
@@ -50,7 +50,7 @@ public class KibanaLogCleanupFilter extends AbstractGenericFilterBean {
         try {
             filterChain.doFilter(request, response);
         } finally {
-            if (!isInternalRedirect(request)) {
+            if (isOriginalRequest(request)) {
                 LOGGER.trace("Clearing Kibana log fields.");
                 KibanaLogFields.clear();
             }

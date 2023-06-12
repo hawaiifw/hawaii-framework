@@ -68,6 +68,9 @@ public class MaskedPasswordBuilder {
 
     /**
      * The constructor.
+     *
+     * @param stringToMask The string to mask.
+     * @param pattern      The pattern to mask.
      */
     public MaskedPasswordBuilder(final String stringToMask, final String pattern) {
         this.stringToMask = requireNonNull(stringToMask);
@@ -77,6 +80,8 @@ public class MaskedPasswordBuilder {
 
     /**
      * Returns {@code true} if the string to mask has more characters.
+     *
+     * @return {@code true} if the string to mask has more characters.
      */
     public boolean hasNext() {
         return currentIndex < stringToMask.length();
@@ -91,6 +96,9 @@ public class MaskedPasswordBuilder {
 
     /**
      * Returns {@code true} of the current character is one of the {@code choices}.
+     *
+     * @param choices Check whether the current char is one of the choices.
+     * @return {@code true} of the current character is one of the {@code choices}.
      */
     public boolean currentCharIsOneOf(final Character... choices) {
         for (final Character choice : choices) {
@@ -103,6 +111,9 @@ public class MaskedPasswordBuilder {
 
     /**
      * Returns {@code true} if the current character is {@code character}.
+     *
+     * @param character The character to check.
+     * @return {@code true} if the current character is {@code character}.
      */
     public boolean currentCharIs(final Character character) {
         return character.equals(getCurrentChar());
@@ -110,6 +121,8 @@ public class MaskedPasswordBuilder {
 
     /**
      * Returns {@code true} if the current character is a whitespace.
+     *
+     * @return {@code true} if the current character is a whitespace.
      */
     public boolean currentCharIsWhitespace() {
         return Character.isWhitespace(getCurrentChar());
@@ -135,6 +148,8 @@ public class MaskedPasswordBuilder {
 
     /**
      * Appends the password mask at the {@code index}.
+     *
+     * @param index the index in the current buffer to append the masked password at.
      */
     public void maskPasswordAt(final Integer index) {
         result.append(stringToMask, lastAddedIndex, index);
@@ -144,13 +159,17 @@ public class MaskedPasswordBuilder {
 
     /**
      * Returns the current index.
+     *
+     * @return the current index.
      */
     public int getCurrentIndex() {
         return currentIndex;
     }
 
     /**
-     * Returns {@code true} if there is another password to be found in the string to mask.
+     * Find the next password in the input.
+     *
+     * @return {@code true} if there is another password to be found in the string to mask.
      */
     public boolean findNextPassword() {
         final int index = stringToMask.indexOf(pattern, currentIndex);
@@ -163,6 +182,8 @@ public class MaskedPasswordBuilder {
 
     /**
      * Builds the masked string.
+     *
+     * @return the masked string.
      */
     public String build() {
         result.append(stringToMask.substring(lastAddedIndex));

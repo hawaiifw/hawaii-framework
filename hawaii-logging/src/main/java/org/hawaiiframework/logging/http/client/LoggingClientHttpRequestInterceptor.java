@@ -51,6 +51,8 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
 
     /**
      * The constructor.
+     *
+     * @param hawaiiLogger The logger to use.
      */
     public LoggingClientHttpRequestInterceptor(final HawaiiRequestResponseLogger hawaiiLogger) {
         this.hawaiiRequestResponseLogger = hawaiiLogger;
@@ -63,9 +65,13 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
             throws IOException {
         try {
-            hawaiiRequestResponseLogger.logRequest(request, body);
+            if (HttpRequestLogging.isEnabled()) {
+                hawaiiRequestResponseLogger.logRequest(request, body);
+            }
             final ClientHttpResponse response = execution.execute(request, body);
-            hawaiiRequestResponseLogger.logResponse(response);
+            if (HttpRequestLogging.isEnabled()) {
+                hawaiiRequestResponseLogger.logResponse(response);
+            }
             return response;
         } catch (IOException t) {
             /*

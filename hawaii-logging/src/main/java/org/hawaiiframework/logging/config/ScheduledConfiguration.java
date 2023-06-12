@@ -25,6 +25,11 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnClass(name = "org.aspectj.lang.ProceedingJoinPoint")
 public class ScheduledConfiguration {
 
+    /**
+     * A scheduled aspect bean.
+     *
+     * @return The scheduled aspect bean.
+     */
     @Bean
     public ScheduledAspect scheduledAspect() {
         return new ScheduledAspect();

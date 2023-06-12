@@ -23,9 +23,9 @@ package org.hawaiiframework.util.tuple;
  * @since 2.0.0
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:LineLength",
-        "checkstyle:ClassTypeParameterName", "checkstyle:MethodTypeParameterName",
-        "PMD.ClassNamingConventions",
-        "checkstyle:ParameterNumber", "PMD.ExcessiveParameterList", "PMD.DataClass"})
+    "checkstyle:ClassTypeParameterName", "checkstyle:MethodTypeParameterName",
+    "PMD.ClassNamingConventions",
+    "checkstyle:ParameterNumber", "PMD.ExcessiveParameterList", "PMD.DataClass"})
 public final class Tuples {
 
     private Tuples() {

@@ -85,6 +85,7 @@ public class AsyncExecutorInitializer {
     /**
      * Initialize all configured executors in the bean factory and determine the default executor.
      */
+    @SuppressWarnings("PMD.CloseResource")
     public void initializeExecutors() {
         final ScheduledThreadPoolExecutor asyncTimeoutExecutor =
                 (ScheduledThreadPoolExecutor) beanFactory.getBean(ASYNC_TIMEOUT_EXECUTOR);
@@ -104,6 +105,11 @@ public class AsyncExecutorInitializer {
         defaultExecutor = new DelegatingExecutor(executor, configuration, beansOfType.values(), configuration.getDefaultExecutor());
     }
 
+    /**
+     * Get the executor to configure.
+     *
+     * @return The task executor.
+     */
     @SuppressWarnings("PMD.CommentRequired")
     public TaskExecutor getDefaultExecutor() {
         return defaultExecutor;

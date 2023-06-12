@@ -102,11 +102,13 @@ public class SharedTaskContext {
      *
      * @param taskName                        the task name
      * @param executorConfigurationProperties the executor configuration properties
+     * @param executorStatistics              executor statisctics.
+     * @param taskListeners                   task listeners.
      */
     public SharedTaskContext(final String taskName,
-                             final ExecutorConfigurationProperties executorConfigurationProperties,
-                             final ExecutorStatistics executorStatistics,
-                             final List<TaskListener> taskListeners) {
+            final ExecutorConfigurationProperties executorConfigurationProperties,
+            final ExecutorStatistics executorStatistics,
+            final List<TaskListener> taskListeners) {
         this.taskName = taskName;
         this.executorConfigurationProperties = executorConfigurationProperties;
         this.taskListeners = taskListeners;
@@ -185,6 +187,8 @@ public class SharedTaskContext {
 
     /**
      * Has the task been aborted?
+     *
+     * @return {@code true} if the task has been aborted.
      */
     public boolean isAborted() {
         return aborted;
@@ -258,6 +262,8 @@ public class SharedTaskContext {
 
     /**
      * Return the task's execution statistics.
+     *
+     * @return The task statistics.
      */
     public TaskStatistics getTaskStatistics() {
         return taskStatistics;

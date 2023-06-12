@@ -23,14 +23,14 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerMapping;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isInternalRedirect;
+import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns the transaction's name (class and method name) to the Kibana logger for each request.
@@ -67,7 +67,7 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain filterChain) throws ServletException, IOException {
 
-        if (!isInternalRedirect(request)) {
+        if (isOriginalRequest(request)) {
             logRequest(request);
         }
 

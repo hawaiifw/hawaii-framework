@@ -58,9 +58,8 @@ public class ValidationErrorResponseEnricher implements ErrorResponseEnricher {
             final Throwable throwable,
             final WebRequest request,
             final HttpStatus httpStatus) {
-        if (throwable instanceof ValidationException && errorResponseResource instanceof ValidationErrorResponseResource) {
-            final ValidationException validationException = (ValidationException) throwable;
-            final ValidationErrorResponseResource resource = (ValidationErrorResponseResource) errorResponseResource;
+        if (throwable instanceof ValidationException validationException
+                && errorResponseResource instanceof ValidationErrorResponseResource resource) {
             final List<ValidationError> errors = getErrors(validationException);
             if (errors != null && !errors.isEmpty()) {
                 resource.setErrors(validationErrorResourceAssembler.convert(errors));

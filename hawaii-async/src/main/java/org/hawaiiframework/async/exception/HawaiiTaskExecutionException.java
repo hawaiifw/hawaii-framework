@@ -18,6 +18,8 @@ package org.hawaiiframework.async.exception;
 
 import org.hawaiiframework.exception.HawaiiException;
 
+import java.io.Serial;
+
 
 /**
  * Exception thrown when a task's {@link java.util.concurrent.CompletableFuture#get()} throws an error.
@@ -28,6 +30,12 @@ import org.hawaiiframework.exception.HawaiiException;
 public class HawaiiTaskExecutionException extends HawaiiException {
 
     /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = -3946536802580483516L;
+
+    /**
      * Constructs a new {@code HawaiiTaskExecutionException}.
      */
     public HawaiiTaskExecutionException() {
@@ -36,6 +44,8 @@ public class HawaiiTaskExecutionException extends HawaiiException {
 
     /**
      * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code message}.
+     *
+     * @param message the message.
      */
     public HawaiiTaskExecutionException(final String message) {
         super(message);
@@ -43,6 +53,9 @@ public class HawaiiTaskExecutionException extends HawaiiException {
 
     /**
      * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code message} and {@code cause}.
+     *
+     * @param message the message.
+     * @param cause The cause.
      */
     public HawaiiTaskExecutionException(final String message, final Throwable cause) {
         super(message, cause);
@@ -50,6 +63,8 @@ public class HawaiiTaskExecutionException extends HawaiiException {
 
     /**
      * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code cause}.
+     *
+     * @param cause The cause.
      */
     public HawaiiTaskExecutionException(final Throwable cause) {
         super(cause);

@@ -58,6 +58,9 @@ public class AbortableTaskDecorator implements TaskDecorator {
 
     /**
      * Construct an instance.
+     *
+     * @param taskExecutor    The executor that will execute the runnable we're decorating.
+     * @param timeoutExecutor The executor aborts tasks that have timed-out.
      */
     public AbortableTaskDecorator(final ThreadPoolTaskExecutor taskExecutor, final ScheduledThreadPoolExecutor timeoutExecutor) {
         this.taskExecutor = taskExecutor;
@@ -75,6 +78,9 @@ public class AbortableTaskDecorator implements TaskDecorator {
      * timeout has lapsed.
      * <p>
      * The {@link AbortableTaskRunnable} will stop the execution of the {@link TimeoutGuardTask} after it completes.
+     *
+     * @param runnable The runnable to decorate.
+     * @return a decorated runnable.
      */
     @Override
     public Runnable decorate(final Runnable runnable) {
