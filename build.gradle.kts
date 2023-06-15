@@ -26,6 +26,7 @@ apply(plugin = "io.github.gradle-nexus.publish-plugin")
 nexusPublishing {
     repositories {
         sonatype {
+            stagingProfileId.set("1a44791a29d63")
             username.set(System.getenv("SONATYPE_OSSRH_USERNAME"))
             password.set(System.getenv("SONATYPE_OSSRH_PASSWORD"))
         }
@@ -231,9 +232,8 @@ subprojects {
 
                     developers {
                         developer {
-                            id.set("marceloverdijk")
-                            name.set("Marcel Overdijk")
-                            email.set("marcel@overdijk.me")
+                            name.set("Rutger Lubbers")
+                            email.set("rlubbers@ilionx.com")
                         }
                     }
                 }
