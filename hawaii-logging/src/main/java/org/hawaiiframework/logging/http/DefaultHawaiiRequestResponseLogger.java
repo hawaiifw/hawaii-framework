@@ -91,26 +91,34 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     private final HttpRequestResponseDebugLogUtil debugLogUtil;
 
     /**
-     * The media type voter.
+     * The media type voter to allow request calls to be logged.
      */
     private final MediaTypeVoter mediaTypeVoter;
 
     /**
+     * The media type voter to suppress body contents for.
+     */
+    private final MediaTypeVoter suppressedMediaTypeVoter;
+
+    /**
      * The constructor.
      *
-     * @param headersLogUtil The util to use for generating request / response headers log statements.
-     * @param bodyLogUtil    The util to use for generating request / response body log statements.
-     * @param debugLogUtil   The util to use for generating request / response debug log statements.
-     * @param mediaTypeVoter The media type voter.
+     * @param headersLogUtil           The util to use for generating request / response headers log statements.
+     * @param bodyLogUtil              The util to use for generating request / response body log statements.
+     * @param debugLogUtil             The util to use for generating request / response debug log statements.
+     * @param mediaTypeVoter           A media type voter to check for logging.
+     * @param suppressedMediaTypeVoter A media type voter to check to suppress body contents logging.
      */
     public DefaultHawaiiRequestResponseLogger(final HttpRequestResponseHeadersLogUtil headersLogUtil,
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
-            final MediaTypeVoter mediaTypeVoter) {
+            final MediaTypeVoter mediaTypeVoter,
+            final MediaTypeVoter suppressedMediaTypeVoter) {
         this.bodyLogUtil = bodyLogUtil;
         this.headersLogUtil = headersLogUtil;
         this.debugLogUtil = debugLogUtil;
         this.mediaTypeVoter = mediaTypeVoter;
+        this.suppressedMediaTypeVoter = suppressedMediaTypeVoter;
     }
 
     /**
@@ -127,7 +135,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         final int contentLength = wrappedRequest.getContentLength();
         // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
         final String contentType = getContentType(wrappedRequest);
-        final boolean contentTypeCanBeLogged = mediaTypeVoter.mediaTypeAllowed(contentType);
+        final boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
         String requestHeaders = "";
         String requestBody = "";
         try {
@@ -140,9 +148,10 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             KibanaLogFields.tag(TX_REQUEST_URI, requestUri);
             KibanaLogFields.tag(TX_REQUEST_SIZE, contentLength);
             KibanaLogFields.tag(TX_REQUEST_HEADERS, requestHeaders);
-            requestBody = bodyLogUtil.getTxRequestBody(wrappedRequest);
+            if (contentTypeCanBeLogged) {
+                requestBody = bodyLogUtil.getTxRequestBody(wrappedRequest);
+            }
             addBodyTag(contentTypeCanBeLogged, TX_REQUEST_BODY, requestBody);
-
         } catch (Throwable t) {
             LOGGER.error("Error getting payload for request.", t);
             throw t;
@@ -171,7 +180,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             final int contentLength = body.length;
             // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
             final MediaType contentType = getContentType(request);
-            final boolean contentTypeCanBeLogged = mediaTypeVoter.mediaTypeAllowed(contentType);
+            final boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
             final String requestHeaders = headersLogUtil.getCallRequestHeaders(request);
             final String requestBody = bodyLogUtil.getCallRequestBody(body);
 
@@ -195,6 +204,14 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         }
     }
 
+    private boolean contentTypeCanBeLogged(final MediaType contentType) {
+        return mediaTypeVoter.mediaTypeMatches(contentType) && !suppressedMediaTypeVoter.mediaTypeMatches(contentType);
+    }
+
+    private boolean contentTypeCanBeLogged(final String contentType) {
+        return mediaTypeVoter.mediaTypeMatches(contentType) && !suppressedMediaTypeVoter.mediaTypeMatches(contentType);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -205,7 +222,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             final String requestURI = servletRequest.getRequestURI();
             final int contentLength = wrappedResponse.getContentSize();
             final String contentType = getContentType(wrappedResponse);
-            final boolean contentTypeCanBeLogged = mediaTypeVoter.mediaTypeAllowed(contentType);
+            final boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
             final HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
             final String responseHeaders = headersLogUtil.getTxResponseHeaders(wrappedResponse);
             final String responseBody = bodyLogUtil.getTxResponseBody(wrappedResponse);
@@ -238,7 +255,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         try {
             final HttpStatusCode httpStatus = response.getStatusCode();
             final MediaType contentType = getContentType(response);
-            final boolean contentTypeCanBeLogged = mediaTypeVoter.mediaTypeAllowed(contentType);
+            final boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
             final String responseHeaders = headersLogUtil.getCallResponseHeaders(response);
             final String responseBody = bodyLogUtil.getCallResponseBody(response);
             final int contentLength = responseBody.length();

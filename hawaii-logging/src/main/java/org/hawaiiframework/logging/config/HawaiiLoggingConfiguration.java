@@ -23,6 +23,7 @@ import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
 import org.hawaiiframework.logging.util.PasswordMaskerUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -132,9 +133,10 @@ public class HawaiiLoggingConfiguration {
             final HttpRequestResponseHeadersLogUtil headersLogUtil,
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
-            final MediaTypeVoter mediaTypeVoter) {
+            final MediaTypeVoter mediaTypeVoter,
+            @Qualifier("suppressedMediaTypeVoter") final MediaTypeVoter suppressedMediaTypeVoter) {
         return new DefaultHawaiiRequestResponseLogger(headersLogUtil, bodyLogUtil, debugLogUtil,
-                mediaTypeVoter);
+                mediaTypeVoter, suppressedMediaTypeVoter);
     }
 
     /**
@@ -146,7 +148,13 @@ public class HawaiiLoggingConfiguration {
     @Bean
     @RefreshScope
     public MediaTypeVoter mediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties);
+        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getAllowedContentTypes(), true);
+    }
+
+    @Bean
+    @RefreshScope
+    public MediaTypeVoter suppressedMediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getSuppressedContentTypes(), false);
     }
 
     /**

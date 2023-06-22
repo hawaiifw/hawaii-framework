@@ -32,6 +32,9 @@ hawaii:
       - multipart/form-data
       - text/plain
       - text/xml
+    # do not log body
+    suppressed-content-types:
+      - multipart/form-data
     exclude-paths:
       - /actuator/*
     fields-to-mask:
