@@ -42,7 +42,7 @@ hawaii:
       - keyPassphrase
     filters:
       # The idea is that Spring Boot (6) supplies micrometer observability, that includes W3C tracing,
-      # so a lot of "old skool" trace headers are disabled by default (since 2.x).
+      # so a lot of "old skool" trace headers are disabled by default (since 6.0.0).
       kibana-log-cleanup:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
