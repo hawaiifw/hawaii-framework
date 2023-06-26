@@ -81,7 +81,7 @@ public class RequestResponseLogFilterTest {
 
         final HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
         final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties.getAllowedContentTypes(), true);
-        final MediaTypeVoter suppressedMediaTypeVoter = new MediaTypeVoter(properties.getSuppressedContentTypes(), false);
+        final MediaTypeVoter suppressedMediaTypeVoter = new MediaTypeVoter(properties.getBodyExcludedContentTypes(), false);
         final RequestVoter requestVoter = new RequestVoter(properties);
 
         final DefaultHawaiiRequestResponseLogger requestResponseLogger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,

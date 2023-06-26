@@ -20,7 +20,6 @@ import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,27 +35,28 @@ import static org.springframework.http.HttpHeaders.EMPTY;
  */
 @Order(0)
 @ControllerAdvice
-public class SpringSecurityResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class JakartaValidationsEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-    public SpringSecurityResponseEntityExceptionHandler(final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    public JakartaValidationsEntityExceptionHandler(final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
         this.errorResponseEntityBuilder = errorResponseEntityBuilder;
     }
+
     /**
-     * Handles {@code AccessDeniedException} instances.
+     * Handles {@code ValidationException} instances.
      * <p>
-     * The response status is: 403 Forbidden.
+     * The response status is: 400 Bad Request.
      *
-     * @param ex      the exception
+     * @param e       the exception
      * @param request the current request
      * @return a response entity reflecting the current exception
      */
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(jakarta.validation.ValidationException.class)
     @ResponseBody
-    public ResponseEntity<Object> accessDeniedException(final AccessDeniedException ex, final WebRequest request) {
-        final HttpStatus status = HttpStatus.FORBIDDEN;
-        return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
+    public ResponseEntity<Object> handleValidationException(final jakarta.validation.ValidationException e, final WebRequest request) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
     }
 
     private ErrorResponseResource buildErrorResponseBody(final Throwable throwable, final HttpStatus status, final WebRequest request) {

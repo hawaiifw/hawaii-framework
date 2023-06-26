@@ -98,27 +98,27 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     /**
      * The media type voter to suppress body contents for.
      */
-    private final MediaTypeVoter suppressedMediaTypeVoter;
+    private final MediaTypeVoter bodyExcludedMediaTypeVoter;
 
     /**
      * The constructor.
      *
-     * @param headersLogUtil           The util to use for generating request / response headers log statements.
-     * @param bodyLogUtil              The util to use for generating request / response body log statements.
-     * @param debugLogUtil             The util to use for generating request / response debug log statements.
-     * @param mediaTypeVoter           A media type voter to check for logging.
-     * @param suppressedMediaTypeVoter A media type voter to check to suppress body contents logging.
+     * @param headersLogUtil             The util to use for generating request / response headers log statements.
+     * @param bodyLogUtil                The util to use for generating request / response body log statements.
+     * @param debugLogUtil               The util to use for generating request / response debug log statements.
+     * @param mediaTypeVoter             A media type voter to check for logging.
+     * @param bodyExcludedMediaTypeVoter A media type voter to check to suppress body contents logging.
      */
     public DefaultHawaiiRequestResponseLogger(final HttpRequestResponseHeadersLogUtil headersLogUtil,
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
             final MediaTypeVoter mediaTypeVoter,
-            final MediaTypeVoter suppressedMediaTypeVoter) {
+            final MediaTypeVoter bodyExcludedMediaTypeVoter) {
         this.bodyLogUtil = bodyLogUtil;
         this.headersLogUtil = headersLogUtil;
         this.debugLogUtil = debugLogUtil;
         this.mediaTypeVoter = mediaTypeVoter;
-        this.suppressedMediaTypeVoter = suppressedMediaTypeVoter;
+        this.bodyExcludedMediaTypeVoter = bodyExcludedMediaTypeVoter;
     }
 
     /**
@@ -205,11 +205,11 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     }
 
     private boolean contentTypeCanBeLogged(final MediaType contentType) {
-        return mediaTypeVoter.mediaTypeMatches(contentType) && !suppressedMediaTypeVoter.mediaTypeMatches(contentType);
+        return mediaTypeVoter.mediaTypeMatches(contentType) && !bodyExcludedMediaTypeVoter.mediaTypeMatches(contentType);
     }
 
     private boolean contentTypeCanBeLogged(final String contentType) {
-        return mediaTypeVoter.mediaTypeMatches(contentType) && !suppressedMediaTypeVoter.mediaTypeMatches(contentType);
+        return mediaTypeVoter.mediaTypeMatches(contentType) && !bodyExcludedMediaTypeVoter.mediaTypeMatches(contentType);
     }
 
     /**

@@ -41,7 +41,6 @@ import org.springframework.context.annotation.Import;
  * @since 2.0.0
  */
 @Configuration
-//@EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
 @Import({CxfLoggingConfiguration.class, DataSourceProxyConfiguration.class, HawaiiLoggingFilterConfiguration.class,
     ScheduledConfiguration.class, StatementLoggerQueryExecutionListenerConfiguration.class})
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
@@ -134,7 +133,7 @@ public class HawaiiLoggingConfiguration {
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
             final MediaTypeVoter mediaTypeVoter,
-            @Qualifier("suppressedMediaTypeVoter") final MediaTypeVoter suppressedMediaTypeVoter) {
+            @Qualifier("bodyExcludedMediaTypeVoter") final MediaTypeVoter suppressedMediaTypeVoter) {
         return new DefaultHawaiiRequestResponseLogger(headersLogUtil, bodyLogUtil, debugLogUtil,
                 mediaTypeVoter, suppressedMediaTypeVoter);
     }
@@ -153,8 +152,8 @@ public class HawaiiLoggingConfiguration {
 
     @Bean
     @RefreshScope
-    public MediaTypeVoter suppressedMediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getSuppressedContentTypes(), false);
+    public MediaTypeVoter bodyExcludedMediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getBodyExcludedContentTypes(), false);
     }
 
     /**

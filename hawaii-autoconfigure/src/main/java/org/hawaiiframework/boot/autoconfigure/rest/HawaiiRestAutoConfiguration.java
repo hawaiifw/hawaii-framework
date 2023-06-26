@@ -17,6 +17,7 @@
 package org.hawaiiframework.boot.autoconfigure.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ValidationException;
 import org.hawaiiframework.converter.ModelConverter;
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.web.exception.ApiErrorResponseEnricher;
@@ -26,6 +27,7 @@ import org.hawaiiframework.web.exception.ErrorResponseEntityBuilder;
 import org.hawaiiframework.web.exception.ErrorResponseStatusEnricher;
 import org.hawaiiframework.web.exception.ExceptionResponseFactory;
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
+import org.hawaiiframework.web.exception.JakartaValidationsEntityExceptionHandler;
 import org.hawaiiframework.web.exception.MethodArgumentNotValidResponseEnricher;
 import org.hawaiiframework.web.exception.RequestInfoErrorResponseEnricher;
 import org.hawaiiframework.web.exception.SpringSecurityResponseEntityExceptionHandler;
@@ -48,7 +50,7 @@ import java.util.List;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @Configuration
 @ConditionalOnWebApplication
 public class HawaiiRestAutoConfiguration {
@@ -101,6 +103,7 @@ public class HawaiiRestAutoConfiguration {
             final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
         return new HawaiiResponseEntityExceptionHandler(errorResponseEntityBuilder);
     }
+
     /**
      * Create a Spring Security response exception handler.
      *
@@ -112,6 +115,19 @@ public class HawaiiRestAutoConfiguration {
             final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
         return new SpringSecurityResponseEntityExceptionHandler(errorResponseEntityBuilder);
     }
+
+    /**
+     * Create a Spring Security response exception handler.
+     *
+     * @return The Spring Security response exception handler bean.
+     */
+    @ConditionalOnClass(ValidationException.class)
+    @Bean
+    public JakartaValidationsEntityExceptionHandler jakartaValidationsEntityExceptionHandler(
+            final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+        return new JakartaValidationsEntityExceptionHandler(errorResponseEntityBuilder);
+    }
+
     /**
      * Create an error response status enricher.
      *

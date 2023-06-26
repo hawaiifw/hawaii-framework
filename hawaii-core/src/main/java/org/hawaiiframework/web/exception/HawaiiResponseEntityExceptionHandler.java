@@ -21,6 +21,7 @@ import org.hawaiiframework.validation.ValidationException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -44,6 +45,7 @@ import static org.springframework.http.HttpHeaders.EMPTY;
  * @author Richard den Adel
  * @since 2.0.0
  */
+@Order
 @ControllerAdvice
 public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
