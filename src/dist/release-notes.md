@@ -1,5 +1,10 @@
 # Release Notes #
 
+### 6.0.0.M3-SNAPSHOT
+* Suppress `form-data/multipart` request logging.
+* Made separate ResponseEntityExceptionHandler for Spring Security exceptions.
+* Made separate ResponseEntityExceptionHandler for Jakarta Validation exceptions.
+
 ## 6.0.0.M1
 * Use Spring Framework 6.0.0
 * Use Spring Boot 3.0.0

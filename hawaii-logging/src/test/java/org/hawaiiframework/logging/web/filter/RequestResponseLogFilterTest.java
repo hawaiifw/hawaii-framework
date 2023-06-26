@@ -80,12 +80,15 @@ public class RequestResponseLogFilterTest {
         final HttpRequestResponseDebugLogUtil debugLogUtil = mock(HttpRequestResponseDebugLogUtil.class);
 
         final HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
-        final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties);
+        final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties.getAllowedContentTypes(), true);
+        final MediaTypeVoter suppressedMediaTypeVoter = new MediaTypeVoter(properties.getBodyExcludedContentTypes(), false);
         final RequestVoter requestVoter = new RequestVoter(properties);
 
         final DefaultHawaiiRequestResponseLogger requestResponseLogger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,
                 bodyLogUtil,
-                debugLogUtil, mediaTypeVoter);
+                debugLogUtil,
+                mediaTypeVoter,
+                suppressedMediaTypeVoter);
         final FilterVoter filterVoter = new FilterVoter(mediaTypeVoter, requestVoter);
         filter = new RequestResponseLogFilter(requestResponseLogger, filterVoter);
     }
