@@ -67,7 +67,7 @@ public class MediaTypeVoter {
                 }
             }
 
-            LOGGER.debug("Media type '{}' is excluded, since it is not configured in 'hawaii.logging.allowed-content-types'.", mediaType);
+            LOGGER.debug("Media type '{}' does not match, since it is not configured.", mediaType);
         }
 
         return matches;

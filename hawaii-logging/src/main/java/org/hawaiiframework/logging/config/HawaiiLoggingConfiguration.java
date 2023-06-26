@@ -133,9 +133,9 @@ public class HawaiiLoggingConfiguration {
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
             final MediaTypeVoter mediaTypeVoter,
-            @Qualifier("bodyExcludedMediaTypeVoter") final MediaTypeVoter suppressedMediaTypeVoter) {
+            @Qualifier("bodyExcludedMediaTypeVoter") final MediaTypeVoter bodyExcludedMediaTypeVoter) {
         return new DefaultHawaiiRequestResponseLogger(headersLogUtil, bodyLogUtil, debugLogUtil,
-                mediaTypeVoter, suppressedMediaTypeVoter);
+                mediaTypeVoter, bodyExcludedMediaTypeVoter);
     }
 
     /**
