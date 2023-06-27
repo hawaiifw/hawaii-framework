@@ -29,6 +29,7 @@ public class HawaiiLoggingConfigurationProperties {
             parseMediaType("application/vnd.spring-boot.actuator.v3+json"),
             parseMediaType("application/vnd.spring-cloud.config-server.v2+json"),
             parseMediaType("application/x-www-form-urlencoded"),
+            parseMediaType("application/xml"),
             parseMediaType("multipart/form-data"),
             parseMediaType("text/plain"),
             parseMediaType("text/xml"));
