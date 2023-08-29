@@ -16,9 +16,9 @@ plugins {
     id("pmd")
 
     // Dependency management
-    id("io.spring.dependency-management") version ("1.1.0")
+    id("io.spring.dependency-management") version ("1.1.3")
 
-    id("io.beekeeper.gradle.plugins.dependency-updates") version "0.14.0"
+    id("io.beekeeper.gradle.plugins.dependency-updates") version ("0.15.0")
 }
 
 apply(plugin = "io.github.gradle-nexus.publish-plugin")
@@ -37,19 +37,19 @@ subprojects {
     project.group = "org.hawaiiframework"
 
     buildscript {
-        extra.set("springBootVersion", "3.1.0")
+        extra.set("springBootVersion", "3.1.3")
         extra.set("apacheCxfVersion", "4.0.2")
         extra.set("bouncycastleVersion", "1.70")
         extra.set("commonsIoVersion", "2.13.0")
         extra.set("commonsTextVersion", "1.10.0")
         extra.set("dataSourceProxyVersion", "1.9")
         extra.set("hamcrestVersion", "2.2")
-        extra.set("hibernatorValidatorVersion", "8.0.0.Final")
+        extra.set("hibernatorValidatorVersion", "8.0.1.Final")
         extra.set("httpcomponentsClient5Version", "5.2.1")
         extra.set("jasyptVersion", "1.9.3")
         extra.set("nimbusJoseJwtVersion", "9.31")
-        extra.set("opentelemetryVersion", "1.27.0")
-        extra.set("orgJsonVersion", "20230227")
+        extra.set("opentelemetryVersion", "1.29.0")
+        extra.set("orgJsonVersion", "20230618")
         extra.set("validationApiVersion", "3.0.2")
     }
 

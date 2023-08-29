@@ -68,7 +68,7 @@ hawaii:
         order: -1000
         http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:traceid}
       open-telemetry-tracing-response:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false
         order: -1000
         http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:traceid}
@@ -77,26 +77,26 @@ hawaii:
         enabled: true
         order: -900
       client-ip-log:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false
         order: -800
         http-header: X-Hawaii-Frontend-IP-Address
       transaction-type:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false
         order: -700
       business-transaction-id:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false
         order: -600
         http-header: X-Hawaii-Business-Tx-Id
       transaction-id:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false
         order: -500
         http-header: X-Hawaii-Tx-Id
       request-id:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false
         order: -400
         http-header: X-Hawaii-Request-Id
@@ -108,6 +108,8 @@ hawaii:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: false
         order: 200
+    scheduled:
+      enabled: true
   time:
     # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
     enabled: true

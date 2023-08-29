@@ -1,5 +1,9 @@
 # Release Notes #
 
+### 6.0.0.M4
+* Added property to enable scheduled logging (`hawaii.logging.scheduled.enabled`)
+* Other defaults for logging.
+
 ### 6.0.0.M3
 * Suppress `form-data/multipart` request logging.
 * Made separate ResponseEntityExceptionHandler for Spring Security exceptions.

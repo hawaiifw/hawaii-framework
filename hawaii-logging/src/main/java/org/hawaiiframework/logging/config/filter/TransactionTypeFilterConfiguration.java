@@ -33,7 +33,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Configures the {@link TransactionTypeFilter}.
  */
 @Configuration
-@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
 public class TransactionTypeFilterConfiguration {
 
     /**
