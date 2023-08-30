@@ -23,7 +23,7 @@ Follow the steps below for publishing a new release.
 The closing and releasing of repositories can be done via the nexus plugin.
 
 ```
-``./gradlew -Dorg.gradle.internal.publish.checksums.insecure=true \
+./gradlew -Dorg.gradle.internal.publish.checksums.insecure=true \
   -Psigning.keyId=0x12345678 \ 
   -Psigning.password=very-secret \ 
   -Psigning.secretKeyRingFile=$(pwd)/tmp/private.key.gpg 
