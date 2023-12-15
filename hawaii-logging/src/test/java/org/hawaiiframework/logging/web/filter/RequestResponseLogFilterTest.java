@@ -28,6 +28,7 @@ import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hawaiiframework.logging.web.filter.RequestResponseLogFilter.WRAPPED_RESPONSE_ATTRIBUTE;
+import static org.hawaiiframework.logging.web.filter.AbstractGenericFilterBean.WRAPPED_REQUEST;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -73,7 +74,7 @@ public class RequestResponseLogFilterTest {
         when(request.getQueryString()).thenReturn(A_QUERY_STRING);
         when(request.getContentType()).thenReturn(A_CONTENT_TYPE);
         when(request.getMethod()).thenReturn(A_METHOD);
-        when(request.getAttribute(WRAPPED_RESPONSE_ATTRIBUTE)).thenReturn(null, response);
+        when(request.getAttribute(WRAPPED_REQUEST)).thenReturn(null, response);
 
         final HttpRequestResponseHeadersLogUtil headersLogUtil = mock(HttpRequestResponseHeadersLogUtil.class);
         final HttpRequestResponseBodyLogUtil bodyLogUtil = mock(HttpRequestResponseBodyLogUtil.class);

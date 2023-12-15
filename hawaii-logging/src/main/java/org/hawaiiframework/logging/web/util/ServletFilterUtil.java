@@ -1,4 +1,4 @@
-package org.hawaiiframework.logging.web.filter;
+package org.hawaiiframework.logging.web.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 

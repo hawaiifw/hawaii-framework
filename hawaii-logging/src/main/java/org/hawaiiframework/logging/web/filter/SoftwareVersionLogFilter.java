@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.SOFTWARE_VERSION;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * Servlet filter that logs the software version of the application. It adds the version to the Kibana log fields as well.

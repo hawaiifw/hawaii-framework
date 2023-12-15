@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns each request a unique transaction id and output the transaction id to the response header.

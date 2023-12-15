@@ -25,8 +25,8 @@ import org.hawaiiframework.logging.model.KibanaLogTypeNames;
 import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
-import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
-import org.hawaiiframework.logging.web.filter.ResettableHttpServletRequest;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -60,8 +60,8 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_HEADERS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_SIZE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_STATUS;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isLogged;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markLogged;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isLogged;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.markLogged;
 
 /**
  * General logger.

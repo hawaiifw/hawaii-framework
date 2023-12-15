@@ -16,7 +16,7 @@
 package org.hawaiiframework.logging.web.filter;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.BUSINESS_TX_ID;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 import java.io.IOException;
 import java.util.UUID;
