@@ -39,7 +39,7 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 public abstract class AbstractGenericFilterBean extends GenericFilterBean {
 
-    protected static final String WRAPPED_REQUEST = WrappedHttpRequestResponse.class.getName();
+    protected static final String WRAPPED_REQUEST_RESPONSE = WrappedHttpRequestResponse.class.getName();
 
     /**
      * {@inheritDoc}
@@ -81,7 +81,7 @@ public abstract class AbstractGenericFilterBean extends GenericFilterBean {
      */
     protected WrappedHttpRequestResponse getWrapped(final HttpServletRequest httpServletRequest) {
         return (WrappedHttpRequestResponse) httpServletRequest.getAttribute(
-            WRAPPED_REQUEST);
+            WRAPPED_REQUEST_RESPONSE);
     }
 
     /**
@@ -106,7 +106,7 @@ public abstract class AbstractGenericFilterBean extends GenericFilterBean {
         wrapped = new WrappedHttpRequestResponse(wrappedRequest,
             wrappedResponse);
 
-        httpServletRequest.setAttribute(WRAPPED_REQUEST, wrapped);
+        httpServletRequest.setAttribute(WRAPPED_REQUEST_RESPONSE, wrapped);
 
         return wrapped;
     }

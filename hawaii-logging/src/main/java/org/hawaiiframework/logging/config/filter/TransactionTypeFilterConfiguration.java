@@ -53,14 +53,14 @@ public class TransactionTypeFilterConfiguration {
     /**
      * Create the {@link TransactionTypeFilter} bean.
      *
-     * @param suppliers The transaction type suppliers.
+     * @param transactionTypeSuppliers The transaction type suppliers.
      * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
     @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public TransactionTypeFilter transactionTypeFilter(final List<TransactionTypeSupplier> suppliers) {
+    public TransactionTypeFilter transactionTypeFilter(final List<TransactionTypeSupplier> transactionTypeSuppliers) {
         LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new TransactionTypeFilter(suppliers);
+        return new TransactionTypeFilter(transactionTypeSuppliers);
     }
 
     /**
