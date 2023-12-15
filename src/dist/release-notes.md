@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 6.0.0.M5
+* Enable GraphQL transaction type logging.
+
 ## 6.0.0.M1
 * Use Spring Framework 6.0.0
 * Use Spring Boot 3.0.0
