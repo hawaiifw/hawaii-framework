@@ -22,7 +22,7 @@ package org.hawaiiframework.logging.web.util;
  * @param response The wrapped response.
  *
  * @author Giuseppe Collura
- * @since 6.0.0.m4
+ * @since 6.0.0
  */
 public record WrappedHttpRequestResponse(ResettableHttpServletRequest request,
                                          ContentCachingWrappedResponse response) {

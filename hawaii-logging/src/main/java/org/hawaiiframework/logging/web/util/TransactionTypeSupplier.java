@@ -21,7 +21,7 @@ import java.io.IOException;
  * The Transaction type supplier.
  *
  * @author Giuseppe Collura
- * @since 6.0.0.m4
+ * @since 6.0.0
  */
 public interface TransactionTypeSupplier {
 

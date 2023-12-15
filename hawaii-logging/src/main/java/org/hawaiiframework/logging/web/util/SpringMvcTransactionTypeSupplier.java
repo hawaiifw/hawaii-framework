@@ -28,7 +28,7 @@ import org.springframework.web.servlet.HandlerMapping;
  * Spring MVC implementation of the {@link TransactionTypeSupplier}.
  *
  * @author Giuseppe Collura
- * @since 6.0.0.m4
+ * @since 6.0.0
  */
 @Order(1_000)
 public class SpringMvcTransactionTypeSupplier implements TransactionTypeSupplier {

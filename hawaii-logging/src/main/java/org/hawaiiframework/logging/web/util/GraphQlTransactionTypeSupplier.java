@@ -30,7 +30,7 @@ import org.springframework.core.annotation.Order;
  * GraphQl implementation for the {@link TransactionTypeSupplier}.
  *
  * @author Giuseppe Collura
- * @since 6.0.0.m4
+ * @since 6.0.0
  */
 @Order(0)
 public class GraphQlTransactionTypeSupplier implements TransactionTypeSupplier {
