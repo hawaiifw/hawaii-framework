@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import org.hawaiiframework.logging.model.KibanaLogFields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerExecutionChain;
-import org.springframework.web.servlet.HandlerMapping;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
+import org.hawaiiframework.logging.web.util.TransactionTypeSupplier;
+import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
+import org.slf4j.Logger;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns the transaction's name (class and method name) to the Kibana logger for each request.
@@ -39,69 +38,52 @@ import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOrigina
  */
 public class TransactionTypeFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionTypeFilter.class);
+    private static final Logger LOGGER = getLogger(TransactionTypeFilter.class);
+    private final List<TransactionTypeSupplier> suppliers;
 
     /**
-     * Application context (ac), ac is the context of this Spring Boot Application.
-     * Ac is needed to get the appropriate handler for each request.
-     */
-    private final ApplicationContext applicationContext;
-
-    /**
-     * Constructor, the application context should be provided when constructing this class. This class cannot be a bean
-     * because it inhered from AbstractGenericFilterBean.
+     * The constructor.
      *
-     * @param applicationContext the application context of the Spring Boot Application
+     * @param suppliers The transaction type suppliers.
      */
-    public TransactionTypeFilter(final ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public TransactionTypeFilter(final List<TransactionTypeSupplier> suppliers) {
+        this.suppliers = suppliers;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
-                                    final FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest httpRequest,
+        final HttpServletResponse httpResponse,
+        final FilterChain filterChain) throws ServletException, IOException {
 
-        if (isOriginalRequest(request)) {
-            logRequest(request);
-        }
-
-        filterChain.doFilter(request, response);
-    }
-
-    private void logRequest(final HttpServletRequest request) {
-        HandlerMethod handler = null;
-
-        for (HandlerMapping handlerMapping : applicationContext.getBeansOfType(HandlerMapping.class).values()) {
-            HandlerExecutionChain handlerExecutionChain = null;
-            try {
-                handlerExecutionChain = handlerMapping.getHandler(request);
-            } catch (Exception e) {
-                LOGGER.warn("Exception when fetching the handler");
-            }
-            if (handlerExecutionChain != null) {
-                final var tempHandler = handlerExecutionChain.getHandler();
-                handler = tempHandler instanceof HandlerMethod ? (HandlerMethod) tempHandler : null;
-                break;
-            }
-        }
-
-        if (handler == null) {
-            LOGGER.debug("No handler found.");
+        if (hasBeenFiltered(httpRequest)) {
+            filterChain.doFilter(httpRequest, httpResponse);
         } else {
+            try {
+                markHasBeenFiltered(httpRequest);
+                final WrappedHttpRequestResponse wrapped = getWrapped(httpRequest, httpResponse);
 
-            final var nameMethod = handler.getMethod().getName();
-            final var nameController = handler.getBeanType().getSimpleName();
-            final var value = nameController + "." + nameMethod;
+                final String type = getTransactionType(wrapped.request());
+                KibanaLogFields.tag(TX_TYPE, type);
+                LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
 
-            KibanaLogFields.tag(TX_TYPE, value);
-            LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), value);
+                filterChain.doFilter(wrapped.request(), wrapped.response());
+            } catch (IOException ignored) {
+                LOGGER.warn("Could not determine the transaction type.", ignored);
+            }
         }
     }
 
+    private String getTransactionType(final ResettableHttpServletRequest wrappedRequest)
+        throws IOException {
+        for (TransactionTypeSupplier supplier : suppliers) {
+            final String type = supplier.getTransactionType(wrappedRequest);
+            if (type != null) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

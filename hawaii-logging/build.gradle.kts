@@ -21,6 +21,8 @@ dependencies {
     compileOnly("net.ttddyy:datasource-proxy:${project.extra["dataSourceProxyVersion"]}")
     compileOnly("io.opentelemetry:opentelemetry-api:${project.extra["opentelemetryVersion"]}")
     compileOnly("com.nimbusds:nimbus-jose-jwt:${project.extra["nimbusJoseJwtVersion"]}")
+    compileOnly("org.json:json:${project.extra["orgJsonVersion"]}")
+    compileOnly("com.graphql-java:graphql-java:${project.extra["graphqlJavaVersion"]}")
 
     testImplementation("jakarta.servlet:jakarta.servlet-api")
     testImplementation("org.apache.commons:commons-text:${project.extra["commonsTextVersion"]}")

@@ -1,7 +1,7 @@
 package org.hawaiiframework.logging.http;
 
-import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
-import org.hawaiiframework.logging.web.filter.ResettableHttpServletRequest;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 

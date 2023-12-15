@@ -18,7 +18,7 @@ package org.hawaiiframework.logging.util;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.slf4j.Logger;
 import org.springframework.http.client.ClientHttpResponse;
 

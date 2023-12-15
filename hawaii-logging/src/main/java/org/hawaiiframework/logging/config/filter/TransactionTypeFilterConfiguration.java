@@ -16,7 +16,15 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.List;
 import org.hawaiiframework.logging.web.filter.TransactionTypeFilter;
+import org.hawaiiframework.logging.web.util.GraphQlTransactionTypeSupplier;
+import org.hawaiiframework.logging.web.util.SpringMvcTransactionTypeSupplier;
+import org.hawaiiframework.logging.web.util.TransactionTypeSupplier;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,10 +32,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link TransactionTypeFilter}.
@@ -43,20 +47,43 @@ public class TransactionTypeFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(TransactionTypeFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-700}")
+    @Value("${" + CONFIG_PREFIX + ".order:-1000}")
     private int filterOrder;
 
     /**
      * Create the {@link TransactionTypeFilter} bean.
      *
-     * @param applicationContext the application context of the Spring Boot Application
+     * @param transactionTypeSuppliers The transaction type suppliers.
      * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
      */
     @Bean
     @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public TransactionTypeFilter transactionTypeFilter(final ApplicationContext applicationContext) {
+    public TransactionTypeFilter transactionTypeFilter(final List<TransactionTypeSupplier> transactionTypeSuppliers) {
         LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new TransactionTypeFilter(applicationContext);
+        return new TransactionTypeFilter(transactionTypeSuppliers);
+    }
+
+    /**
+     * Create the {@link SpringMvcTransactionTypeSupplier} bean.
+     *
+     * @param applicationContext The application context of the Spring Boot Application.
+     * @return the {@link SpringMvcTransactionTypeSupplier} bean.
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+    public SpringMvcTransactionTypeSupplier springMvcTransactionTypeSupplier(final ApplicationContext applicationContext) {
+        return new SpringMvcTransactionTypeSupplier(applicationContext);
+    }
+
+    /**
+     * Create the {@link GraphQlTransactionTypeSupplier} bean.
+     *
+     * @return the {@link GraphQlTransactionTypeSupplier} bean.
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+    public GraphQlTransactionTypeSupplier graphQlTransactionTypeSupplier() {
+        return new GraphQlTransactionTypeSupplier();
     }
 
     /**

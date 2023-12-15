@@ -47,6 +47,7 @@ subprojects {
         extra.set("opentelemetryVersion", "1.19.0")
         extra.set("orgJsonVersion", "20220924")
         extra.set("validationApiVersion", "3.0.2")
+        extra.set("graphqlJavaVersion", "20.2")
     }
 
     apply(plugin = "java-library")
