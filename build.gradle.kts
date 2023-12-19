@@ -7,7 +7,7 @@ plugins {
     // For publishing
     id("signing")
     id("maven-publish")
-    id("io.github.gradle-nexus.publish-plugin") version ("1.1.0")
+    id("io.github.gradle-nexus.publish-plugin") version ("2.0.0-rc-1")
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
@@ -27,6 +27,7 @@ nexusPublishing {
             password.set(System.getenv("SONATYPE_OSSRH_PASSWORD"))
         }
     }
+    packageGroup.set("org.hawaiiframework")
 }
 
 subprojects {
