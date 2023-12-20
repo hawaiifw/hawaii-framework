@@ -52,7 +52,8 @@ public class GraphQlTransactionTypeSupplier implements TransactionTypeSupplier {
         try {
             // Collect the graphQl multiPart request with.
             // request.getParts().stream().findFirst().get().getContentType()
-            if (request.getContentType().contains(MULTI_PART_MIME_TYPE)) {
+            String contentType = request.getContentType();
+            if (contentType != null && contentType.contains(MULTI_PART_MIME_TYPE)) {
                 return "Graphql.multiPart";
             }
 
