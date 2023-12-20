@@ -30,7 +30,7 @@ import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
 import org.hawaiiframework.web.exception.JakartaValidationsEntityExceptionHandler;
 import org.hawaiiframework.web.exception.MethodArgumentNotValidResponseEnricher;
 import org.hawaiiframework.web.exception.RequestInfoErrorResponseEnricher;
-import org.hawaiiframework.web.exception.SpringSecurityResponseEntityExceptionHandler;
+import org.hawaiiframework.web.exception.HawaiiSpringResponseEntityExceptionHandler;
 import org.hawaiiframework.web.exception.ValidationErrorResponseEnricher;
 import org.hawaiiframework.web.resource.ObjectErrorResourceAssembler;
 import org.hawaiiframework.web.resource.ValidationErrorResource;
@@ -50,9 +50,9 @@ import java.util.List;
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
 @Configuration
 @ConditionalOnWebApplication
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
 public class HawaiiRestAutoConfiguration {
 
     @Autowired
@@ -111,9 +111,9 @@ public class HawaiiRestAutoConfiguration {
      */
     @ConditionalOnClass(AccessDeniedException.class)
     @Bean
-    public SpringSecurityResponseEntityExceptionHandler springSecurityResponseEntityExceptionHandler(
+    public HawaiiSpringResponseEntityExceptionHandler springSecurityResponseEntityExceptionHandler(
             final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
-        return new SpringSecurityResponseEntityExceptionHandler(errorResponseEntityBuilder);
+        return new HawaiiSpringResponseEntityExceptionHandler(errorResponseEntityBuilder);
     }
 
     /**

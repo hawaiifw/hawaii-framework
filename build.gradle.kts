@@ -12,7 +12,6 @@ plugins {
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
     id("com.github.spotbugs") version ("6.0.4")
-//    id("com.github.spotbugs") version ("5.0.14")
     id("pmd")
 
     // Dependency management
@@ -77,7 +76,7 @@ subprojects {
         options.encoding = Charsets.UTF_8.name()
 
         options.isDeprecation = true
-        options.isWarnings = true
+        // options.isWarnings = true
 
         // javac -X
         // javac --help-lint

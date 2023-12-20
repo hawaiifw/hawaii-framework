@@ -20,8 +20,11 @@ import static org.springframework.http.HttpHeaders.EMPTY;
 
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,13 +45,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @Order(0)
 @ControllerAdvice
-public class SpringSecurityResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class HawaiiSpringResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-    public SpringSecurityResponseEntityExceptionHandler(final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    public HawaiiSpringResponseEntityExceptionHandler(final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
         this.errorResponseEntityBuilder = errorResponseEntityBuilder;
     }
+
     /**
      * Handles {@code AccessDeniedException} instances.
      * <p>
@@ -62,6 +66,22 @@ public class SpringSecurityResponseEntityExceptionHandler extends ResponseEntity
     @ResponseBody
     public ResponseEntity<Object> accessDeniedException(final AccessDeniedException ex, final WebRequest request) {
         final HttpStatus status = HttpStatus.FORBIDDEN;
+        return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
+    }
+
+    /**
+     * The overridden message not readable exception handler.
+     *
+     * @param ex the exception to handle
+     * @param headers the headers to use for the response
+     * @param statusCode the status code to use for the response
+     * @param request the current request
+     * @return a response entity reflecting the current exception
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex,
+        final HttpHeaders headers, final HttpStatusCode statusCode, final WebRequest request) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
     }
 
