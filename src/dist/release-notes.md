@@ -1,5 +1,9 @@
 # Release Notes #
 
+## 6.0.0.M6
+* Enable GraphQL transaction type logging for multiParts.
+* Added missing classes from version `6.0.0.M4` (see mainly`JakartaValidationsEntityExceptionHandler.java` and `SpringSecurityResponseEntityExceptionHandler.java`.
+
 ## 6.0.0.M5
 * Enable GraphQL transaction type logging.
 

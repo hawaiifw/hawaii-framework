@@ -15,6 +15,9 @@
  */
 package org.hawaiiframework.logging.web.util;
 
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
+import static org.springframework.http.MediaType.parseMediaType;
+
 import graphql.language.Document;
 import graphql.language.Field;
 import graphql.language.OperationDefinition;
@@ -36,7 +39,6 @@ import org.springframework.core.annotation.Order;
 public class GraphQlTransactionTypeSupplier implements TransactionTypeSupplier {
 
     private static final String GRAPHQL_URL_IDENTIFIER = "graphql";
-    private static final String MULTI_PART_MIME_TYPE = "multipart/form-data";
 
     private static String getPostBody(final HttpServletRequest servletRequest) throws IOException {
         return IOUtils.toString(servletRequest.getInputStream(),
@@ -46,14 +48,14 @@ public class GraphQlTransactionTypeSupplier implements TransactionTypeSupplier {
     @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public String getTransactionType(final ResettableHttpServletRequest request) throws IOException {
-        if (request.getServletPath().contains(GRAPHQL_URL_IDENTIFIER)) {
+        final String contentType = request.getContentType();
+        if (contentType == null || !request.getServletPath().contains(GRAPHQL_URL_IDENTIFIER)) {
             return null;
         }
         try {
             // Collect the graphQl multiPart request with.
             // request.getParts().stream().findFirst().get().getContentType()
-            String contentType = request.getContentType();
-            if (contentType != null && contentType.contains(MULTI_PART_MIME_TYPE)) {
+            if (MULTIPART_FORM_DATA.includes(parseMediaType(contentType))) {
                 return "Graphql.multiPart";
             }
 
