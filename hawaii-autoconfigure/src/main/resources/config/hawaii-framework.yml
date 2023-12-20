@@ -72,6 +72,10 @@ hawaii:
         enabled: false
         order: -1000
         http-header: ${OPEN_TELEMETRY_TRACE_ID_HEADER:traceid}
+      transaction-type:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1000
       oidc:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
@@ -81,10 +85,6 @@ hawaii:
         enabled: false
         order: -800
         http-header: X-Hawaii-Frontend-IP-Address
-      transaction-type:
-        # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
-        enabled: false
-        order: -700
       business-transaction-id:
         # Must set explicitly to true if required. If the property is not present, the default is "enabled = false".
         enabled: false

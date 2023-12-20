@@ -32,7 +32,7 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isOriginalRequest;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that logs the duration of the request.

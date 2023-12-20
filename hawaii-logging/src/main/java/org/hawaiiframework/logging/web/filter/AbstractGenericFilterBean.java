@@ -15,16 +15,17 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import org.springframework.web.filter.GenericFilterBean;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
+import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
+import org.springframework.web.filter.GenericFilterBean;
 
 /**
  * Adapter "interface" to be able to write FilterBeans that can be "once per request" or "for every dispatch in the request" without having
@@ -37,6 +38,8 @@ import java.io.IOException;
  * @since 2.0.0
  */
 public abstract class AbstractGenericFilterBean extends GenericFilterBean {
+
+    protected static final String WRAPPED_REQUEST_RESPONSE = WrappedHttpRequestResponse.class.getName();
 
     /**
      * {@inheritDoc}
@@ -68,4 +71,63 @@ public abstract class AbstractGenericFilterBean extends GenericFilterBean {
      */
     protected abstract void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
             FilterChain filterChain) throws ServletException, IOException;
+
+
+    /**
+     * Retrieve the {@link WrappedHttpRequestResponse} given the {@code httpServletRequest}.
+     *
+     * @param httpServletRequest The http servlet request.
+     * @return The, possibly {@code null}, {@link WrappedHttpRequestResponse}.
+     */
+    protected WrappedHttpRequestResponse getWrapped(final HttpServletRequest httpServletRequest) {
+        return (WrappedHttpRequestResponse) httpServletRequest.getAttribute(
+            WRAPPED_REQUEST_RESPONSE);
+    }
+
+    /**
+     * Retrieve or create the {@link WrappedHttpRequestResponse}.
+     *
+     * @param httpServletRequest The http servlet request.
+     * @param httpServletResponse The http servlet response.
+     * @return a, never {@code null} {@link WrappedHttpRequestResponse}.
+     */
+    protected WrappedHttpRequestResponse getWrapped(final HttpServletRequest httpServletRequest,
+        final HttpServletResponse httpServletResponse) {
+        WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest);
+        if (wrapped != null) {
+            return wrapped;
+        }
+
+        final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(
+            httpServletResponse);
+        final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(
+            httpServletRequest, wrappedResponse);
+
+        wrapped = new WrappedHttpRequestResponse(wrappedRequest,
+            wrappedResponse);
+
+        httpServletRequest.setAttribute(WRAPPED_REQUEST_RESPONSE, wrapped);
+
+        return wrapped;
+    }
+
+    /**
+     * Determine if the {@code httpServletRequest} already has been filtered.
+     *
+     * @param httpServletRequest The http servlet request.
+     * @return {@code true} if the request already has been filter within this context.
+     */
+    protected boolean hasBeenFiltered(final HttpServletRequest httpServletRequest) {
+        return httpServletRequest.getAttribute(this.getClass().getName()) != null;
+    }
+
+    /**
+     * Mark the {@code httpServletRequest} as already filtered.
+     *
+     * @param httpServletRequest The http servlet request.
+     */
+    protected void markHasBeenFiltered(final HttpServletRequest httpServletRequest) {
+        httpServletRequest.setAttribute(this.getClass().getName(), true);
+    }
+
 }

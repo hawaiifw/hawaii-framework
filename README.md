@@ -16,7 +16,7 @@ See http://www.hawaiiframework.org.
 ----------|----------------|-------------|--------------------------------
  `master` | 6.x            | 17          | 3.x (follows spring version 6) 
  `2.x`    | 2.x            | 8           | 1.5.x                          
- `3.x`    | 2.x            | 11          | 2.x                            
+ `3.x`    | 3.x            | 11          | 2.x                            
 
 ## Contributing
 

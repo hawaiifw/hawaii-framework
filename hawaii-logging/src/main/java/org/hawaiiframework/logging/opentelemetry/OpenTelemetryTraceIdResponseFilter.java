@@ -17,17 +17,15 @@ package org.hawaiiframework.logging.opentelemetry;
 
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanContext;
-import org.apache.commons.lang3.StringUtils;
-import org.hawaiiframework.logging.web.filter.AbstractGenericFilterBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.util.Objects;
+import org.hawaiiframework.logging.web.filter.AbstractGenericFilterBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A filter that adds the trace id to the response header.
@@ -53,7 +51,7 @@ public class OpenTelemetryTraceIdResponseFilter extends AbstractGenericFilterBea
      * @param headerName the name of the header to response with.
      */
     public OpenTelemetryTraceIdResponseFilter(final String headerName) {
-        this.headerName = StringUtils.defaultString(headerName, "traceid");
+        this.headerName = Objects.toString(headerName, "traceid");
         LOGGER.info("Configured to use '{}'.", this.headerName);
     }
 

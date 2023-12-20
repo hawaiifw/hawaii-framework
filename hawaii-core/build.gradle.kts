@@ -12,7 +12,7 @@ dependencies {
     compileOnly("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
     compileOnly("org.aspectj:aspectjweaver")
-    compileOnly("org.springframework.cloud:spring-cloud-context:4.0.4")
+    compileOnly("org.springframework.cloud:spring-cloud-context:${project.extra["springCloudVersion"]}")
     compileOnly("org.springframework:spring-aop")
     compileOnly("org.springframework:spring-core")
     compileOnly("org.springframework:spring-context")

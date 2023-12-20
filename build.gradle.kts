@@ -1,4 +1,4 @@
-import java.util.Calendar
+import java.util.*
 
 
 plugins {
@@ -7,18 +7,17 @@ plugins {
     // For publishing
     id("signing")
     id("maven-publish")
-    //    id("io.github.gradle-nexus.publish-plugin") version ("1.1.0")
     id("io.github.gradle-nexus.publish-plugin") version ("2.0.0-rc-1")
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
-    id("com.github.spotbugs") version ("5.0.14")
+    id("com.github.spotbugs") version ("6.0.4")
+//    id("com.github.spotbugs") version ("5.0.14")
     id("pmd")
 
     // Dependency management
-    id("io.spring.dependency-management") version ("1.1.3")
-
-    id("io.beekeeper.gradle.plugins.dependency-updates") version ("0.15.0")
+    id("io.spring.dependency-management") version ("1.1.4")
+    id("com.github.ben-manes.versions") version "0.50.0"
 }
 
 apply(plugin = "io.github.gradle-nexus.publish-plugin")
@@ -31,26 +30,29 @@ nexusPublishing {
             password.set(System.getenv("SONATYPE_OSSRH_PASSWORD"))
         }
     }
+    // packageGroup.set("org.hawaiiframework")
 }
 
 subprojects {
     project.group = "org.hawaiiframework"
 
     buildscript {
-        extra.set("springBootVersion", "3.1.3")
-        extra.set("apacheCxfVersion", "4.0.2")
+        extra.set("springBootVersion", "3.2.0")
+        extra.set("apacheCxfVersion", "4.0.3")
         extra.set("bouncycastleVersion", "1.70")
         extra.set("commonsIoVersion", "2.13.0")
-        extra.set("commonsTextVersion", "1.10.0")
-        extra.set("dataSourceProxyVersion", "1.9")
+        extra.set("commonsTextVersion", "1.11.0")
+        extra.set("dataSourceProxyVersion", "1.10")
         extra.set("hamcrestVersion", "2.2")
         extra.set("hibernatorValidatorVersion", "8.0.1.Final")
-        extra.set("httpcomponentsClient5Version", "5.2.1")
+        extra.set("httpcomponentsClient5Version", "5.3")
         extra.set("jasyptVersion", "1.9.3")
-        extra.set("nimbusJoseJwtVersion", "9.31")
-        extra.set("opentelemetryVersion", "1.29.0")
-        extra.set("orgJsonVersion", "20230618")
+        extra.set("nimbusJoseJwtVersion", "9.37.3")
+        extra.set("opentelemetryVersion", "1.33.0")
+        extra.set("orgJsonVersion", "20231013")
+        extra.set("springCloudVersion", "4.1.0")
         extra.set("validationApiVersion", "3.0.2")
+        extra.set("graphqlJavaVersion", "20.2")
     }
 
     apply(plugin = "java-library")
@@ -234,6 +236,10 @@ subprojects {
                         developer {
                             name.set("Rutger Lubbers")
                             email.set("rlubbers@ilionx.com")
+                        }
+                        developer {
+                            name.set("Giuseppe Collura")
+                            email.set("gcollura@ilionx.com")
                         }
                     }
                 }

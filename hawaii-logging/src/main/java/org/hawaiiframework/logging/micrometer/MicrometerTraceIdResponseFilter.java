@@ -22,12 +22,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
+import java.util.Objects;
 import org.hawaiiframework.logging.web.filter.AbstractGenericFilterBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * A filter that adds the trace id to the response header.
@@ -59,7 +58,7 @@ public class MicrometerTraceIdResponseFilter extends AbstractGenericFilterBean {
      * @param tracer     the tracer.
      */
     public MicrometerTraceIdResponseFilter(final String headerName, final Tracer tracer) {
-        this.headerName = StringUtils.defaultString(headerName, "traceid");
+        this.headerName = Objects.toString(headerName, "traceid");
         this.tracer = tracer;
         LOGGER.info("Configured to use '{}'.", this.headerName);
     }

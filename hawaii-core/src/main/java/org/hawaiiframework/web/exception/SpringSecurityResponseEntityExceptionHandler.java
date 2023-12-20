@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.web.exception;
 
+import static org.springframework.http.HttpHeaders.EMPTY;
+
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -27,10 +29,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static org.springframework.http.HttpHeaders.EMPTY;
-
 /**
  * This class creates proper HTTP response bodies for exceptions.
+ *
+ * <p>Separate controller advice with it's own order, so that is used before the {@link HawaiiResponseEntityExceptionHandler}.
+ * This is needed because in the code we tend to wrap exceptions within Hawaii exceptions
+ * and the Hawaii exception is preferred above the cause within that exceptions.</p>
+ *
+ * <p>(in other words, don't delete this file or merge this file with the {@link HawaiiResponseEntityExceptionHandler}!)</p>
  *
  * @since 6.0.0
  */

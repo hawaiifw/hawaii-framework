@@ -16,7 +16,7 @@
 package org.hawaiiframework.logging.util;
 
 import junit.framework.TestCase;
-import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

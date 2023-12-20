@@ -1,13 +1,11 @@
 package org.hawaiiframework.logging.http;
 
-import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
-import org.hawaiiframework.logging.web.filter.ResettableHttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
-
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
 
 /**
  * Responsible for logging Http requests and responses.

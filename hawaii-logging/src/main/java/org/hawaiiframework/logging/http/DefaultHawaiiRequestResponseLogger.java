@@ -15,30 +15,6 @@
  */
 package org.hawaiiframework.logging.http;
 
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import org.hawaiiframework.logging.config.MediaTypeVoter;
-import org.hawaiiframework.logging.model.KibanaLogFieldNames;
-import org.hawaiiframework.logging.model.KibanaLogFields;
-import org.hawaiiframework.logging.model.KibanaLogTypeNames;
-import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
-import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
-import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
-import org.hawaiiframework.logging.web.filter.ContentCachingWrappedResponse;
-import org.hawaiiframework.logging.web.filter.ResettableHttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpResponse;
-
-import java.io.IOException;
-
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.FAILURE;
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.SUCCESS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_REQUEST_BODY;
@@ -60,8 +36,31 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_HEADERS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_SIZE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_STATUS;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.isLogged;
-import static org.hawaiiframework.logging.web.filter.ServletFilterUtil.markLogged;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isLogged;
+import static org.hawaiiframework.logging.web.util.ServletFilterUtil.markLogged;
+
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import org.hawaiiframework.logging.config.MediaTypeVoter;
+import org.hawaiiframework.logging.model.KibanaLogFieldNames;
+import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.hawaiiframework.logging.model.KibanaLogTypeNames;
+import org.hawaiiframework.logging.util.HttpRequestResponseBodyLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
+import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
+import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpResponse;
 
 /**
  * General logger.
