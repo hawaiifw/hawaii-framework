@@ -18,3 +18,14 @@ Follow the steps below for publishing a new release.
 * [ ] After the new version is synchronized to Maven Central update the links in 
       https://github.com/hawaiifw/hawaii-framework/blob/gh-pages/_includes/releases.html (in the `gh-pages` branch) to 
       display the new version on http://www.hawaiiframework.org/. 
+
+---
+The closing and releasing of repositories can be done via the nexus plugin.
+
+```
+``./gradlew -Dorg.gradle.internal.publish.checksums.insecure=true \
+  -Psigning.keyId=0x12345678 \ 
+  -Psigning.password=very-secret \ 
+  -Psigning.secretKeyRingFile=$(pwd)/tmp/private.key.gpg 
+  publishToSonatype closeAndReleaseStagingRepository
+```

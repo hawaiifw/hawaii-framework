@@ -36,18 +36,26 @@ import org.springframework.core.annotation.Order;
 public class GraphQlTransactionTypeSupplier implements TransactionTypeSupplier {
 
     private static final String GRAPHQL_URL_IDENTIFIER = "graphql";
+    private static final String MULTI_PART_MIME_TYPE = "multipart/form-data";
 
     private static String getPostBody(final HttpServletRequest servletRequest) throws IOException {
         return IOUtils.toString(servletRequest.getInputStream(),
             servletRequest.getCharacterEncoding());
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public String getTransactionType(final ResettableHttpServletRequest request) throws IOException {
-        if (!request.getServletPath().contains(GRAPHQL_URL_IDENTIFIER)) {
+        if (request.getServletPath().contains(GRAPHQL_URL_IDENTIFIER)) {
             return null;
         }
         try {
+            // Collect the graphQl multiPart request with.
+            // request.getParts().stream().findFirst().get().getContentType()
+            if (request.getContentType().contains(MULTI_PART_MIME_TYPE)) {
+                return "Graphql.multiPart";
+            }
+
             final String body = getPostBody(request);
 
             final JSONObject jsonObject = new JSONObject(body);

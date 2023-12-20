@@ -29,14 +29,15 @@ public class HawaiiLoggingConfigurationProperties {
             parseMediaType("application/vnd.spring-boot.actuator.v3+json"),
             parseMediaType("application/vnd.spring-cloud.config-server.v2+json"),
             parseMediaType("application/x-www-form-urlencoded"),
+            parseMediaType("application/xml"),
             parseMediaType("multipart/form-data"),
             parseMediaType("text/plain"),
             parseMediaType("text/xml"));
 
-    // @Value("${" + CONFIG_PREFIX + ".exclude-paths}")
+    private List<MediaType> bodyExcludedContentTypes = List.of(MediaType.MULTIPART_FORM_DATA);
+
     private List<PathDefinition> excludePaths = List.of(new PathDefinition("/actuator/*"));
 
-    // @Value("${" + CONFIG_PREFIX + ".fields-to-mask}")
     private List<String> fieldsToMask = List.of("password", "keyPassphrase", "client_secret", "secret");
 
     /**
@@ -93,4 +94,11 @@ public class HawaiiLoggingConfigurationProperties {
         this.excludePaths = excludePaths;
     }
 
+    public List<MediaType> getBodyExcludedContentTypes() {
+        return bodyExcludedContentTypes;
+    }
+
+    public void setBodyExcludedContentTypes(final List<MediaType> bodyExcludedContentTypes) {
+        this.bodyExcludedContentTypes = bodyExcludedContentTypes;
+    }
 }

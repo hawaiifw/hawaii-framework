@@ -1,12 +1,12 @@
 package org.hawaiiframework.async;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 import org.yaml.snakeyaml.nodes.NodeId;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Extended version of snakeyaml's Constructor class to facilitate mapping custom YAML
@@ -27,7 +27,7 @@ public class YamlJavaBeanPropertyConstructor extends Constructor {
      * @param theRoot The root class.
      */
     public YamlJavaBeanPropertyConstructor(final Class<?> theRoot) {
-        super(theRoot);
+        super(theRoot, new LoaderOptions());
         this.yamlClassConstructors.put(NodeId.mapping,
                 new CustomPropertyConstructMapping());
     }

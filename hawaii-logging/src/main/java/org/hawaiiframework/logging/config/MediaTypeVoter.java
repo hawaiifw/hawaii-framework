@@ -36,53 +36,41 @@ public class MediaTypeVoter {
     private static final Logger LOGGER = getLogger(MediaTypeVoter.class);
 
     /**
-     * The allowed content types.
+     * The configured content types.
      */
-    private final List<MediaType> allowedContentTypes;
+    private final List<MediaType> contentTypes;
 
-    /**
-     * The constructor.
-     *
-     * @param properties The properties.
-     */
-    public MediaTypeVoter(final HawaiiLoggingConfigurationProperties properties) {
-        allowedContentTypes = properties.getAllowedContentTypes();
-        LOGGER.debug("Allowed content types: '{}'.", allowedContentTypes);
+    private final boolean matchIfEmpty;
+
+    public MediaTypeVoter(final List<MediaType> contentTypes, final boolean matchIfEmpty) {
+        this.contentTypes = contentTypes;
+        this.matchIfEmpty = matchIfEmpty;
+        LOGGER.debug("Configured content types: '{}'.", contentTypes);
     }
 
-    /**
-     * Returns {@code true} if the {@code contentType} is allowed.
-     * @param contentType The content type to check.
-     * @return  {@code true} if the {@code contentType} is allowed.
-     */
-    public boolean mediaTypeAllowed(final String contentType) {
-        return mediaTypeAllowed(parseMediaType(contentType));
+    public boolean mediaTypeMatches(final String contentType) {
+        return mediaTypeMatches(parseMediaType(contentType));
     }
 
-    /**
-     * Returns {@code true} if the {@code mediaType} is allowed.
-     * @param mediaType The media type to check.
-     * @return  {@code true} if the {@code mediaType} is allowed.
-     */
-    public boolean mediaTypeAllowed(final MediaType mediaType) {
-        boolean allowed = false;
+    public boolean mediaTypeMatches(final MediaType mediaType) {
+        boolean matches = false;
 
-        if (mediaType == null || allowedContentTypes == null || allowedContentTypes.isEmpty()) {
-            allowed = true;
+        if (mediaType == null || contentTypes == null || contentTypes.isEmpty()) {
+            matches = matchIfEmpty;
         } else {
 
-            for (final MediaType allowedType : allowedContentTypes) {
+            for (final MediaType allowedType : contentTypes) {
                 final boolean includes = allowedType.includes(mediaType);
                 LOGGER.trace("Type '{}' contains '{}': '{}'.", allowedType, mediaType, includes);
                 if (includes) {
-                    allowed = true;
+                    matches = true;
                 }
             }
 
-            LOGGER.debug("Media type '{}' is excluded, since it is not configured in 'hawaii.logging.allowed-content-types'.", mediaType);
+            LOGGER.debug("Media type '{}' does not match, since it is not configured.", mediaType);
         }
 
-        return allowed;
+        return matches;
     }
 
     private MediaType parseMediaType(final String contentType) {

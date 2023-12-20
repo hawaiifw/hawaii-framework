@@ -23,6 +23,7 @@ import org.hawaiiframework.logging.util.HttpRequestResponseDebugLogUtil;
 import org.hawaiiframework.logging.util.HttpRequestResponseHeadersLogUtil;
 import org.hawaiiframework.logging.util.PasswordMaskerUtil;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +41,6 @@ import org.springframework.context.annotation.Import;
  * @since 2.0.0
  */
 @Configuration
-//@EnableConfigurationProperties(HawaiiLoggingConfigurationProperties.class)
 @Import({CxfLoggingConfiguration.class, DataSourceProxyConfiguration.class, HawaiiLoggingFilterConfiguration.class,
     ScheduledConfiguration.class, StatementLoggerQueryExecutionListenerConfiguration.class})
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
@@ -132,9 +132,10 @@ public class HawaiiLoggingConfiguration {
             final HttpRequestResponseHeadersLogUtil headersLogUtil,
             final HttpRequestResponseBodyLogUtil bodyLogUtil,
             final HttpRequestResponseDebugLogUtil debugLogUtil,
-            final MediaTypeVoter mediaTypeVoter) {
+            final MediaTypeVoter mediaTypeVoter,
+            @Qualifier("bodyExcludedMediaTypeVoter") final MediaTypeVoter bodyExcludedMediaTypeVoter) {
         return new DefaultHawaiiRequestResponseLogger(headersLogUtil, bodyLogUtil, debugLogUtil,
-                mediaTypeVoter);
+                mediaTypeVoter, bodyExcludedMediaTypeVoter);
     }
 
     /**
@@ -146,7 +147,13 @@ public class HawaiiLoggingConfiguration {
     @Bean
     @RefreshScope
     public MediaTypeVoter mediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
-        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties);
+        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getAllowedContentTypes(), true);
+    }
+
+    @Bean
+    @RefreshScope
+    public MediaTypeVoter bodyExcludedMediaTypeVoter(final HawaiiLoggingConfigurationProperties hawaiiLoggingConfigurationProperties) {
+        return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getBodyExcludedContentTypes(), false);
     }
 
     /**

@@ -64,7 +64,7 @@ public class FilterVoter {
         Boolean isEnabled = (Boolean) request.getAttribute(getAttributeName());
         LOGGER.trace("Got '{}' from attribute.", isEnabled);
         if (isEnabled == null) {
-            final boolean mediaTypeAllowed = mediaTypeVoter.mediaTypeAllowed(request.getContentType());
+            final boolean mediaTypeAllowed = mediaTypeVoter.mediaTypeMatches(request.getContentType());
             final boolean requestAllowed = requestVoter.allowed(request);
             isEnabled = mediaTypeAllowed && requestAllowed;
             request.setAttribute(getAttributeName(), isEnabled);

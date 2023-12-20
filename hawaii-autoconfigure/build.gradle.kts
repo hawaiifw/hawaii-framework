@@ -15,6 +15,9 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api")
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("org.springframework.data:spring-data-redis")
+    compileOnly("org.springframework.security:spring-security-core")
+    compileOnly("jakarta.validation:jakarta.validation-api:3.0.2")
+
 }
 
 tasks.withType<JavaCompile> {

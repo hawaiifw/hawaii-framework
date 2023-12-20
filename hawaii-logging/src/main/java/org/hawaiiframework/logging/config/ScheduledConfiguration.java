@@ -17,11 +17,13 @@ package org.hawaiiframework.logging.config;
 
 import org.hawaiiframework.logging.scheduled.ScheduledAspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
 /**
  * Configuration for adding transaction id's to scheduled methods.
  */
+@ConditionalOnProperty(prefix = "hawaii.logging.scheduled", name = "enabled", matchIfMissing = true)
 @ConditionalOnClass(name = "org.aspectj.lang.ProceedingJoinPoint")
 public class ScheduledConfiguration {
 
