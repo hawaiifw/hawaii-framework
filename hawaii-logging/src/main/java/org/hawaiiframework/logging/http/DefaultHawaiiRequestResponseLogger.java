@@ -36,8 +36,6 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_HEADERS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_RESPONSE_SIZE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_STATUS;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isLogged;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.markLogged;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -125,10 +123,6 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
      */
     @Override
     public void logRequest(final ResettableHttpServletRequest wrappedRequest) throws IOException {
-        if (isLogged(wrappedRequest)) {
-            return;
-        }
-        markLogged(wrappedRequest);
         final String method = wrappedRequest.getMethod();
         final String requestUri = wrappedRequest.getRequestURI();
         final int contentLength = wrappedRequest.getContentLength();
@@ -237,7 +231,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
             LOGGER.info("Response '{}' is '{}' with content type '{}' and size of '{}' bytes.", requestURI, httpStatus, contentType,
                     contentLength);
-            if (contentTypeCanBeLogged) {
+            if (contentTypeCanBeLogged && LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Response is:\n{}",
                         debugLogUtil.getTxResponseDebugOutput(servletRequest.getProtocol(), httpStatus, responseHeaders, responseBody));
             }
@@ -272,7 +266,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
             }
 
             LOGGER.info("Got response '{}' with content type '{}' and size of '{}' bytes.", httpStatus, contentType, contentLength);
-            if (contentTypeCanBeLogged) {
+            if (contentTypeCanBeLogged && LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Got response '{}':\n{}", httpStatus,
                         debugLogUtil.getCallResponseDebugOutput(responseHeaders, responseBody));
             }

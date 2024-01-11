@@ -18,6 +18,7 @@ package org.hawaiiframework.logging.config;
 import org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.ClientIpLogFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.ContainerNameHttpHeaderFilterConfiguration;
+import org.hawaiiframework.logging.config.filter.ContentCachingRequestResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.MicrometerTracingResponseFilterConfiguration;
 import org.hawaiiframework.logging.config.filter.OidcLogFilterConfiguration;
@@ -40,6 +41,7 @@ import org.springframework.context.annotation.Import;
     BusinessTransactionIdFilterConfiguration.class,
     ClientIpLogFilterConfiguration.class,
     ContainerNameHttpHeaderFilterConfiguration.class,
+    ContentCachingRequestResponseFilterConfiguration.class,
     MicrometerTracingResponseFilterConfiguration.class,
     KibanaLogCleanupFilterConfiguration.class,
     OidcLogFilterConfiguration.class,

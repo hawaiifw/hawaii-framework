@@ -129,5 +129,4 @@ public abstract class AbstractGenericFilterBean extends GenericFilterBean {
     protected void markHasBeenFiltered(final HttpServletRequest httpServletRequest) {
         httpServletRequest.setAttribute(this.getClass().getName(), true);
     }
-
 }

@@ -52,6 +52,10 @@ hawaii:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
         order: -1300
+      content-caching-request-response:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1250
       software-version:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true

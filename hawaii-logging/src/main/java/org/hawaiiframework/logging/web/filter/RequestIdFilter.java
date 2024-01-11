@@ -15,20 +15,19 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.RequestId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_ID;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns each request a unique request id and output the request id to the response header.
@@ -63,24 +62,21 @@ public class RequestIdFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (isOriginalRequest(request)) {
+        if (!hasBeenFiltered(request)) {
+            markHasBeenFiltered(request);
+
             final UUID uuid = UUID.randomUUID();
 
             RequestId.set(uuid);
             KibanaLogFields.tag(REQUEST_ID, RequestId.get());
 
             LOGGER.debug("Set '{}' with value '{};.", REQUEST_ID.getLogName(), uuid);
-        }
 
-        try {
             if (!response.containsHeader(headerName)) {
                 response.addHeader(headerName, RequestId.get());
             }
-            filterChain.doFilter(request, response);
-        } finally {
-            if (isOriginalRequest(request)) {
-                RequestId.remove();
-            }
         }
+
+        filterChain.doFilter(request, response);
     }
 }

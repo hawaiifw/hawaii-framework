@@ -15,11 +15,6 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.BUSINESS_TX_ID;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
-
-import java.io.IOException;
-import java.util.UUID;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +24,11 @@ import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.UuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.UUID;
+
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.BUSINESS_TX_ID;
 
 /**
  * A filter that assigns each request a unique transaction id and output the transaction id to the response header.
@@ -65,24 +65,21 @@ public class BusinessTransactionIdFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (isOriginalRequest(request)) {
+        if (!hasBeenFiltered(request)) {
+            markHasBeenFiltered(request);
+
             final UUID uuid = uuidResolver.resolve(request, headerName);
 
             BusinessTransactionId.set(uuid);
             KibanaLogFields.tag(BUSINESS_TX_ID, BusinessTransactionId.get());
 
             LOGGER.debug("Set '{}' with value '{};.", BUSINESS_TX_ID.getLogName(), uuid);
-        }
 
-        try {
             if (!response.containsHeader(headerName)) {
                 response.addHeader(headerName, BusinessTransactionId.get());
             }
-            filterChain.doFilter(request, response);
-        } finally {
-            if (isOriginalRequest(request)) {
-                BusinessTransactionId.remove();
-            }
         }
+        filterChain.doFilter(request, response);
+
     }
 }

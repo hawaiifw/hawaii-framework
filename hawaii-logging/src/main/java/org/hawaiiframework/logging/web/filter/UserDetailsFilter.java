@@ -56,8 +56,7 @@ public class UserDetailsFilter extends OncePerRequestFilter {
         if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
             final Object principal = auth.getPrincipal();
             LOGGER.debug("Request called by '{}'.", principal);
-            if (principal instanceof UserDetails) {
-                final UserDetails userDetails = (UserDetails) principal;
+            if (principal instanceof UserDetails userDetails) {
                 final String username = userDetails.getUsername();
                 KibanaLogFields.tag(USER_NAME, username);
                 LOGGER.debug("User has user name '{}'.", username);
