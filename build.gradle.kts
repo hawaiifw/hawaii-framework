@@ -242,7 +242,7 @@ subprojects {
     }
 
     project.tasks["checkstyleTest"].enabled = false
-    
+
     /**
      * Sign
      */
