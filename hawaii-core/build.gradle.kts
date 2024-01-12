@@ -3,7 +3,7 @@ description = "Hawaii Core"
 dependencies {
     api("org.jasypt:jasypt:${project.extra["jasyptVersion"]}")
     api("org.hamcrest:hamcrest:${project.extra["hamcrestVersion"]}")
-    api("org.bouncycastle:bcprov-jdk15on:${project.extra["bouncycastleVersion"]}")
+    api("org.bouncycastle:bcprov-jdk18on:${project.extra["bouncycastleVersion"]}")
     implementation("commons-codec:commons-codec")
     implementation("org.apache.commons:commons-lang3")
 

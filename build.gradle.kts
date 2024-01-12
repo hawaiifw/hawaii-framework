@@ -11,7 +11,7 @@ plugins {
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
-    id("com.github.spotbugs") version ("6.0.4")
+    id("com.github.spotbugs") version ("6.0.6")
     id("pmd")
 
     // Dependency management
@@ -36,10 +36,10 @@ subprojects {
     project.group = "org.hawaiiframework"
 
     buildscript {
-        extra.set("springBootVersion", "3.2.0")
+        extra.set("springBootVersion", "3.2.1")
         extra.set("apacheCxfVersion", "4.0.3")
-        extra.set("bouncycastleVersion", "1.70")
-        extra.set("commonsIoVersion", "2.13.0")
+        extra.set("bouncycastleVersion", "1.77")
+        extra.set("commonsIoVersion", "2.15.1")
         extra.set("commonsTextVersion", "1.11.0")
         extra.set("dataSourceProxyVersion", "1.10")
         extra.set("hamcrestVersion", "2.2")
@@ -47,7 +47,7 @@ subprojects {
         extra.set("httpcomponentsClient5Version", "5.3")
         extra.set("jasyptVersion", "1.9.3")
         extra.set("nimbusJoseJwtVersion", "9.37.3")
-        extra.set("opentelemetryVersion", "1.33.0")
+        extra.set("opentelemetryVersion", "1.34.1")
         extra.set("orgJsonVersion", "20231013")
         extra.set("springCloudVersion", "4.1.0")
         extra.set("validationApiVersion", "3.0.2")
