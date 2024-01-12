@@ -44,17 +44,11 @@ public class KibanaLogCleanupFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-
-        if (hasBeenFiltered(request)) {
+        try {
             filterChain.doFilter(request, response);
-        } else {
-            markHasBeenFiltered(request);
-            try {
-                filterChain.doFilter(request, response);
-            } finally {
-                LOGGER.info("Clearing Kibana log fields.");
-                KibanaLogFields.clear();
-            }
+        } finally {
+            LOGGER.info("Clearing Kibana log fields.");
+            KibanaLogFields.clear();
         }
     }
 }

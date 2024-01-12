@@ -15,20 +15,21 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
-import static org.slf4j.LoggerFactory.getLogger;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.TransactionTypeSupplier;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
 import org.slf4j.Logger;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
@@ -57,22 +58,16 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
     protected void doFilterInternal(final HttpServletRequest httpRequest,
         final HttpServletResponse httpResponse,
         final FilterChain filterChain) throws ServletException, IOException {
+        try {
+            final WrappedHttpRequestResponse wrapped = getWrapped(httpRequest, httpResponse);
 
-        if (hasBeenFiltered(httpRequest)) {
-            filterChain.doFilter(httpRequest, httpResponse);
-        } else {
-            try {
-                markHasBeenFiltered(httpRequest);
-                final WrappedHttpRequestResponse wrapped = getWrapped(httpRequest, httpResponse);
+            final String type = getTransactionType(wrapped.request());
+            KibanaLogFields.tag(TX_TYPE, type);
+            LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
 
-                final String type = getTransactionType(wrapped.request());
-                KibanaLogFields.tag(TX_TYPE, type);
-                LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
-
-                filterChain.doFilter(wrapped.request(), wrapped.response());
-            } catch (IOException ignored) {
-                LOGGER.warn("Could not determine the transaction type.", ignored);
-            }
+            filterChain.doFilter(wrapped.request(), wrapped.response());
+        } catch (IOException ignored) {
+            LOGGER.warn("Could not determine the transaction type.", ignored);
         }
     }
 

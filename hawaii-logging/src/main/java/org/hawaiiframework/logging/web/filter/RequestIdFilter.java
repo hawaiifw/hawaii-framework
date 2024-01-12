@@ -61,20 +61,15 @@ public class RequestIdFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
+        final UUID uuid = UUID.randomUUID();
 
-        if (!hasBeenFiltered(request)) {
-            markHasBeenFiltered(request);
+        RequestId.set(uuid);
+        KibanaLogFields.tag(REQUEST_ID, RequestId.get());
 
-            final UUID uuid = UUID.randomUUID();
+        LOGGER.debug("Set '{}' with value '{};.", REQUEST_ID.getLogName(), uuid);
 
-            RequestId.set(uuid);
-            KibanaLogFields.tag(REQUEST_ID, RequestId.get());
-
-            LOGGER.debug("Set '{}' with value '{};.", REQUEST_ID.getLogName(), uuid);
-
-            if (!response.containsHeader(headerName)) {
-                response.addHeader(headerName, RequestId.get());
-            }
+        if (!response.containsHeader(headerName)) {
+            response.addHeader(headerName, RequestId.get());
         }
 
         filterChain.doFilter(request, response);

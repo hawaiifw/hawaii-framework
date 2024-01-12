@@ -70,9 +70,7 @@ public class SoftwareVersionLogFilter extends AbstractGenericFilterBean {
             final HttpServletResponse response,
             final FilterChain filterChain) throws ServletException, IOException {
 
-        if (!hasBeenFiltered(request) && filterVoter.enabled(request)) {
-            markHasBeenFiltered(request);
-
+        if (filterVoter.enabled(request)) {
             final String version = buildProperties.getVersion();
 
             LOGGER.info("Software Build version '{}'.", version);

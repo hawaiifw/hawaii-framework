@@ -22,12 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
-import org.slf4j.Logger;
 
 import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
-
 
 /**
  * A filter that starts content caching.
@@ -36,8 +32,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBean {
 
-    private static final Logger LOGGER = getLogger(ContentCachingRequestResponseFilter.class);
-
     /**
      * {@inheritDoc}
      */
@@ -45,22 +39,11 @@ public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBe
     protected void doFilterInternal(final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse,
             final FilterChain filterChain) throws ServletException, IOException {
-
-        if (hasBeenFiltered(httpServletRequest)) {
-            try {
-                LOGGER.trace("httpServletRequest has already been filtered.");
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
-            } finally {
-                copyCachedResponse(getWrapped(httpServletRequest));
-            }
-        } else {
-            markHasBeenFiltered(httpServletRequest);
-            final WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
-            try {
-                filterChain.doFilter(wrapped.request(), wrapped.response());
-            } finally {
-                copyCachedResponse(wrapped);
-            }
+        final WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
+        try {
+            filterChain.doFilter(wrapped.request(), wrapped.response());
+        } finally {
+            copyCachedResponse(wrapped);
         }
     }
 
@@ -76,4 +59,8 @@ public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBe
         }
     }
 
+    @Override
+    protected boolean shouldNotFilterAsyncDispatch() {
+        return false;
+    }
 }
