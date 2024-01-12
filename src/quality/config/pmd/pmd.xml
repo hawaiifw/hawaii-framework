@@ -136,7 +136,7 @@
   <rule ref="category/java/documentation.xml/CommentRequired">
     <properties>
       <property name="methodWithOverrideCommentRequirement" value="Ignored"/>
-      <property name="accessorCommentRequirement" value="Unwanted"/>
+      <property name="accessorCommentRequirement" value="Ignored"/>
       <property name="classCommentRequirement" value="Required"/>
       <property name="fieldCommentRequirement" value="Ignored"/>
       <property name="publicMethodCommentRequirement" value="Required"/>
