@@ -1,3 +1,4 @@
+import net.ltgt.gradle.errorprone.errorprone
 import java.util.*
 
 
@@ -11,7 +12,8 @@ plugins {
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
-    id("com.github.spotbugs") version ("6.0.6")
+//    id("com.github.spotbugs") version ("6.0.6")
+    id("net.ltgt.errorprone") version ("3.1.0")
     id("pmd")
 
     // Dependency management
@@ -59,7 +61,7 @@ subprojects {
     apply(plugin = "maven-publish")
 
     apply(plugin = "checkstyle")
-    apply(plugin = "com.github.spotbugs")
+    apply(plugin = "net.ltgt.errorprone")
     apply(plugin = "pmd")
 
     apply(plugin = "io.spring.dependency-management")
@@ -107,7 +109,12 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-logging")
         testImplementation("org.springframework:spring-test")
 
-        spotbugsSlf4j("org.slf4j:slf4j-simple")
+        errorprone("com.google.errorprone:error_prone_core:2.24.1")
+        // Error Prone Support's additional bug checkers.
+        // errorprone("com.uber.nullaway:nullaway:$nullawayVersion")
+        errorprone("tech.picnic.error-prone-support:error-prone-contrib:0.14.0")
+
+
         // optional "org.springframework.boot:spring-boot-configuration-processor"
     }
     tasks.withType<Jar> {
@@ -174,23 +181,48 @@ subprojects {
     }
     project.tasks["checkstyleTest"].enabled = false
 
-    /**
-     * Configuration of spotbugs.
-     */
-    spotbugs {
-        excludeFilter.set(file("${rootDir}/src/quality/config/spotbugs/exclude.xml"))
-        ignoreFailures.set(true)
-        showProgress.set(true)
-    }
-    project.tasks["spotbugsTest"].enabled = false
-    tasks.withType<com.github.spotbugs.snom.SpotBugsTask> {
-        val format = findProperty("spotbugsReportFormat")
-        val xmlFormat = (format == "xml")
-        reports {
-            maybeCreate("html").required.set(!xmlFormat)
-            maybeCreate("xml").required.set(xmlFormat)
+    tasks.withType<JavaCompile>().configureEach {
+        // override default false
+        options.isDeprecation = true
+        // defaults to use the platform encoding
+        options.encoding = Charsets.UTF_8.name()
+
+        // add Xlint to our compiler options (but disable processing because of Spring warnings in code)
+        // and make warnings be treated like errors
+
+        // disable "-Werror" to allow automatic refactoring of our code
+        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Xlint:-processing", "-Xmaxerrs", "100", "-Xmaxwarns", "500", "-Amapstruct.defaultComponentModel=spring"))
+
+        options.errorprone {
+            disableWarningsInGeneratedCode.set(true)
+            allDisabledChecksAsWarnings.set(true)
+            allErrorsAsWarnings.set(true)
+
+            // For now disable, discuss
+            disable("Var", "CollectorMutability")
+            disable("Varifier")
+            // The pattern constant first is always null proof, discuss
+            disable("YodaCondition")
+
+            // String.format allows more descriptive texts than String.join.
+            disable("StringJoin")
+            // Disabled, clashes with settings in IntelliJ
+            disable("UngroupedOverloads")
+            // Disabled, since IntelliJ does this for us:
+            disable("BooleanParameter")
+            // Disabled, since we do not require to be compliant with:
+            disable("Java7ApiChecker", "Java8ApiChecker", "AndroidJdkLibsChecker")
+
+            // The auto patch is disabled for now, it _seems_ that having this patching in place makes error-prone
+            // only check the checks that can be patched. Can be enabled to fix bugs if there are too many.
+            //
+            errorproneArgs.addAll(
+                    "-XepPatchChecks:AutowiredConstructor,CanonicalAnnotationSyntax,DeadException,DefaultCharset,LexicographicalAnnotationAttributeListing,LexicographicalAnnotationListing,MethodCanBeStatic,MissingOverride,MutableConstantField,RemoveUnusedImports,StaticImport,TimeZoneUsage,UnnecessaryFinal,UnnecessarilyFullyQualified",
+                    "-XepPatchLocation:IN_PLACE"
+            )
         }
     }
+
 
     /**
      * Sign
