@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.cache.redis;
 
 import java.time.Duration;
@@ -234,6 +235,7 @@ public class HawaiiRedisCacheBuilder {
    * @param <V> Type of the Redis Cache is inferred from the provided type in the parameter
    * @return the constructed {@link RedisCache}
    */
+  @SuppressWarnings("PMD.LawOfDemeter")
   private <V> RedisCache<V> generateRedisCache(
       RedisTemplate<String, V> template, HawaiiTime hawaiiTime, String keyPrefix) {
     var expiration =

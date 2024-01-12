@@ -114,11 +114,13 @@ subprojects {
             // Disabled, since we do not require to be compliant with:
             disable("Java7ApiChecker", "Java8ApiChecker", "AndroidJdkLibsChecker")
 
+            disable("TimeZoneUsage")
+
             // The auto patch is disabled for now, it _seems_ that having this patching in place makes error-prone
             // only check the checks that can be patched. Can be enabled to fix bugs if there are too many.
             //
             errorproneArgs.addAll(
-                "-XepPatchChecks:AutowiredConstructor,CanonicalAnnotationSyntax,DeadException,DefaultCharset,LexicographicalAnnotationAttributeListing,LexicographicalAnnotationListing,MethodCanBeStatic,MissingOverride,MutableConstantField,RemoveUnusedImports,StaticImport,TimeZoneUsage,UnnecessaryFinal,UnnecessarilyFullyQualified",
+                "-XepPatchChecks:AutowiredConstructor,CanonicalAnnotationSyntax,DeadException,DefaultCharset,LexicographicalAnnotationAttributeListing,LexicographicalAnnotationListing,MethodCanBeStatic,MissingOverride,MutableConstantField,RemoveUnusedImports,StaticImport,UnnecessaryFinal,UnnecessarilyFullyQualified",
                 "-XepPatchLocation:IN_PLACE"
             )
         }

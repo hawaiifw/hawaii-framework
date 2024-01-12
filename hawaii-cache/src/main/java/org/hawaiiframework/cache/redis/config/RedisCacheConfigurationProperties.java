@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.cache.redis.config;
 
 import java.time.Duration;
@@ -28,20 +29,10 @@ public class RedisCacheConfigurationProperties {
   /** The default expiration. */
   private Duration defaultExpiration;
 
-  /**
-   * Get the default expiration.
-   *
-   * @return The default expiration.
-   */
   public Duration getDefaultExpiration() {
     return defaultExpiration;
   }
 
-  /**
-   * set the default expiration.
-   *
-   * @param defaultExpiration The default expiration.
-   */
   public void setDefaultExpiration(Duration defaultExpiration) {
     this.defaultExpiration = defaultExpiration;
   }
