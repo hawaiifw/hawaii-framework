@@ -36,6 +36,7 @@ public class ValidationException extends HawaiiException {
 
   /** Constructs a new {@link ValidationException} with an empty {@link ValidationResult}. */
   public ValidationException() {
+    super();
     this.validationResult = new ValidationResult();
   }
 
@@ -45,6 +46,7 @@ public class ValidationException extends HawaiiException {
    * @param validationResult the validation result, not null
    */
   public ValidationException(ValidationResult validationResult) {
+    super();
     requireNonNull(validationResult, "'validationResult' must not be null");
     this.validationResult = validationResult;
   }

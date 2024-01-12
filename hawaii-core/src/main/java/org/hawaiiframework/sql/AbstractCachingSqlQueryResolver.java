@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.sql;
 
+import java.io.Serial;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,7 +46,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
   /** Default maximum number of entries for the sql query cache ({@code 1024}). */
   public static final int DEFAULT_CACHE_LIMIT = 1024;
 
-  private static Logger logger = LoggerFactory.getLogger(AbstractCachingSqlQueryResolver.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCachingSqlQueryResolver.class);
 
   /**
    * Fast access cache for sql queries, returning already cached instances without a global lock.
@@ -60,7 +61,9 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
   /** Map from sql query key to sql query instance, synchronized for sql query creation. */
   @SuppressWarnings("checkstyle:Indentation")
   private final Map<Object, QueryHolder> sqlQueryCreationCache =
-      new LinkedHashMap<Object, QueryHolder>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
+      new LinkedHashMap<>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
+        @Serial
+        private static final long serialVersionUID = -1795871359268002373L;
 
         @Override
         protected boolean removeEldestEntry(Map.Entry<Object, QueryHolder> eldest) {
@@ -156,7 +159,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    */
   public void removeFromCache(String sqlQueryName) {
     if (!isCache()) {
-      logger.warn("Sql query caching is SWITCHED OFF -- removal not necessary");
+      LOGGER.warn("Sql query caching is SWITCHED OFF -- removal not necessary");
     } else {
       Object cacheKey = getCacheKey(sqlQueryName);
       Object cachedSqlQuery;
@@ -164,14 +167,14 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
         this.sqlQueryAccessCache.remove(cacheKey);
         cachedSqlQuery = this.sqlQueryCreationCache.remove(cacheKey);
       }
-      if (logger.isDebugEnabled()) {
+      if (LOGGER.isDebugEnabled()) {
         if (cachedSqlQuery == null) {
-          if (logger.isDebugEnabled()) {
-            logger.debug("No cached instance for sql query '" + cacheKey + "' was found");
+          if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("No cached instance for sql query '" + cacheKey + "' was found");
           }
         } else {
-          if (logger.isDebugEnabled()) {
-            logger.debug("Cache for sql query " + cacheKey + " has been cleared");
+          if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Cache for sql query " + cacheKey + " has been cleared");
           }
         }
       }
@@ -183,7 +186,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    * will lead to loading of demanded sql queries.
    */
   public void clearCache() {
-    logger.debug("Clearing entire sql query cache");
+    LOGGER.debug("Clearing entire sql query cache");
     synchronized (this.sqlQueryCreationCache) {
       this.sqlQueryAccessCache.clear();
       this.sqlQueryCreationCache.clear();
@@ -192,7 +195,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
 
   @Override
   @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount"})
-  public String resolveSqlQuery(String sqlQueryName) throws HawaiiException {
+  public String resolveSqlQuery(String sqlQueryName) {
     if (!isCache()) {
       return loadSqlQuery(sqlQueryName, null);
     } else {
@@ -202,8 +205,8 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
         long originalTimestamp = queryHolder.getRefreshTimestamp();
         if (originalTimestamp > System.currentTimeMillis() - this.cacheMillis) {
           // Up-to-date
-          if (logger.isTraceEnabled()) {
-            logger.trace("Query {} within cache seconds, not refreshing", sqlQueryName);
+          if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Query {} within cache seconds, not refreshing", sqlQueryName);
           }
           return queryHolder.getSqlQuery();
         }
@@ -218,8 +221,8 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
             if (this.cacheUnresolved || queryHolder.getSqlQuery() != null) {
               this.sqlQueryAccessCache.put(cacheKey, queryHolder);
               this.sqlQueryCreationCache.put(cacheKey, queryHolder);
-              if (logger.isTraceEnabled()) {
-                logger.trace("Cached sql query [" + cacheKey + "]");
+              if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Cached sql query [" + cacheKey + "]");
               }
             }
           }
@@ -238,19 +241,20 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    * @param sqlQueryName the name of the query to refresh
    * @param queryHolder the cached QueryHolder to refresh
    */
+  @SuppressWarnings("PMD.LawOfDemeter")
   private void refreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
-    if (logger.isTraceEnabled()) {
-      logger.trace("Attempting to refresh QueryHolder for query {}", sqlQueryName);
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Attempting to refresh QueryHolder for query {}", sqlQueryName);
     }
     if (!queryHolder.refreshLock.tryLock()) {
-      if (logger.isTraceEnabled()) {
-        logger.trace("QueryHolder is locked");
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace("QueryHolder is locked");
       }
       return;
     }
     try {
-      if (logger.isTraceEnabled()) {
-        logger.trace("Refreshing query");
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace("Refreshing query");
       }
       doRefreshQueryHolder(sqlQueryName, queryHolder);
     } finally {
@@ -285,8 +289,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    *     resolving the sql query)
    * @see #resolveSqlQuery
    */
-  protected abstract String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder)
-      throws HawaiiException;
+  protected abstract String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder);
 
   /**
    * QueryHolder for caching. Stores the timestamp of the last refresh (updated every time the query

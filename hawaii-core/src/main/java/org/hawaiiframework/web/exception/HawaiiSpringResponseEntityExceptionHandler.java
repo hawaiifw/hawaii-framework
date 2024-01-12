@@ -51,8 +51,12 @@ public class HawaiiSpringResponseEntityExceptionHandler extends ResponseEntityEx
 
   private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
+  /**
+   * Constructor with an {@code errorResponseEntityBuilder}.
+   */
   public HawaiiSpringResponseEntityExceptionHandler(
       ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    super();
     this.errorResponseEntityBuilder = errorResponseEntityBuilder;
   }
 
@@ -61,23 +65,23 @@ public class HawaiiSpringResponseEntityExceptionHandler extends ResponseEntityEx
    *
    * <p>The response status is: 403 Forbidden.
    *
-   * @param ex the exception
+   * @param exception the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseBody
   public ResponseEntity<Object> accessDeniedException(
-      AccessDeniedException ex, WebRequest request) {
+      AccessDeniedException exception, WebRequest request) {
     HttpStatus status = HttpStatus.FORBIDDEN;
     return handleExceptionInternal(
-        ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
   }
 
   /**
    * The overridden message not readable exception handler.
    *
-   * @param ex the exception to handle
+   * @param exception the exception to handle
    * @param headers the headers to use for the response
    * @param statusCode the status code to use for the response
    * @param request the current request
@@ -85,13 +89,13 @@ public class HawaiiSpringResponseEntityExceptionHandler extends ResponseEntityEx
    */
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
-      HttpMessageNotReadableException ex,
+      HttpMessageNotReadableException exception,
       HttpHeaders headers,
       HttpStatusCode statusCode,
       WebRequest request) {
     HttpStatus status = HttpStatus.BAD_REQUEST;
     return handleExceptionInternal(
-        ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
   }
 
   private ErrorResponseResource buildErrorResponseBody(

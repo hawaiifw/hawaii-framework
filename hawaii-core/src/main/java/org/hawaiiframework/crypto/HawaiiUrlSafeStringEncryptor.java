@@ -45,8 +45,8 @@ public class HawaiiUrlSafeStringEncryptor extends HawaiiStringEncryptor {
 
       byte[] encoded = UrlBase64.encode(encrypted);
       return Strings.fromByteArray(encoded);
-    } catch (GeneralSecurityException e) {
-      throw new HawaiiException("Error encrypting message", e);
+    } catch (GeneralSecurityException exception) {
+      throw new HawaiiException("Error encrypting message", exception);
     }
   }
 
@@ -62,8 +62,8 @@ public class HawaiiUrlSafeStringEncryptor extends HawaiiStringEncryptor {
       Cipher cipher = initCipher(Cipher.DECRYPT_MODE, key, initVector);
       byte[] decrypted = cipher.doFinal(UrlBase64.decode(encryptedMessage));
       return new String(decrypted, Charset.defaultCharset());
-    } catch (GeneralSecurityException e) {
-      throw new HawaiiException("Error decrypting message", e);
+    } catch (GeneralSecurityException exception) {
+      throw new HawaiiException("Error decrypting message", exception);
     }
   }
 }

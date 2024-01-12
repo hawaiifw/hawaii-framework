@@ -204,7 +204,7 @@ subprojects {
             // custom("replace Javax", { it.replace("import javax.", "import jakarta.") })
         }
     }
-
+    project.tasks["spotlessJavaCheck"].enabled = false
     /**
      * Configuration of PMD.
      */

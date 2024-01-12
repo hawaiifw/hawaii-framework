@@ -26,6 +26,9 @@ public class DataSourceProxyBeanPostProcessor implements BeanPostProcessor {
 
   private final DataSourceProxyFactory dataSourceProxyFactory;
 
+  /**
+   * The constructor with a {@code dataSourceProxyFactory}.
+   */
   public DataSourceProxyBeanPostProcessor(DataSourceProxyFactory dataSourceProxyFactory) {
     this.dataSourceProxyFactory = dataSourceProxyFactory;
   }

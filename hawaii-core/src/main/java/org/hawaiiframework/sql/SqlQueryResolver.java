@@ -38,5 +38,5 @@ public interface SqlQueryResolver {
    * @throws HawaiiException if the sql query could not be resolved (typically in case of problems
    *     resolving the sql query)
    */
-  String resolveSqlQuery(String sqlQueryName) throws HawaiiException;
+  String resolveSqlQuery(String sqlQueryName);
 }

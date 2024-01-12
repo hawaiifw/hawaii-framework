@@ -238,7 +238,7 @@ public class FieldRejection<T> {
    * @return The current field rejection.
    */
   public <R> FieldRejection<T> when(Function<T, R> function, Matcher<R> matcher, String code) {
-    return when(v -> matcher.matches(function.apply(v)), code);
+    return when(value -> matcher.matches(function.apply(value)), code);
   }
 
   /**

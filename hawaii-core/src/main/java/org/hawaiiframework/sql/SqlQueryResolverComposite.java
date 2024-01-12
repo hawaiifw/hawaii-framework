@@ -20,7 +20,7 @@ import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.hawaiiframework.exception.HawaiiException;
+
 import org.springframework.core.Ordered;
 import org.springframework.util.CollectionUtils;
 
@@ -59,7 +59,7 @@ public class SqlQueryResolverComposite implements SqlQueryResolver, Ordered {
   }
 
   @Override
-  public String resolveSqlQuery(String sqlQueryName) throws HawaiiException {
+  public String resolveSqlQuery(String sqlQueryName)  {
     for (SqlQueryResolver sqlQueryResolver : this.sqlQueryResolvers) {
       String sqlQuery = sqlQueryResolver.resolveSqlQuery(sqlQueryName);
       if (sqlQuery != null) {

@@ -30,10 +30,16 @@ public class ValidationErrorResponseResource extends ErrorResponseResource {
   /** The validation errors. */
   private List<ValidationErrorResource> errors;
 
+  /**
+   * Default constructor.
+   */
   public ValidationErrorResponseResource() {
     this(null);
   }
 
+  /**
+   * Constructor with a {@code validationException}.
+   */
   public ValidationErrorResponseResource(ValidationException validationException) {
     super(validationException);
   }

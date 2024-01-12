@@ -32,6 +32,9 @@ public class ValidationErrorResourceAssembler
 
   private final ObjectMapper objectMapper;
 
+  /**
+   * Constructor with an {@code objectMapper}.
+   */
   public ValidationErrorResourceAssembler(ObjectMapper objectMapper) {
     super(ValidationErrorResource.class);
     this.objectMapper = requireNonNull(objectMapper, "'objectMapper' must not be null");

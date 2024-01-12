@@ -51,7 +51,6 @@
           //VariableDeclaratorId[(string-length(@Name) &lt; 3) and (not (@Name='id'))]
           [not(ancestor::ForInit)]
           [not((ancestor::FormalParameter) and (ancestor::TryStatement))]
-          [not(ancestor::MethodDeclarator[@Image='hashCode' or @Image='equals'])]
         </value>
       </property>
     </properties>

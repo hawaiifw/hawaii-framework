@@ -62,7 +62,7 @@ public interface Validator<T> {
    * @param object the object to validate
    * @throws ValidationException if the validation fails
    */
-  default void validateAndThrow(T object) throws ValidationException {
+  default void validateAndThrow(T object) {
     ValidationResult validationResult = new ValidationResult();
     validateAndThrow(object, validationResult);
   }
@@ -74,8 +74,7 @@ public interface Validator<T> {
    * @param validationResult the contextual state about the validation process
    * @throws ValidationException if the validation fails
    */
-  default void validateAndThrow(T object, ValidationResult validationResult)
-      throws ValidationException {
+  default void validateAndThrow(T object, ValidationResult validationResult) {
     validate(object, validationResult);
     if (validationResult.hasErrors()) {
       throw new ValidationException(validationResult);

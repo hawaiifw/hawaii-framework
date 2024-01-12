@@ -29,6 +29,9 @@ import org.springframework.core.OrderComparator;
 @Configuration
 public class DataSourceProxyConfiguration {
 
+  /**
+   * Create a {@link DataSourceProxyBeanPostProcessor} bean.
+   */
   @Bean
   @ConditionalOnClass(ProxyDataSource.class)
   @ConditionalOnMissingBean(DataSourceProxyBeanPostProcessor.class)
@@ -37,6 +40,9 @@ public class DataSourceProxyConfiguration {
     return new DataSourceProxyBeanPostProcessor(dataSourceProxyFactory);
   }
 
+  /**
+   * Create a {@link DataSourceProxyFactory} bean.
+   */
   @Bean
   @ConditionalOnClass(ProxyDataSource.class)
   @ConditionalOnMissingBean(DataSourceProxyFactory.class)

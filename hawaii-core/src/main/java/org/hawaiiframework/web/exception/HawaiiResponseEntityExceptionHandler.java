@@ -49,12 +49,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private static final Logger LOGGER = LoggerFactory.getLogger(HawaiiResponseEntityExceptionHandler.class);
 
   private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
+  /**
+   * The constructor with a {@code errorResponseEntityBuilder}.
+   */
   public HawaiiResponseEntityExceptionHandler(
       ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    super();
     this.errorResponseEntityBuilder = errorResponseEntityBuilder;
   }
 
@@ -64,16 +68,16 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
    * <p>Each {@code HttpException} has an associated {@code HttpStatus} that is used as the response
    * status.
    *
-   * @param e the exception
+   * @param exception the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @ExceptionHandler(HttpException.class)
   @ResponseBody
-  public ResponseEntity<Object> handleHttpException(HttpException e, WebRequest request) {
-    HttpStatus status = e.getHttpStatus();
+  public ResponseEntity<Object> handleHttpException(HttpException exception, WebRequest request) {
+    HttpStatus status = exception.getHttpStatus();
     return handleExceptionInternal(
-        e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
   }
 
   /**
@@ -81,20 +85,20 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
    *
    * <p>The response status is: 400 Bad Request.
    *
-   * @param ex the exception
+   * @param exception the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      @NonNull MethodArgumentNotValidException ex,
+      @NonNull MethodArgumentNotValidException exception,
       @NonNull HttpHeaders headers,
       @NonNull HttpStatusCode status,
       @NonNull WebRequest request) {
 
     return handleExceptionInternal(
-        ex,
-        buildErrorResponseBody(ex, HttpStatus.valueOf(status.value()), request),
+        exception,
+        buildErrorResponseBody(exception, HttpStatus.valueOf(status.value()), request),
         EMPTY,
         status,
         request);
@@ -105,17 +109,17 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
    *
    * <p>The response status is: 400 Bad Request.
    *
-   * @param e the exception
+   * @param exception the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @ExceptionHandler(ValidationException.class)
   @ResponseBody
   public ResponseEntity<Object> handleValidationException(
-      ValidationException e, WebRequest request) {
+      ValidationException exception, WebRequest request) {
     HttpStatus status = HttpStatus.BAD_REQUEST;
     return handleExceptionInternal(
-        e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
   }
 
   /**
@@ -123,31 +127,31 @@ public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptio
    *
    * <p>The response status is: 400 Bad Request.
    *
-   * @param e the exception
+   * @param exception the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @ExceptionHandler(ApiException.class)
   @ResponseBody
-  public ResponseEntity<Object> handleApiException(ApiException e, WebRequest request) {
+  public ResponseEntity<Object> handleApiException(ApiException exception, WebRequest request) {
     HttpStatus status = HttpStatus.BAD_REQUEST;
     return handleExceptionInternal(
-        e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
   }
 
   /**
    * Handles {@code Throwable} instances. This method acts as a fallback handler.
    *
-   * @param t the exception
+   * @param throwable the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @ExceptionHandler(Throwable.class)
   @ResponseBody
-  public ResponseEntity<Object> handleThrowable(Throwable t, WebRequest request) {
-    logger.error("Unhandled exception", t);
+  public ResponseEntity<Object> handleThrowable(Throwable throwable, WebRequest request) {
+    LOGGER.error("Unhandled exception", throwable);
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-    return ResponseEntity.status(status).body(buildErrorResponseBody(t, status, request));
+    return ResponseEntity.status(status).body(buildErrorResponseBody(throwable, status, request));
   }
 
   private ErrorResponseResource buildErrorResponseBody(

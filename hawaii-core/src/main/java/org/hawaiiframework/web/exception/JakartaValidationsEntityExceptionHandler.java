@@ -48,8 +48,12 @@ public class JakartaValidationsEntityExceptionHandler extends ResponseEntityExce
 
   private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
+  /**
+   * Constructor with an {@code errorResponseEntityBuilder}.
+   */
   public JakartaValidationsEntityExceptionHandler(
       ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    super();
     this.errorResponseEntityBuilder = errorResponseEntityBuilder;
   }
 
@@ -58,17 +62,17 @@ public class JakartaValidationsEntityExceptionHandler extends ResponseEntityExce
    *
    * <p>The response status is: 400 Bad Request.
    *
-   * @param e the exception
+   * @param exception the exception
    * @param request the current request
    * @return a response entity reflecting the current exception
    */
   @ExceptionHandler(ValidationException.class)
   @ResponseBody
   public ResponseEntity<Object> handleValidationException(
-      ValidationException e, WebRequest request) {
+      ValidationException exception, WebRequest request) {
     HttpStatus status = HttpStatus.BAD_REQUEST;
     return handleExceptionInternal(
-        e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
   }
 
   private ErrorResponseResource buildErrorResponseBody(

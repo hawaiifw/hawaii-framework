@@ -93,8 +93,8 @@ public class ValidationResult implements Serializable {
   public void popNestedPath() throws IllegalArgumentException {
     try {
       this.nestedPathStack.pop();
-    } catch (NoSuchElementException e) {
-      throw new IllegalStateException("Cannot pop nested path: no nested path on stack", e);
+    } catch (NoSuchElementException exception) {
+      throw new IllegalStateException("Cannot pop nested path: no nested path on stack", exception);
     }
   }
 
@@ -116,55 +116,83 @@ public class ValidationResult implements Serializable {
     return unmodifiableList(this.errors);
   }
 
+  /**
+   * Reject the value.
+   */
   public void reject(String code) {
     addError(new ValidationError(code));
   }
 
+  /**
+   * Reject the value {@code expr} is {@code true}.
+   */
   public void rejectIf(boolean expr, String code) {
     if (expr) {
       reject(code);
     }
   }
 
+  /**
+   * Reject the value {@code actual} if the {@code matcher} matches.
+   */
   public <T> void rejectIf(T actual, Matcher<? super T> matcher, String code) {
     rejectIf(matcher.matches(actual), code);
   }
 
+  /**
+   * Reject the value  with {@code code} error.
+   */
   public void rejectValue(String code) {
     rejectValue(null, code);
   }
 
+  /**
+   * Reject the value for {@code field} with {@code code} error.
+   */
   public void rejectValue(String field, String code) {
     StringBuilder fieldBuilder = new StringBuilder(getNestedPath());
     if (StringUtils.isNotBlank(field)) {
-      if (fieldBuilder.length() > 0) {
+      if (!fieldBuilder.isEmpty()) {
         fieldBuilder.append(NESTED_PATH_SEPARATOR);
       }
       fieldBuilder.append(field);
     }
-    if (fieldBuilder.length() == 0) {
+    if (fieldBuilder.isEmpty()) {
       reject(code);
     } else {
       addError(new ValidationError(fieldBuilder.toString(), code));
     }
   }
 
+  /**
+   * Reject the value if {@code expr} is {@code true}. Will return the {@code code} error.
+   */
   public void rejectValueIf(boolean expr, String code) {
     if (expr) {
       rejectValue(code);
     }
   }
 
+  /**
+   * Reject the value if {@code matcher} matches the value {@code actual}. Will return the
+   * {@code code} error on the {@code field}.
+   */
   public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String code) {
     rejectValueIf(matcher.matches(actual), code);
   }
 
+  /**
+   * Reject the value if {@code expr} is {@code true}. Will return the {@code code} error on the {@code field}.
+   */
   public void rejectValueIf(boolean expr, String field, String code) {
     if (expr) {
       rejectValue(field, code);
     }
   }
 
+  /**
+   * Reject the value if the value matches the {@code matcher}. Will return the {@code code} error on the {@code field}.
+   */
   public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String field, String code) {
     rejectValueIf(matcher.matches(actual), field, code);
   }

@@ -30,10 +30,16 @@ public class MethodArgumentNotValidResponseResource extends ErrorResponseResourc
   /** The validation errors. */
   private List<ValidationErrorResource> errors;
 
+  /**
+   * Default constructor.
+   */
   public MethodArgumentNotValidResponseResource() {
     this(null);
   }
 
+  /**
+   * Constructor with a {@code validationException}.
+   */
   public MethodArgumentNotValidResponseResource(
       MethodArgumentNotValidException validationException) {
     super(validationException);

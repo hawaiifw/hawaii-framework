@@ -51,10 +51,8 @@ public class RequestInfoErrorResponseEnricher implements ErrorResponseEnricher {
       Throwable throwable,
       WebRequest request,
       HttpStatus httpStatus) {
-    if (request instanceof ServletWebRequest) {
-      ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-      HttpServletRequest httpServletRequest =
-          (HttpServletRequest) servletWebRequest.getNativeRequest();
+    if (request instanceof ServletWebRequest servletWebRequest) {
+      HttpServletRequest httpServletRequest = (HttpServletRequest) servletWebRequest.getNativeRequest();
       errorResponseResource.setUri(httpServletRequest.getRequestURI());
       errorResponseResource.setQuery(httpServletRequest.getQueryString());
       errorResponseResource.setMethod(httpServletRequest.getMethod());

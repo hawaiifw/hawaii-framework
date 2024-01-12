@@ -88,7 +88,7 @@ public class BaseJdbcRepository {
   protected <T> T getOpt(String query, SqlParameterSource parameters, RowMapper<T> rowMapper) {
     try {
       return aNamedParameterJdbcTemplate.queryForObject(resolveQuery(query), parameters, rowMapper);
-    } catch (EmptyResultDataAccessException e) {
+    } catch (EmptyResultDataAccessException exception) {
       LOGGER.debug(COULD_NOT_FIND_A_RESULT_FOR, query);
     }
     return null;
@@ -107,7 +107,7 @@ public class BaseJdbcRepository {
     try {
       return aNamedParameterJdbcTemplate.queryForObject(
           resolveQuery(query), parameters, requiredType);
-    } catch (EmptyResultDataAccessException e) {
+    } catch (EmptyResultDataAccessException exception) {
       LOGGER.debug(COULD_NOT_FIND_A_RESULT_FOR, query);
     }
     return null;
@@ -126,7 +126,7 @@ public class BaseJdbcRepository {
       String query, SqlParameterSource parameters, ResultSetExtractor<T> extractor) {
     try {
       return aNamedParameterJdbcTemplate.query(resolveQuery(query), parameters, extractor);
-    } catch (EmptyResultDataAccessException e) {
+    } catch (EmptyResultDataAccessException exception) {
       LOGGER.debug(COULD_NOT_FIND_A_RESULT_FOR, query);
     }
     return null;
@@ -156,9 +156,9 @@ public class BaseJdbcRepository {
   protected <T> T get(String query, SqlParameterSource parameters, RowMapper<T> rowMapper) {
     try {
       return aNamedParameterJdbcTemplate.queryForObject(resolveQuery(query), parameters, rowMapper);
-    } catch (EmptyResultDataAccessException e) {
+    } catch (EmptyResultDataAccessException exception) {
       LOGGER.debug(COULD_NOT_FIND_A_RESULT_FOR, query);
-      throw e;
+      throw exception;
     }
   }
 
@@ -173,9 +173,9 @@ public class BaseJdbcRepository {
   protected int update(String query, SqlParameterSource parameters) {
     try {
       return aNamedParameterJdbcTemplate.update(resolveQuery(query), parameters);
-    } catch (DataAccessException e) {
+    } catch (DataAccessException exception) {
       LOGGER.debug("Error performing '{}'.", query);
-      throw e;
+      throw exception;
     }
   }
 
@@ -192,9 +192,9 @@ public class BaseJdbcRepository {
       String query, SqlParameterSource parameters, RowMapper<T> rowMapper) {
     try {
       return aNamedParameterJdbcTemplate.query(resolveQuery(query), parameters, rowMapper);
-    } catch (EmptyResultDataAccessException e) {
+    } catch (EmptyResultDataAccessException exception) {
       LOGGER.debug(COULD_NOT_FIND_A_RESULT_FOR, query);
-      throw e;
+      throw exception;
     }
   }
 }

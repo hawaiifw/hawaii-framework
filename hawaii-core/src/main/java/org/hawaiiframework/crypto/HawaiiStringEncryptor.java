@@ -71,8 +71,8 @@ public class HawaiiStringEncryptor implements StringEncryptor {
       Cipher cipher = initCipher(Cipher.ENCRYPT_MODE, key, initVector);
       byte[] encrypted = cipher.doFinal(message.getBytes(Charset.defaultCharset()));
       return Base64.toBase64String(encrypted);
-    } catch (GeneralSecurityException e) {
-      throw new HawaiiException("Error encrypting message", e);
+    } catch (GeneralSecurityException exception) {
+      throw new HawaiiException("Error encrypting message", exception);
     }
   }
 
@@ -89,8 +89,8 @@ public class HawaiiStringEncryptor implements StringEncryptor {
       Cipher cipher = initCipher(Cipher.DECRYPT_MODE, key, initVector);
       byte[] decrypted = cipher.doFinal(Base64.decode(encryptedMessage));
       return new String(decrypted, Charset.defaultCharset());
-    } catch (GeneralSecurityException e) {
-      throw new HawaiiException("Error decrypting message", e);
+    } catch (GeneralSecurityException exception) {
+      throw new HawaiiException("Error decrypting message", exception);
     }
   }
 
@@ -105,21 +105,21 @@ public class HawaiiStringEncryptor implements StringEncryptor {
     return cipher;
   }
 
-  private static byte[] hexStringToByteArray(String s) {
-    int len = s.length();
+  private static byte[] hexStringToByteArray(String value) {
+    int len = value.length();
 
     // "111" is not a valid hex encoding.
     if (len % 2 != 0) {
-      throw new IllegalArgumentException("hexBinary needs to be even-length: " + s);
+      throw new IllegalArgumentException("hexBinary needs to be even-length: " + value);
     }
 
     byte[] out = new byte[len / 2];
 
     for (int i = 0; i < len; i += 2) {
-      int high = hexToBin(s.charAt(i));
-      int low = hexToBin(s.charAt(i + 1));
+      int high = hexToBin(value.charAt(i));
+      int low = hexToBin(value.charAt(i + 1));
       if (high == -1 || low == -1) {
-        throw new IllegalArgumentException("contains illegal character for hexBinary: " + s);
+        throw new IllegalArgumentException("contains illegal character for hexBinary: " + value);
       }
 
       out[i / 2] = (byte) (high * 16 + low);
@@ -128,14 +128,14 @@ public class HawaiiStringEncryptor implements StringEncryptor {
     return out;
   }
 
-  private static int hexToBin(char ch) {
+  private static int hexToBin(char character) {
     int bin;
-    if ('0' <= ch && ch <= '9') {
-      bin = ch - '0';
-    } else if ('A' <= ch && ch <= 'F') {
-      bin = ch - 'A' + 10;
-    } else if ('a' <= ch && ch <= 'f') {
-      bin = ch - 'a' + 10;
+    if ('0' <= character && character <= '9') {
+      bin = character - '0';
+    } else if ('A' <= character && character <= 'F') {
+      bin = character - 'A' + 10;
+    } else if ('a' <= character && character <= 'f') {
+      bin = character - 'a' + 10;
     } else {
       bin = -1;
     }

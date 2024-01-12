@@ -24,12 +24,12 @@ import java.io.Serial;
  */
 public class HawaiiException extends RuntimeException {
 
-  /** The serial verion UUID.. */
-  @Serial private static final long serialVersionUID = 6463686875194124117L;
+  @Serial
+  private static final long serialVersionUID = 6463686875194124117L;
 
   /** Constructs a new {@code HawaiiException}. */
   public HawaiiException() {
-    // This constructor is intentionally empty. Nothing special is needed here.
+    super();
   }
 
   /** Constructs a new {@code HawaiiException} with the supplied message. */

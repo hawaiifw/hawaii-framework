@@ -32,8 +32,8 @@ public class HexEncoder {
   public String decode(String str) {
     try {
       return new String(Hex.decodeHex(str), UTF_8);
-    } catch (DecoderException e) {
-      throw new HawaiiException("Error decoding hex string: " + str, e);
+    } catch (DecoderException exception) {
+      throw new HawaiiException("Error decoding hex string: " + str, exception);
     }
   }
 }

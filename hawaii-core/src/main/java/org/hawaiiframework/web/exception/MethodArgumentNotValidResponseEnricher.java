@@ -40,6 +40,9 @@ public class MethodArgumentNotValidResponseEnricher implements ErrorResponseEnri
 
   private final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler;
 
+  /**
+   * The constructor.
+   */
   public MethodArgumentNotValidResponseEnricher(
       ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler) {
     this.objectErrorResourceAssembler =

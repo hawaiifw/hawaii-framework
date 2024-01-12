@@ -35,6 +35,7 @@ public class HttpException extends HawaiiException {
 
   /** Constructs a new {@code HttpException} with the supplied {@link HttpStatus}. */
   public HttpException(HttpStatus httpStatus) {
+    super();
     this.httpStatus = requireNonNull(httpStatus);
   }
 

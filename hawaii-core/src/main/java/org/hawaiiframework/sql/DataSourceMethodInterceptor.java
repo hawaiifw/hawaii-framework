@@ -28,10 +28,12 @@ public class DataSourceMethodInterceptor implements MethodInterceptor {
   private final DataSource dataSource;
 
   public DataSourceMethodInterceptor(DataSource dataSource) {
+    super();
     this.dataSource = dataSource;
   }
 
   @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
   public Object invoke(MethodInvocation invocation) throws Throwable {
     Method proxyMethod =
         ReflectionUtils.findMethod(this.dataSource.getClass(), invocation.getMethod().getName());

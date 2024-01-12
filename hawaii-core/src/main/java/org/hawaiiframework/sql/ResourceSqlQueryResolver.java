@@ -43,7 +43,7 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
   /** Default charset for retrieving sql query resources ({@code UTF_8}). */
   public static final Charset DEFAULT_CHARSET = UTF_8;
 
-  private static Logger logger = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
 
   private final ResourceLoader resourceLoader;
 
@@ -52,7 +52,7 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
   private String prefix = "";
   private String suffix = "";
 
-  private int order = Ordered.LOWEST_PRECEDENCE;
+  private int order = LOWEST_PRECEDENCE;
 
   public ResourceSqlQueryResolver() {
     this(new DefaultResourceLoader());
@@ -120,41 +120,40 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
         if (lastModified > checkpoint) {
           loadSqlQuery(sqlQueryName, queryHolder);
         } else {
-          if (logger.isDebugEnabled()) {
-            logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
+          if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Query file {} unchanged - not reloading", resource.getFilename());
           }
         }
-      } catch (IOException e) {
+      } catch (IOException exception) {
         // Can't really happen as we already checked that the resource has a filename
-        throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
+        throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), exception);
       }
     }
   }
 
   @Override
-  protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder)
-      throws HawaiiException {
+  protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder) {
     String location = getPrefix() + sqlQueryName + getSuffix();
     Resource resource = this.resourceLoader.getResource(location);
     String query = null;
     if (resource.exists()) {
       try {
         query =
-            new Scanner(resource.getInputStream(), this.charset.name()).useDelimiter("\\Z").next();
+            new Scanner(resource.getInputStream(), this.charset).useDelimiter("\\Z").next();
         if (queryHolder != null && resource.getFilename() != null) {
-          if (logger.isTraceEnabled()) {
-            logger.trace("Updating query {}", resource.getFilename());
+          if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Updating query {}", resource.getFilename());
           }
           queryHolder.setSqlQuery(query);
           queryHolder.setRefreshTimestamp(System.currentTimeMillis());
           queryHolder.setQueryTimestamp(resource.lastModified());
         }
-      } catch (IOException e) {
-        throw new HawaiiException("Error reading resource: " + location, e);
+      } catch (IOException exception) {
+        throw new HawaiiException("Error reading resource: " + location, exception);
       }
     } else {
-      if (logger.isDebugEnabled()) {
-        logger.debug("Resource {} does not exist", resource.getDescription());
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("Resource {} does not exist", resource.getDescription());
       }
     }
     return query;

@@ -3,6 +3,9 @@ package org.hawaiiframework.time;
 import java.time.Clock;
 import java.time.ZoneId;
 
+/**
+ * A zoned clock.
+ */
 class HawaiiZonedClock {
 
   private HawaiiTime hawaiiTime;
