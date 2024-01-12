@@ -212,7 +212,7 @@ subprojects {
         isIgnoreFailures = false
         //    rulesMinimumPriority.set(5)
         threads.set(4)
-        ruleSetConfig = resources.text.fromFile(projectDir.path + "/config/pmd/pmd.xml")
+        ruleSetConfig = resources.text.fromFile("${rootDir}/src/quality/config/pmd/pmd.xml")
         // clear the default list of rules, otherwise this will override our custom configuration.
         ruleSets = listOf<String>()
     }
@@ -242,50 +242,7 @@ subprojects {
     }
 
     project.tasks["checkstyleTest"].enabled = false
-
-    tasks.withType<JavaCompile>().configureEach {
-        // override default false
-        options.isDeprecation = true
-        // defaults to use the platform encoding
-        options.encoding = Charsets.UTF_8.name()
-
-        // add Xlint to our compiler options (but disable processing because of Spring warnings in code)
-        // and make warnings be treated like errors
-
-        // disable "-Werror" to allow automatic refactoring of our code
-        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Xlint:-processing", "-Xmaxerrs", "100", "-Xmaxwarns", "500", "-Amapstruct.defaultComponentModel=spring"))
-
-        options.errorprone {
-            disableWarningsInGeneratedCode.set(true)
-            allDisabledChecksAsWarnings.set(true)
-            allErrorsAsWarnings.set(true)
-
-            // For now disable, discuss
-            disable("Var", "CollectorMutability")
-            disable("Varifier")
-            // The pattern constant first is always null proof, discuss
-            disable("YodaCondition")
-
-            // String.format allows more descriptive texts than String.join.
-            disable("StringJoin")
-            // Disabled, clashes with settings in IntelliJ
-            disable("UngroupedOverloads")
-            // Disabled, since IntelliJ does this for us:
-            disable("BooleanParameter")
-            // Disabled, since we do not require to be compliant with:
-            disable("Java7ApiChecker", "Java8ApiChecker", "AndroidJdkLibsChecker")
-
-            // The auto patch is disabled for now, it _seems_ that having this patching in place makes error-prone
-            // only check the checks that can be patched. Can be enabled to fix bugs if there are too many.
-            //
-            errorproneArgs.addAll(
-                    "-XepPatchChecks:AutowiredConstructor,CanonicalAnnotationSyntax,DeadException,DefaultCharset,LexicographicalAnnotationAttributeListing,LexicographicalAnnotationListing,MethodCanBeStatic,MissingOverride,MutableConstantField,RemoveUnusedImports,StaticImport,TimeZoneUsage,UnnecessaryFinal,UnnecessarilyFullyQualified",
-                    "-XepPatchLocation:IN_PLACE"
-            )
-        }
-    }
-
-
+    
     /**
      * Sign
      */
