@@ -16,20 +16,25 @@
 
 package org.hawaiiframework.context;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.ApplicationContext;
 
 /**
+ * Utility class to obtain Spring's application context.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 public final class ApplicationContextHolder {
 
-  private static final ConcurrentHashMap<ClassLoader, ApplicationContext> CONTEXT_MAP =
-      new ConcurrentHashMap<>();
+  private static final Map<ClassLoader, ApplicationContext> CONTEXT_MAP = new ConcurrentHashMap<>();
 
   private ApplicationContextHolder() {}
 
+  /**
+   * Get the application context, or throw an {@link IllegalStateException}.
+   */
   public static ApplicationContext getRequiredApplicationContext() {
     ApplicationContext context = getApplicationContext();
     if (context == null) {
@@ -38,6 +43,9 @@ public final class ApplicationContextHolder {
     return context;
   }
 
+  /**
+   * Get the application context, or return {@code null}.
+   */
   public static ApplicationContext getApplicationContext() {
     ClassLoader classLoader = getContextClassLoader();
     while (classLoader != null) {

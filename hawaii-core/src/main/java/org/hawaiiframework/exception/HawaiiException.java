@@ -19,6 +19,8 @@ package org.hawaiiframework.exception;
 import java.io.Serial;
 
 /**
+ * An Hawaii Exception.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

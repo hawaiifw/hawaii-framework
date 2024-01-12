@@ -26,6 +26,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 /**
+ * Assembler for object error resources.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

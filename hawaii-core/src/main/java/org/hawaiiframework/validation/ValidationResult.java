@@ -68,29 +68,38 @@ public class ValidationResult implements Serializable {
     return StringUtils.defaultString(nestedPath);
   }
 
+  /**
+   * Push the nested path.
+   */
   public void pushNestedPath(String path) {
     doPushNestedPath(path, null);
   }
 
+  /**
+   * Push the nested path.
+   */
   public void pushNestedPath(String path, int index) {
     doPushNestedPath(path, index);
   }
 
   private void doPushNestedPath(String path, Integer index) {
     StringBuilder nestedPathBuilder = new StringBuilder(getNestedPath());
-    if (nestedPathBuilder.length() > 0) {
+    if (!nestedPathBuilder.isEmpty()) {
       nestedPathBuilder.append(NESTED_PATH_SEPARATOR);
     }
     nestedPathBuilder.append(path);
     if (index != null) {
-      nestedPathBuilder.append(NESTED_PATH_INDEX_PREFIX);
-      nestedPathBuilder.append(index);
-      nestedPathBuilder.append(NESTED_PATH_INDEX_SUFFIX);
+      nestedPathBuilder.append(NESTED_PATH_INDEX_PREFIX)
+          .append(index)
+          .append(NESTED_PATH_INDEX_SUFFIX);
     }
     this.nestedPathStack.push(nestedPathBuilder.toString());
   }
 
-  public void popNestedPath() throws IllegalArgumentException {
+  /**
+   * Remove the nested path.
+   */
+  public void popNestedPath() {
     try {
       this.nestedPathStack.pop();
     } catch (NoSuchElementException exception) {

@@ -21,6 +21,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import java.io.Serial;
 
 /**
+ * An internal service error exception.
+ *
  * @author Ivan Melotte
  * @since 2.0.0
  */

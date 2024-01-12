@@ -24,6 +24,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Hawaii opinionated Jackson configuration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

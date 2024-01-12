@@ -138,9 +138,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    * <p>Note, setting this to anything other than -1 only makes sense if the queries are loaded from
    * a source other than the classpath.
    *
-   * <p>
-   *
-   * <ul>
+   * <p><ul>
    *   <li>Default is "-1", indicating to cache forever.
    *   <li>A positive number will cache a query for the given number of seconds. This is essentially
    *       the interval between refresh checks.
@@ -148,7 +146,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    * </ul>
    */
   public void setCacheSeconds(int cacheSeconds) {
-    this.cacheMillis = 1000 * cacheSeconds;
+    this.cacheMillis = 1_000L * cacheSeconds;
   }
 
   /**
@@ -157,6 +155,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    * @param sqlQueryName the sql query name for which the cached sql query (if any) needs to be
    *     removed
    */
+  @SuppressWarnings("PMD.CognitiveComplexity")
   public void removeFromCache(String sqlQueryName) {
     if (!isCache()) {
       LOGGER.warn("Sql query caching is SWITCHED OFF -- removal not necessary");
@@ -194,7 +193,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
   }
 
   @Override
-  @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount"})
+  @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount", "PMD.CognitiveComplexity"})
   public String resolveSqlQuery(String sqlQueryName) {
     if (!isCache()) {
       return loadSqlQuery(sqlQueryName, null);

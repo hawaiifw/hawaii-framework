@@ -20,6 +20,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 /**
+ * Application point cuts.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
@@ -27,25 +29,46 @@ import org.aspectj.lang.annotation.Pointcut;
 @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
 public class ApplicationPointcuts {
 
+  /**
+   * Pointcut for {@code anyPublicMethod}.
+   */
   @Pointcut("execution(public * *(..))")
   public void anyPublicMethod() {}
 
+  /**
+   * Pointcut for {@code isComponent}.
+   */
   @Pointcut("@target(org.springframework.stereotype.Component)")
   public void isComponent() {}
 
+  /**
+   * Pointcut for {@code isController}.
+   */
   @Pointcut(
       "@target(org.springframework.stereotype.Controller) || @target(org.springframework.web.bind.annotation.RestController)")
   public void isController() {}
 
+  /**
+   * Pointcut for {@code isExceptionHandler}.
+   */
   @Pointcut("@annotation(org.springframework.web.bind.annotation.ExceptionHandler)")
   public void isExceptionHandler() {}
 
+  /**
+   * Pointcut for {@code isRepository}.
+   */
   @Pointcut("@target(org.springframework.stereotype.Repository)")
   public void isRepository() {}
 
+  /**
+   * Pointcut for {@code isRequestMapping}.
+   */
   @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
   public void isRequestMapping() {}
 
+  /**
+   * Pointcut for {@code isService}.
+   */
   @Pointcut("@target(org.springframework.stereotype.Service)")
   public void isService() {}
 }

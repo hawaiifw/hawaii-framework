@@ -20,7 +20,6 @@ import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.core.Ordered;
 import org.springframework.util.CollectionUtils;
 
@@ -34,7 +33,7 @@ public class SqlQueryResolverComposite implements SqlQueryResolver, Ordered {
 
   private final List<SqlQueryResolver> sqlQueryResolvers = new ArrayList<>();
 
-  private int order = Ordered.LOWEST_PRECEDENCE;
+  private int order = LOWEST_PRECEDENCE;
 
   /** Return the list of {@link SqlQueryResolver}s to delegate to. */
   public List<SqlQueryResolver> getSqlQueryResolvers() {

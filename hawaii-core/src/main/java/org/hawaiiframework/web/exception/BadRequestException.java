@@ -21,6 +21,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import java.io.Serial;
 
 /**
+ * A Bad Request exception.
+ *
  * @author Ivan Melotte
  * @since 2.0.0
  */

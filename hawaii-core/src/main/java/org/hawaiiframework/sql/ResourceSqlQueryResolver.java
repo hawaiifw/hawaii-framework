@@ -54,11 +54,18 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
 
   private int order = LOWEST_PRECEDENCE;
 
+  /**
+   * Default constructor.
+   */
   public ResourceSqlQueryResolver() {
     this(new DefaultResourceLoader());
   }
 
+  /**
+   * Constructor with a {@code resourceLoader}.
+   */
   public ResourceSqlQueryResolver(ResourceLoader resourceLoader) {
+    super();
     this.resourceLoader = resourceLoader;
   }
 

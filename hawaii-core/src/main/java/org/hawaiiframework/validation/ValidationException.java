@@ -23,6 +23,8 @@ import java.util.List;
 import org.hawaiiframework.exception.HawaiiException;
 
 /**
+ * A Validation exception.
+ *
  * @author Marcel Overdijk
  * @see ValidationResult
  * @since 2.0.0

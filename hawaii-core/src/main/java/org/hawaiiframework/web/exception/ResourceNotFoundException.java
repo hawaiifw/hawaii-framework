@@ -21,6 +21,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.Serial;
 
 /**
+ * A resource not found exception.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

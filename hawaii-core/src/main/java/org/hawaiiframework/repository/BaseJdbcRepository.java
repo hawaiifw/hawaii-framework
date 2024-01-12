@@ -63,14 +63,14 @@ public class BaseJdbcRepository {
   }
 
   /**
-   * @return the JDBC template.
+   * Return the JDBC template.
    */
   protected JdbcTemplate jdbcTemplate() {
     return aJdbcTemplate;
   }
 
   /**
-   * @return the named parameter template.
+   * Return the named parameter template.
    */
   protected NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
     return aNamedParameterJdbcTemplate;

@@ -24,6 +24,8 @@ import org.hawaiiframework.converter.AbstractModelConverter;
 import org.hawaiiframework.validation.ValidationError;
 
 /**
+ * Assembler for validation resources.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

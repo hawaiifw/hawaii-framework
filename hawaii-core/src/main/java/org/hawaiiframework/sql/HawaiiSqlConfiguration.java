@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResourceLoader;
 
 /**
+ * Hawaii SQL configuration.
+ *
  * @author Rutger Lubbers
  * @since 6.0.0
  */

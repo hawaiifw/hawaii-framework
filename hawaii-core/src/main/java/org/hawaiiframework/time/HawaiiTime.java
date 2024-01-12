@@ -91,6 +91,7 @@ public class HawaiiTime {
   public static HawaiiTime getInstance() {
     return INSTANCE.getHawaiiTime();
   }
+
   /**
    * Returns the clock used by this {@code HawaiiTime}.
    *

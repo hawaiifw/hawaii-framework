@@ -23,6 +23,8 @@ import org.hawaiiframework.exception.HawaiiException;
 import org.springframework.http.HttpStatus;
 
 /**
+ * An HTTP exception.
+ *
  * @author Ivan Melotte
  * @since 2.0.0
  */

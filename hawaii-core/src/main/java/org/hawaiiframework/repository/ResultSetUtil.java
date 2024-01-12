@@ -35,6 +35,7 @@ public final class ResultSetUtil {
   public static Long getLong(ResultSet resultSet, String columnLabel) throws SQLException {
     return getValueOrNull(resultSet, resultSet.getLong(columnLabel));
   }
+
   /**
    * Returns the Date value.
    *
