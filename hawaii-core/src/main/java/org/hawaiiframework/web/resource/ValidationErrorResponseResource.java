@@ -16,9 +16,8 @@
 
 package org.hawaiiframework.web.resource;
 
-import org.hawaiiframework.validation.ValidationException;
-
 import java.util.List;
+import org.hawaiiframework.validation.ValidationException;
 
 /**
  * Response resource for validation errors.
@@ -28,35 +27,32 @@ import java.util.List;
  */
 public class ValidationErrorResponseResource extends ErrorResponseResource {
 
-    /**
-     * The validation errors.
-     */
-    private List<ValidationErrorResource> errors;
+  /** The validation errors. */
+  private List<ValidationErrorResource> errors;
 
-    public ValidationErrorResponseResource() {
-        this(null);
-    }
+  public ValidationErrorResponseResource() {
+    this(null);
+  }
 
-    public ValidationErrorResponseResource(final ValidationException validationException) {
-        super(validationException);
-    }
+  public ValidationErrorResponseResource(ValidationException validationException) {
+    super(validationException);
+  }
 
-    /**
-     * Returns the validation errors.
-     *
-     * @return the validation errors
-     */
-    public List<ValidationErrorResource> getErrors() {
-        return errors;
-    }
+  /**
+   * Returns the validation errors.
+   *
+   * @return the validation errors
+   */
+  public List<ValidationErrorResource> getErrors() {
+    return errors;
+  }
 
-    /**
-     * Sets the validation errors.
-     *
-     * @param errors the validation errors
-     */
-    public void setErrors(final List<ValidationErrorResource> errors) {
-        this.errors = errors;
-    }
-
+  /**
+   * Sets the validation errors.
+   *
+   * @param errors the validation errors
+   */
+  public void setErrors(List<ValidationErrorResource> errors) {
+    this.errors = errors;
+  }
 }

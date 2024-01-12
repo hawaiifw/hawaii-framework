@@ -31,56 +31,52 @@ import java.util.Objects;
 @SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private T4 element4;
+  private T4 element4;
 
-    /**
-     * Constructs a new {@code Tuple} with the supplied elements.
-     */
-    public Tuple4(final T1 element1, final T2 element2, final T3 element3, final T4 element4) {
-        super(element1, element2, element3);
-        this.element4 = element4;
+  /** Constructs a new {@code Tuple} with the supplied elements. */
+  public Tuple4(T1 element1, T2 element2, T3 element3, T4 element4) {
+    super(element1, element2, element3);
+    this.element4 = element4;
+  }
+
+  /**
+   * Returns the 4th element of this tuple.
+   *
+   * @return the 4th element of this tuple
+   */
+  public T4 getElement4() {
+    return element4;
+  }
+
+  /** Sets the 4th element of this tuple. */
+  public void setElement4(T4 element4) {
+    this.element4 = element4;
+  }
+
+  @Override
+  public int size() {
+    return 4;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Returns the 4th element of this tuple.
-     *
-     * @return the 4th element of this tuple
-     */
-    public T4 getElement4() {
-        return element4;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
-
-    /**
-     * Sets the 4th element of this tuple.
-     */
-    public void setElement4(final T4 element4) {
-        this.element4 = element4;
+    if (!super.equals(o)) {
+      return false;
     }
+    Tuple4<?, ?, ?, ?> other = (Tuple4) o;
+    return Objects.equals(this.element4, other.element4);
+  }
 
-    @Override
-    public int size() {
-        return 4;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final Tuple4<?, ?, ?, ?> other = (Tuple4) o;
-        return Objects.equals(this.element4, other.element4);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode() + Objects.hash(element4);
-    }
+  @Override
+  public int hashCode() {
+    return super.hashCode() + Objects.hash(element4);
+  }
 }

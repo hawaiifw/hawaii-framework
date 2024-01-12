@@ -16,6 +16,9 @@
 
 package org.hawaiiframework.web.exception;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.List;
 import org.hawaiiframework.converter.ModelConverter;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.hawaiiframework.web.resource.MethodArgumentNotValidResponseResource;
@@ -26,9 +29,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.List;
-import java.util.Objects;
-
 /**
  * This enricher adds validation errors to the error response resource.
  *
@@ -38,41 +38,43 @@ import java.util.Objects;
  */
 public class MethodArgumentNotValidResponseEnricher implements ErrorResponseEnricher {
 
-    private final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler;
+  private final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler;
 
-    public MethodArgumentNotValidResponseEnricher(
-            final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler) {
-        this.objectErrorResourceAssembler = Objects.requireNonNull(objectErrorResourceAssembler,
-                "'objectErrorResourceAssembler' must not be null");
+  public MethodArgumentNotValidResponseEnricher(
+      ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler) {
+    this.objectErrorResourceAssembler =
+        requireNonNull(
+            objectErrorResourceAssembler, "'objectErrorResourceAssembler' must not be null");
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p><strong>NOTE:</strong> This enricher only applies if throwable is a {@link
+   * MethodArgumentNotValidException} and #errorResponseResource is a {@link
+   * MethodArgumentNotValidResponseResource}.
+   */
+  @Override
+  public void doEnrich(
+      ErrorResponseResource errorResponseResource,
+      Throwable throwable,
+      WebRequest request,
+      HttpStatus httpStatus) {
+    if (throwable instanceof MethodArgumentNotValidException validationException
+        && errorResponseResource instanceof MethodArgumentNotValidResponseResource resource) {
+      List<ObjectError> errors = getErrors(validationException);
+      if (!errors.isEmpty()) {
+        resource.setErrors(objectErrorResourceAssembler.convert(errors));
+      }
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p><strong>NOTE:</strong> This enricher only applies if throwable is a {@link MethodArgumentNotValidException} and
-     * #errorResponseResource is a {@link MethodArgumentNotValidResponseResource}.
-     */
-    @Override
-    public void doEnrich(
-            final ErrorResponseResource errorResponseResource,
-            final Throwable throwable,
-            final WebRequest request,
-            final HttpStatus httpStatus) {
-        if (throwable instanceof MethodArgumentNotValidException validationException
-                && errorResponseResource instanceof MethodArgumentNotValidResponseResource resource) {
-            final List<ObjectError> errors = getErrors(validationException);
-            if (!errors.isEmpty()) {
-                resource.setErrors(objectErrorResourceAssembler.convert(errors));
-            }
-        }
-    }
+  private static List<ObjectError> getErrors(
+      MethodArgumentNotValidException methodArgumentNotValidException) {
+    return getErrors(methodArgumentNotValidException.getBindingResult());
+  }
 
-    private List<ObjectError> getErrors(final MethodArgumentNotValidException methodArgumentNotValidException) {
-        return getErrors(methodArgumentNotValidException.getBindingResult());
-    }
-
-    private List<ObjectError> getErrors(final BindingResult validationResult) {
-        return validationResult.getAllErrors();
-    }
-
+  private static List<ObjectError> getErrors(BindingResult validationResult) {
+    return validationResult.getAllErrors();
+  }
 }

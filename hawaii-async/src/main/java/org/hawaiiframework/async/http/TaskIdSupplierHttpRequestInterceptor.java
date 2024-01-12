@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.async.http;
 
+import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.springframework.http.HttpRequest;
@@ -23,51 +24,41 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-import java.io.IOException;
-
 /**
  * HTTP request interceptor to set a task id as a header on an HTTP request.
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 public class TaskIdSupplierHttpRequestInterceptor implements ClientHttpRequestInterceptor {
 
-    /**
-     * The header name to set.
-     */
-    private final String headerName;
+  /** The header name to set. */
+  private final String headerName;
 
-    /**
-     * Default constructor with 'X-Hawaii-Task-Id' as {@code headername}.
-     */
-    public TaskIdSupplierHttpRequestInterceptor() {
-        this("X-Hawaii-Task-Id");
+  /** Default constructor with 'X-Hawaii-Task-Id' as {@code headername}. */
+  public TaskIdSupplierHttpRequestInterceptor() {
+    this("X-Hawaii-Task-Id");
+  }
+
+  /**
+   * Constructor that sets the header name.
+   *
+   * @param headerName The header name to use.
+   */
+  public TaskIdSupplierHttpRequestInterceptor(String headerName) {
+    this.headerName = headerName;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public ClientHttpResponse intercept(
+      HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    String taskId = SharedTaskContextHolder.getTaskId();
+    if (StringUtils.isNotBlank(taskId)) {
+      request.getHeaders().add(headerName, taskId);
     }
-
-    /**
-     * Constructor that sets the header name.
-     *
-     * @param headerName The header name to use.
-     */
-    public TaskIdSupplierHttpRequestInterceptor(final String headerName) {
-        this.headerName = headerName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    @Override
-    public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
-            throws IOException {
-        final String taskId = SharedTaskContextHolder.getTaskId();
-        if (StringUtils.isNotBlank(taskId)) {
-            request.getHeaders().add(headerName, taskId);
-        }
-        return execution.execute(request, body);
-    }
-
+    return execution.execute(request, body);
+  }
 }

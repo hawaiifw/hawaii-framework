@@ -29,8 +29,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 /**
  * Default implementation of {@link ExceptionResponseFactory}.
  *
- * The default implementation creates an {@link ApiErrorResponseResource} if the exception is an {@link ApiException}
- * and a {@link ErrorResponseResource} in all other cases.
+ * <p>The default implementation creates an {@link ApiErrorResponseResource} if the exception is an
+ * {@link ApiException} and a {@link ErrorResponseResource} in all other cases.
  *
  * @author Paul Klos
  * @since 2.0.0
@@ -38,87 +38,89 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 @Component
 public class DefaultExceptionResponseFactory implements ExceptionResponseFactory {
 
-    /**
-     * Create the response resource.
-     *
-     * <p>If present, the first {@link HawaiiException} found in the cause chain of the throwable is used
-     * to determine the response type. If there is no cause, or if it doesn't contain a {@link HawaiiException},
-     * the throwable itself is used.</p>
-     *
-     * <p>As an example, assume throwable is some type of {@link HttpException}, caused by an {@link ApiException}. In such a case,
-     * we want the error information to be derived from the {@link ApiException}.</p>
-     *
-     * @param throwable the throwable
-     * @return the error resource
-     */
-    @Override public ErrorResponseResource create(final Throwable throwable) {
-        ErrorResponseResource result = null;
-        if (throwable != null) {
+  /**
+   * Create the response resource.
+   *
+   * <p>If present, the first {@link HawaiiException} found in the cause chain of the throwable is
+   * used to determine the response type. If there is no cause, or if it doesn't contain a {@link
+   * HawaiiException}, the throwable itself is used.
+   *
+   * <p>As an example, assume throwable is some type of {@link HttpException}, caused by an {@link
+   * ApiException}. In such a case, we want the error information to be derived from the {@link
+   * ApiException}.
+   *
+   * @param throwable the throwable
+   * @return the error resource
+   */
+  @Override
+  public ErrorResponseResource create(Throwable throwable) {
+    ErrorResponseResource result = null;
+    if (throwable != null) {
 
-            result = getErrorResponseResource(throwable);
+      result = getErrorResponseResource(throwable);
 
-            if (result == null) {
-                final Throwable cause = getCausingHawaiiException(throwable);
-                result = getErrorResponseResource(cause);
-            }
-        }
-        if (result == null) {
-            result = new ErrorResponseResource(throwable);
-        }
-        return result;
+      if (result == null) {
+        Throwable cause = getCausingHawaiiException(throwable);
+        result = getErrorResponseResource(cause);
+      }
     }
-
-    /**
-     * Create an instance of the correct type of error resource for the given throwable.
-     *
-     * @param throwable the throwable
-     * @return the error resource
-     */
-    private ErrorResponseResource getErrorResponseResource(final Throwable throwable) {
-        final ErrorResponseResource result;
-        if (throwable instanceof ApiException apiException) {
-            result = new ApiErrorResponseResource(apiException);
-        } else if (throwable instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
-            result = new MethodArgumentNotValidResponseResource(methodArgumentNotValidException);
-        } else if (throwable instanceof ValidationException validationException) {
-            result = new ValidationErrorResponseResource(validationException);
-        } else {
-            result = null;
-        }
-        return result;
+    if (result == null) {
+      result = new ErrorResponseResource(throwable);
     }
+    return result;
+  }
 
-    /**
-     * Returns the first {@link HawaiiException} encountered in the chain of exception causes,
-     * or the original throwable if no {@link HawaiiException} can be found.
-     *
-     * @param throwable the Throwable to examine, must not be <code>null</code>
-     * @return a HawaiiException, or throwable
-     */
-    private Throwable getCausingHawaiiException(final Throwable throwable) {
-        Throwable cause = getCause(throwable.getCause());
-        if (cause == null) {
-            cause = throwable;
-        }
-        return cause;
+  /**
+   * Create an instance of the correct type of error resource for the given throwable.
+   *
+   * @param throwable the throwable
+   * @return the error resource
+   */
+  private static ErrorResponseResource getErrorResponseResource(Throwable throwable) {
+    ErrorResponseResource result;
+    if (throwable instanceof ApiException apiException) {
+      result = new ApiErrorResponseResource(apiException);
+    } else if (throwable
+        instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
+      result = new MethodArgumentNotValidResponseResource(methodArgumentNotValidException);
+    } else if (throwable instanceof ValidationException validationException) {
+      result = new ValidationErrorResponseResource(validationException);
+    } else {
+      result = null;
     }
+    return result;
+  }
 
-    /**
-     * Recursive method to find the cause of a Throwable, if that is a {@link HawaiiException}.
-     *
-     * @param throwable the throwable
-     * @return throwable, or null
-     */
-    private Throwable getCause(final Throwable throwable) {
-        final Throwable cause;
-        if (throwable == null) {
-            cause = null;
-        } else if (throwable instanceof HawaiiException) {
-            cause = throwable;
-        } else {
-            cause = getCause(throwable.getCause());
-        }
-        return cause;
+  /**
+   * Returns the first {@link HawaiiException} encountered in the chain of exception causes, or the
+   * original throwable if no {@link HawaiiException} can be found.
+   *
+   * @param throwable the Throwable to examine, must not be <code>null</code>
+   * @return a HawaiiException, or throwable
+   */
+  private static Throwable getCausingHawaiiException(Throwable throwable) {
+    Throwable cause = getCause(throwable.getCause());
+    if (cause == null) {
+      cause = throwable;
     }
+    return cause;
+  }
 
+  /**
+   * Recursive method to find the cause of a Throwable, if that is a {@link HawaiiException}.
+   *
+   * @param throwable the throwable
+   * @return throwable, or null
+   */
+  private static Throwable getCause(Throwable throwable) {
+    Throwable cause;
+    if (throwable == null) {
+      cause = null;
+    } else if (throwable instanceof HawaiiException) {
+      cause = throwable;
+    } else {
+      cause = getCause(throwable.getCause());
+    }
+    return cause;
+  }
 }

@@ -18,24 +18,25 @@ package org.hawaiiframework.async.timeout;
 
 /**
  * A strategy to abort a running task.
- * <p>
- * The abort strategy does not know what sort of task it needs to abort. It is up to the implementation to handle all the logic.
- * <p>
- * Note, the abort <b>must</b> ensure that all open resources are released in order to avoid deadlocks.
- * <p>
- * For a common case, think about a HTTP request that needs to be stopped if it takes too long.
+ *
+ * <p>The abort strategy does not know what sort of task it needs to abort. It is up to the
+ * implementation to handle all the logic.
+ *
+ * <p>Note, the abort <b>must</b> ensure that all open resources are released in order to avoid
+ * deadlocks.
+ *
+ * <p>For a common case, think about a HTTP request that needs to be stopped if it takes too long.
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 public interface TaskAbortStrategy {
 
-    /**
-     * Invoke the strategy in order to abort the task (that registered this abort strategy).
-     *
-     * @return {@code true} if the task has been aborted.
-     */
-    boolean invoke();
+  /**
+   * Invoke the strategy in order to abort the task (that registered this abort strategy).
+   *
+   * @return {@code true} if the task has been aborted.
+   */
+  boolean invoke();
 }

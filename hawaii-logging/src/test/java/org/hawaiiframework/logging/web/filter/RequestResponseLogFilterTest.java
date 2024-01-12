@@ -44,68 +44,69 @@ import org.slf4j.LoggerFactory;
 
 public class RequestResponseLogFilterTest {
 
-    private static final String A_REQUEST_URI = "/idm/rest/public/registration/customer";
-    private static final String A_QUERY_STRING = "token=4a8ff079-9223-41cc-a072-9c8656216479&bla=bladiebla";
-    private static final String A_METHOD = "POST";
-    private static final String A_CONTENT_TYPE = "text/plain";
+  private static final String A_REQUEST_URI = "/idm/rest/public/registration/customer";
+  private static final String A_QUERY_STRING =
+      "token=4a8ff079-9223-41cc-a072-9c8656216479&bla=bladiebla";
+  private static final String A_METHOD = "POST";
+  private static final String A_CONTENT_TYPE = "text/plain";
 
-    private RequestResponseLogFilter filter;
-    private Logger logger;
+  private RequestResponseLogFilter filter;
+  private Logger logger;
 
-    private TestLogAppender testLogAppender;
+  private TestLogAppender testLogAppender;
 
-    private HttpServletRequest request;
-    private HttpServletResponse response;
+  private HttpServletRequest request;
+  private HttpServletResponse response;
 
-    @Before
-    public void setup() {
-        testLogAppender = new TestLogAppender();
-        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        logger.addAppender(testLogAppender);
+  @Before
+  public void setup() {
+    testLogAppender = new TestLogAppender();
+    ch.qos.logback.classic.Logger logger =
+        (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+    logger.addAppender(testLogAppender);
 
-        testLogAppender.start();
+    testLogAppender.start();
 
-        response = mock(ContentCachingWrappedResponse.class);
-        when(response.getStatus()).thenReturn(200);
+    response = mock(ContentCachingWrappedResponse.class);
+    when(response.getStatus()).thenReturn(200);
 
-        request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn(A_REQUEST_URI);
-        when(request.getQueryString()).thenReturn(A_QUERY_STRING);
-        when(request.getContentType()).thenReturn(A_CONTENT_TYPE);
-        when(request.getMethod()).thenReturn(A_METHOD);
-        when(request.getAttribute(WRAPPED_REQUEST_RESPONSE)).thenReturn(null, response);
+    request = mock(HttpServletRequest.class);
+    when(request.getRequestURI()).thenReturn(A_REQUEST_URI);
+    when(request.getQueryString()).thenReturn(A_QUERY_STRING);
+    when(request.getContentType()).thenReturn(A_CONTENT_TYPE);
+    when(request.getMethod()).thenReturn(A_METHOD);
+    when(request.getAttribute(WRAPPED_REQUEST_RESPONSE)).thenReturn(null, response);
 
-        final HttpRequestResponseHeadersLogUtil headersLogUtil = mock(HttpRequestResponseHeadersLogUtil.class);
-        final HttpRequestResponseBodyLogUtil bodyLogUtil = mock(HttpRequestResponseBodyLogUtil.class);
-        final HttpRequestResponseDebugLogUtil debugLogUtil = mock(HttpRequestResponseDebugLogUtil.class);
+    HttpRequestResponseHeadersLogUtil headersLogUtil =
+        mock(HttpRequestResponseHeadersLogUtil.class);
+    HttpRequestResponseBodyLogUtil bodyLogUtil = mock(HttpRequestResponseBodyLogUtil.class);
+    HttpRequestResponseDebugLogUtil debugLogUtil = mock(HttpRequestResponseDebugLogUtil.class);
 
-        final HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
-        final MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties.getAllowedContentTypes(), true);
-        final MediaTypeVoter suppressedMediaTypeVoter = new MediaTypeVoter(properties.getBodyExcludedContentTypes(), false);
-        final RequestVoter requestVoter = new RequestVoter(properties);
+    HawaiiLoggingConfigurationProperties properties = new HawaiiLoggingConfigurationProperties();
+    MediaTypeVoter mediaTypeVoter = new MediaTypeVoter(properties.getAllowedContentTypes(), true);
+    MediaTypeVoter suppressedMediaTypeVoter =
+        new MediaTypeVoter(properties.getBodyExcludedContentTypes(), false);
+    RequestVoter requestVoter = new RequestVoter(properties);
 
-        final DefaultHawaiiRequestResponseLogger requestResponseLogger = new DefaultHawaiiRequestResponseLogger(headersLogUtil,
-                bodyLogUtil,
-                debugLogUtil,
-                mediaTypeVoter,
-                suppressedMediaTypeVoter);
-        final FilterVoter filterVoter = new FilterVoter(mediaTypeVoter, requestVoter);
-        filter = new RequestResponseLogFilter(requestResponseLogger, filterVoter);
-    }
+    DefaultHawaiiRequestResponseLogger requestResponseLogger =
+        new DefaultHawaiiRequestResponseLogger(
+            headersLogUtil, bodyLogUtil, debugLogUtil, mediaTypeVoter, suppressedMediaTypeVoter);
+    FilterVoter filterVoter = new FilterVoter(mediaTypeVoter, requestVoter);
+    filter = new RequestResponseLogFilter(requestResponseLogger, filterVoter);
+  }
 
-    @Test
-    public void thatRequestParamsAreLogged() throws ServletException, IOException {
-        filter.doFilterInternal(request, response, mock(FilterChain.class));
+  @Test
+  public void thatRequestParamsAreLogged() throws ServletException, IOException {
+    filter.doFilterInternal(request, response, mock(FilterChain.class));
 
-        final String message = "Invoked '{} {}' with content type '{}' and size of '{}' bytes.";
-        final ILoggingEvent logEvent = testLogAppender.findEventForMessage(message);
-        assertThat(logEvent, notNullValue());
+    String message = "Invoked '{} {}' with content type '{}' and size of '{}' bytes.";
+    ILoggingEvent logEvent = testLogAppender.findEventForMessage(message);
+    assertThat(logEvent, notNullValue());
 
-        final Object[] argumentArray = logEvent.getArgumentArray();
-        assertThat((String) argumentArray[0], is("POST"));
-        assertThat((String) argumentArray[1], is(A_REQUEST_URI));
-        assertThat(argumentArray[2], is(A_CONTENT_TYPE));
-        assertThat((int) argumentArray[3], is(0));
-    }
-
+    Object[] argumentArray = logEvent.getArgumentArray();
+    assertThat((String) argumentArray[0], is("POST"));
+    assertThat((String) argumentArray[1], is(A_REQUEST_URI));
+    assertThat(argumentArray[2], is(A_CONTENT_TYPE));
+    assertThat((int) argumentArray[3], is(0));
+  }
 }

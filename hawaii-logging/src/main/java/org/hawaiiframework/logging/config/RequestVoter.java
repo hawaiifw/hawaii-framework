@@ -16,63 +16,60 @@
 
 package org.hawaiiframework.logging.config;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import org.hawaiiframework.logging.model.PathDefinition;
 import org.slf4j.Logger;
 
-import java.util.List;
-
-import static org.slf4j.LoggerFactory.getLogger;
-
 /**
- * Request voter allows configuration of excluded URL request based on paths patterns and HTTP methods.
+ * Request voter allows configuration of excluded URL request based on paths patterns and HTTP
+ * methods.
  */
 public class RequestVoter {
 
-    /**
-     * The logger.
-     */
-    private static final Logger LOGGER = getLogger(RequestVoter.class);
+  /** The logger. */
+  private static final Logger LOGGER = getLogger(RequestVoter.class);
 
-    /**
-     * The excluded paths.
-     */
-    private final List<PathDefinition> exclusions;
+  /** The excluded paths. */
+  private final List<PathDefinition> exclusions;
 
-    /**
-     * The constructor.
-     *
-     * @param properties The properties.
-     */
-    public RequestVoter(final HawaiiLoggingConfigurationProperties properties) {
-        exclusions = properties.getExcludePaths();
-        LOGGER.info("Excluded paths '{}'.", exclusions);
-    }
+  /**
+   * The constructor.
+   *
+   * @param properties The properties.
+   */
+  public RequestVoter(HawaiiLoggingConfigurationProperties properties) {
+    exclusions = properties.getExcludePaths();
+    LOGGER.info("Excluded paths '{}'.", exclusions);
+  }
 
-    /**
-     * Return {@code true} if the {@code request} is allowed.
-     *
-     * @param request The request to check.
-     * @return {@code true} if the {@code request} is allowed.
-     */
-    public boolean allowed(final HttpServletRequest request) {
-        if (!isEmpty()) {
-            final String method = request.getMethod();
-            final String path = request.getServletPath();
-            for (final PathDefinition exclusion : exclusions) {
-                final boolean excluded = exclusion.matches(method, path);
-                LOGGER.trace("Request'{} {}' matches '{}': '{}'.", method, path, exclusion, excluded);
-                if (excluded) {
-                    LOGGER.trace("Request'{} {}' excluded because of match with '{}'.", method, path, exclusion);
-                    return false;
-                }
-            }
+  /**
+   * Return {@code true} if the {@code request} is allowed.
+   *
+   * @param request The request to check.
+   * @return {@code true} if the {@code request} is allowed.
+   */
+  public boolean allowed(HttpServletRequest request) {
+    if (!isEmpty()) {
+      String method = request.getMethod();
+      String path = request.getServletPath();
+      for (PathDefinition exclusion : exclusions) {
+        boolean excluded = exclusion.matches(method, path);
+        LOGGER.trace("Request'{} {}' matches '{}': '{}'.", method, path, exclusion, excluded);
+        if (excluded) {
+          LOGGER.trace(
+              "Request'{} {}' excluded because of match with '{}'.", method, path, exclusion);
+          return false;
         }
-
-        return true;
+      }
     }
 
-    private boolean isEmpty() {
-        return exclusions == null || exclusions.isEmpty();
-    }
+    return true;
+  }
+
+  private boolean isEmpty() {
+    return exclusions == null || exclusions.isEmpty();
+  }
 }

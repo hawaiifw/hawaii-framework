@@ -22,87 +22,83 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Class the mask passwords in a string, so log files will not contain plain text (or encrypted) passwords.
+ * Class the mask passwords in a string, so log files will not contain plain text (or encrypted)
+ * passwords.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class PasswordMaskerUtil {
 
-    /**
-     * The list of password maskers.
-     */
-    private static final List<PasswordMasker> PASSWORD_MASKERS = new ArrayList<>();
+  /** The list of password maskers. */
+  private static final List<PasswordMasker> PASSWORD_MASKERS = new ArrayList<>();
 
-    static {
-        PASSWORD_MASKERS.add(new JsonPasswordMasker());
-        PASSWORD_MASKERS.add(new XmlAttributePasswordMasker());
-        PASSWORD_MASKERS.add(new UriQueryStringPasswordMasker());
+  static {
+    PASSWORD_MASKERS.add(new JsonPasswordMasker());
+    PASSWORD_MASKERS.add(new XmlAttributePasswordMasker());
+    PASSWORD_MASKERS.add(new UriQueryStringPasswordMasker());
+  }
+
+  /** The list of fields to mask. */
+  private final Set<String> fieldsToMask = new HashSet<>();
+
+  /**
+   * The constructor.
+   *
+   * @param fieldsToMask The list of fields to mask.
+   */
+  public PasswordMaskerUtil(Collection<String> fieldsToMask) {
+    if (fieldsToMask != null && !fieldsToMask.isEmpty()) {
+      this.fieldsToMask.addAll(fieldsToMask);
+    } else {
+      this.fieldsToMask.add("password");
     }
+  }
 
-    /**
-     * The list of fields to mask.
-     */
-    private final Set<String> fieldsToMask = new HashSet<>();
+  /**
+   * Mask the password with {@code ***} in the {@code input}.
+   *
+   * @param input the input to mask passwords in.
+   * @return The masked result.
+   */
+  public String maskPasswordsIn(String input) {
+    String masked = input;
+    for (String fieldToMask : fieldsToMask) {
+      masked = maskPasswords(masked, fieldToMask);
+    }
+    return masked;
+  }
 
-    /**
-     * The constructor.
-     *
-     * @param fieldsToMask The list of fields to mask.
-     */
-    public PasswordMaskerUtil(final Collection<String> fieldsToMask) {
-        if (fieldsToMask != null && !fieldsToMask.isEmpty()) {
-            this.fieldsToMask.addAll(fieldsToMask);
-        } else {
-            this.fieldsToMask.add("password");
+  private static String maskPasswords(String input, String pattern) {
+    MaskedPasswordBuilder builder = new MaskedPasswordBuilder(input, pattern);
+    if (!builder.findNextPassword()) {
+      return input;
+    }
+    builder.reset();
+    return maskPasswords(builder);
+  }
+
+  @SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD"})
+  private static String maskPasswords(MaskedPasswordBuilder builder) {
+
+    while (builder.findNextPassword()) {
+      while (builder.hasNext()) {
+        boolean fieldMasked = false;
+        for (PasswordMasker masker : PASSWORD_MASKERS) {
+          fieldMasked = masker.matches(builder);
         }
-    }
-
-    /**
-     * Mask the password with {@code ***} in the {@code input}.
-     *
-     * @param input the input to mask passwords in.
-     * @return The masked result.
-     */
-    public String maskPasswordsIn(final String input) {
-        String masked = input;
-        for (final String fieldToMask : fieldsToMask) {
-            masked = maskPasswords(masked, fieldToMask);
+        if (fieldMasked) {
+          break;
         }
-        return masked;
-    }
-
-    private String maskPasswords(final String input, final String pattern) {
-        final MaskedPasswordBuilder builder = new MaskedPasswordBuilder(input, pattern);
-        if (!builder.findNextPassword()) {
-            return input;
+        if (builder.currentCharIsWhitespace()) {
+          // We've found a whitespace, this means the input is not in one of the expected formats,
+          // break the loop and search again.
+          break;
         }
-        builder.reset();
-        return maskPasswords(builder);
+        builder.next();
+      }
     }
 
-    @SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD"})
-    private String maskPasswords(final MaskedPasswordBuilder builder) {
-
-        while (builder.findNextPassword()) {
-            while (builder.hasNext()) {
-                boolean fieldMasked = false;
-                for (PasswordMasker masker : PASSWORD_MASKERS) {
-                    fieldMasked = masker.matches(builder);
-                }
-                if (fieldMasked) {
-                    break;
-                }
-                if (builder.currentCharIsWhitespace()) {
-                    // We've found a whitespace, this means the input is not in one of the expected formats,
-                    // break the loop and search again.
-                    break;
-                }
-                builder.next();
-            }
-        }
-
-        return builder.build();
-    }
-
+    return builder.build();
+  }
 }

@@ -16,6 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.TransactionIdFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,52 +28,44 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.TransactionIdFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configures the {@link TransactionIdFilter}.
- */
+/** Configures the {@link TransactionIdFilter}. */
 @Configuration
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
 public class TransactionIdFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.transaction-id";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.transaction-id";
 
-    private static final Logger LOGGER = getLogger(TransactionIdFilterConfiguration.class);
-    
-    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Tx-Id}")
-    private String headerName;
+  private static final Logger LOGGER = getLogger(TransactionIdFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-500}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Tx-Id}")
+  private String headerName;
 
-    /**
-     * Create the {@link TransactionIdFilter} bean.
-     *
-     * @return the {@link TransactionIdFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public TransactionIdFilter transactionIdFilter() {
-        LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
-        return new TransactionIdFilter(headerName);
-    }
+  @Value("${" + CONFIG_PREFIX + ".order:-500}")
+  private int filterOrder;
 
-    /**
-     * Register the {@link #transactionIdFilter()} bean.
-     *
-     * @param transactionIdFilter the transaction id filter
-     * @return the {@link #transactionIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<TransactionIdFilter> transactionIdFilterRegistration(final TransactionIdFilter transactionIdFilter) {
-        return createFilterRegistrationBean(transactionIdFilter, filterOrder);
-    }
+  /**
+   * Create the {@link TransactionIdFilter} bean.
+   *
+   * @return the {@link TransactionIdFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public TransactionIdFilter transactionIdFilter() {
+    LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
+    return new TransactionIdFilter(headerName);
+  }
 
+  /**
+   * Register the {@link #transactionIdFilter()} bean.
+   *
+   * @param transactionIdFilter the transaction id filter
+   * @return the {@link #transactionIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<TransactionIdFilter> transactionIdFilterRegistration(
+      TransactionIdFilter transactionIdFilter) {
+    return createFilterRegistrationBean(transactionIdFilter, filterOrder);
+  }
 }

@@ -15,47 +15,58 @@
  */
 package org.hawaiiframework.logging.model;
 
-import org.junit.After;
-import org.junit.Test;
-
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER_NAME;
 
+import java.util.List;
+import org.junit.After;
+import org.junit.Test;
+
 public class KibanaLogFieldsTest {
-    @Test
-    public void testMdcKeysShouldContainAllMdcKeysExceptLogType() {
-        for (final KibanaLogFieldNames fieldName : KibanaLogFieldNames.values()) {
-            KibanaLogFields.tag(fieldName, "test");
-        }
-
-        for (final KibanaLogFieldNames mdcKey : KibanaLogFieldNames.values()) {
-            if (mdcKey.equals(KibanaLogFieldNames.LOG_TYPE)) {
-                assertThat(String.format("Kibana log string should not contain %s", mdcKey.getLogName()), KibanaLogFields.getValuesAsLogString(), not(containsString(mdcKey.getLogName())));
-            } else {
-                assertThat(String.format("Kibana log string should contain %s", mdcKey.getLogName()), KibanaLogFields.getValuesAsLogString(), containsString(mdcKey.getLogName()));
-            }
-        }
+  @Test
+  public void testMdcKeysShouldContainAllMdcKeysExceptLogType() {
+    for (KibanaLogFieldNames fieldName : KibanaLogFieldNames.values()) {
+      KibanaLogFields.tag(fieldName, "test");
     }
 
-    @Test
-    public void testTagWithList() {
-        KibanaLogFields.tag(USER_NAME, List.of("a", "b", "c"));
-        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER_NAME), is("['a', 'b', 'c']"));
+    for (KibanaLogFieldNames mdcKey : KibanaLogFieldNames.values()) {
+      if (mdcKey.equals(KibanaLogFieldNames.LOG_TYPE)) {
+        assertThat(
+            String.format("Kibana log string should not contain %s", mdcKey.getLogName()),
+            KibanaLogFields.getValuesAsLogString(),
+            not(containsString(mdcKey.getLogName())));
+      } else {
+        assertThat(
+            String.format("Kibana log string should contain %s", mdcKey.getLogName()),
+            KibanaLogFields.getValuesAsLogString(),
+            containsString(mdcKey.getLogName()));
+      }
     }
+  }
 
-    @Test
-    public void setWithList() {
-        KibanaLogFields.tag(USER_NAME, List.of("a", "b", "c"));
-        assertThat("Kibana log field should contain flattened list", KibanaLogFields.get(USER_NAME), is("['a', 'b', 'c']"));
-    }
+  @Test
+  public void testTagWithList() {
+    KibanaLogFields.tag(USER_NAME, List.of("a", "b", "c"));
+    assertThat(
+        "Kibana log field should contain flattened list",
+        KibanaLogFields.get(USER_NAME),
+        is("['a', 'b', 'c']"));
+  }
 
-    @After
-    public void tearDown() {
-        KibanaLogFields.clear();
-    }
+  @Test
+  public void setWithList() {
+    KibanaLogFields.tag(USER_NAME, List.of("a", "b", "c"));
+    assertThat(
+        "Kibana log field should contain flattened list",
+        KibanaLogFields.get(USER_NAME),
+        is("['a', 'b', 'c']"));
+  }
+
+  @After
+  public void tearDown() {
+    KibanaLogFields.clear();
+  }
 }

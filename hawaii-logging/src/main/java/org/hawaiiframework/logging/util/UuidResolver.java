@@ -15,13 +15,13 @@
  */
 package org.hawaiiframework.logging.util;
 
+import static java.util.UUID.randomUUID;
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.util.UUID;
 
 /**
  * Resolver for UUID values from HTTP Servlet Request Headers.
@@ -31,38 +31,36 @@ import java.util.UUID;
  */
 public class UuidResolver {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(UuidResolver.class);
+  /** The logger to use. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(UuidResolver.class);
 
-    /**
-     * Resolve the UUID from the header with name {@code headerName}.
-     * <p>
-     * If the value is not set in the {@code request} then a new UUID will be generated.
-     *
-     * @param request    THe request to get a UUID value from.
-     * @param headerName THe header to get the UUID value from.
-     * @return The resolved UUID, or a new uuid.
-     */
-    public UUID resolve(final HttpServletRequest request, final String headerName) {
-        UUID uuid = null;
+  /**
+   * Resolve the UUID from the header with name {@code headerName}.
+   *
+   * <p>If the value is not set in the {@code request} then a new UUID will be generated.
+   *
+   * @param request THe request to get a UUID value from.
+   * @param headerName THe header to get the UUID value from.
+   * @return The resolved UUID, or a new uuid.
+   */
+  public UUID resolve(HttpServletRequest request, String headerName) {
+    UUID uuid = null;
 
-        final String txIdHeader = request.getHeader(headerName);
-        if (StringUtils.isNotBlank(txIdHeader)) {
-            LOGGER.trace("Found header '{}' with value '{}' in request.", headerName, txIdHeader);
-            try {
-                uuid = UUID.fromString(txIdHeader);
-            } catch (IllegalArgumentException e) {
-                LOGGER.error("Could not create UUID from header.", e);
-            }
-        }
-
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
-            LOGGER.trace("Generated new UUID '{}'.", uuid);
-        }
-
-        return uuid;
+    String txIdHeader = request.getHeader(headerName);
+    if (StringUtils.isNotBlank(txIdHeader)) {
+      LOGGER.trace("Found header '{}' with value '{}' in request.", headerName, txIdHeader);
+      try {
+        uuid = UUID.fromString(txIdHeader);
+      } catch (IllegalArgumentException e) {
+        LOGGER.error("Could not create UUID from header.", e);
+      }
     }
+
+    if (uuid == null) {
+      uuid = randomUUID();
+      LOGGER.trace("Generated new UUID '{}'.", uuid);
+    }
+
+    return uuid;
+  }
 }

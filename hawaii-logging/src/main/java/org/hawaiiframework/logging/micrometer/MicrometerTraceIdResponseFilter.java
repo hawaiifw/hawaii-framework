@@ -36,66 +36,60 @@ import org.slf4j.LoggerFactory;
  */
 public class MicrometerTraceIdResponseFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MicrometerTraceIdResponseFilter.class);
+  /** The logger to use. */
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(MicrometerTraceIdResponseFilter.class);
 
-    /**
-     * The configured header name to write the trace id in.
-     */
-    private final String headerName;
+  /** The configured header name to write the trace id in. */
+  private final String headerName;
 
-    /**
-     * The tracer.
-     */
-    private final Tracer tracer;
+  /** The tracer. */
+  private final Tracer tracer;
 
-    /**
-     * Constructor.
-     *
-     * @param headerName the name of the header to response with.
-     * @param tracer     the tracer.
-     */
-    public MicrometerTraceIdResponseFilter(final String headerName, final Tracer tracer) {
-        this.headerName = Objects.toString(headerName, "traceid");
-        this.tracer = tracer;
-        LOGGER.info("Configured to use '{}'.", this.headerName);
+  /**
+   * Constructor.
+   *
+   * @param headerName the name of the header to response with.
+   * @param tracer the tracer.
+   */
+  public MicrometerTraceIdResponseFilter(String headerName, Tracer tracer) {
+    this.headerName = Objects.toString(headerName, "traceid");
+    this.tracer = tracer;
+    LOGGER.info("Configured to use '{}'.", this.headerName);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+
+    String traceId = getTraceId();
+    if (traceId != null) {
+      addHeader(response, traceId);
     }
+    filterChain.doFilter(request, response);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
+  private String getTraceId() {
+    return getTraceId(tracer.currentTraceContext());
+  }
 
-        final String traceId = getTraceId();
-        if (traceId != null) {
-            addHeader(response, traceId);
-        }
-        filterChain.doFilter(request, response);
+  private static String getTraceId(CurrentTraceContext currentTraceContext) {
+    TraceContext context = currentTraceContext.context();
+    return getTraceId(context);
+  }
+
+  private static String getTraceId(TraceContext context) {
+    if (context == null) {
+      return null;
     }
+    return context.traceId();
+  }
 
-    private String getTraceId() {
-        return getTraceId(tracer.currentTraceContext());
+  private void addHeader(HttpServletResponse response, String value) {
+    if (!response.containsHeader(headerName)) {
+      response.setHeader(headerName, value);
     }
-
-    private String getTraceId(final CurrentTraceContext currentTraceContext) {
-        final TraceContext context = currentTraceContext.context();
-        return getTraceId(context);
-    }
-
-    private String getTraceId(final TraceContext context) {
-        if (context == null) {
-            return null;
-        }
-        return context.traceId();
-    }
-
-    private void addHeader(final HttpServletResponse response, final String value) {
-        if (!response.containsHeader(headerName)) {
-            response.setHeader(headerName, value);
-        }
-    }
+  }
 }

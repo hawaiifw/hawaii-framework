@@ -20,91 +20,86 @@ package org.hawaiiframework.async.model;
  * Properties representing configuration for an individual task.
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 @SuppressWarnings("PMD.DataClass")
 public class TaskProperties {
 
-    /**
-     * The method name.
-     */
-    private String method;
+  /** The method name. */
+  private String method;
 
-    /**
-     * The executor to use for this task.
-     */
-    private String executor;
+  /** The executor to use for this task. */
+  private String executor;
 
-    /**
-     * The timeout for this task in seconds.
-     * <p>
-     * Overrides the system timeout, see {@link SystemProperties#defaultTimeout}.
-     */
-    private Integer timeout;
+  /**
+   * The timeout for this task in seconds.
+   *
+   * <p>Overrides the system timeout, see {@link SystemProperties#defaultTimeout}.
+   */
+  private Integer timeout;
 
-    /**
-     * Getter for method name.
-     *
-     * @return the method name
-     */
-    public String getMethod() {
-        return method;
-    }
+  /**
+   * Getter for method name.
+   *
+   * @return the method name
+   */
+  public String getMethod() {
+    return method;
+  }
 
-    /**
-     * Setter for method name.
-     *
-     * @param method the method name
-     */
-    public void setMethod(final String method) {
-        this.method = method;
-    }
+  /**
+   * Setter for method name.
+   *
+   * @param method the method name
+   */
+  public void setMethod(String method) {
+    this.method = method;
+  }
 
-    /**
-     * Getter for executor.
-     *
-     * @return the executor
-     */
-    public String getExecutor() {
-        return executor;
-    }
+  /**
+   * Getter for executor.
+   *
+   * @return the executor
+   */
+  public String getExecutor() {
+    return executor;
+  }
 
-    /**
-     * Setter for executor.
-     *
-     * @param executor the executor
-     */
-    public void setExecutor(final String executor) {
-        this.executor = executor;
-    }
+  /**
+   * Setter for executor.
+   *
+   * @param executor the executor
+   */
+  public void setExecutor(String executor) {
+    this.executor = executor;
+  }
 
-    /**
-     * Getter for timeout.
-     *
-     * @return the timeout
-     */
-    public Integer getTimeout() {
-        return timeout;
-    }
+  /**
+   * Getter for timeout.
+   *
+   * @return the timeout
+   */
+  public Integer getTimeout() {
+    return timeout;
+  }
 
-    /**
-     * Setter for timeout.
-     *
-     * @param timeout the timeout
-     */
-    public void setTimeout(final Integer timeout) {
-        this.timeout = timeout;
-    }
+  /**
+   * Setter for timeout.
+   *
+   * @param timeout the timeout
+   */
+  public void setTimeout(Integer timeout) {
+    this.timeout = timeout;
+  }
 
-    /**
-     * Determine if this TaskProperties' name matches the given name.
-     *
-     * @param taskName the name to check
-     * @return true if the names match
-     */
-    public boolean isNameMatch(final String taskName) {
-        return method.equals(taskName);
-    }
+  /**
+   * Determine if this TaskProperties' name matches the given name.
+   *
+   * @param taskName the name to check
+   * @return true if the names match
+   */
+  public boolean isNameMatch(String taskName) {
+    return method.equals(taskName);
+  }
 }

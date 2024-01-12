@@ -16,64 +16,55 @@
 
 package org.hawaiiframework.logging.config.filter;
 
-import org.slf4j.Logger;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
-
 import java.util.EnumSet;
+import org.slf4j.Logger;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Utility for registering filter registration beans for servlet filters.
- */
+/** Utility for registering filter registration beans for servlet filters. */
 public final class FilterRegistrationBeanUtil {
 
-    private static final Logger LOGGER = getLogger(FilterRegistrationBeanUtil.class);
+  private static final Logger LOGGER = getLogger(FilterRegistrationBeanUtil.class);
 
+  private static final EnumSet<DispatcherType> ALL_DISPATCHER_TYPES =
+      EnumSet.allOf(DispatcherType.class);
 
-    private static final EnumSet<DispatcherType> ALL_DISPATCHER_TYPES = EnumSet.allOf(DispatcherType.class);
+  /** Utility constructor. */
+  private FilterRegistrationBeanUtil() {
+    // Do nothing.
+  }
 
-    /**
-     * Utility constructor.
-     */
-    private FilterRegistrationBeanUtil() {
-        // Do nothing.
-    }
+  /**
+   * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
+   *
+   * @param filter the filter.
+   * @param filterOrder the filter's order.
+   * @param <T> the specific filter type.
+   * @return the filter registration.
+   */
+  public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
+      T filter, int filterOrder) {
+    return createFilterRegistrationBean(filter, filterOrder, ALL_DISPATCHER_TYPES);
+  }
 
-    /**
-     * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
-     *
-     * @param filter      the filter.
-     * @param filterOrder the filter's order.
-     * @param <T>         the specific filter type.
-     * @return the filter registration.
-     */
-    public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
-            final T filter,
-            final int filterOrder) {
-        return createFilterRegistrationBean(filter, filterOrder, ALL_DISPATCHER_TYPES);
-    }
-
-    /**
-     * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
-     *
-     * @param filter          the filter
-     * @param filterOrder     the filter's order.
-     * @param dispatcherTypes the request dispatcher types the filter is used for
-     * @param <T>             the specific filter type.
-     * @return the filter registration.
-     */
-    public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
-            final T filter,
-            final int filterOrder,
-            final EnumSet<DispatcherType> dispatcherTypes) {
-        LOGGER.trace("Setting filter order for '{}' to '{}'.", filter, filterOrder);
-        final FilterRegistrationBean<T> result = new FilterRegistrationBean<>(filter);
-        result.setOrder(filterOrder);
-        result.setDispatcherTypes(dispatcherTypes);
-        return result;
-    }
+  /**
+   * Helper method to wrap a filter in a {@link FilterRegistrationBean} with the configured order.
+   *
+   * @param filter the filter
+   * @param filterOrder the filter's order.
+   * @param dispatcherTypes the request dispatcher types the filter is used for
+   * @param <T> the specific filter type.
+   * @return the filter registration.
+   */
+  public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
+      T filter, int filterOrder, EnumSet<DispatcherType> dispatcherTypes) {
+    LOGGER.trace("Setting filter order for '{}' to '{}'.", filter, filterOrder);
+    FilterRegistrationBean<T> result = new FilterRegistrationBean<>(filter);
+    result.setOrder(filterOrder);
+    result.setDispatcherTypes(dispatcherTypes);
+    return result;
+  }
 }

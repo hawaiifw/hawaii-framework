@@ -16,12 +16,11 @@
 
 package org.hawaiiframework.sql;
 
+import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResourceLoader;
-
-import java.util.List;
 
 /**
  * @author Rutger Lubbers
@@ -30,19 +29,21 @@ import java.util.List;
 @Configuration
 public class HawaiiSqlConfiguration {
 
-    @ConditionalOnMissingBean(SqlQueryResolver.class)
-    @Bean
-    public SqlQueryResolver resourceSqlQueryResolver() {
-        final SqlQueryResolverComposite sqlQueryResolver = new SqlQueryResolverComposite();
+  @Bean
+  @ConditionalOnMissingBean(SqlQueryResolver.class)
+  public SqlQueryResolver resourceSqlQueryResolver() {
+    SqlQueryResolverComposite sqlQueryResolver = new SqlQueryResolverComposite();
 
-        final FileSystemResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
+    FileSystemResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
 
-        final ResourceSqlQueryResolver fileSystemQueryResolver = new ResourceSqlQueryResolver(fileSystemResourceLoader);
-        fileSystemQueryResolver.setPrefix("src/main/resources/");
+    ResourceSqlQueryResolver fileSystemQueryResolver =
+        new ResourceSqlQueryResolver(fileSystemResourceLoader);
+    fileSystemQueryResolver.setPrefix("src/main/resources/");
 
-        final ResourceSqlQueryResolver resourceSqlQueryResolver = new ResourceSqlQueryResolver();
+    ResourceSqlQueryResolver resourceSqlQueryResolver = new ResourceSqlQueryResolver();
 
-        sqlQueryResolver.setSqlQueryResolvers(List.of(fileSystemQueryResolver, resourceSqlQueryResolver));
-        return sqlQueryResolver;
-    }
+    sqlQueryResolver.setSqlQueryResolvers(
+        List.of(fileSystemQueryResolver, resourceSqlQueryResolver));
+    return sqlQueryResolver;
+  }
 }

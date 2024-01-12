@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.async.sql;
 
+import java.util.List;
 import net.ttddyy.dsproxy.ExecutionInfo;
 import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.listener.QueryExecutionListener;
@@ -27,37 +28,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-/**
- * Query execution listener that registers an abort strategy for a task.
- */
+/** Query execution listener that registers an abort strategy for a task. */
 @ConditionalOnClass(QueryExecutionListener.class)
 @Component
 public class AbortStrategyQueryExecutionListener implements OrderedQueryExecutionListener {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbortStrategyQueryExecutionListener.class);
+  /** The logger to use. */
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(AbortStrategyQueryExecutionListener.class);
 
-    @Override
-    public void beforeQuery(final ExecutionInfo execInfo, final List<QueryInfo> queryInfoList) {
-        LOGGER.trace("Registering abort strategy.");
-        SharedTaskContextHolder.setTaskAbortStrategy(createAbortStrategy(execInfo));
-    }
+  @Override
+  public void beforeQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
+    LOGGER.trace("Registering abort strategy.");
+    SharedTaskContextHolder.setTaskAbortStrategy(createAbortStrategy(execInfo));
+  }
 
-    @Override
-    public void afterQuery(final ExecutionInfo execInfo, final List<QueryInfo> queryInfoList) {
-        // Do nothing.
-    }
+  @Override
+  public void afterQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
+    // Do nothing.
+  }
 
-    private TaskAbortStrategy createAbortStrategy(final ExecutionInfo execInfo) {
-        return new QueryTaskAbortStrategy(execInfo.getStatement());
-    }
+  private static TaskAbortStrategy createAbortStrategy(ExecutionInfo execInfo) {
+    return new QueryTaskAbortStrategy(execInfo.getStatement());
+  }
 
-    @Override
-    public int getOrder() {
-        return 0;
-    }
+  @Override
+  public int getOrder() {
+    return 0;
+  }
 }

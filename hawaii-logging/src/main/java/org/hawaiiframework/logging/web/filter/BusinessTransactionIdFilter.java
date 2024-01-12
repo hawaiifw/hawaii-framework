@@ -15,71 +15,64 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.BUSINESS_TX_ID;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.UUID;
 import org.hawaiiframework.logging.model.BusinessTransactionId;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.UuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.BUSINESS_TX_ID;
-
 /**
- * A filter that assigns each request a unique transaction id and output the transaction id to the response header.
+ * A filter that assigns each request a unique transaction id and output the transaction id to the
+ * response header.
  */
 public class BusinessTransactionIdFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessTransactionIdFilter.class);
+  /** The Logger. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(BusinessTransactionIdFilter.class);
 
-    /**
-     * The incoming Hawaii transaction id header name.
-     */
-    private final String headerName;
+  /** The incoming Hawaii transaction id header name. */
+  private final String headerName;
 
-    /**
-     * The UUID Resolver.
-     */
-    private final UuidResolver uuidResolver = new UuidResolver();
+  /** The UUID Resolver. */
+  private final UuidResolver uuidResolver = new UuidResolver();
 
-    /**
-     * Constructor.
-     * @param headerName the headerName to use for the Hawaii transaction id.
-     */
-    public BusinessTransactionIdFilter(final String headerName) {
-        this.headerName = headerName;
+  /**
+   * Constructor.
+   *
+   * @param headerName the headerName to use for the Hawaii transaction id.
+   */
+  public BusinessTransactionIdFilter(String headerName) {
+    this.headerName = headerName;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+
+    if (!hasBeenFiltered(request)) {
+      markHasBeenFiltered(request);
+
+      UUID uuid = uuidResolver.resolve(request, headerName);
+
+      BusinessTransactionId.set(uuid);
+      KibanaLogFields.tag(BUSINESS_TX_ID, BusinessTransactionId.get());
+
+      LOGGER.debug("Set '{}' with value '{};.", BUSINESS_TX_ID.getLogName(), uuid);
+
+      if (!response.containsHeader(headerName)) {
+        response.addHeader(headerName, BusinessTransactionId.get());
+      }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
-
-        if (!hasBeenFiltered(request)) {
-            markHasBeenFiltered(request);
-
-            final UUID uuid = uuidResolver.resolve(request, headerName);
-
-            BusinessTransactionId.set(uuid);
-            KibanaLogFields.tag(BUSINESS_TX_ID, BusinessTransactionId.get());
-
-            LOGGER.debug("Set '{}' with value '{};.", BUSINESS_TX_ID.getLogName(), uuid);
-
-            if (!response.containsHeader(headerName)) {
-                response.addHeader(headerName, BusinessTransactionId.get());
-            }
-        }
-        filterChain.doFilter(request, response);
-
-    }
+    filterChain.doFilter(request, response);
+  }
 }

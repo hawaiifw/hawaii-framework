@@ -16,57 +16,51 @@
 
 package org.hawaiiframework.async.http;
 
+import static java.util.Objects.requireNonNull;
+
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Strategy to abort and Http Components HTTP request.
- * <p>
- * These requests are used by (for instance) Spring's RestTemplate.
+ *
+ * <p>These requests are used by (for instance) Spring's RestTemplate.
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 public class HttpComponentHttpRequestTaskAbortStrategy implements TaskAbortStrategy {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpComponentHttpRequestTaskAbortStrategy.class);
+  /** The logger to use. */
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(HttpComponentHttpRequestTaskAbortStrategy.class);
 
-    /**
-     * The request we may have to abort.
-     */
-    private final HttpUriRequest request;
+  /** The request we may have to abort. */
+  private final HttpUriRequest request;
 
-    /**
-     * Construct a new instance with the {@code request} we may have to abort.
-     *
-     * @param request The request about to be executed (which we have to guard).
-     */
-    public HttpComponentHttpRequestTaskAbortStrategy(@NonNull final HttpUriRequest request) {
-        this.request = requireNonNull(request);
+  /**
+   * Construct a new instance with the {@code request} we may have to abort.
+   *
+   * @param request The request about to be executed (which we have to guard).
+   */
+  public HttpComponentHttpRequestTaskAbortStrategy(@NonNull HttpUriRequest request) {
+    this.request = requireNonNull(request);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean invoke() {
+    try {
+      LOGGER.trace("Invoking HttpUriRequest#abort().");
+      request.abort();
+      return true;
+    } catch (UnsupportedOperationException e) {
+      LOGGER.error("Cannot stop http request.", e);
+      return false;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean invoke() {
-        try {
-            LOGGER.trace("Invoking HttpUriRequest#abort().");
-            request.abort();
-            return true;
-        } catch (UnsupportedOperationException e) {
-            LOGGER.error("Cannot stop http request.", e);
-            return false;
-        }
-    }
+  }
 }

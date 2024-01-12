@@ -16,63 +16,69 @@
 
 package org.hawaiiframework.web.resource;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.hawaiiframework.converter.AbstractModelConverter;
 import org.hawaiiframework.validation.ValidationError;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
-public class ValidationErrorResourceAssembler extends AbstractModelConverter<ValidationError, ValidationErrorResource> {
+public class ValidationErrorResourceAssembler
+    extends AbstractModelConverter<ValidationError, ValidationErrorResource> {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    public ValidationErrorResourceAssembler(final ObjectMapper objectMapper) {
-        super(ValidationErrorResource.class);
-        this.objectMapper = requireNonNull(objectMapper, "'objectMapper' must not be null");
+  public ValidationErrorResourceAssembler(ObjectMapper objectMapper) {
+    super(ValidationErrorResource.class);
+    this.objectMapper = requireNonNull(objectMapper, "'objectMapper' must not be null");
+  }
+
+  @Override
+  public void convert(ValidationError validationError, ValidationErrorResource resource) {
+    requireNonNull(validationError, "'validationError' must not be null");
+    String field = convertProperty(validationError.getField());
+    String code = convertProperty(validationError.getCode());
+    resource.setField(field);
+    resource.setCode(code);
+  }
+
+  /**
+   * Converts the given property name (field name or error code) using the application defined
+   * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in
+   * responses. The naming strategy is defined in {@code application.yml} via the {@code
+   * spring.jackson.property-naming-strategy} property.
+   *
+   * <p>For example, if the {@link
+   * com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy} is defined, the
+   * following field names and error codes will be translated as following:
+   *
+   * <ul>
+   *   <li>description -&gt; description
+   *   <li>price -&gt; price
+   *   <li>discountPrice -&gt; discount_price
+   *   <li>Required -&gt; required
+   *   <li>InvalidLength -&gt; invalid_length
+   * </ul>
+   */
+  protected String convertProperty(String propertyName) {
+    String name;
+    if (objectMapper == null || propertyName == null || propertyName.length() == 0) {
+      name = propertyName;
+    } else {
+      // retrieve the application defined property naming strategy from the object mapper's
+      // serialization config
+      PropertyNamingStrategy propertyNamingStrategy =
+          objectMapper.getSerializationConfig().getPropertyNamingStrategy();
+      if (propertyNamingStrategy == null) {
+        name = propertyName;
+      } else {
+        name = propertyNamingStrategy.nameForField(null, null, propertyName);
+      }
     }
-
-    @Override
-    public void convert(final ValidationError validationError, final ValidationErrorResource resource) {
-        requireNonNull(validationError, "'validationError' must not be null");
-        final String field = convertProperty(validationError.getField());
-        final String code = convertProperty(validationError.getCode());
-        resource.setField(field);
-        resource.setCode(code);
-    }
-
-    /**
-     * Converts the given property name (field name or error code) using the application defined
-     * {@link com.fasterxml.jackson.databind.PropertyNamingStrategy} for consistent output in responses. The naming strategy is defined in
-     * {@code application.yml} via the {@code spring.jackson.property-naming-strategy} property.
-     * <p>
-     * For example, if the {@link com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy} is defined,
-     * the following field names and error codes will be translated as following:
-     * <ul>
-     * <li>description -&gt; description</li>
-     * <li>price -&gt; price</li>
-     * <li>discountPrice -&gt; discount_price</li>
-     * <li>Required -&gt; required</li>
-     * <li>InvalidLength -&gt; invalid_length</li>
-     * </ul>
-     */
-    protected String convertProperty(final String propertyName) {
-        final String name;
-        if (objectMapper == null || propertyName == null || propertyName.length() == 0) {
-            name = propertyName;
-        } else {
-            // retrieve the application defined property naming strategy from the object mapper's serialization config
-            final PropertyNamingStrategy propertyNamingStrategy = objectMapper.getSerializationConfig().getPropertyNamingStrategy();
-            if (propertyNamingStrategy == null) {
-                name = propertyName;
-            } else {
-                name = propertyNamingStrategy.nameForField(null, null, propertyName);
-            }
-        }
-        return name;
-    }
+    return name;
+  }
 }

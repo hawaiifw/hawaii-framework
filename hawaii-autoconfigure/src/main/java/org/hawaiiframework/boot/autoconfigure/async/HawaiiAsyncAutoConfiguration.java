@@ -32,6 +32,4 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass(AsyncExecutorConfiguration.class)
 @ConditionalOnResource(resources = "${hawaii.async.configuration}")
 @Import(AsyncExecutorConfiguration.class)
-public class HawaiiAsyncAutoConfiguration {
-
-}
+public class HawaiiAsyncAutoConfiguration {}

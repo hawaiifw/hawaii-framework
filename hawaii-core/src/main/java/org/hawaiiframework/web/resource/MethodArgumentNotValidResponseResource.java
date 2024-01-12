@@ -16,9 +16,8 @@
 
 package org.hawaiiframework.web.resource;
 
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
 import java.util.List;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
  * Response resource for validation errors.
@@ -28,35 +27,33 @@ import java.util.List;
  */
 public class MethodArgumentNotValidResponseResource extends ErrorResponseResource {
 
-    /**
-     * The validation errors.
-     */
-    private List<ValidationErrorResource> errors;
+  /** The validation errors. */
+  private List<ValidationErrorResource> errors;
 
-    public MethodArgumentNotValidResponseResource() {
-        this(null);
-    }
+  public MethodArgumentNotValidResponseResource() {
+    this(null);
+  }
 
-    public MethodArgumentNotValidResponseResource(final MethodArgumentNotValidException validationException) {
-        super(validationException);
-    }
+  public MethodArgumentNotValidResponseResource(
+      MethodArgumentNotValidException validationException) {
+    super(validationException);
+  }
 
-    /**
-     * Returns the validation errors.
-     *
-     * @return the validation errors
-     */
-    public List<ValidationErrorResource> getErrors() {
-        return errors;
-    }
+  /**
+   * Returns the validation errors.
+   *
+   * @return the validation errors
+   */
+  public List<ValidationErrorResource> getErrors() {
+    return errors;
+  }
 
-    /**
-     * Sets the validation errors.
-     *
-     * @param errors the validation errors
-     */
-    public void setErrors(final List<ValidationErrorResource> errors) {
-        this.errors = errors;
-    }
-
+  /**
+   * Sets the validation errors.
+   *
+   * @param errors the validation errors
+   */
+  public void setErrors(List<ValidationErrorResource> errors) {
+    this.errors = errors;
+  }
 }

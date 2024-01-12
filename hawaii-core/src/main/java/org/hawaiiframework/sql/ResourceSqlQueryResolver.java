@@ -16,6 +16,11 @@
 
 package org.hawaiiframework.sql;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Scanner;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +29,9 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Scanner;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 /**
- * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic {@link ResourceLoader} mechanism.
+ * Simple implementation of {@link SqlQueryResolver} resolving sql queries using Spring's generic
+ * {@link ResourceLoader} mechanism.
  *
  * @author Marcel Overdijk
  * @author Paul Klos
@@ -40,135 +40,123 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @SuppressWarnings("PMD.DataClass")
 public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver implements Ordered {
 
-    /**
-     * Default charset for retrieving sql query resources ({@code UTF_8}).
-     */
-    public static final Charset DEFAULT_CHARSET = UTF_8;
+  /** Default charset for retrieving sql query resources ({@code UTF_8}). */
+  public static final Charset DEFAULT_CHARSET = UTF_8;
 
-    private static Logger logger = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
+  private static Logger logger = LoggerFactory.getLogger(ResourceSqlQueryResolver.class);
 
-    private final ResourceLoader resourceLoader;
+  private final ResourceLoader resourceLoader;
 
-    private Charset charset = DEFAULT_CHARSET;
+  private Charset charset = DEFAULT_CHARSET;
 
-    private String prefix = "";
-    private String suffix = "";
+  private String prefix = "";
+  private String suffix = "";
 
-    private int order = Ordered.LOWEST_PRECEDENCE;
+  private int order = Ordered.LOWEST_PRECEDENCE;
 
-    public ResourceSqlQueryResolver() {
-        this(new DefaultResourceLoader());
-    }
+  public ResourceSqlQueryResolver() {
+    this(new DefaultResourceLoader());
+  }
 
-    public ResourceSqlQueryResolver(final ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+  public ResourceSqlQueryResolver(ResourceLoader resourceLoader) {
+    this.resourceLoader = resourceLoader;
+  }
 
-    /**
-     * Return the {@code Charset} for retrieving sql query resources.
-     */
-    public Charset getCharset() {
-        return charset;
-    }
+  /** Return the {@code Charset} for retrieving sql query resources. */
+  public Charset getCharset() {
+    return charset;
+  }
 
-    /**
-     * Set the {@code Charset} for retrieving sql query resources.
-     */
-    public void setCharset(final Charset charset) {
-        this.charset = charset;
-    }
+  /** Set the {@code Charset} for retrieving sql query resources. */
+  public void setCharset(Charset charset) {
+    this.charset = charset;
+  }
 
-    /**
-     * Return the prefix that gets prepended to sql query names when building the resource location.
-     */
-    protected String getPrefix() {
-        return this.prefix;
-    }
+  /**
+   * Return the prefix that gets prepended to sql query names when building the resource location.
+   */
+  protected String getPrefix() {
+    return this.prefix;
+  }
 
-    /**
-     * Set the prefix that gets prepended to sql query names when building the resource location.
-     */
-    public void setPrefix(final String prefix) {
-        this.prefix = prefix != null ? prefix : "";
-    }
+  /** Set the prefix that gets prepended to sql query names when building the resource location. */
+  public void setPrefix(String prefix) {
+    this.prefix = prefix != null ? prefix : "";
+  }
 
-    /**
-     * Return the suffix that gets appended to sql query names when building the resource location.
-     */
-    protected String getSuffix() {
-        return this.suffix;
-    }
+  /**
+   * Return the suffix that gets appended to sql query names when building the resource location.
+   */
+  protected String getSuffix() {
+    return this.suffix;
+  }
 
-    /**
-     * Set the suffix that gets appended to sql query names when building the resource location.
-     */
-    public void setSuffix(final String suffix) {
-        this.suffix = suffix != null ? suffix : "";
-    }
+  /** Set the suffix that gets appended to sql query names when building the resource location. */
+  public void setSuffix(String suffix) {
+    this.suffix = suffix != null ? suffix : "";
+  }
 
-    /**
-     * Return the order in which this {@link SqlQueryResolver} is evaluated.
-     */
-    @Override
-    public int getOrder() {
-        return this.order;
-    }
+  /** Return the order in which this {@link SqlQueryResolver} is evaluated. */
+  @Override
+  public int getOrder() {
+    return this.order;
+  }
 
-    /**
-     * Set the order in which this {@link SqlQueryResolver} is evaluated.
-     */
-    public void setOrder(final int order) {
-        this.order = order;
-    }
+  /** Set the order in which this {@link SqlQueryResolver} is evaluated. */
+  public void setOrder(int order) {
+    this.order = order;
+  }
 
-    @Override
-    protected void doRefreshQueryHolder(final String sqlQueryName, final QueryHolder queryHolder) {
-        final String location = getPrefix() + sqlQueryName + getSuffix();
-        final Resource resource = this.resourceLoader.getResource(location);
-        if (resource.exists() && resource.getFilename() != null) {
-            // This is an actual file
-            final long checkpoint = queryHolder.getQueryTimestamp();
-            final long lastModified;
-            try {
-                lastModified = resource.lastModified();
-                if (lastModified > checkpoint) {
-                    loadSqlQuery(sqlQueryName, queryHolder);
-                } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
-                    }
-                }
-            } catch (IOException e) {
-                // Can't really happen as we already checked that the resource has a filename
-                throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
-            }
-        }
-    }
-
-    @Override
-    protected String loadSqlQuery(final String sqlQueryName, final QueryHolder queryHolder) throws HawaiiException {
-        final String location = getPrefix() + sqlQueryName + getSuffix();
-        final Resource resource = this.resourceLoader.getResource(location);
-        String query = null;
-        if (resource.exists()) {
-            try {
-                query = new Scanner(resource.getInputStream(), this.charset.name()).useDelimiter("\\Z").next();
-                if (queryHolder != null && resource.getFilename() != null) {
-                    if (logger.isTraceEnabled()) {
-                        logger.trace("Updating query {}", resource.getFilename());
-                    }
-                    queryHolder.setSqlQuery(query);
-                    queryHolder.setRefreshTimestamp(System.currentTimeMillis());
-                    queryHolder.setQueryTimestamp(resource.lastModified());
-                }
-            } catch (IOException e) {
-                throw new HawaiiException("Error reading resource: " + location, e);
-            }
+  @Override
+  protected void doRefreshQueryHolder(String sqlQueryName, QueryHolder queryHolder) {
+    String location = getPrefix() + sqlQueryName + getSuffix();
+    Resource resource = this.resourceLoader.getResource(location);
+    if (resource.exists() && resource.getFilename() != null) {
+      // This is an actual file
+      long checkpoint = queryHolder.getQueryTimestamp();
+      long lastModified;
+      try {
+        lastModified = resource.lastModified();
+        if (lastModified > checkpoint) {
+          loadSqlQuery(sqlQueryName, queryHolder);
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Resource {} does not exist", resource.getDescription());
-            }
+          if (logger.isDebugEnabled()) {
+            logger.debug("Query file {} unchanged - not reloading", resource.getFilename());
+          }
         }
-        return query;
+      } catch (IOException e) {
+        // Can't really happen as we already checked that the resource has a filename
+        throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), e);
+      }
     }
+  }
+
+  @Override
+  protected String loadSqlQuery(String sqlQueryName, QueryHolder queryHolder)
+      throws HawaiiException {
+    String location = getPrefix() + sqlQueryName + getSuffix();
+    Resource resource = this.resourceLoader.getResource(location);
+    String query = null;
+    if (resource.exists()) {
+      try {
+        query =
+            new Scanner(resource.getInputStream(), this.charset.name()).useDelimiter("\\Z").next();
+        if (queryHolder != null && resource.getFilename() != null) {
+          if (logger.isTraceEnabled()) {
+            logger.trace("Updating query {}", resource.getFilename());
+          }
+          queryHolder.setSqlQuery(query);
+          queryHolder.setRefreshTimestamp(System.currentTimeMillis());
+          queryHolder.setQueryTimestamp(resource.lastModified());
+        }
+      } catch (IOException e) {
+        throw new HawaiiException("Error reading resource: " + location, e);
+      }
+    } else {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Resource {} does not exist", resource.getDescription());
+      }
+    }
+    return query;
+  }
 }

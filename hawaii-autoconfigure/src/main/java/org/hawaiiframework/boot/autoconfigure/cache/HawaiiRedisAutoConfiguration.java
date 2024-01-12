@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-
 /**
  * Cache auto configuration.
  *
@@ -31,6 +30,4 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 @Configuration
 @ConditionalOnClass({RedisConfiguration.class, RedisConnectionFactory.class})
 @Import(RedisConfiguration.class)
-public class HawaiiRedisAutoConfiguration {
-
-}
+public class HawaiiRedisAutoConfiguration {}

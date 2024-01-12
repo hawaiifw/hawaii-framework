@@ -21,41 +21,34 @@ import org.springframework.core.Ordered;
 
 /**
  * An interface that allows listeners to be informed about the task's lifecycle.
- * <p>
- * The setSharedTaskContext method is called before the task is being run.
- * Then the startExecution method is called (prior to starting the task).
- * Optionally the timeout method is called.
- * Then the finish is called last.
+ *
+ * <p>The setSharedTaskContext method is called before the task is being run. Then the
+ * startExecution method is called (prior to starting the task). Optionally the timeout method is
+ * called. Then the finish is called last.
  */
 public interface TaskListener extends Ordered {
 
-    /**
-     * Set the shared task context in this task context. Invoked before the set.
-     *
-     * @param sharedTaskContext the shared task context.
-     */
-    default void setSharedTaskContext(final SharedTaskContext sharedTaskContext) {
-        // Default empty implementation.
-    }
+  /**
+   * Set the shared task context in this task context. Invoked before the set.
+   *
+   * @param sharedTaskContext the shared task context.
+   */
+  default void setSharedTaskContext(SharedTaskContext sharedTaskContext) {
+    // Default empty implementation.
+  }
 
-    /**
-     * Called just before the task is started.
-     */
-    default void startExecution() {
-        // Default empty implementation.
-    }
+  /** Called just before the task is started. */
+  default void startExecution() {
+    // Default empty implementation.
+  }
 
-    /**
-     * Called just after a task is finished.
-     */
-    default void finish() {
-        // Default empty implementation.
-    }
+  /** Called just after a task is finished. */
+  default void finish() {
+    // Default empty implementation.
+  }
 
-    /**
-     * Called just after a task has timed-out.
-     */
-    default void timeout() {
-        // Default empty implementation.
-    }
+  /** Called just after a task has timed-out. */
+  default void timeout() {
+    // Default empty implementation.
+  }
 }

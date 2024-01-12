@@ -32,56 +32,52 @@ import java.util.Objects;
 @SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private T5 element5;
+  private T5 element5;
 
-    /**
-     * Constructs a new {@code Tuple} with the supplied elements.
-     */
-    public Tuple5(final T1 element1, final T2 element2, final T3 element3, final T4 element4, final T5 element5) {
-        super(element1, element2, element3, element4);
-        this.element5 = element5;
+  /** Constructs a new {@code Tuple} with the supplied elements. */
+  public Tuple5(T1 element1, T2 element2, T3 element3, T4 element4, T5 element5) {
+    super(element1, element2, element3, element4);
+    this.element5 = element5;
+  }
+
+  /**
+   * Returns the 5th element of this tuple.
+   *
+   * @return the 5th element of this tuple
+   */
+  public T5 getElement5() {
+    return element5;
+  }
+
+  /** Sets the 5th element of this tuple. */
+  public void setElement5(T5 element5) {
+    this.element5 = element5;
+  }
+
+  @Override
+  public int size() {
+    return 5;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Returns the 5th element of this tuple.
-     *
-     * @return the 5th element of this tuple
-     */
-    public T5 getElement5() {
-        return element5;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
-
-    /**
-     * Sets the 5th element of this tuple.
-     */
-    public void setElement5(final T5 element5) {
-        this.element5 = element5;
+    if (!super.equals(o)) {
+      return false;
     }
+    Tuple5<?, ?, ?, ?, ?> other = (Tuple5) o;
+    return Objects.equals(this.element5, other.element5);
+  }
 
-    @Override
-    public int size() {
-        return 5;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final Tuple5<?, ?, ?, ?, ?> other = (Tuple5) o;
-        return Objects.equals(this.element5, other.element5);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode() + Objects.hash(element5);
-    }
+  @Override
+  public int hashCode() {
+    return super.hashCode() + Objects.hash(element5);
+  }
 }

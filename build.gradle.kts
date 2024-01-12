@@ -1,4 +1,5 @@
 import net.ltgt.gradle.errorprone.errorprone
+import com.diffplug.gradle.spotless.SpotlessTask
 import java.util.*
 
 
@@ -12,9 +13,9 @@ plugins {
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
-//    id("com.github.spotbugs") version ("6.0.6")
     id("net.ltgt.errorprone") version ("3.1.0")
     id("pmd")
+    id("com.diffplug.spotless") version ("6.12.0")
 
     // Dependency management
     id("io.spring.dependency-management") version ("1.1.4")
@@ -22,6 +23,7 @@ plugins {
 }
 
 apply(plugin = "io.github.gradle-nexus.publish-plugin")
+apply(plugin = "com.diffplug.spotless")
 
 nexusPublishing {
     repositories {
@@ -56,6 +58,11 @@ subprojects {
         extra.set("graphqlJavaVersion", "20.2")
     }
 
+    val checkstyleVersion = "10.5.0"
+    val errorProneVersion = "2.24.1"
+    val errorProneSupportVersion = "0.14.0"
+    val pmdVersion = "7.0.0-rc4"
+
     apply(plugin = "java-library")
     apply(plugin = "signing")
     apply(plugin = "maven-publish")
@@ -63,6 +70,7 @@ subprojects {
     apply(plugin = "checkstyle")
     apply(plugin = "net.ltgt.errorprone")
     apply(plugin = "pmd")
+    apply(plugin = "com.diffplug.spotless")
 
     apply(plugin = "io.spring.dependency-management")
 
@@ -83,7 +91,37 @@ subprojects {
         // javac -X
         // javac --help-lint
         //-missing-explicit-ctor"
-        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Werror", "-parameters" ))
+        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-parameters" ))
+
+
+        options.errorprone {
+            disableWarningsInGeneratedCode.set(true)
+            allDisabledChecksAsWarnings.set(true)
+            allErrorsAsWarnings.set(true)
+
+            // For now disable, discuss
+            disable("Var", "CollectorMutability")
+            disable("Varifier")
+            // The pattern constant first is always null proof, discuss
+            disable("YodaCondition")
+
+            // String.format allows more descriptive texts than String.join.
+            disable("StringJoin")
+            // Disabled, clashes with settings in IntelliJ
+            disable("UngroupedOverloads")
+            // Disabled, since IntelliJ does this for us:
+            disable("BooleanParameter")
+            // Disabled, since we do not require to be compliant with:
+            disable("Java7ApiChecker", "Java8ApiChecker", "AndroidJdkLibsChecker")
+
+            // The auto patch is disabled for now, it _seems_ that having this patching in place makes error-prone
+            // only check the checks that can be patched. Can be enabled to fix bugs if there are too many.
+            //
+            errorproneArgs.addAll(
+                "-XepPatchChecks:AutowiredConstructor,CanonicalAnnotationSyntax,DeadException,DefaultCharset,LexicographicalAnnotationAttributeListing,LexicographicalAnnotationListing,MethodCanBeStatic,MissingOverride,MutableConstantField,RemoveUnusedImports,StaticImport,TimeZoneUsage,UnnecessaryFinal,UnnecessarilyFullyQualified",
+                "-XepPatchLocation:IN_PLACE"
+            )
+        }
     }
 
     repositories {
@@ -103,17 +141,19 @@ subprojects {
 
     dependencies {
         compileOnly("org.slf4j:slf4j-api")
+        compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 
         testImplementation("junit:junit")
         testImplementation("org.mockito:mockito-core")
         testImplementation("org.springframework.boot:spring-boot-starter-logging")
         testImplementation("org.springframework:spring-test")
 
-        errorprone("com.google.errorprone:error_prone_core:2.24.1")
+        errorprone("com.google.errorprone:error_prone_core:${errorProneVersion}")
         // Error Prone Support's additional bug checkers.
-        // errorprone("com.uber.nullaway:nullaway:$nullawayVersion")
-        errorprone("tech.picnic.error-prone-support:error-prone-contrib:0.14.0")
+        errorprone("tech.picnic.error-prone-support:error-prone-contrib:${errorProneSupportVersion}")
 
+        pmd("net.sourceforge.pmd:pmd-ant:${pmdVersion}")
+        pmd("net.sourceforge.pmd:pmd-java:${pmdVersion}")
 
         // optional "org.springframework.boot:spring-boot-configuration-processor"
     }
@@ -156,17 +196,23 @@ subprojects {
         logging.captureStandardError(LogLevel.INFO)
         logging.captureStandardOutput(LogLevel.INFO)
     }
+    spotless {
+        java {
+            googleJavaFormat()
+            // custom("replace Javax", { it.replace("import javax.", "import jakarta.") })
+        }
+    }
 
     /**
      * Configuration of PMD.
      */
     pmd {
-        // as a development team we want pmd failures to break the build and keep the code clean.
-        isIgnoreFailures = false
-        // directly show the failures in the output
+        toolVersion = pmdVersion
         isConsoleOutput = true
-        // the configuration of the custom rules
-        ruleSetConfig = resources.text.fromFile("${rootDir}/src/quality/config/pmd/pmd.xml")
+        isIgnoreFailures = false
+        //    rulesMinimumPriority.set(5)
+        threads.set(4)
+        ruleSetConfig = resources.text.fromFile(projectDir.path + "/config/pmd/pmd.xml")
         // clear the default list of rules, otherwise this will override our custom configuration.
         ruleSets = listOf<String>()
     }
@@ -175,10 +221,26 @@ subprojects {
     /**
      * Configuration of check style
      */
+    /**
+     * Checkstyle
+     */
     checkstyle {
+        toolVersion = checkstyleVersion
+        // configProperties = mapOf(
+        //         "checkstyle.cache.file" to file("checkstyle.cache")
+        // )
         configFile = file("${rootDir}/src/quality/config/checkstyle/checkstyle.xml")
-        isIgnoreFailures = false
     }
+
+    tasks.withType<Checkstyle>().configureEach {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+            html.stylesheet = resources.text.fromFile("${rootDir}/src/quality/config/checkstyle/checkstyle-no-frames-severity-sorted.xsl")
+        }
+        isShowViolations = true
+    }
+
     project.tasks["checkstyleTest"].enabled = false
 
     tasks.withType<JavaCompile>().configureEach {

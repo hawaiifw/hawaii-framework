@@ -5,48 +5,48 @@ import org.springframework.util.PathMatcher;
 
 public class PathDefinition {
 
-    private String pattern;
+  private String pattern;
 
-    private String method;
+  private String method;
 
-    private final PathMatcher matcher;
+  private final PathMatcher matcher;
 
-    public PathDefinition() {
-        this.matcher = new AntPathMatcher();
+  public PathDefinition() {
+    this.matcher = new AntPathMatcher();
+  }
+
+  public PathDefinition(String pattern) {
+    this(null, pattern);
+  }
+
+  public PathDefinition(String method, String pattern) {
+    this();
+    this.pattern = pattern;
+    this.method = method;
+  }
+
+  public boolean matches(String method, String path) {
+    boolean matches = true;
+    if (this.method != null) {
+      matches = this.method.equals(method);
     }
 
-    public PathDefinition(final String pattern) {
-        this(null, pattern);
-    }
+    return matches && matcher.match(this.pattern, path);
+  }
 
-    public PathDefinition(final String method, final String pattern) {
-        this();
-        this.pattern = pattern;
-        this.method = method;
-    }
+  public String getPattern() {
+    return pattern;
+  }
 
-    public boolean matches(final String method, final String path) {
-        boolean matches = true;
-        if (this.method != null) {
-            matches = this.method.equals(method);
-        }
+  public void setPattern(String pattern) {
+    this.pattern = pattern;
+  }
 
-        return matches && matcher.match(this.pattern, path);
-    }
+  public String getMethod() {
+    return method;
+  }
 
-    public String getPattern() {
-        return pattern;
-    }
-
-    public void setPattern(final String pattern) {
-        this.pattern = pattern;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(final String method) {
-        this.method = method;
-    }
+  public void setMethod(String method) {
+    this.method = method;
+  }
 }

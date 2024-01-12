@@ -15,144 +15,131 @@
  */
 package org.hawaiiframework.logging.util;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpResponse;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
 
 /**
  * Utility for logging requests / responses.
- * <p>
- * The utility can be used to generate HTTP request / response header log strings. Both for incoming service calls as outgoing calls
- * (i.e. calls to backend systems).
+ *
+ * <p>The utility can be used to generate HTTP request / response header log strings. Both for
+ * incoming service calls as outgoing calls (i.e. calls to backend systems).
  *
  * @author Rutger Lubbers
  * @since 3.0.0
  */
 public class HttpRequestResponseHeadersLogUtil {
 
-    /**
-     * The configured newline to look for.
-     */
-    private static final String NEW_LINE = System.getProperty("line.separator");
+  /** The configured newline to look for. */
+  private static final String NEW_LINE = System.getProperty("line.separator");
 
-    /**
-     * Masks passwords in json strings.
-     */
-    private final PasswordMaskerUtil passwordMasker;
+  /** Masks passwords in json strings. */
+  private final PasswordMaskerUtil passwordMasker;
 
-    /**
-     * The constructor for the log utility.
-     *
-     * @param passwordMasker The password masker utility.
-     */
-    public HttpRequestResponseHeadersLogUtil(final PasswordMaskerUtil passwordMasker) {
-        this.passwordMasker = passwordMasker;
+  /**
+   * The constructor for the log utility.
+   *
+   * @param passwordMasker The password masker utility.
+   */
+  public HttpRequestResponseHeadersLogUtil(PasswordMaskerUtil passwordMasker) {
+    this.passwordMasker = passwordMasker;
+  }
+
+  /**
+   * Get request headers. With password masking.
+   *
+   * @param servletRequest The servlet request.
+   * @return The headers as string.
+   */
+  public String getTxRequestHeaders(HttpServletRequest servletRequest) {
+    HttpHeaders headers = creatHttpHeaders(servletRequest);
+    return createHeadersAsString(headers);
+  }
+
+  /**
+   * Get response headers. With password masking.
+   *
+   * @param servletResponse The servlet response.
+   * @return The headers as string.
+   */
+  public String getTxResponseHeaders(HttpServletResponse servletResponse) {
+    HttpHeaders headers = creatHttpHeaders(servletResponse);
+    return createHeadersAsString(headers);
+  }
+
+  /** Create {@link HttpHeaders} for the {@code request}. */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  private static HttpHeaders creatHttpHeaders(HttpServletRequest request) {
+    HttpHeaders headers = new HttpHeaders();
+
+    Enumeration<String> headerNames = request.getHeaderNames();
+    while (headerNames.hasMoreElements()) {
+      String headerName = headerNames.nextElement();
+      Enumeration<String> values = request.getHeaders(headerName);
+      while (values.hasMoreElements()) {
+        headers.add(headerName, values.nextElement());
+      }
     }
 
-    /**
-     * Get request headers.
-     * With password masking.
-     *
-     * @param servletRequest The servlet request.
-     * @return The headers as string.
-     */
-    public String getTxRequestHeaders(final HttpServletRequest servletRequest) {
-        final HttpHeaders headers = creatHttpHeaders(servletRequest);
-        return createHeadersAsString(headers);
+    return headers;
+  }
+
+  /** Create {@link HttpHeaders} for the {@code response}. */
+  private static HttpHeaders creatHttpHeaders(HttpServletResponse response) {
+    HttpHeaders headers = new HttpHeaders();
+    for (String headerName : response.getHeaderNames()) {
+      for (String headerValue : response.getHeaders(headerName)) {
+        headers.add(headerName, headerValue);
+      }
     }
+    return headers;
+  }
+  /**
+   * Get call request headers. With password masking.
+   *
+   * @param request The http request.
+   * @return The headers as string.
+   */
+  public String getCallRequestHeaders(HttpRequest request) {
+    HttpHeaders headers = request.getHeaders();
+    return createHeadersAsString(headers);
+  }
 
-    /**
-     * Get response headers.
-     * With password masking.
-     *
-     * @param servletResponse The servlet response.
-     * @return The headers as string.
-     */
-    public String getTxResponseHeaders(final HttpServletResponse servletResponse) {
-        final HttpHeaders headers = creatHttpHeaders(servletResponse);
-        return createHeadersAsString(headers);
+  /**
+   * Get call response headers. With password masking.
+   *
+   * @param response The http response.
+   * @return The headers as string.
+   */
+  public String getCallResponseHeaders(ClientHttpResponse response) {
+    HttpHeaders headers = response.getHeaders();
+    return createHeadersAsString(headers);
+  }
+
+  private String createHeadersAsString(HttpHeaders headers) {
+    StringBuilder builder = new StringBuilder();
+    appendHeaders(builder, headers);
+    String value = builder.toString();
+
+    // remove clear text password values and indent the multi line body.
+    return passwordMasker.maskPasswordsIn(value);
+  }
+
+  private static void appendHeaders(StringBuilder builder, HttpHeaders headers) {
+    List<String> headerNames = new ArrayList<>(headers.keySet());
+    Collections.sort(headerNames);
+
+    for (String headerName : headerNames) {
+      builder.append(headerName);
+      builder.append(": ");
+      builder.append(String.join(", ", headers.get(headerName)));
+      builder.append(NEW_LINE);
     }
-
-    /**
-     * Create {@link HttpHeaders} for the {@code request}.
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    private HttpHeaders creatHttpHeaders(final HttpServletRequest request) {
-        final HttpHeaders headers = new HttpHeaders();
-
-        final Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            final String headerName = headerNames.nextElement();
-            final Enumeration<String> values = request.getHeaders(headerName);
-            while (values.hasMoreElements()) {
-                headers.add(headerName, values.nextElement());
-            }
-        }
-
-        return headers;
-    }
-
-    /**
-     * Create {@link HttpHeaders} for the {@code response}.
-     */
-    private HttpHeaders creatHttpHeaders(final HttpServletResponse response) {
-        final HttpHeaders headers = new HttpHeaders();
-        for (final String headerName : response.getHeaderNames()) {
-            for (final String headerValue : response.getHeaders(headerName)) {
-                headers.add(headerName, headerValue);
-            }
-        }
-        return headers;
-    }
-    /**
-     * Get call request headers.
-     * With password masking.
-     *
-     * @param request The http request.
-     * @return The headers as string.
-     */
-    public String getCallRequestHeaders(final HttpRequest request) {
-        final HttpHeaders headers = request.getHeaders();
-        return createHeadersAsString(headers);
-    }
-
-    /**
-     * Get call response headers.
-     * With password masking.
-     *
-     * @param response The http response.
-     * @return The headers as string.
-     */
-    public String getCallResponseHeaders(final ClientHttpResponse response) {
-        final HttpHeaders headers = response.getHeaders();
-        return createHeadersAsString(headers);
-    }
-
-    private String createHeadersAsString(final HttpHeaders headers) {
-        final StringBuilder builder = new StringBuilder();
-        appendHeaders(builder, headers);
-        final String value = builder.toString();
-
-        // remove clear text password values and indent the multi line body.
-        return passwordMasker.maskPasswordsIn(value);
-    }
-
-    private void appendHeaders(final StringBuilder builder, final HttpHeaders headers) {
-        final List<String> headerNames = new ArrayList<>(headers.keySet());
-        Collections.sort(headerNames);
-
-        for (final String headerName : headerNames) {
-            builder.append(headerName);
-            builder.append(": ");
-            builder.append(String.join(", ", headers.get(headerName)));
-            builder.append(NEW_LINE);
-        }
-    }
+  }
 }

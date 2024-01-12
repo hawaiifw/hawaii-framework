@@ -5,33 +5,33 @@ import java.time.ZoneId;
 
 class HawaiiZonedClock {
 
-    private HawaiiTime hawaiiTime;
+  private HawaiiTime hawaiiTime;
 
-    private Clock clock;
+  private Clock clock;
 
-    private ZoneId zone;
+  private ZoneId zone;
 
-    HawaiiTime getHawaiiTime() {
-        return hawaiiTime;
-    }
+  HawaiiTime getHawaiiTime() {
+    return hawaiiTime;
+  }
 
-    void setHawaiiTime(final HawaiiTime hawaiiTime) {
-        this.hawaiiTime = hawaiiTime;
-    }
+  void setHawaiiTime(HawaiiTime hawaiiTime) {
+    this.hawaiiTime = hawaiiTime;
+  }
 
-    Clock getClock() {
-        return clock;
-    }
+  Clock getClock() {
+    return clock;
+  }
 
-    void setClock(final Clock clock) {
-        this.clock = clock;
-    }
+  void setClock(Clock clock) {
+    this.clock = clock;
+  }
 
-    ZoneId getZone() {
-        return zone;
-    }
+  ZoneId getZone() {
+    return zone;
+  }
 
-    void setZone(final ZoneId zone) {
-        this.zone = zone;
-    }
+  void setZone(ZoneId zone) {
+    this.zone = zone;
+  }
 }

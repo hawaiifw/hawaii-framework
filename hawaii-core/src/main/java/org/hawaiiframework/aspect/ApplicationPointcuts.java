@@ -27,31 +27,25 @@ import org.aspectj.lang.annotation.Pointcut;
 @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
 public class ApplicationPointcuts {
 
-    @Pointcut("execution(public * *(..))")
-    public void anyPublicMethod() {
-    }
+  @Pointcut("execution(public * *(..))")
+  public void anyPublicMethod() {}
 
-    @Pointcut("@target(org.springframework.stereotype.Component)")
-    public void isComponent() {
-    }
+  @Pointcut("@target(org.springframework.stereotype.Component)")
+  public void isComponent() {}
 
-    @Pointcut("@target(org.springframework.stereotype.Controller) || @target(org.springframework.web.bind.annotation.RestController)")
-    public void isController() {
-    }
+  @Pointcut(
+      "@target(org.springframework.stereotype.Controller) || @target(org.springframework.web.bind.annotation.RestController)")
+  public void isController() {}
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.ExceptionHandler)")
-    public void isExceptionHandler() {
-    }
+  @Pointcut("@annotation(org.springframework.web.bind.annotation.ExceptionHandler)")
+  public void isExceptionHandler() {}
 
-    @Pointcut("@target(org.springframework.stereotype.Repository)")
-    public void isRepository() {
-    }
+  @Pointcut("@target(org.springframework.stereotype.Repository)")
+  public void isRepository() {}
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    public void isRequestMapping() {
-    }
+  @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+  public void isRequestMapping() {}
 
-    @Pointcut("@target(org.springframework.stereotype.Service)")
-    public void isService() {
-    }
+  @Pointcut("@target(org.springframework.stereotype.Service)")
+  public void isService() {}
 }

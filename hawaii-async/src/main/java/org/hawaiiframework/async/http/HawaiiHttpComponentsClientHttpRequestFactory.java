@@ -16,6 +16,8 @@
 
 package org.hawaiiframework.async.http;
 
+import static java.util.Objects.requireNonNull;
+
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
@@ -23,36 +25,35 @@ import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.lang.NonNull;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * An HTTP request factory that sets the {@link TaskAbortStrategy} for the request.
- * <p>
- * It extends the (default) {@link HttpComponentsClientHttpRequestFactory} and uses the postProcessHttpRequest method to register
- * the {@link TaskAbortStrategy}.
+ *
+ * <p>It extends the (default) {@link HttpComponentsClientHttpRequestFactory} and uses the
+ * postProcessHttpRequest method to register the {@link TaskAbortStrategy}.
  *
  * @author Rutger Lubbers
  * @author Paul Klos
  * @since 2.0.0
  */
-public class HawaiiHttpComponentsClientHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
+public class HawaiiHttpComponentsClientHttpRequestFactory
+    extends HttpComponentsClientHttpRequestFactory {
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Register the abort strategy for this request.
-     *
-     * @param request The request to register.
-     */
-    @Override
-    protected void postProcessHttpRequest(@NonNull final ClassicHttpRequest request) {
-        requireNonNull(request);
-        if (request instanceof HttpUriRequest httpUriRequest) {
-            super.postProcessHttpRequest(request);
-            SharedTaskContextHolder.setTaskAbortStrategy(new HttpComponentHttpRequestTaskAbortStrategy(httpUriRequest));
-        } else {
-            throw new IllegalArgumentException("Request not supported.");
-        }
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Register the abort strategy for this request.
+   *
+   * @param request The request to register.
+   */
+  @Override
+  protected void postProcessHttpRequest(@NonNull ClassicHttpRequest request) {
+    requireNonNull(request);
+    if (request instanceof HttpUriRequest httpUriRequest) {
+      super.postProcessHttpRequest(request);
+      SharedTaskContextHolder.setTaskAbortStrategy(
+          new HttpComponentHttpRequestTaskAbortStrategy(httpUriRequest));
+    } else {
+      throw new IllegalArgumentException("Request not supported.");
     }
-
+  }
 }

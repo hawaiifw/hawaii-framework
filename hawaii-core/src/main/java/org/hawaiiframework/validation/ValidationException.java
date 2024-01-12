@@ -16,12 +16,11 @@
 
 package org.hawaiiframework.validation;
 
-import org.hawaiiframework.exception.HawaiiException;
+import static java.util.Objects.requireNonNull;
 
 import java.io.Serial;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
+import org.hawaiiframework.exception.HawaiiException;
 
 /**
  * @author Marcel Overdijk
@@ -30,59 +29,54 @@ import static java.util.Objects.requireNonNull;
  */
 public class ValidationException extends HawaiiException {
 
-    /**
-     * The serial version UID.
-     */
-    @Serial
-    private static final long serialVersionUID = 7243575134936095351L;
+  /** The serial version UID. */
+  @Serial private static final long serialVersionUID = 7243575134936095351L;
 
-    private final ValidationResult validationResult;
+  private final ValidationResult validationResult;
 
-    /**
-     * Constructs a new {@link ValidationException} with an empty {@link ValidationResult}.
-     */
-    public ValidationException() {
-        this.validationResult = new ValidationResult();
-    }
+  /** Constructs a new {@link ValidationException} with an empty {@link ValidationResult}. */
+  public ValidationException() {
+    this.validationResult = new ValidationResult();
+  }
 
-    /**
-     * Constructs a new {@link ValidationException} with the supplied {@link ValidationResult}.
-     *
-     * @param validationResult the validation result, not null
-     */
-    public ValidationException(final ValidationResult validationResult) {
-        requireNonNull(validationResult, "'validationResult' must not be null");
-        this.validationResult = validationResult;
-    }
+  /**
+   * Constructs a new {@link ValidationException} with the supplied {@link ValidationResult}.
+   *
+   * @param validationResult the validation result, not null
+   */
+  public ValidationException(ValidationResult validationResult) {
+    requireNonNull(validationResult, "'validationResult' must not be null");
+    this.validationResult = validationResult;
+  }
 
-    /**
-     * Constructs a new {@link ValidationException} with the supplied {@link ValidationError}.
-     *
-     * @param validationError the validation error, not null
-     */
-    public ValidationException(final ValidationError validationError) {
-        this();
-        requireNonNull(validationError, "'validationError' must not be null");
-        validationResult.addError(validationError);
-    }
+  /**
+   * Constructs a new {@link ValidationException} with the supplied {@link ValidationError}.
+   *
+   * @param validationError the validation error, not null
+   */
+  public ValidationException(ValidationError validationError) {
+    this();
+    requireNonNull(validationError, "'validationError' must not be null");
+    validationResult.addError(validationError);
+  }
 
-    /**
-     * Constructs a new {@link ValidationException} with the supplied {@link ValidationError}s.
-     *
-     * @param validationErrors the validation errors, not null
-     */
-    public ValidationException(final List<ValidationError> validationErrors) {
-        this();
-        requireNonNull(validationErrors, "'validationErrors' must not be null");
-        validationResult.addAllErrors(validationErrors);
-    }
+  /**
+   * Constructs a new {@link ValidationException} with the supplied {@link ValidationError}s.
+   *
+   * @param validationErrors the validation errors, not null
+   */
+  public ValidationException(List<ValidationError> validationErrors) {
+    this();
+    requireNonNull(validationErrors, "'validationErrors' must not be null");
+    validationResult.addAllErrors(validationErrors);
+  }
 
-    /**
-     * Returns the validation result containing the validation errors.
-     *
-     * @return the validation result containing the validation errors
-     */
-    public ValidationResult getValidationResult() {
-        return validationResult;
-    }
+  /**
+   * Returns the validation result containing the validation errors.
+   *
+   * @return the validation result containing the validation errors
+   */
+  public ValidationResult getValidationResult() {
+    return validationResult;
+  }
 }

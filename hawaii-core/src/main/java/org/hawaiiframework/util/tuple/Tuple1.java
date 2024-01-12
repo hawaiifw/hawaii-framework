@@ -28,50 +28,46 @@ import java.util.Objects;
 @SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple1<T1> implements Tuple {
 
-    private T1 element1;
+  private T1 element1;
 
-    /**
-     * Constructs a new {@code Tuple} with the supplied elements.
-     */
-    public Tuple1(final T1 element1) {
-        this.element1 = element1;
-    }
+  /** Constructs a new {@code Tuple} with the supplied elements. */
+  public Tuple1(T1 element1) {
+    this.element1 = element1;
+  }
 
-    /**
-     * Returns the 1st element of this tuple.
-     *
-     * @return the 1st element of this tuple
-     */
-    public T1 getElement1() {
-        return element1;
-    }
+  /**
+   * Returns the 1st element of this tuple.
+   *
+   * @return the 1st element of this tuple
+   */
+  public T1 getElement1() {
+    return element1;
+  }
 
-    /**
-     * Sets the 1st element of this tuple.
-     */
-    public void setElement1(final T1 element1) {
-        this.element1 = element1;
-    }
+  /** Sets the 1st element of this tuple. */
+  public void setElement1(T1 element1) {
+    this.element1 = element1;
+  }
 
-    @Override
-    public int size() {
-        return 1;
-    }
+  @Override
+  public int size() {
+    return 1;
+  }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Tuple1<?> other = (Tuple1) o;
-        return Objects.equals(this.element1, other.element1);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Tuple1<?> other = (Tuple1) o;
+    return Objects.equals(this.element1, other.element1);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(element1);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(element1);
+  }
 }

@@ -30,56 +30,52 @@ import java.util.Objects;
 @SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private T3 element3;
+  private T3 element3;
 
-    /**
-     * Constructs a new {@code Tuple} with the supplied elements.
-     */
-    public Tuple3(final T1 element1, final T2 element2, final T3 element3) {
-        super(element1, element2);
-        this.element3 = element3;
+  /** Constructs a new {@code Tuple} with the supplied elements. */
+  public Tuple3(T1 element1, T2 element2, T3 element3) {
+    super(element1, element2);
+    this.element3 = element3;
+  }
+
+  /**
+   * Returns the 3rd element of this tuple.
+   *
+   * @return the 3rd element of this tuple
+   */
+  public T3 getElement3() {
+    return element3;
+  }
+
+  /** Sets the 3rd element of this tuple. */
+  public void setElement3(T3 element3) {
+    this.element3 = element3;
+  }
+
+  @Override
+  public int size() {
+    return 3;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Returns the 3rd element of this tuple.
-     *
-     * @return the 3rd element of this tuple
-     */
-    public T3 getElement3() {
-        return element3;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
-
-    /**
-     * Sets the 3rd element of this tuple.
-     */
-    public void setElement3(final T3 element3) {
-        this.element3 = element3;
+    if (!super.equals(o)) {
+      return false;
     }
+    Tuple3<?, ?, ?> other = (Tuple3) o;
+    return Objects.equals(this.element3, other.element3);
+  }
 
-    @Override
-    public int size() {
-        return 3;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final Tuple3<?, ?, ?> other = (Tuple3) o;
-        return Objects.equals(this.element3, other.element3);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode() + Objects.hash(element3);
-    }
+  @Override
+  public int hashCode() {
+    return super.hashCode() + Objects.hash(element3);
+  }
 }

@@ -23,21 +23,20 @@ package org.hawaiiframework.logging.model;
  */
 public interface KibanaLogField {
 
-    /**
-     * Get the name with which this field will appear in the log.
-     *
-     * @return the log name of the field
-     */
-    String getLogName();
+  /**
+   * Get the name with which this field will appear in the log.
+   *
+   * @return the log name of the field
+   */
+  String getLogName();
 
-    /**
-     * Check if a key matches.
-     *
-     * @param key the key to match
-     * @return true if not null and if the supplied key equals this key.
-     */
-    default boolean matches(final String key) {
-        return key != null && key.equalsIgnoreCase(getLogName());
-    }
-
+  /**
+   * Check if a key matches.
+   *
+   * @param key the key to match
+   * @return true if not null and if the supplied key equals this key.
+   */
+  default boolean matches(String key) {
+    return key != null && key.equalsIgnoreCase(getLogName());
+  }
 }

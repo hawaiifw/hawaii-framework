@@ -18,6 +18,7 @@ package org.hawaiiframework.web.exception;
 
 import static org.springframework.http.HttpHeaders.EMPTY;
 
+import jakarta.validation.ValidationException;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -31,11 +32,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 /**
  * This class creates proper HTTP response bodies for exceptions.
  *
- * <p>Separate controller advice with it's own order, so that is used before the {@link HawaiiResponseEntityExceptionHandler}.
- * This is needed because in the code we tend to wrap exceptions within Hawaii exceptions
- * and the Hawaii exception is preferred above the cause within that exceptions.</p>
+ * <p>Separate controller advice with it's own order, so that is used before the {@link
+ * HawaiiResponseEntityExceptionHandler}. This is needed because in the code we tend to wrap
+ * exceptions within Hawaii exceptions and the Hawaii exception is preferred above the cause within
+ * that exceptions.
  *
- * <p>(in other words, don't delete this file or merge this file with the {@link HawaiiResponseEntityExceptionHandler}!)</p>
+ * <p>(in other words, don't delete this file or merge this file with the {@link
+ * HawaiiResponseEntityExceptionHandler}!)
  *
  * @since 6.0.0
  */
@@ -43,29 +46,33 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class JakartaValidationsEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
+  private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-    public JakartaValidationsEntityExceptionHandler(final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
-        this.errorResponseEntityBuilder = errorResponseEntityBuilder;
-    }
+  public JakartaValidationsEntityExceptionHandler(
+      ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    this.errorResponseEntityBuilder = errorResponseEntityBuilder;
+  }
 
-    /**
-     * Handles {@code ValidationException} instances.
-     * <p>
-     * The response status is: 400 Bad Request.
-     *
-     * @param e       the exception
-     * @param request the current request
-     * @return a response entity reflecting the current exception
-     */
-    @ExceptionHandler(jakarta.validation.ValidationException.class)
-    @ResponseBody
-    public ResponseEntity<Object> handleValidationException(final jakarta.validation.ValidationException e, final WebRequest request) {
-        final HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleExceptionInternal(e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
-    }
+  /**
+   * Handles {@code ValidationException} instances.
+   *
+   * <p>The response status is: 400 Bad Request.
+   *
+   * @param e the exception
+   * @param request the current request
+   * @return a response entity reflecting the current exception
+   */
+  @ExceptionHandler(ValidationException.class)
+  @ResponseBody
+  public ResponseEntity<Object> handleValidationException(
+      ValidationException e, WebRequest request) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    return handleExceptionInternal(
+        e, buildErrorResponseBody(e, status, request), EMPTY, status, request);
+  }
 
-    private ErrorResponseResource buildErrorResponseBody(final Throwable throwable, final HttpStatus status, final WebRequest request) {
-        return errorResponseEntityBuilder.buildErrorResponseBody(throwable, status, request);
-    }
+  private ErrorResponseResource buildErrorResponseBody(
+      Throwable throwable, HttpStatus status, WebRequest request) {
+    return errorResponseEntityBuilder.buildErrorResponseBody(throwable, status, request);
+  }
 }

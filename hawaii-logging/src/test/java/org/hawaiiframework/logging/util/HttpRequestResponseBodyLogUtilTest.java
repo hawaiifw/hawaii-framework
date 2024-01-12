@@ -15,6 +15,15 @@
  */
 package org.hawaiiframework.logging.util;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.junit.Before;
@@ -25,77 +34,63 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.web.DelegatingServletInputStream;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class HttpRequestResponseBodyLogUtilTest extends TestCase {
 
-    @Mock
-    private PasswordMaskerUtil passwordMasker;
+  @Mock private PasswordMaskerUtil passwordMasker;
 
-    @Mock
-    private ContentCachingWrappedResponse servletResponse;
+  @Mock private ContentCachingWrappedResponse servletResponse;
 
-    @Mock
-    private HttpServletRequest servletRequest;
+  @Mock private HttpServletRequest servletRequest;
 
-    @Mock
-    private ClientHttpResponse clientResponse;
+  @Mock private ClientHttpResponse clientResponse;
 
-    private HttpRequestResponseBodyLogUtil httpRequestResponseBodyLogUtil;
+  private HttpRequestResponseBodyLogUtil httpRequestResponseBodyLogUtil;
 
-    @Before
-    public void setup() {
-        httpRequestResponseBodyLogUtil = new HttpRequestResponseBodyLogUtil(passwordMasker);
-    }
+  @Before
+  public void setup() {
+    httpRequestResponseBodyLogUtil = new HttpRequestResponseBodyLogUtil(passwordMasker);
+  }
 
-    @Test
-    public void thatTxRequestBodyIsPasswordMasked() throws IOException {
-        String request = "foo";
-        final ByteArrayInputStream inputStream = new ByteArrayInputStream(request.getBytes());
-        DelegatingServletInputStream servletInputStream = new DelegatingServletInputStream(inputStream);
+  @Test
+  public void thatTxRequestBodyIsPasswordMasked() throws IOException {
+    String request = "foo";
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(request.getBytes(UTF_8));
+    DelegatingServletInputStream servletInputStream = new DelegatingServletInputStream(inputStream);
 
-        when(servletRequest.getInputStream()).thenReturn(servletInputStream);
-        when(servletRequest.getCharacterEncoding()).thenReturn(StandardCharsets.UTF_8.toString());
+    when(servletRequest.getInputStream()).thenReturn(servletInputStream);
+    when(servletRequest.getCharacterEncoding()).thenReturn(StandardCharsets.UTF_8.toString());
 
-        httpRequestResponseBodyLogUtil.getTxRequestBody(servletRequest);
-        verify(passwordMasker, times(1)).maskPasswordsIn(request);
-    }
+    httpRequestResponseBodyLogUtil.getTxRequestBody(servletRequest);
+    verify(passwordMasker, times(1)).maskPasswordsIn(request);
+  }
 
-    @Test
-    public void thatTxResponseBodyIsPasswordMasked() {
-        String response = "foo";
-        when(servletResponse.getContentAsByteArray()).thenReturn(response.getBytes(StandardCharsets.UTF_8));
-        when(servletResponse.getCharacterEncoding()).thenReturn(StandardCharsets.UTF_8.toString());
+  @Test
+  public void thatTxResponseBodyIsPasswordMasked() {
+    String response = "foo";
+    when(servletResponse.getContentAsByteArray()).thenReturn(response.getBytes(UTF_8));
+    when(servletResponse.getCharacterEncoding()).thenReturn(StandardCharsets.UTF_8.toString());
 
-        httpRequestResponseBodyLogUtil.getTxResponseBody(servletResponse);
-        verify(passwordMasker, times(1)).maskPasswordsIn(response);
-    }
+    httpRequestResponseBodyLogUtil.getTxResponseBody(servletResponse);
+    verify(passwordMasker, times(1)).maskPasswordsIn(response);
+  }
 
-    @Test
-    public void thatCallRequestBodyIsPasswordMasked() {
-        String response = "foo";
+  @Test
+  public void thatCallRequestBodyIsPasswordMasked() {
+    String response = "foo";
 
-        httpRequestResponseBodyLogUtil.getCallRequestBody(response.getBytes());
-        verify(passwordMasker, times(1)).maskPasswordsIn(response);
-    }
+    httpRequestResponseBodyLogUtil.getCallRequestBody(response.getBytes(UTF_8));
+    verify(passwordMasker, times(1)).maskPasswordsIn(response);
+  }
 
+  @Test
+  public void thatCallResponseBodyIsPasswordMasked() throws IOException {
+    String response = "foo";
 
-    @Test
-    public void thatCallResponseBodyIsPasswordMasked() throws IOException {
-        String response = "foo";
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getBytes(UTF_8));
+    when(clientResponse.getBody()).thenReturn(inputStream);
 
-        final ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getBytes());
-        when(clientResponse.getBody()).thenReturn(inputStream);
-
-        httpRequestResponseBodyLogUtil.getCallResponseBody(clientResponse);
-        verify(passwordMasker, times(1)).maskPasswordsIn(response + "\n");
-    }
+    httpRequestResponseBodyLogUtil.getCallResponseBody(clientResponse);
+    verify(passwordMasker, times(1)).maskPasswordsIn(response + "\n");
+  }
 }

@@ -30,6 +30,4 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ConditionalOnClass(HawaiiSqlConfiguration.class)
 @Import(HawaiiSqlConfiguration.class)
-public class HawaiiSqlAutoConfiguration {
-
-}
+public class HawaiiSqlAutoConfiguration {}

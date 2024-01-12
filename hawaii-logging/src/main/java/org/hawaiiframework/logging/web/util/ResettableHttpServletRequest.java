@@ -15,18 +15,16 @@
  */
 package org.hawaiiframework.logging.web.util;
 
-import org.apache.commons.io.IOUtils;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpUpgradeHandler;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.apache.commons.io.IOUtils;
 
 /**
  * HttpServletRequestWrapper that allows resetting of the input stream.
@@ -36,74 +34,64 @@ import java.io.InputStreamReader;
  */
 public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
 
-    /**
-     * The original request.
-     */
-    private final HttpServletRequest request;
+  /** The original request. */
+  private final HttpServletRequest request;
 
-    /**
-     * The (wrapped) response.
-     */
-    private final HttpServletResponse response;
+  /** The (wrapped) response. */
+  private final HttpServletResponse response;
 
-    /**
-     * The input stream we can reset.
-     */
-    private ResettableServletInputStream servletStream;
+  /** The input stream we can reset. */
+  private ResettableServletInputStream servletStream;
 
-    /**
-     * The constructor.
-     *
-     * @param request  The original request.
-     * @param response The (wrapped) response.
-     */
-    public ResettableHttpServletRequest(final HttpServletRequest request, final HttpServletResponse response) {
-        super(request);
-        this.request = request;
-        this.response = response;
+  /**
+   * The constructor.
+   *
+   * @param request The original request.
+   * @param response The (wrapped) response.
+   */
+  public ResettableHttpServletRequest(HttpServletRequest request, HttpServletResponse response) {
+    super(request);
+    this.request = request;
+    this.response = response;
+  }
+
+  /**
+   * Reset the input stream, so we can read it again.
+   *
+   * @throws IOException in case reset fails.
+   */
+  public void reset() throws IOException {
+    if (this.servletStream != null) {
+      this.servletStream.reset();
     }
+  }
 
-    /**
-     * Reset the input stream, so we can read it again.
-     *
-     * @throws IOException in case reset fails.
-     */
-    public void reset() throws IOException {
-        if (this.servletStream != null) {
-            this.servletStream.reset();
-        }
+  /** {@inheritDoc} */
+  @Override
+  public ServletInputStream getInputStream() throws IOException {
+    if (servletStream == null) {
+      servletStream = new ResettableServletInputStream(copyRawData());
     }
+    return servletStream;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
-        if (servletStream == null) {
-            servletStream = new ResettableServletInputStream(copyRawData());
-        }
-        return servletStream;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public BufferedReader getReader() throws IOException {
+    return new BufferedReader(
+        new InputStreamReader(getInputStream(), request.getCharacterEncoding()));
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(getInputStream(), request.getCharacterEncoding()));
-    }
+  private byte[] copyRawData() throws IOException {
+    return IOUtils.toByteArray(request.getReader(), request.getCharacterEncoding());
+  }
 
-    private byte[] copyRawData() throws IOException {
-        return IOUtils.toByteArray(request.getReader(), request.getCharacterEncoding());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends HttpUpgradeHandler> T upgrade(final Class<T> httpUpgradeHandlerClass) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_SWITCHING_PROTOCOLS);
-        return request.upgrade(httpUpgradeHandlerClass);
-    }
+  /** {@inheritDoc} */
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T extends HttpUpgradeHandler> T upgrade(Class<T> httpUpgradeHandlerClass)
+      throws IOException, ServletException {
+    response.setStatus(HttpServletResponse.SC_SWITCHING_PROTOCOLS);
+    return request.upgrade(httpUpgradeHandlerClass);
+  }
 }

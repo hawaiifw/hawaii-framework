@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Hawaii's auto-configuration capabilities.
- */
+/** Hawaii's auto-configuration capabilities. */
 package org.hawaiiframework.boot.autoconfigure;

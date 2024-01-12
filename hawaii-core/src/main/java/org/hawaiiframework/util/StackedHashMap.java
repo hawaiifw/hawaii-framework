@@ -25,9 +25,9 @@ import java.util.Set;
 
 /**
  * A stacked {@code HashMap} implementation.
- * <p>
- * This implementation is useful if you want to add and/or remove mappings to a map, but also want to return to a previous state of the map
- * easily.
+ *
+ * <p>This implementation is useful if you want to add and/or remove mappings to a map, but also
+ * want to return to a previous state of the map easily.
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -37,84 +37,83 @@ import java.util.Set;
  */
 public class StackedHashMap<K, V> extends AbstractMap<K, V> {
 
-    protected Deque<HashMap<K, V>> stack;
+  protected Deque<HashMap<K, V>> stack;
 
-    /**
-     * Constructs a new {@code StackedHashMap}.
-     */
-    public StackedHashMap() {
-        this.stack = new ArrayDeque<>();
-        this.stack.add(new HashMap<>());
-    }
+  /** Constructs a new {@code StackedHashMap}. */
+  public StackedHashMap() {
+    this.stack = new ArrayDeque<>();
+    this.stack.add(new HashMap<>());
+  }
 
-    /**
-     * Constructs a new {@code StackedHashMap} with the same mappings as the supplied {@code Map}.
-     *
-     * @param m the map whose mappings are to be placed in this stacked map
-     */
-    public StackedHashMap(final Map<? extends K, ? extends V> m) {
-        this();
-        if (!m.isEmpty()) {
-            peek().putAll(m);
-        }
+  /**
+   * Constructs a new {@code StackedHashMap} with the same mappings as the supplied {@code Map}.
+   *
+   * @param m the map whose mappings are to be placed in this stacked map
+   */
+  public StackedHashMap(Map<? extends K, ? extends V> m) {
+    this();
+    if (!m.isEmpty()) {
+      peek().putAll(m);
     }
+  }
 
-    /**
-     * Pushes a new element ({@code HashMap}) onto the stack.
-     */
-    public void push() {
-        final HashMap<K, V> m = new HashMap<>(peek());
-        this.stack.push(m);
-    }
+  /** Pushes a new element ({@code HashMap}) onto the stack. */
+  public void push() {
+    HashMap<K, V> m = new HashMap<>(peek());
+    this.stack.push(m);
+  }
 
-    /**
-     * Pops the top element ({@code HashMap}) from the stack. Note that the initial element cannot be popped from the stack.
-     *
-     * @return the top element of the stack
-     * @throws IllegalStateException if there is only {@code 1} element on the stack
-     */
-    @SuppressWarnings({"PMD.LooseCoupling", "PMD.AvoidLiteralsInIfCondition"})
-    public HashMap<K, V> pop() {
-        if (stackSize() > 1) {
-            return this.stack.pop();
-        }
-        throw new IllegalStateException("Cannot pop first element from stack");
+  /**
+   * Pops the top element ({@code HashMap}) from the stack. Note that the initial element cannot be
+   * popped from the stack.
+   *
+   * @return the top element of the stack
+   * @throws IllegalStateException if there is only {@code 1} element on the stack
+   */
+  @SuppressWarnings({"PMD.AvoidLiteralsInIfCondition", "PMD.LooseCoupling"})
+  public HashMap<K, V> pop() {
+    if (stackSize() > 1) {
+      return this.stack.pop();
     }
+    throw new IllegalStateException("Cannot pop first element from stack");
+  }
 
-    /**
-     * Retrieves, but does not remove, the top element ({@code HashMap}) from the stack.
-     *
-     * @return the top element of the stack
-     */
-    @SuppressWarnings("PMD.LooseCoupling")
-    public HashMap<K, V> peek() {
-        return this.stack.peek();
-    }
+  /**
+   * Retrieves, but does not remove, the top element ({@code HashMap}) from the stack.
+   *
+   * @return the top element of the stack
+   */
+  @SuppressWarnings("PMD.LooseCoupling")
+  public HashMap<K, V> peek() {
+    return this.stack.peek();
+  }
 
-    /**
-     * Returns the number of elements ({@code HashMap}s) on the stack. There will always be at least {code 1} element on the stack.
-     *
-     * @return the number of elements on the stack
-     */
-    public int stackSize() {
-        return this.stack.size();
-    }
+  /**
+   * Returns the number of elements ({@code HashMap}s) on the stack. There will always be at least
+   * {code 1} element on the stack.
+   *
+   * @return the number of elements on the stack
+   */
+  public int stackSize() {
+    return this.stack.size();
+  }
 
-    /**
-     * Clears the stack. After clearing the stack there will be {@code 1 } element ({@code HashMap}) on the stack without any mappings.
-     */
-    public void clearStack() {
-        this.stack = new ArrayDeque<>();
-        this.stack.add(new HashMap<>());
-    }
+  /**
+   * Clears the stack. After clearing the stack there will be {@code 1 } element ({@code HashMap})
+   * on the stack without any mappings.
+   */
+  public void clearStack() {
+    this.stack = new ArrayDeque<>();
+    this.stack.add(new HashMap<>());
+  }
 
-    @Override
-    public V put(final K key, final V value) {
-        return peek().put(key, value);
-    }
+  @Override
+  public V put(K key, V value) {
+    return peek().put(key, value);
+  }
 
-    @Override
-    public Set<Entry<K, V>> entrySet() {
-        return peek().entrySet();
-    }
+  @Override
+  public Set<Entry<K, V>> entrySet() {
+    return peek().entrySet();
+  }
 }

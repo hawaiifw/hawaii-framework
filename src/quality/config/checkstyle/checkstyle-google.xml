@@ -33,9 +33,9 @@
   <!-- See https://checkstyle.org/config_filefilters.html -->
   <module name="LineLength">
     <property name="fileExtensions" value="java"/>
-    <property name="max" value="150"/>
+    <property name="max" value="100"/>
     <property name="ignorePattern"
-      value="^package.*|^import.*|a href|href|http://|https://|ftp://|@.*"/>
+      value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
   </module>
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
   <module name="TreeWalker">
@@ -96,10 +96,10 @@
     </module>
     <module name="WhitespaceAfter">
       <property name="tokens"
-        value="COMMA, SEMI, TYPECAST, LITERAL_IF, LITERAL_ELSE, LITERAL_WHILE, LITERAL_DO,
-                LITERAL_FOR, LITERAL_FINALLY, LITERAL_RETURN, LITERAL_YIELD, LITERAL_CATCH,
-                DO_WHILE, ELLIPSIS, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_CASE,
-                LAMBDA"/>
+        value="COMMA, SEMI, TYPECAST, LITERAL_IF, LITERAL_ELSE, LITERAL_RETURN,
+                    LITERAL_WHILE, LITERAL_DO, LITERAL_FOR, LITERAL_FINALLY, DO_WHILE, ELLIPSIS,
+                    LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_CATCH, LAMBDA,
+                    LITERAL_YIELD, LITERAL_CASE"/>
     </module>
     <module name="WhitespaceAround">
       <message key="ws.notFollowed"
@@ -177,61 +177,32 @@
     <module name="MemberName">
       <message key="name.invalidPattern"
         value="Member name ''{0}'' must match pattern ''{1}''."/>
-      <!--property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/-->
-      <property name="format" value="^([a-z]|an?[A-Z])([a-z]+[0-9]*)*([A-Z]([a-z]+[0-9]*)+)*$"/>
+      <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
     </module>
     <module name="ParameterName">
       <message key="name.invalidPattern"
         value="Parameter name ''{0}'' must match pattern ''{1}''."/>
-      <!--property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/-->
-      <property name="format" value="^([a-z]|an?[A-Z])([a-z]+[0-9]*)*([A-Z]([a-z]+[0-9]*)+)*$"/>
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
     </module>
     <module name="LambdaParameterName">
       <message key="name.invalidPattern"
         value="Lambda parameter name ''{0}'' must match pattern ''{1}''."/>
-      <!--property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/-->
-      <property name="format" value="^([a-z]|an?[A-Z])([a-z]+[0-9]*)*([A-Z]([a-z]+[0-9]*)+)*$"/>
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
     </module>
     <module name="CatchParameterName">
       <message key="name.invalidPattern"
         value="Catch parameter name ''{0}'' must match pattern ''{1}''."/>
-      <!--property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/-->
-      <property name="format" value="^([a-z]|an?[A-Z])([a-z]+[0-9]*)*([A-Z]([a-z]+[0-9]*)+)*$"/>
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
     </module>
     <module name="LocalVariableName">
       <message key="name.invalidPattern"
         value="Local variable name ''{0}'' must match pattern ''{1}''."/>
-      <!--property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/-->
-      <property name="format" value="^([a-z]|an?[A-Z])([a-z]+[0-9]*)*([A-Z]([a-z]+[0-9]*)+)*$"/>
-      <!--
-     ^([a-z]|an?[A-Z])([a-z]+[0-9]*)+([A-Z]([a-z]+[0-9]*)+)*$
-
-      ^ ... $:
-        match whole word
-
-      ([a-z]|an?[A-Z]):
-        - a lower case character, or
-        - "a" + upper case; or
-         - "an" + upper case
-
-      ([a-z]+[0-9]*)+:
-        - one or more times (the "(...)+")
-          - one or more lower case characters, followed by
-          - zero or more digits
-
-      ([A-Z]([a-z]+[0-9]*)+)*:
-        - zero or more times (the "(...)*"):
-          - an upper case character, followed by
-          - one or more times (the "(...)+")
-            - one or more lower case characters, followed by
-            - zero or more digits
-      -->
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
     </module>
     <module name="PatternVariableName">
       <message key="name.invalidPattern"
         value="Pattern variable name ''{0}'' must match pattern ''{1}''."/>
-      <!--property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/-->
-      <property name="format" value="^([a-z]|an?[A-Z])([a-z]+[0-9]*)*([A-Z]([a-z]+[0-9]*)+)*$"/>
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
     </module>
     <module name="ClassTypeParameterName">
       <message key="name.invalidPattern"
@@ -270,7 +241,6 @@
         value="GenericWhitespace ''{0}'' is not preceded with whitespace."/>
     </module>
     <module name="Indentation">
-      <property name="severity" value="error"/>
       <property name="basicOffset" value="2"/>
       <property name="braceAdjustment" value="2"/>
       <property name="caseIndent" value="2"/>
@@ -287,7 +257,7 @@
                     RECORD_COMPONENT_DEF"/>
     </module>
     <module name="NoWhitespaceBeforeCaseDefaultColon"/>
-    <!-- <module name="OverloadMethodsDeclarationOrder"/> -->
+    <module name="OverloadMethodsDeclarationOrder"/>
     <module name="VariableDeclarationUsageDistance"/>
     <module name="CustomImportOrder">
       <property name="sortImportsInGroupAlphabetically" value="true"/>
@@ -361,7 +331,6 @@
                                    COMPACT_CTOR_DEF"/>
     </module>
     <module name="MissingJavadocType">
-      <property name="severity" value="error"/>
       <property name="scope" value="protected"/>
       <property name="tokens"
         value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF,

@@ -23,136 +23,132 @@ import java.util.List;
  * Configuration properties for a system.
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 @SuppressWarnings("PMD.DataClass")
 public class SystemProperties {
 
-    /**
-     * The system name.
-     */
-    private String name;
+  /** The system name. */
+  private String name;
 
-    /**
-     * The default executor.
-     * <p>
-     * This is the fallback executor that will be used if no executor is configured for a task.
-     */
-    private String defaultExecutor;
+  /**
+   * The default executor.
+   *
+   * <p>This is the fallback executor that will be used if no executor is configured for a task.
+   */
+  private String defaultExecutor;
 
-    /**
-     * The default timeout.
-     */
-    private Integer defaultTimeout;
+  /** The default timeout. */
+  private Integer defaultTimeout;
 
-    /**
-     * The tasks.
-     */
-    private List<TaskProperties> tasks = new ArrayList<>();
+  /** The tasks. */
+  private List<TaskProperties> tasks = new ArrayList<>();
 
-    /**
-     * Getter for name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
+  /**
+   * Getter for name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Setter for the name.
+   *
+   * @param name the name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * Getter for the default executor.
+   *
+   * @return the default executor
+   */
+  public String getDefaultExecutor() {
+    return defaultExecutor;
+  }
+
+  /**
+   * Setter for the default executor.
+   *
+   * @param defaultExecutor the default executor
+   */
+  public void setDefaultExecutor(String defaultExecutor) {
+    this.defaultExecutor = defaultExecutor;
+  }
+
+  /**
+   * Getter for the default timeout.
+   *
+   * @return the default timeout
+   */
+  public Integer getDefaultTimeout() {
+    return defaultTimeout;
+  }
+
+  /**
+   * Setter for the default timeout.
+   *
+   * @param defaultTimeout the default timeout
+   */
+  public void setDefaultTimeout(Integer defaultTimeout) {
+    this.defaultTimeout = defaultTimeout;
+  }
+
+  /**
+   * Getter for the tasks.
+   *
+   * @return the tasks
+   */
+  public List<TaskProperties> getTasks() {
+    return tasks;
+  }
+
+  /**
+   * Setter for the tasks.
+   *
+   * @param tasks the tasks
+   */
+  public void setTasks(List<TaskProperties> tasks) {
+    this.tasks = tasks;
+  }
+
+  /**
+   * Convenience method to add properties for a single task.
+   *
+   * @param task the task
+   */
+  public void addTask(TaskProperties task) {
+    if (tasks == null) {
+      tasks = new ArrayList<>();
     }
+    tasks.add(task);
+  }
+  /**
+   * Retrieve the properties for a named task.
+   *
+   * @param taskName the task name
+   * @return the properties
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public TaskProperties getTaskPropertiesForName(String taskName) {
+    return tasks.stream()
+        .filter(taskProperties -> taskProperties.isNameMatch(taskName))
+        .findFirst()
+        .orElse(null);
+  }
 
-    /**
-     * Setter for the name.
-     *
-     * @param name the name
-     */
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    /**
-     * Getter for the default executor.
-     *
-     * @return the default executor
-     */
-    public String getDefaultExecutor() {
-        return defaultExecutor;
-    }
-
-    /**
-     * Setter for the default executor.
-     *
-     * @param defaultExecutor the default executor
-     */
-    public void setDefaultExecutor(final String defaultExecutor) {
-        this.defaultExecutor = defaultExecutor;
-    }
-
-    /**
-     * Getter for the default timeout.
-     *
-     * @return the default timeout
-     */
-    public Integer getDefaultTimeout() {
-        return defaultTimeout;
-    }
-
-    /**
-     * Setter for the default timeout.
-     *
-     * @param defaultTimeout the default timeout
-     */
-    public void setDefaultTimeout(final Integer defaultTimeout) {
-        this.defaultTimeout = defaultTimeout;
-    }
-
-    /**
-     * Getter for the tasks.
-     *
-     * @return the tasks
-     */
-    public List<TaskProperties> getTasks() {
-        return tasks;
-    }
-
-    /**
-     * Setter for the tasks.
-     *
-     * @param tasks the tasks
-     */
-    public void setTasks(final List<TaskProperties> tasks) {
-        this.tasks = tasks;
-    }
-
-    /**
-     * Convenience method to add properties for a single task.
-     *
-     * @param task the task
-     */
-    public void addTask(final TaskProperties task) {
-        if (tasks == null) {
-            tasks = new ArrayList<>();
-        }
-        tasks.add(task);
-    }
-    /**
-     * Retrieve the properties for a named task.
-     *
-     * @param taskName the task name
-     * @return the properties
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public TaskProperties getTaskPropertiesForName(final String taskName) {
-        return tasks.stream().filter(taskProperties -> taskProperties.isNameMatch(taskName)).findFirst().orElse(null);
-    }
-
-    /**
-     * Check if this {@link SystemProperties} name matches the given name.
-     *
-     * @param systemName the name to check
-     * @return true if the names match
-     */
-    public boolean nameMatches(final String systemName) {
-        return name.equals(systemName);
-    }
+  /**
+   * Check if this {@link SystemProperties} name matches the given name.
+   *
+   * @param systemName the name to check
+   * @return true if the names match
+   */
+  public boolean nameMatches(String systemName) {
+    return name.equals(systemName);
+  }
 }

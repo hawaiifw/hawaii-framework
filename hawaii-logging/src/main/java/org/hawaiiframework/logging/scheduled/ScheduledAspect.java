@@ -15,6 +15,11 @@
  */
 package org.hawaiiframework.logging.scheduled;
 
+import static java.util.UUID.randomUUID;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_ID;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
+
+import java.util.UUID;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,50 +29,45 @@ import org.hawaiiframework.logging.model.TransactionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
-
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_ID;
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
-
 /**
- * Aspect around @{@link org.springframework.scheduling.annotation.Scheduled} annotation to allow participating in Kibana tx's.
+ * Aspect around @{@link org.springframework.scheduling.annotation.Scheduled} annotation to allow
+ * participating in Kibana tx's.
  */
 @Aspect
 public class ScheduledAspect {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledAspect.class);
+  /** The logger to use. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledAspect.class);
 
-    /**
-     * Create an around advise for the {@link org.springframework.scheduling.annotation.Scheduled} annotation.
-     *
-     * @param pjp The proceeding join point.
-     * @return The original return value.
-     * @throws Throwable in case of an error.
-     */
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    @Around("execution (@org.springframework.scheduling.annotation.Scheduled  * *.*(..))")
-    public Object withTransactionId(final ProceedingJoinPoint pjp) throws Throwable {
-        try {
-            final UUID uuid = UUID.randomUUID();
+  /**
+   * Create an around advise for the {@link org.springframework.scheduling.annotation.Scheduled}
+   * annotation.
+   *
+   * @param pjp The proceeding join point.
+   * @return The original return value.
+   * @throws Throwable in case of an error.
+   */
+  @Around("execution (@org.springframework.scheduling.annotation.Scheduled  * *.*(..))")
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
+  public Object withTransactionId(ProceedingJoinPoint pjp) throws Throwable {
+    try {
+      UUID uuid = randomUUID();
 
-            RequestId.set(uuid);
-            KibanaLogFields.tag(REQUEST_ID, RequestId.get());
+      RequestId.set(uuid);
+      KibanaLogFields.tag(REQUEST_ID, RequestId.get());
 
-            TransactionId.set(uuid);
-            KibanaLogFields.tag(TX_ID, TransactionId.get());
+      TransactionId.set(uuid);
+      KibanaLogFields.tag(TX_ID, TransactionId.get());
 
-            LOGGER.trace("Started scheduled task with tx id '{}'.", TransactionId.get());
-            return pjp.proceed();
-        } catch (Exception ex) {
-            LOGGER.error("Caught error '{}'.", ex.getMessage(), ex);
-            throw ex;
-        } finally {
-            RequestId.remove();
-            TransactionId.remove();
-            KibanaLogFields.clear();
-        }
+      LOGGER.trace("Started scheduled task with tx id '{}'.", TransactionId.get());
+      return pjp.proceed();
+    } catch (Exception ex) {
+      LOGGER.error("Caught error '{}'.", ex.getMessage(), ex);
+      throw ex;
+    } finally {
+      RequestId.remove();
+      TransactionId.remove();
+      KibanaLogFields.clear();
     }
+  }
 }

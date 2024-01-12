@@ -16,6 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConfiguration.CONFIG_PREFIX;
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.hawaiiframework.logging.web.filter.BusinessTransactionIdFilter;
 import org.hawaiiframework.logging.web.filter.TransactionIdFilter;
 import org.slf4j.Logger;
@@ -25,53 +29,46 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.BusinessTransactionIdFilterConfiguration.CONFIG_PREFIX;
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configures the {@link TransactionIdFilter}.
- */
+/** Configures the {@link TransactionIdFilter}. */
 @Configuration
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
 public class BusinessTransactionIdFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.business-transaction-id";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.business-transaction-id";
 
-    private static final Logger LOGGER = getLogger(BusinessTransactionIdFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(BusinessTransactionIdFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Business-Tx-Id}")
-    private String headerName;
+  @Value("${" + CONFIG_PREFIX + ".http-header:X-Hawaii-Business-Tx-Id}")
+  private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order:-600}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-600}")
+  private int filterOrder;
 
-    /**
-     * Create the {@link TransactionIdFilter} bean.
-     *
-     * @return the {@link TransactionIdFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public BusinessTransactionIdFilter businessTransactionIdFilter() {
-        LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
-        return new BusinessTransactionIdFilter(headerName);
-    }
+  /**
+   * Create the {@link TransactionIdFilter} bean.
+   *
+   * @return the {@link TransactionIdFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public BusinessTransactionIdFilter businessTransactionIdFilter() {
+    LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
+    return new BusinessTransactionIdFilter(headerName);
+  }
 
-    /**
-     * Register the {@link #businessTransactionIdFilter()} bean.
-     *
-     * @param businessTransactionIdFilter the business transaction id filter
-     * @return the {@link #businessTransactionIdFilter()} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<BusinessTransactionIdFilter> businessTransactionIdFilterRegistration(
-            final BusinessTransactionIdFilter businessTransactionIdFilter) {
-        return createFilterRegistrationBean(businessTransactionIdFilter, filterOrder);
-    }
-
+  /**
+   * Register the {@link #businessTransactionIdFilter()} bean.
+   *
+   * @param businessTransactionIdFilter the business transaction id filter
+   * @return the {@link #businessTransactionIdFilter()} bean, wrapped in a {@link
+   *     FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<BusinessTransactionIdFilter>
+      businessTransactionIdFilterRegistration(
+          BusinessTransactionIdFilter businessTransactionIdFilter) {
+    return createFilterRegistrationBean(businessTransactionIdFilter, filterOrder);
+  }
 }

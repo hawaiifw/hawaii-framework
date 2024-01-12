@@ -18,6 +18,7 @@ package org.hawaiiframework.boot.autoconfigure.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ValidationException;
+import java.util.List;
 import org.hawaiiframework.converter.ModelConverter;
 import org.hawaiiframework.validation.ValidationError;
 import org.hawaiiframework.web.exception.ApiErrorResponseEnricher;
@@ -27,10 +28,10 @@ import org.hawaiiframework.web.exception.ErrorResponseEntityBuilder;
 import org.hawaiiframework.web.exception.ErrorResponseStatusEnricher;
 import org.hawaiiframework.web.exception.ExceptionResponseFactory;
 import org.hawaiiframework.web.exception.HawaiiResponseEntityExceptionHandler;
+import org.hawaiiframework.web.exception.HawaiiSpringResponseEntityExceptionHandler;
 import org.hawaiiframework.web.exception.JakartaValidationsEntityExceptionHandler;
 import org.hawaiiframework.web.exception.MethodArgumentNotValidResponseEnricher;
 import org.hawaiiframework.web.exception.RequestInfoErrorResponseEnricher;
-import org.hawaiiframework.web.exception.HawaiiSpringResponseEntityExceptionHandler;
 import org.hawaiiframework.web.exception.ValidationErrorResponseEnricher;
 import org.hawaiiframework.web.resource.ObjectErrorResourceAssembler;
 import org.hawaiiframework.web.resource.ValidationErrorResource;
@@ -44,149 +45,151 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 
-import java.util.List;
-
 /**
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 @Configuration
 @ConditionalOnWebApplication
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
+@SuppressWarnings({
+  "checkstyle:ClassDataAbstractionCoupling",
+  "checkstyle:ClassFanOutComplexity",
+  "PMD.ExcessiveImports"
+})
 public class HawaiiRestAutoConfiguration {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    /**
-     * Create a host resolver bean.
-     *
-     * @return The host resolver bean.
-     */
-    @Bean
-    public HostResolver hostResolver() {
-        return new HostResolver();
-    }
+  /**
+   * Create a host resolver bean.
+   *
+   * @return The host resolver bean.
+   */
+  @Bean
+  public HostResolver hostResolver() {
+    return new HostResolver();
+  }
 
-    /**
-     * Create an object error resource assembler.
-     *
-     * @return The object error resource assembler bean.
-     */
-    @Bean
-    public ObjectErrorResourceAssembler objectErrorResourceAssembler() {
-        return new ObjectErrorResourceAssembler(objectMapper);
-    }
+  /**
+   * Create an object error resource assembler.
+   *
+   * @return The object error resource assembler bean.
+   */
+  @Bean
+  public ObjectErrorResourceAssembler objectErrorResourceAssembler() {
+    return new ObjectErrorResourceAssembler(objectMapper);
+  }
 
-    /**
-     * Create an exception response factory.
-     *
-     * @return The exception response factory bean.
-     */
-    @Bean
-    public ExceptionResponseFactory exceptionResponseFactory() {
-        return new DefaultExceptionResponseFactory();
-    }
+  /**
+   * Create an exception response factory.
+   *
+   * @return The exception response factory bean.
+   */
+  @Bean
+  public ExceptionResponseFactory exceptionResponseFactory() {
+    return new DefaultExceptionResponseFactory();
+  }
 
-    @Bean
-    public ErrorResponseEntityBuilder errorResponseEntityBuilder(final List<ErrorResponseEnricher> errorResponseEnrichers) {
-        return new ErrorResponseEntityBuilder(exceptionResponseFactory(), errorResponseEnrichers);
-    }
+  @Bean
+  public ErrorResponseEntityBuilder errorResponseEntityBuilder(
+      List<ErrorResponseEnricher> errorResponseEnrichers) {
+    return new ErrorResponseEntityBuilder(exceptionResponseFactory(), errorResponseEnrichers);
+  }
 
-    /**
-     * Create a Hawaii response exception handler.
-     *
-     * @return The Hawaii response exception handler bean.
-     */
-    @Bean
-    public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler(
-            final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
-        return new HawaiiResponseEntityExceptionHandler(errorResponseEntityBuilder);
-    }
+  /**
+   * Create a Hawaii response exception handler.
+   *
+   * @return The Hawaii response exception handler bean.
+   */
+  @Bean
+  public HawaiiResponseEntityExceptionHandler hawaiiResponseEntityExceptionHandler(
+      ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    return new HawaiiResponseEntityExceptionHandler(errorResponseEntityBuilder);
+  }
 
-    /**
-     * Create a Spring Security response exception handler.
-     *
-     * @return The Spring Security response exception handler bean.
-     */
-    @ConditionalOnClass(AccessDeniedException.class)
-    @Bean
-    public HawaiiSpringResponseEntityExceptionHandler springSecurityResponseEntityExceptionHandler(
-            final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
-        return new HawaiiSpringResponseEntityExceptionHandler(errorResponseEntityBuilder);
-    }
+  /**
+   * Create a Spring Security response exception handler.
+   *
+   * @return The Spring Security response exception handler bean.
+   */
+  @Bean
+  @ConditionalOnClass(AccessDeniedException.class)
+  public HawaiiSpringResponseEntityExceptionHandler springSecurityResponseEntityExceptionHandler(
+      ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    return new HawaiiSpringResponseEntityExceptionHandler(errorResponseEntityBuilder);
+  }
 
-    /**
-     * Create a Spring Security response exception handler.
-     *
-     * @return The Spring Security response exception handler bean.
-     */
-    @ConditionalOnClass(ValidationException.class)
-    @Bean
-    public JakartaValidationsEntityExceptionHandler jakartaValidationsEntityExceptionHandler(
-            final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
-        return new JakartaValidationsEntityExceptionHandler(errorResponseEntityBuilder);
-    }
+  /**
+   * Create a Spring Security response exception handler.
+   *
+   * @return The Spring Security response exception handler bean.
+   */
+  @Bean
+  @ConditionalOnClass(ValidationException.class)
+  public JakartaValidationsEntityExceptionHandler jakartaValidationsEntityExceptionHandler(
+      ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    return new JakartaValidationsEntityExceptionHandler(errorResponseEntityBuilder);
+  }
 
-    /**
-     * Create an error response status enricher.
-     *
-     * @return The error response status enricher bean.
-     */
-    @Bean
-    public ErrorResponseStatusEnricher errorResponseStatusEnricher() {
-        return new ErrorResponseStatusEnricher();
-    }
+  /**
+   * Create an error response status enricher.
+   *
+   * @return The error response status enricher bean.
+   */
+  @Bean
+  public ErrorResponseStatusEnricher errorResponseStatusEnricher() {
+    return new ErrorResponseStatusEnricher();
+  }
 
-    /**
-     * Create a request info error response enricher.
-     *
-     * @return The request info error response enricher bean.
-     */
-    @Bean
-    public RequestInfoErrorResponseEnricher requestInfoErrorResponseEnricher() {
-        return new RequestInfoErrorResponseEnricher();
-    }
+  /**
+   * Create a request info error response enricher.
+   *
+   * @return The request info error response enricher bean.
+   */
+  @Bean
+  public RequestInfoErrorResponseEnricher requestInfoErrorResponseEnricher() {
+    return new RequestInfoErrorResponseEnricher();
+  }
 
-    /**
-     * Create a method argument not valid response enricher.
-     *
-     * @return The method argument not valid response enricher bean.
-     */
-    @Bean
-    public MethodArgumentNotValidResponseEnricher methodArgumentNotValidResponseEnricher(
-            final ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler) {
-        return new MethodArgumentNotValidResponseEnricher(objectErrorResourceAssembler);
-    }
+  /**
+   * Create a method argument not valid response enricher.
+   *
+   * @return The method argument not valid response enricher bean.
+   */
+  @Bean
+  public MethodArgumentNotValidResponseEnricher methodArgumentNotValidResponseEnricher(
+      ModelConverter<ObjectError, ValidationErrorResource> objectErrorResourceAssembler) {
+    return new MethodArgumentNotValidResponseEnricher(objectErrorResourceAssembler);
+  }
 
-    /**
-     * Create a validation error resource assembler.
-     *
-     * @return The validation error resource assembler bean.
-     */
-    @Bean
-    public ValidationErrorResourceAssembler validationErrorResourceAssembler() {
-        return new ValidationErrorResourceAssembler(objectMapper);
-    }
+  /**
+   * Create a validation error resource assembler.
+   *
+   * @return The validation error resource assembler bean.
+   */
+  @Bean
+  public ValidationErrorResourceAssembler validationErrorResourceAssembler() {
+    return new ValidationErrorResourceAssembler(objectMapper);
+  }
 
-    /**
-     * Create a validation error response enricher.
-     *
-     * @return The validation error response enricher bean.
-     */
-    @Bean
-    public ValidationErrorResponseEnricher validationErrorResponseEnricher(
-            final ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler) {
-        return new ValidationErrorResponseEnricher(validationErrorResourceAssembler);
-    }
+  /**
+   * Create a validation error response enricher.
+   *
+   * @return The validation error response enricher bean.
+   */
+  @Bean
+  public ValidationErrorResponseEnricher validationErrorResponseEnricher(
+      ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler) {
+    return new ValidationErrorResponseEnricher(validationErrorResourceAssembler);
+  }
 
-    /**
-     * Create an api error response enricher.
-     *
-     * @return The api error response enricher bean.
-     */
-    @Bean
-    public ApiErrorResponseEnricher apiErrorResponseEnricher() {
-        return new ApiErrorResponseEnricher();
-    }
+  /**
+   * Create an api error response enricher.
+   *
+   * @return The api error response enricher bean.
+   */
+  @Bean
+  public ApiErrorResponseEnricher apiErrorResponseEnricher() {
+    return new ApiErrorResponseEnricher();
+  }
 }

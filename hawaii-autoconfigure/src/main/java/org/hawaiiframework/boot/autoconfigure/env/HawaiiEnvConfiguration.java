@@ -16,8 +16,8 @@
 
 package org.hawaiiframework.boot.autoconfigure.env;
 
-import org.jasypt.encryption.StringEncryptor;
 import org.hawaiiframework.crypto.StringEncryptorConfig;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +31,4 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass(StringEncryptor.class)
 @ConditionalOnProperty(prefix = "hawaii.crypto", name = "enabled", matchIfMissing = true)
 @Import(StringEncryptorConfig.class)
-public class HawaiiEnvConfiguration {
-
-}
+public class HawaiiEnvConfiguration {}

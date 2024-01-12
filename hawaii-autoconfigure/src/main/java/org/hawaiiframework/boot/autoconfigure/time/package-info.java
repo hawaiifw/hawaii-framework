@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Auto-configuration for {@link org.hawaiiframework.time.HawaiiTime}.
- */
+/** Auto-configuration for {@link org.hawaiiframework.time.HawaiiTime}. */
 package org.hawaiiframework.boot.autoconfigure.time;

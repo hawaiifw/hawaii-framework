@@ -17,7 +17,6 @@ package org.hawaiiframework.cache.redis.config;
 
 import org.hawaiiframework.cache.redis.HawaiiRedisCacheBuilder;
 import org.hawaiiframework.time.HawaiiTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,36 +32,32 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 @EnableConfigurationProperties(RedisCacheConfigurationProperties.class)
 public class RedisConfiguration {
 
-    /**
-     * Redis configuration properties.
-     */
-    private final RedisCacheConfigurationProperties properties;
+  /** Redis configuration properties. */
+  private final RedisCacheConfigurationProperties properties;
 
-    /**
-     * Hawaii time.
-     */
-    private final HawaiiTime hawaiiTime;
+  /** Hawaii time. */
+  private final HawaiiTime hawaiiTime;
 
-    /**
-     * Constructor.
-     *
-     * @param properties the properties to create the redis beans.
-     * @param hawaiiTime The hawaii time.
-     */
-    @Autowired
-    public RedisConfiguration(final RedisCacheConfigurationProperties properties, final HawaiiTime hawaiiTime) {
-        this.properties = properties;
-        this.hawaiiTime = hawaiiTime;
-    }
+  /**
+   * Constructor.
+   *
+   * @param properties the properties to create the redis beans.
+   * @param hawaiiTime The hawaii time.
+   */
+  public RedisConfiguration(RedisCacheConfigurationProperties properties, HawaiiTime hawaiiTime) {
+    this.properties = properties;
+    this.hawaiiTime = hawaiiTime;
+  }
 
-    /**
-     * Provides a {@link HawaiiRedisCacheBuilder}.
-     *
-     * @param redisConnectionFactory The redis connection factory.
-     * @return an instance of {@link HawaiiRedisCacheBuilder}
-     */
-    @Bean
-    public HawaiiRedisCacheBuilder hawaiiRedisCacheBuilder(final RedisConnectionFactory redisConnectionFactory) {
-        return new HawaiiRedisCacheBuilder(properties, redisConnectionFactory, hawaiiTime);
-    }
+  /**
+   * Provides a {@link HawaiiRedisCacheBuilder}.
+   *
+   * @param redisConnectionFactory The redis connection factory.
+   * @return an instance of {@link HawaiiRedisCacheBuilder}
+   */
+  @Bean
+  public HawaiiRedisCacheBuilder hawaiiRedisCacheBuilder(
+      RedisConnectionFactory redisConnectionFactory) {
+    return new HawaiiRedisCacheBuilder(properties, redisConnectionFactory, hawaiiTime);
+  }
 }

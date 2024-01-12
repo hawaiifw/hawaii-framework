@@ -16,30 +16,28 @@
 
 package org.hawaiiframework.sql;
 
+import java.lang.reflect.Method;
+import javax.sql.DataSource;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.util.ReflectionUtils;
 
-import javax.sql.DataSource;
-import java.lang.reflect.Method;
-
-/**
- * Method interceptor for data sources.
- */
+/** Method interceptor for data sources. */
 public class DataSourceMethodInterceptor implements MethodInterceptor {
 
-    private final DataSource dataSource;
+  private final DataSource dataSource;
 
-    public DataSourceMethodInterceptor(final DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+  public DataSourceMethodInterceptor(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-    @Override
-    public Object invoke(final MethodInvocation invocation) throws Throwable {
-        final Method proxyMethod = ReflectionUtils.findMethod(this.dataSource.getClass(), invocation.getMethod().getName());
-        if (proxyMethod != null) {
-            return proxyMethod.invoke(this.dataSource, invocation.getArguments());
-        }
-        return invocation.proceed();
+  @Override
+  public Object invoke(MethodInvocation invocation) throws Throwable {
+    Method proxyMethod =
+        ReflectionUtils.findMethod(this.dataSource.getClass(), invocation.getMethod().getName());
+    if (proxyMethod != null) {
+      return proxyMethod.invoke(this.dataSource, invocation.getArguments());
     }
+    return invocation.proceed();
+  }
 }

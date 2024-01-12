@@ -16,6 +16,9 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.hawaiiframework.logging.web.filter.ContentCachingRequestResponseFilter;
 import org.hawaiiframework.logging.web.filter.TransactionTypeFilter;
 import org.slf4j.Logger;
@@ -25,48 +28,43 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configures the {@link TransactionTypeFilter}.
- */
+/** Configures the {@link TransactionTypeFilter}. */
 @Configuration
 @Conditional(ContentCachingRequired.class)
 public class ContentCachingRequestResponseFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.content-caching-request-response";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX =
+      "hawaii.logging.filters.content-caching-request-response";
 
-    private static final Logger LOGGER = getLogger(ContentCachingRequestResponseFilterConfiguration.class);
+  private static final Logger LOGGER =
+      getLogger(ContentCachingRequestResponseFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-17400}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-17400}")
+  private int filterOrder;
 
-    /**
-     * Create the caching request/response filter bean.
-     *
-     * @return the {@link ContentCachingRequestResponseFilter} bean
-     */
-    @Bean
-    @Conditional(ContentCachingRequired.class)
-    public ContentCachingRequestResponseFilter contentCachingRequestResponseFilter() {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new ContentCachingRequestResponseFilter();
-    }
+  /**
+   * Create the caching request/response filter bean.
+   *
+   * @return the {@link ContentCachingRequestResponseFilter} bean
+   */
+  @Bean
+  @Conditional(ContentCachingRequired.class)
+  public ContentCachingRequestResponseFilter contentCachingRequestResponseFilter() {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new ContentCachingRequestResponseFilter();
+  }
 
-    /**
-     * Create and register the {@link ContentCachingRequestResponseFilter} bean.
-     *
-     * @param filter The filter to register.
-     * @return the {@code filter} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @Conditional(ContentCachingRequired.class)
-    public FilterRegistrationBean<ContentCachingRequestResponseFilter> contentCachingRequestResponseFilterRegistration(
-            final ContentCachingRequestResponseFilter filter) {
-        return createFilterRegistrationBean(filter, filterOrder);
-    }
+  /**
+   * Create and register the {@link ContentCachingRequestResponseFilter} bean.
+   *
+   * @param filter The filter to register.
+   * @return the {@code filter} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @Conditional(ContentCachingRequired.class)
+  public FilterRegistrationBean<ContentCachingRequestResponseFilter>
+      contentCachingRequestResponseFilterRegistration(ContentCachingRequestResponseFilter filter) {
+    return createFilterRegistrationBean(filter, filterOrder);
+  }
 }

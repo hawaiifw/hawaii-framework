@@ -16,66 +16,58 @@
 
 package org.hawaiiframework.logging.config;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 /**
- * Voter for various logging filters.
- * Allows configuration of excluded paths and included content types.
- * See {@link HawaiiLoggingConfigurationProperties}.
+ * Voter for various logging filters. Allows configuration of excluded paths and included content
+ * types. See {@link HawaiiLoggingConfigurationProperties}.
  */
 public class FilterVoter {
 
-    /**
-     * The logger.
-     */
-    private static final Logger LOGGER = getLogger(FilterVoter.class);
+  /** The logger. */
+  private static final Logger LOGGER = getLogger(FilterVoter.class);
 
-    /**
-     * The media type voter.
-     */
-    private final MediaTypeVoter mediaTypeVoter;
+  /** The media type voter. */
+  private final MediaTypeVoter mediaTypeVoter;
 
-    /**
-     * The path voter.
-     */
-    private final RequestVoter requestVoter;
+  /** The path voter. */
+  private final RequestVoter requestVoter;
 
-    /**
-     * The constructor.
-     *
-     * @param mediaTypeVoter The media type voter.
-     * @param requestVoter   The request voter.
-     */
-    public FilterVoter(final MediaTypeVoter mediaTypeVoter, final RequestVoter requestVoter) {
-        this.mediaTypeVoter = mediaTypeVoter;
-        this.requestVoter = requestVoter;
+  /**
+   * The constructor.
+   *
+   * @param mediaTypeVoter The media type voter.
+   * @param requestVoter The request voter.
+   */
+  public FilterVoter(MediaTypeVoter mediaTypeVoter, RequestVoter requestVoter) {
+    this.mediaTypeVoter = mediaTypeVoter;
+    this.requestVoter = requestVoter;
+  }
+
+  /**
+   * Returns {@code true} if the filter should be enabled.
+   *
+   * @param request The request.
+   * @return {@code true} if the filter should be enabled.
+   */
+  public boolean enabled(HttpServletRequest request) {
+    Boolean isEnabled = (Boolean) request.getAttribute(getAttributeName());
+    LOGGER.trace("Got '{}' from attribute.", isEnabled);
+    if (isEnabled == null) {
+      boolean mediaTypeAllowed = mediaTypeVoter.mediaTypeMatches(request.getContentType());
+      boolean requestAllowed = requestVoter.allowed(request);
+      isEnabled = mediaTypeAllowed && requestAllowed;
+      request.setAttribute(getAttributeName(), isEnabled);
     }
+    LOGGER.trace("Is enabled: '{}'.", isEnabled);
 
-    /**
-     * Returns {@code true} if the filter should be enabled.
-     *
-     * @param request The request.
-     * @return {@code true} if the filter should be enabled.
-     */
-    public boolean enabled(final HttpServletRequest request) {
-        Boolean isEnabled = (Boolean) request.getAttribute(getAttributeName());
-        LOGGER.trace("Got '{}' from attribute.", isEnabled);
-        if (isEnabled == null) {
-            final boolean mediaTypeAllowed = mediaTypeVoter.mediaTypeMatches(request.getContentType());
-            final boolean requestAllowed = requestVoter.allowed(request);
-            isEnabled = mediaTypeAllowed && requestAllowed;
-            request.setAttribute(getAttributeName(), isEnabled);
-        }
-        LOGGER.trace("Is enabled: '{}'.", isEnabled);
+    return isEnabled;
+  }
 
-        return isEnabled;
-    }
-
-    private String getAttributeName() {
-        return this.getClass().getPackageName() + ".FILTER_VOTER";
-    }
-
+  private String getAttributeName() {
+    return this.getClass().getPackageName() + ".FILTER_VOTER";
+  }
 }

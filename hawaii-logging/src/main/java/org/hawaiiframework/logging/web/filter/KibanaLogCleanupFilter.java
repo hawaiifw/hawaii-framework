@@ -19,11 +19,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * A filter that cleans up the Kibana Log Fields.
@@ -33,28 +32,25 @@ import java.io.IOException;
  */
 public class KibanaLogCleanupFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogCleanupFilter.class);
+  /** The Logger. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogCleanupFilter.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
+  /** {@inheritDoc} */
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-        if (hasBeenFiltered(request)) {
-            filterChain.doFilter(request, response);
-        } else {
-            markHasBeenFiltered(request);
-            try {
-                filterChain.doFilter(request, response);
-            } finally {
-                LOGGER.info("Clearing Kibana log fields.");
-                KibanaLogFields.clear();
-            }
-        }
+    if (hasBeenFiltered(request)) {
+      filterChain.doFilter(request, response);
+    } else {
+      markHasBeenFiltered(request);
+      try {
+        filterChain.doFilter(request, response);
+      } finally {
+        LOGGER.info("Clearing Kibana log fields.");
+        KibanaLogFields.clear();
+      }
     }
+  }
 }

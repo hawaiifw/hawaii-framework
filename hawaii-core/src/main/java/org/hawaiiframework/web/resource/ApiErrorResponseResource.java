@@ -27,57 +27,53 @@ import org.hawaiiframework.exception.ApiException;
 @SuppressWarnings("PMD.DataClass")
 public class ApiErrorResponseResource extends ErrorResponseResource {
 
-    /**
-     * The error code.
-     */
-    private String apiErrorCode;
+  /** The error code. */
+  private String apiErrorCode;
 
-    /**
-     * The error reason.
-     */
-    private String apiErrorReason;
+  /** The error reason. */
+  private String apiErrorReason;
 
-    public ApiErrorResponseResource() {
-        this(null);
-    }
+  public ApiErrorResponseResource() {
+    this(null);
+  }
 
-    public ApiErrorResponseResource(final ApiException apiException) {
-        super(apiException);
-    }
+  public ApiErrorResponseResource(ApiException apiException) {
+    super(apiException);
+  }
 
-    /**
-     * Getter for error code.
-     *
-     * @return the error code
-     */
-    public String getApiErrorCode() {
-        return apiErrorCode;
-    }
+  /**
+   * Getter for error code.
+   *
+   * @return the error code
+   */
+  public String getApiErrorCode() {
+    return apiErrorCode;
+  }
 
-    /**
-     * Setter for error code.
-     *
-     * @param apiErrorCode the error code
-     */
-    public void setApiErrorCode(final String apiErrorCode) {
-        this.apiErrorCode = apiErrorCode;
-    }
+  /**
+   * Setter for error code.
+   *
+   * @param apiErrorCode the error code
+   */
+  public void setApiErrorCode(String apiErrorCode) {
+    this.apiErrorCode = apiErrorCode;
+  }
 
-    /**
-     * Getter for reason.
-     *
-     * @return the reason
-     */
-    public String getApiErrorReason() {
-        return apiErrorReason;
-    }
+  /**
+   * Getter for reason.
+   *
+   * @return the reason
+   */
+  public String getApiErrorReason() {
+    return apiErrorReason;
+  }
 
-    /**
-     * Setter for reason.
-     *
-     * @param apiErrorReason the reason
-     */
-    public void setApiErrorReason(final String apiErrorReason) {
-        this.apiErrorReason = apiErrorReason;
-    }
+  /**
+   * Setter for reason.
+   *
+   * @param apiErrorReason the reason
+   */
+  public void setApiErrorReason(String apiErrorReason) {
+    this.apiErrorReason = apiErrorReason;
+  }
 }

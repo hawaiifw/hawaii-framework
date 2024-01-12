@@ -33,27 +33,23 @@ import org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-/**
- * Configuration that includes all filter configurations.
- */
+/** Configuration that includes all filter configurations. */
 @Configuration
 @Import({
-    BusinessTransactionIdFilterConfiguration.class,
-    ClientIpLogFilterConfiguration.class,
-    ContainerNameHttpHeaderFilterConfiguration.class,
-    ContentCachingRequestResponseFilterConfiguration.class,
-    MicrometerTracingResponseFilterConfiguration.class,
-    KibanaLogCleanupFilterConfiguration.class,
-    OidcLogFilterConfiguration.class,
-    OpenTelemetryTraceIdResponseFilterConfiguration.class,
-    RequestDurationFilterConfiguration.class,
-    RequestIdFilterConfiguration.class,
-    RequestResponseLogFilterConfiguration.class,
-    SoftwareVersionLogFilterConfiguration.class,
-    TransactionIdFilterConfiguration.class,
-    TransactionTypeFilterConfiguration.class,
-    UserDetailsFilterConfiguration.class
+  BusinessTransactionIdFilterConfiguration.class,
+  ClientIpLogFilterConfiguration.class,
+  ContainerNameHttpHeaderFilterConfiguration.class,
+  ContentCachingRequestResponseFilterConfiguration.class,
+  KibanaLogCleanupFilterConfiguration.class,
+  MicrometerTracingResponseFilterConfiguration.class,
+  OidcLogFilterConfiguration.class,
+  OpenTelemetryTraceIdResponseFilterConfiguration.class,
+  RequestDurationFilterConfiguration.class,
+  RequestIdFilterConfiguration.class,
+  RequestResponseLogFilterConfiguration.class,
+  SoftwareVersionLogFilterConfiguration.class,
+  TransactionIdFilterConfiguration.class,
+  TransactionTypeFilterConfiguration.class,
+  UserDetailsFilterConfiguration.class
 })
-public class HawaiiLoggingFilterConfiguration {
-
-}
+public class HawaiiLoggingFilterConfiguration {}

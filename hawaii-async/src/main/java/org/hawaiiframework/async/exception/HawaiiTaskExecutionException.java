@@ -16,57 +16,52 @@
 
 package org.hawaiiframework.async.exception;
 
+import java.io.Serial;
 import org.hawaiiframework.exception.HawaiiException;
 
-import java.io.Serial;
-
-
 /**
- * Exception thrown when a task's {@link java.util.concurrent.CompletableFuture#get()} throws an error.
+ * Exception thrown when a task's {@link java.util.concurrent.CompletableFuture#get()} throws an
+ * error.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class HawaiiTaskExecutionException extends HawaiiException {
 
-    /**
-     * The serial version UID.
-     */
-    @Serial
-    private static final long serialVersionUID = -3946536802580483516L;
+  /** The serial version UID. */
+  @Serial private static final long serialVersionUID = -3946536802580483516L;
 
-    /**
-     * Constructs a new {@code HawaiiTaskExecutionException}.
-     */
-    public HawaiiTaskExecutionException() {
-        super();
-    }
+  /** Constructs a new {@code HawaiiTaskExecutionException}. */
+  public HawaiiTaskExecutionException() {
+    super();
+  }
 
-    /**
-     * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code message}.
-     *
-     * @param message the message.
-     */
-    public HawaiiTaskExecutionException(final String message) {
-        super(message);
-    }
+  /**
+   * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code message}.
+   *
+   * @param message the message.
+   */
+  public HawaiiTaskExecutionException(String message) {
+    super(message);
+  }
 
-    /**
-     * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code message} and {@code cause}.
-     *
-     * @param message the message.
-     * @param cause The cause.
-     */
-    public HawaiiTaskExecutionException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code message} and
+   * {@code cause}.
+   *
+   * @param message the message.
+   * @param cause The cause.
+   */
+  public HawaiiTaskExecutionException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code cause}.
-     *
-     * @param cause The cause.
-     */
-    public HawaiiTaskExecutionException(final Throwable cause) {
-        super(cause);
-    }
+  /**
+   * Constructs a new {@code HawaiiTaskExecutionException} with the supplied {@code cause}.
+   *
+   * @param cause The cause.
+   */
+  public HawaiiTaskExecutionException(Throwable cause) {
+    super(cause);
+  }
 }

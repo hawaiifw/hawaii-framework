@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Auto-configuration for REST.
- */
+/** Auto-configuration for REST. */
 
-/**
- * Auto-configuration for Hawaii asynchronous execution.
- */
+/** Auto-configuration for Hawaii asynchronous execution. */
 package org.hawaiiframework.boot.autoconfigure.async;

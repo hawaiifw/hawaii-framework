@@ -16,6 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.web.filter.RequestDurationFilter;
 import org.slf4j.Logger;
@@ -25,50 +29,43 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.RequestDurationFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configures the {@link RequestDurationFilter}.
- */
+/** Configures the {@link RequestDurationFilter}. */
 @Configuration
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class RequestDurationFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-duration";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-duration";
 
-    private static final Logger LOGGER = getLogger(RequestDurationFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(RequestDurationFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-17500}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-17500}")
+  private int filterOrder;
 
-    /**
-     * Create the {@link RequestDurationFilter} bean.
-     *
-     * @param filterVoter The filter voter.
-     * @return the {@link RequestDurationFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public RequestDurationFilter requestDurationFilter(final FilterVoter filterVoter) {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new RequestDurationFilter(filterVoter);
-    }
+  /**
+   * Create the {@link RequestDurationFilter} bean.
+   *
+   * @param filterVoter The filter voter.
+   * @return the {@link RequestDurationFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public RequestDurationFilter requestDurationFilter(FilterVoter filterVoter) {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new RequestDurationFilter(filterVoter);
+  }
 
-    /**
-     * Register the {@link #requestDurationFilter(FilterVoter)} bean.
-     *
-     * @param requestDurationFilter the request duration filter
-     * @return the {@link #requestDurationFilter(FilterVoter)} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<RequestDurationFilter> requestDurationFilterRegistration(
-            final RequestDurationFilter requestDurationFilter) {
-        return createFilterRegistrationBean(requestDurationFilter, filterOrder);
-    }
+  /**
+   * Register the {@link #requestDurationFilter(FilterVoter)} bean.
+   *
+   * @param requestDurationFilter the request duration filter
+   * @return the {@link #requestDurationFilter(FilterVoter)} bean, wrapped in a {@link
+   *     FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<RequestDurationFilter> requestDurationFilterRegistration(
+      RequestDurationFilter requestDurationFilter) {
+    return createFilterRegistrationBean(requestDurationFilter, filterOrder);
+  }
 }

@@ -34,57 +34,53 @@ import java.util.Objects;
 @SuppressWarnings({"checkstyle:ClassTypeParameterName", "PMD.GenericsNaming"})
 public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends Tuple6<T1, T2, T3, T4, T5, T6> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private T7 element7;
+  private T7 element7;
 
-    /**
-     * Constructs a new {@code Tuple} with the supplied elements.
-     */
-    public Tuple7(final T1 element1, final T2 element2, final T3 element3, final T4 element4, final T5 element5, final T6 element6,
-            final T7 element7) {
-        super(element1, element2, element3, element4, element5, element6);
-        this.element7 = element7;
+  /** Constructs a new {@code Tuple} with the supplied elements. */
+  public Tuple7(
+      T1 element1, T2 element2, T3 element3, T4 element4, T5 element5, T6 element6, T7 element7) {
+    super(element1, element2, element3, element4, element5, element6);
+    this.element7 = element7;
+  }
+
+  /**
+   * Returns the 7th element of this tuple.
+   *
+   * @return the 7th element of this tuple
+   */
+  public T7 getElement7() {
+    return element7;
+  }
+
+  /** Sets the 7th element of this tuple. */
+  public void setElement7(T7 element7) {
+    this.element7 = element7;
+  }
+
+  @Override
+  public int size() {
+    return 7;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Returns the 7th element of this tuple.
-     *
-     * @return the 7th element of this tuple
-     */
-    public T7 getElement7() {
-        return element7;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
-
-    /**
-     * Sets the 7th element of this tuple.
-     */
-    public void setElement7(final T7 element7) {
-        this.element7 = element7;
+    if (!super.equals(o)) {
+      return false;
     }
+    Tuple7<?, ?, ?, ?, ?, ?, ?> other = (Tuple7) o;
+    return Objects.equals(this.element7, other.element7);
+  }
 
-    @Override
-    public int size() {
-        return 7;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final Tuple7<?, ?, ?, ?, ?, ?, ?> other = (Tuple7) o;
-        return Objects.equals(this.element7, other.element7);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode() + Objects.hash(element7);
-    }
+  @Override
+  public int hashCode() {
+    return super.hashCode() + Objects.hash(element7);
+  }
 }

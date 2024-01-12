@@ -16,6 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.web.filter.RequestResponseLogFilter;
@@ -26,54 +30,44 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.RequestResponseLogFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configures the {@link RequestResponseLogFilter}.
- */
+/** Configures the {@link RequestResponseLogFilter}. */
 @Configuration
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class RequestResponseLogFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-response";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.request-response";
 
-    private static final Logger LOGGER = getLogger(RequestResponseLogFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(RequestResponseLogFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-300}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-300}")
+  private int filterOrder;
 
-    /**
-     * Create the request/response logging filter bean.
-     *
-     * @param filterVoter  The filter voter.
-     * @param hawaiiLogger The logger.
-     * @return the {@link RequestResponseLogFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public RequestResponseLogFilter requestResponseLogFilter(
-            final FilterVoter filterVoter,
-            final HawaiiRequestResponseLogger hawaiiLogger) {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new RequestResponseLogFilter(hawaiiLogger, filterVoter);
-    }
+  /**
+   * Create the request/response logging filter bean.
+   *
+   * @param filterVoter The filter voter.
+   * @param hawaiiLogger The logger.
+   * @return the {@link RequestResponseLogFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public RequestResponseLogFilter requestResponseLogFilter(
+      FilterVoter filterVoter, HawaiiRequestResponseLogger hawaiiLogger) {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new RequestResponseLogFilter(hawaiiLogger, filterVoter);
+  }
 
-    /**
-     * Create and register the {@link RequestResponseLogFilter} bean.
-     *
-     * @param requestResponseLogFilter The filter to register.
-     * @return the requestResponseLogFilter bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<RequestResponseLogFilter> requestResponseLogFilterRegistration(
-            final RequestResponseLogFilter requestResponseLogFilter) {
-        return createFilterRegistrationBean(requestResponseLogFilter, filterOrder);
-    }
-
+  /**
+   * Create and register the {@link RequestResponseLogFilter} bean.
+   *
+   * @param requestResponseLogFilter The filter to register.
+   * @return the requestResponseLogFilter bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<RequestResponseLogFilter> requestResponseLogFilterRegistration(
+      RequestResponseLogFilter requestResponseLogFilter) {
+    return createFilterRegistrationBean(requestResponseLogFilter, filterOrder);
+  }
 }

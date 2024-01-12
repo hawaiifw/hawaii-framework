@@ -22,16 +22,10 @@ package org.hawaiiframework.logging.model;
  * @since 2.0.0
  */
 public enum KibanaLogCallResultTypes {
-    /**
-     * Success.
-     */
-    SUCCESS,
-    /**
-     * Timeout.
-     */
-    TIMEOUT,
-    /**
-     * Failure.
-     */
-    FAILURE
+  /** Success. */
+  SUCCESS,
+  /** Timeout. */
+  TIMEOUT,
+  /** Failure. */
+  FAILURE
 }

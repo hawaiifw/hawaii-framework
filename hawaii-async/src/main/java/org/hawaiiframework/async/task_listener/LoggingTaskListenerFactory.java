@@ -18,14 +18,12 @@ package org.hawaiiframework.async.task_listener;
 
 import org.springframework.stereotype.Component;
 
-/**
- * Factory for logging task events.
- */
+/** Factory for logging task events. */
 @Component
 public class LoggingTaskListenerFactory implements TaskListenerFactory {
 
-    @Override
-    public TaskListener create() {
-        return new LoggingTaskListener();
-    }
+  @Override
+  public TaskListener create() {
+    return new LoggingTaskListener();
+  }
 }

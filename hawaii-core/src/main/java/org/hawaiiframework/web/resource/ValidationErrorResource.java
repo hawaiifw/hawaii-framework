@@ -16,9 +16,9 @@
 
 package org.hawaiiframework.web.resource;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * @author Marcel Overdijk
@@ -27,27 +27,27 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 @SuppressWarnings("PMD.DataClass")
 public class ValidationErrorResource {
 
-    private String code;
-    private String field;
+  private String code;
+  private String field;
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public void setCode(final String code) {
-        this.code = code;
-    }
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-    public String getField() {
-        return field;
-    }
+  public String getField() {
+    return field;
+  }
 
-    public void setField(final String field) {
-        this.field = field;
-    }
+  public void setField(String field) {
+    this.field = field;
+  }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
-    }
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
+  }
 }

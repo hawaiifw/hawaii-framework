@@ -19,83 +19,79 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
 
-import java.io.IOException;
-
 /**
  * Filter that logs the input and output of each HTTP request. It also logs the duration of the
  * request.
- * <p>
- * For more inspiration see AbstractRequestLoggingFilter.
+ *
+ * <p>For more inspiration see AbstractRequestLoggingFilter.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class RequestResponseLogFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The request response logger to use.
-     */
-    private final HawaiiRequestResponseLogger hawaiiLogger;
+  /** The request response logger to use. */
+  private final HawaiiRequestResponseLogger hawaiiLogger;
 
-    /**
-     * The filter voter.
-     */
-    private final FilterVoter filterVoter;
+  /** The filter voter. */
+  private final FilterVoter filterVoter;
 
-    /**
-     * The constructor.
-     *
-     * @param hawaiiLogger The request response logger.
-     * @param filterVoter  The filter voter.
-     */
-    public RequestResponseLogFilter(final HawaiiRequestResponseLogger hawaiiLogger,
-        final FilterVoter filterVoter) {
-        super();
-        this.hawaiiLogger = hawaiiLogger;
-        this.filterVoter = filterVoter;
+  /**
+   * The constructor.
+   *
+   * @param hawaiiLogger The request response logger.
+   * @param filterVoter The filter voter.
+   */
+  public RequestResponseLogFilter(
+      HawaiiRequestResponseLogger hawaiiLogger, FilterVoter filterVoter) {
+    super();
+    this.hawaiiLogger = hawaiiLogger;
+    this.filterVoter = filterVoter;
+  }
+
+  @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
+  protected void doFilterInternal(
+      HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse,
+      FilterChain filterChain)
+      throws ServletException, IOException {
+
+    if (!filterVoter.enabled(httpServletRequest) || hasBeenFiltered(httpServletRequest)) {
+      try {
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+      } finally {
+        logResponse(getWrapped(httpServletRequest));
+      }
+    } else {
+      markHasBeenFiltered(httpServletRequest);
+      WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
+      hawaiiLogger.logRequest(wrapped.request());
+
+      try {
+        filterChain.doFilter(wrapped.request(), wrapped.response());
+      } finally {
+        logResponse(wrapped);
+      }
     }
+  }
 
-    @Override
-    @SuppressWarnings("PMD.LawOfDemeter")
-    protected void doFilterInternal(
-        final HttpServletRequest httpServletRequest,
-        final HttpServletResponse httpServletResponse,
-        final FilterChain filterChain) throws ServletException, IOException {
-
-        if (!filterVoter.enabled(httpServletRequest) || hasBeenFiltered(httpServletRequest)) {
-            try {
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
-            } finally {
-                logResponse(getWrapped(httpServletRequest));
-            }
-        } else {
-            markHasBeenFiltered(httpServletRequest);
-            final WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
-            hawaiiLogger.logRequest(wrapped.request());
-
-            try {
-                filterChain.doFilter(wrapped.request(), wrapped.response());
-            } finally {
-                logResponse(wrapped);
-            }
+  private void logResponse(WrappedHttpRequestResponse wrapped) throws IOException {
+    if (wrapped != null) {
+      ResettableHttpServletRequest request = wrapped.request();
+      if (!request.isAsyncStarted() && filterVoter.enabled(request)) {
+        ContentCachingWrappedResponse response = wrapped.response();
+        if (response != null) {
+          hawaiiLogger.logResponse(request, response);
         }
+      }
     }
-
-    private void logResponse(final WrappedHttpRequestResponse wrapped) throws IOException {
-        if (wrapped != null) {
-            final ResettableHttpServletRequest request = wrapped.request();
-            if (!request.isAsyncStarted() && filterVoter.enabled(request)) {
-                final ContentCachingWrappedResponse response = wrapped.response();
-                if (response != null) {
-                    hawaiiLogger.logResponse(request, response);
-                }
-            }
-        }
-    }
+  }
 }

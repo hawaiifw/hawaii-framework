@@ -15,28 +15,29 @@
  */
 package org.hawaiiframework.logging.web.sse;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpOutputMessage;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpOutputMessage;
 
 public class LoggingSseHttpOutputMessage implements HttpOutputMessage {
 
-    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+  private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    @Override
-    public OutputStream getBody() throws IOException {
-        return outputStream;
-    }
+  @Override
+  public OutputStream getBody() throws IOException {
+    return outputStream;
+  }
 
-    @Override
-    public HttpHeaders getHeaders() {
-        return new HttpHeaders();
-    }
+  @Override
+  public HttpHeaders getHeaders() {
+    return new HttpHeaders();
+  }
 
-    public String getContents() {
-        return outputStream.toString();
-    }
+  public String getContents() {
+    return outputStream.toString(UTF_8);
+  }
 }

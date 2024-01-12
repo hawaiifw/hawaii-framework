@@ -8,10 +8,10 @@ package org.hawaiiframework.util;
 @FunctionalInterface
 public interface Returnable<T> {
 
-    /**
-     * The call to invoke.
-     *
-     * @return the return value of the wrapped call.
-     */
-    T invoke() throws Throwable;
+  /**
+   * The call to invoke.
+   *
+   * @return the return value of the wrapped call.
+   */
+  T invoke() throws Throwable;
 }

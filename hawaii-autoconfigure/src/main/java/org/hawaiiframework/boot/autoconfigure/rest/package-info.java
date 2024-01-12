@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Auto-configuration for REST.
- */
+/** Auto-configuration for REST. */
 package org.hawaiiframework.boot.autoconfigure.rest;

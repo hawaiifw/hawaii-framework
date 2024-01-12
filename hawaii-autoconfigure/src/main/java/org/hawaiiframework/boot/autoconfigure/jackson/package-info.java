@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Auto-configuration for Jackson.
- */
+/** Auto-configuration for Jackson. */
 package org.hawaiiframework.boot.autoconfigure.jackson;

@@ -38,43 +38,42 @@ import org.springframework.core.annotation.Order;
 @Order(0)
 public class GraphQlTransactionTypeSupplier implements TransactionTypeSupplier {
 
-    private static final String GRAPHQL_URL_IDENTIFIER = "graphql";
+  private static final String GRAPHQL_URL_IDENTIFIER = "graphql";
 
-    private static String getPostBody(final HttpServletRequest servletRequest) throws IOException {
-        return IOUtils.toString(servletRequest.getInputStream(),
-            servletRequest.getCharacterEncoding());
+  private static String getPostBody(HttpServletRequest servletRequest) throws IOException {
+    return IOUtils.toString(servletRequest.getInputStream(), servletRequest.getCharacterEncoding());
+  }
+
+  @Override
+  @SuppressWarnings("checkstyle:ReturnCount")
+  public String getTransactionType(ResettableHttpServletRequest request) throws IOException {
+    String contentType = request.getContentType();
+    if (contentType == null || !request.getServletPath().contains(GRAPHQL_URL_IDENTIFIER)) {
+      return null;
     }
+    try {
+      // Collect the graphQl multiPart request with.
+      // request.getParts().stream().findFirst().get().getContentType()
+      if (MULTIPART_FORM_DATA.includes(parseMediaType(contentType))) {
+        return "Graphql.multiPart";
+      }
 
-    @SuppressWarnings("checkstyle:ReturnCount")
-    @Override
-    public String getTransactionType(final ResettableHttpServletRequest request) throws IOException {
-        final String contentType = request.getContentType();
-        if (contentType == null || !request.getServletPath().contains(GRAPHQL_URL_IDENTIFIER)) {
-            return null;
-        }
-        try {
-            // Collect the graphQl multiPart request with.
-            // request.getParts().stream().findFirst().get().getContentType()
-            if (MULTIPART_FORM_DATA.includes(parseMediaType(contentType))) {
-                return "Graphql.multiPart";
-            }
+      String body = getPostBody(request);
 
-            final String body = getPostBody(request);
+      JSONObject jsonObject = new JSONObject(body);
+      String query = jsonObject.getString("query");
+      Document document = Parser.parse(query);
 
-            final JSONObject jsonObject = new JSONObject(body);
-            final String query = jsonObject.getString("query");
-            final Document document = Parser.parse(query);
+      OperationDefinition operationDefinition =
+          document.getDefinitionsOfType(OperationDefinition.class).get(0);
 
-            final OperationDefinition operationDefinition = document.getDefinitionsOfType(
-                OperationDefinition.class).get(0);
+      String operation = operationDefinition.getOperation().name().toLowerCase(Locale.getDefault());
+      String action =
+          operationDefinition.getSelectionSet().getSelectionsOfType(Field.class).get(0).getName();
 
-            final String operation = operationDefinition.getOperation().name().toLowerCase(Locale.getDefault());
-            final String action = operationDefinition.getSelectionSet().getSelectionsOfType(Field.class).get(0)
-                .getName();
-
-            return "Graphql." + operation + "." + action;
-        } finally {
-            request.reset();
-        }
+      return "Graphql." + operation + "." + action;
+    } finally {
+      request.reset();
     }
+  }
 }

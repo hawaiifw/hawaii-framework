@@ -22,11 +22,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Task that stops another scheduled task if the scheduled task's timeout has been reached.
- * <p>
- * We first try to remove the scheduled task from the executor, so it will not be executed.
- * If this fails we will try to abort the scheduled tasks.
- * <p>
- * For this the guarded task must register it's {@link TaskAbortStrategy} in the {@link SharedTaskContext}.
+ *
+ * <p>We first try to remove the scheduled task from the executor, so it will not be executed. If
+ * this fails we will try to abort the scheduled tasks.
+ *
+ * <p>For this the guarded task must register it's {@link TaskAbortStrategy} in the {@link
+ * SharedTaskContext}.
  *
  * @author Rutger Lubbers
  * @author Paul Klos
@@ -34,27 +35,22 @@ import org.slf4j.LoggerFactory;
  */
 public class TimeoutGuardTask extends HawaiiAsyncRunnable {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimeoutGuardTask.class);
+  /** The logger to use. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(TimeoutGuardTask.class);
 
-    /**
-     * Create a new {@link TimeoutGuardTask} instance with the given {@code taskExecutor}.
-     *
-     * @param sharedTaskContext The context to share, contains
-     */
-    public TimeoutGuardTask(final SharedTaskContext sharedTaskContext) {
-        super(sharedTaskContext);
-    }
+  /**
+   * Create a new {@link TimeoutGuardTask} instance with the given {@code taskExecutor}.
+   *
+   * @param sharedTaskContext The context to share, contains
+   */
+  public TimeoutGuardTask(SharedTaskContext sharedTaskContext) {
+    super(sharedTaskContext);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doRun() {
-        LOGGER.trace("Executing guard task.");
-        sharedTaskContext.timeout();
-    }
-
+  /** {@inheritDoc} */
+  @Override
+  protected void doRun() {
+    LOGGER.trace("Executing guard task.");
+    sharedTaskContext.timeout();
+  }
 }

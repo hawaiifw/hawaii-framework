@@ -19,9 +19,5 @@ package org.hawaiiframework.sql;
 import net.ttddyy.dsproxy.listener.QueryExecutionListener;
 import org.springframework.core.Ordered;
 
-/**
- * An {@link Ordered} version of {@link QueryExecutionListener}.
- */
-public interface OrderedQueryExecutionListener extends QueryExecutionListener, Ordered {
-
-}
+/** An {@link Ordered} version of {@link QueryExecutionListener}. */
+public interface OrderedQueryExecutionListener extends QueryExecutionListener, Ordered {}

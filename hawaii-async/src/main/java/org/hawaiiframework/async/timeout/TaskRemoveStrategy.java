@@ -16,10 +16,9 @@
 
 package org.hawaiiframework.async.timeout;
 
+import java.util.concurrent.ThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Removes the scheduled task from the executor's queue.
@@ -30,55 +29,44 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class TaskRemoveStrategy implements TaskAbortStrategy {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskRemoveStrategy.class);
+  /** The logger to use. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(TaskRemoveStrategy.class);
 
-    /**
-     * The executor holding the timeout guard tasks.
-     */
-    private final ThreadPoolExecutor executor;
+  /** The executor holding the timeout guard tasks. */
+  private final ThreadPoolExecutor executor;
 
-    /**
-     * The timeout guard task for this task.
-     */
-    private final Runnable task;
+  /** The timeout guard task for this task. */
+  private final Runnable task;
 
-    /**
-     * The task's type, i.e. 'guarded' or 'timeout guard'.
-     */
-    private final String taskType;
+  /** The task's type, i.e. 'guarded' or 'timeout guard'. */
+  private final String taskType;
 
-    /**
-     * The task id.
-     */
-    private final String taskId;
+  /** The task id. */
+  private final String taskId;
 
-    /**
-     * Create a new instance.
-     *
-     * @param executor The executor executing or queueing the {@code task}.
-     * @param task     The task.
-     * @param taskType The type of the task.
-     * @param taskId   The task id.
-     */
-    public TaskRemoveStrategy(final ThreadPoolExecutor executor, final Runnable task, final String taskType, final String taskId) {
-        this.executor = executor;
-        this.task = task;
-        this.taskType = taskType;
-        this.taskId = taskId;
-    }
+  /**
+   * Create a new instance.
+   *
+   * @param executor The executor executing or queueing the {@code task}.
+   * @param task The task.
+   * @param taskType The type of the task.
+   * @param taskId The task id.
+   */
+  public TaskRemoveStrategy(
+      ThreadPoolExecutor executor, Runnable task, String taskType, String taskId) {
+    this.executor = executor;
+    this.task = task;
+    this.taskType = taskType;
+    this.taskId = taskId;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean invoke() {
-        LOGGER.trace("Removing {} task with id '{}'.", taskType, taskId);
-        final boolean wasRemoved = executor.remove(task);
-        LOGGER.trace("Removal was {}successful.", wasRemoved ? "" : "not ");
+  /** {@inheritDoc} */
+  @Override
+  public boolean invoke() {
+    LOGGER.trace("Removing {} task with id '{}'.", taskType, taskId);
+    boolean wasRemoved = executor.remove(task);
+    LOGGER.trace("Removal was {}successful.", wasRemoved ? "" : "not ");
 
-        return wasRemoved;
-    }
+    return wasRemoved;
+  }
 }

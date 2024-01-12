@@ -15,9 +15,8 @@
  */
 package org.hawaiiframework.logging.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Utility class to determine the client IP address.
@@ -27,34 +26,32 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public class ClientIpResolver {
 
-    /**
-     * The name of the request header that contains the client ip address.
-     */
-    private final String frontendIpHeader;
+  /** The name of the request header that contains the client ip address. */
+  private final String frontendIpHeader;
 
-    /**
-     * Create a new instance of the ClientIpResolver.
-     * @param frontendIpHeader if present, this header's value will be used as the client IP address.
-     */
-    public ClientIpResolver(final String frontendIpHeader) {
-        this.frontendIpHeader = frontendIpHeader;
+  /**
+   * Create a new instance of the ClientIpResolver.
+   *
+   * @param frontendIpHeader if present, this header's value will be used as the client IP address.
+   */
+  public ClientIpResolver(String frontendIpHeader) {
+    this.frontendIpHeader = frontendIpHeader;
+  }
+
+  /**
+   * Extract the client IP address from the HttpServletRequest.
+   *
+   * @param request the request
+   * @return the IP address
+   */
+  public String getClientIp(HttpServletRequest request) {
+    String address = request.getRemoteAddr();
+    if (StringUtils.isNotBlank(frontendIpHeader)) {
+      String headerValue = request.getHeader(frontendIpHeader);
+      if (StringUtils.isNotBlank(headerValue)) {
+        address = headerValue;
+      }
     }
-
-    /**
-     * Extract the client IP address from the HttpServletRequest.
-     *
-     * @param request the request
-     * @return the IP address
-     */
-    public String getClientIp(final HttpServletRequest request) {
-        String address = request.getRemoteAddr();
-        if (StringUtils.isNotBlank(frontendIpHeader)) {
-            final String headerValue = request.getHeader(frontendIpHeader);
-            if (StringUtils.isNotBlank(headerValue)) {
-                address = headerValue;
-            }
-        }
-        return address;
-    }
-
+    return address;
+  }
 }

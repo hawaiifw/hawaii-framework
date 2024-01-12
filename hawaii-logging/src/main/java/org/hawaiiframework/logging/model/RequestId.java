@@ -17,48 +17,41 @@ package org.hawaiiframework.logging.model;
 
 import java.util.UUID;
 
-/**
- * Class that holds a request id in a ThreadLocal.
- */
+/** Class that holds a request id in a ThreadLocal. */
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class RequestId {
 
-    /**
-     * The thread local id.
-     */
-    private static final ThreadLocal<UUID> ID = new InheritableThreadLocal<>();
+  /** The thread local id. */
+  private static final ThreadLocal<UUID> ID = new InheritableThreadLocal<>();
 
-    private RequestId() {
-        // private constructor for utility class.
+  private RequestId() {
+    // private constructor for utility class.
+  }
+
+  /**
+   * Return the id as string.
+   *
+   * @return The ID as string, or {@code null} if not set.
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public static String get() {
+    if (ID.get() == null) {
+      return null;
     }
+    return ID.get().toString();
+  }
 
-    /**
-     * Return the id as string.
-     *
-     * @return The ID as string, or {@code null} if not set.
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public static String get() {
-        if (ID.get() == null) {
-            return null;
-        }
-        return ID.get().toString();
-    }
+  /**
+   * Set the request id.
+   *
+   * @param value The UUID to set.
+   */
+  public static void set(UUID value) {
+    ID.set(value);
+  }
 
-    /**
-     * Set the request id.
-     *
-     * @param value The UUID to set.
-     */
-    public static void set(final UUID value) {
-        ID.set(value);
-    }
-
-    /**
-     * Clear the thread local.
-     */
-    public static void remove() {
-        ID.remove();
-    }
-
+  /** Clear the thread local. */
+  public static void remove() {
+    ID.remove();
+  }
 }

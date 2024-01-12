@@ -9,49 +9,43 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-
 /**
  * HTTP request interceptor to set a business transaction id as a header on an HTTP request.
  *
- * A business transaction id can be any (UUID) value a caller to a service wishes to supply.
+ * <p>A business transaction id can be any (UUID) value a caller to a service wishes to supply.
  */
-public class BusinessTransactionIdSupplierHttpRequestInterceptor implements ClientHttpRequestInterceptor {
+public class BusinessTransactionIdSupplierHttpRequestInterceptor
+    implements ClientHttpRequestInterceptor {
 
-    /**
-     * The header name to set.
-     */
-    private final String headerName;
+  /** The header name to set. */
+  private final String headerName;
 
-    /**
-     * Default constructor with 'X-Hawaii-Business-Tx-Id' as {@code headerName}.
-     */
-    public BusinessTransactionIdSupplierHttpRequestInterceptor() {
-        this("X-Hawaii-Business-Tx-Id");
+  /** Default constructor with 'X-Hawaii-Business-Tx-Id' as {@code headerName}. */
+  public BusinessTransactionIdSupplierHttpRequestInterceptor() {
+    this("X-Hawaii-Business-Tx-Id");
+  }
+
+  /**
+   * Constructor that sets the header name.
+   *
+   * @param headerName The header name to use.
+   */
+  public BusinessTransactionIdSupplierHttpRequestInterceptor(String headerName) {
+    this.headerName = headerName;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public ClientHttpResponse intercept(
+      HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    // Read the value from the log fields, since for thread pool style execution, this should be
+    // populated,
+    // whereas the thread local variable might not be.
+    String btxId = KibanaLogFields.get(KibanaLogFieldNames.BUSINESS_TX_ID);
+    if (StringUtils.isNotBlank(btxId)) {
+      request.getHeaders().add(headerName, btxId);
     }
-
-    /**
-     * Constructor that sets the header name.
-     *
-     * @param headerName The header name to use.
-     */
-    public BusinessTransactionIdSupplierHttpRequestInterceptor(final String headerName) {
-        this.headerName = headerName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    @Override
-    public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
-        throws IOException {
-        // Read the value from the log fields, since for thread pool style execution, this should be populated,
-        // whereas the thread local variable might not be.
-        final String btxId = KibanaLogFields.get(KibanaLogFieldNames.BUSINESS_TX_ID);
-        if (StringUtils.isNotBlank(btxId)) {
-            request.getHeaders().add(headerName, btxId);
-        }
-        return execution.execute(request, body);
-    }
-
+    return execution.execute(request, body);
+  }
 }

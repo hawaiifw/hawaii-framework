@@ -24,10 +24,10 @@ package org.hawaiiframework.util.tuple;
  */
 public interface Tuple {
 
-    /**
-     * Returns the number of elements of this tuple.
-     *
-     * @return the number of elements of this tuple
-     */
-    int size();
+  /**
+   * Returns the number of elements of this tuple.
+   *
+   * @return the number of elements of this tuple
+   */
+  int size();
 }

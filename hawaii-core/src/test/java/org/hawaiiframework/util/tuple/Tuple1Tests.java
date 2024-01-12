@@ -16,12 +16,12 @@
 
 package org.hawaiiframework.util.tuple;
 
-import org.junit.Test;
-
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.Test;
 
 /**
  * Tests for {@link Tuple1}.
@@ -30,22 +30,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class Tuple1Tests extends AbstractTupleTests {
 
-    private Tuple1<Object1> tuple = Tuples.of(object1);
+  private Tuple1<Object1> tuple = Tuples.of(object1);
 
-    @Test
-    public void testSizeIs1() {
-        assertThat(tuple.size(), is(1));
-    }
+  @Test
+  public void testSizeIs1() {
+    assertThat(tuple.size(), is(1));
+  }
 
-    @Test
-    public void testSetElement1() {
-        tuple.setElement1(other1);
-        assertThat(tuple.getElement1(), is(sameInstance(other1)));
-    }
+  @Test
+  public void testSetElement1() {
+    tuple.setElement1(other1);
+    assertThat(tuple.getElement1(), is(sameInstance(other1)));
+  }
 
-    @Test
-    public void testGetElement1() {
-        assertThat(tuple.getElement1(), is(instanceOf(Object1.class)));
-        assertThat(tuple.getElement1(), is(sameInstance(object1)));
-    }
+  @Test
+  public void testGetElement1() {
+    assertThat(tuple.getElement1(), is(instanceOf(Object1.class)));
+    assertThat(tuple.getElement1(), is(sameInstance(object1)));
+  }
 }

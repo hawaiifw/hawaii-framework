@@ -16,52 +16,50 @@
 
 package org.hawaiiframework.async.task_listener;
 
-import org.hawaiiframework.async.timeout.SharedTaskContext;
-import org.hawaiiframework.logging.model.KibanaLogContext;
-import org.hawaiiframework.logging.model.KibanaLogFields;
-
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_ID;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TASK_ID;
 
+import org.hawaiiframework.async.timeout.SharedTaskContext;
+import org.hawaiiframework.logging.model.KibanaLogContext;
+import org.hawaiiframework.logging.model.KibanaLogFields;
+
 /**
  * Task listener for Kibana log fields.
- * <p>
- * Ordered at -100.
+ *
+ * <p>Ordered at -100.
  */
 public class KibanaLogFieldsTaskListener implements TaskListener {
 
-    private final KibanaLogContext kibanaLogContext;
-    private SharedTaskContext sharedTaskContext;
+  private final KibanaLogContext kibanaLogContext;
+  private SharedTaskContext sharedTaskContext;
 
-    /**
-     * The constructor.
-     */
-    public KibanaLogFieldsTaskListener() {
-        kibanaLogContext = KibanaLogFields.getContext();
-    }
+  /** The constructor. */
+  public KibanaLogFieldsTaskListener() {
+    kibanaLogContext = KibanaLogFields.getContext();
+  }
 
-    @Override
-    public int getOrder() {
-        return -100;
-    }
+  @Override
+  public int getOrder() {
+    return -100;
+  }
 
-    @Override
-    public void setSharedTaskContext(final SharedTaskContext sharedTaskContext) {
-        this.sharedTaskContext = sharedTaskContext;
-    }
+  @Override
+  public void setSharedTaskContext(SharedTaskContext sharedTaskContext) {
+    this.sharedTaskContext = sharedTaskContext;
+  }
 
-    @Override
-    public void startExecution() {
-        KibanaLogFields.populateFromContext(kibanaLogContext);
-        final String taskId = sharedTaskContext.getTaskId();
-        KibanaLogFields.tag(TASK_ID, taskId);
-        KibanaLogFields.tag(CALL_ID, taskId);
-        KibanaLogFields.tag(CALL_TYPE, sharedTaskContext.getTaskName());
-    }
+  @Override
+  public void startExecution() {
+    KibanaLogFields.populateFromContext(kibanaLogContext);
+    String taskId = sharedTaskContext.getTaskId();
+    KibanaLogFields.tag(TASK_ID, taskId);
+    KibanaLogFields.tag(CALL_ID, taskId);
+    KibanaLogFields.tag(CALL_TYPE, sharedTaskContext.getTaskName());
+  }
 
-    @Override
-    public void finish() {
-        KibanaLogFields.clear();
-    }
+  @Override
+  public void finish() {
+    KibanaLogFields.clear();
+  }
 }

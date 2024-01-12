@@ -33,46 +33,46 @@ import org.springframework.web.servlet.HandlerMapping;
 @Order(1_000)
 public class SpringMvcTransactionTypeSupplier implements TransactionTypeSupplier {
 
-    private static final Logger LOGGER = getLogger(SpringMvcTransactionTypeSupplier.class);
+  private static final Logger LOGGER = getLogger(SpringMvcTransactionTypeSupplier.class);
 
-    private final ApplicationContext applicationContext;
+  private final ApplicationContext applicationContext;
 
-    /**
-     * The constructor.
-     *
-     * @param applicationContext The application context.
-     */
-    public SpringMvcTransactionTypeSupplier(final ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+  /**
+   * The constructor.
+   *
+   * @param applicationContext The application context.
+   */
+  public SpringMvcTransactionTypeSupplier(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
+
+  @Override
+  public String getTransactionType(ResettableHttpServletRequest request) {
+    HandlerMethod handler = null;
+
+    for (HandlerMapping handlerMapping :
+        applicationContext.getBeansOfType(HandlerMapping.class).values()) {
+      HandlerExecutionChain handlerExecutionChain = null;
+      try {
+        handlerExecutionChain = handlerMapping.getHandler(request);
+      } catch (Exception e) {
+        LOGGER.warn("Exception when fetching the handler");
+      }
+      if (handlerExecutionChain != null) {
+        var tempHandler = handlerExecutionChain.getHandler();
+        handler = tempHandler instanceof HandlerMethod handlerMethod ? handlerMethod : null;
+        break;
+      }
     }
 
-    @Override
-    public String getTransactionType(final ResettableHttpServletRequest request) {
-        HandlerMethod handler = null;
+    if (handler == null) {
+      LOGGER.debug("No handler found.");
+    } else {
 
-        for (HandlerMapping handlerMapping : applicationContext.getBeansOfType(HandlerMapping.class)
-            .values()) {
-            HandlerExecutionChain handlerExecutionChain = null;
-            try {
-                handlerExecutionChain = handlerMapping.getHandler(request);
-            } catch (Exception e) {
-                LOGGER.warn("Exception when fetching the handler");
-            }
-            if (handlerExecutionChain != null) {
-                final var tempHandler = handlerExecutionChain.getHandler();
-                handler = tempHandler instanceof HandlerMethod handlerMethod ? handlerMethod : null;
-                break;
-            }
-        }
-
-        if (handler == null) {
-            LOGGER.debug("No handler found.");
-        } else {
-
-            final var nameMethod = handler.getMethod().getName();
-            final var nameController = handler.getBeanType().getSimpleName();
-            return nameController + "." + nameMethod;
-        }
-        return null;
+      var nameMethod = handler.getMethod().getName();
+      var nameController = handler.getBeanType().getSimpleName();
+      return nameController + "." + nameMethod;
     }
+    return null;
+  }
 }
