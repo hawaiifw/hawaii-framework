@@ -42,7 +42,7 @@ public class ContentCachingRequestResponseFilterConfiguration {
 
     private static final Logger LOGGER = getLogger(ContentCachingRequestResponseFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-1250}")
+    @Value("${" + CONFIG_PREFIX + ".order:-17400}")
     private int filterOrder;
 
     /**
