@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.boot.autoconfigure.cache;
 
 import org.hawaiiframework.cache.redis.config.RedisConfiguration;

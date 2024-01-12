@@ -19,6 +19,8 @@ package org.hawaiiframework.boot.autoconfigure.time;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * The Hawaii time properies.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */

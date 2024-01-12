@@ -24,6 +24,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
+ * The Hawaii environment configuration.
+ *
  * @author Rutger Lubbers
  * @since 6.0.0
  */

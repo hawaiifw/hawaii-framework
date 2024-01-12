@@ -46,6 +46,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 
 /**
+ * The Hawaii REST autoconfiguration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
@@ -90,6 +92,11 @@ public class HawaiiRestAutoConfiguration {
     return new DefaultExceptionResponseFactory();
   }
 
+  /**
+   * Create an error response entity builder.
+   *
+   * @return The error response entity builder.
+   */
   @Bean
   public ErrorResponseEntityBuilder errorResponseEntityBuilder(
       List<ErrorResponseEnricher> errorResponseEnrichers) {
