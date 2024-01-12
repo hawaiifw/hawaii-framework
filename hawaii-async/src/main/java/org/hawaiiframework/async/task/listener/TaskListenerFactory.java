@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.async.task_listener;
+package org.hawaiiframework.async.task.listener;
 
 /**
  * Factory for a task listener. The listeners are invoked for the async task lifecycle events. See

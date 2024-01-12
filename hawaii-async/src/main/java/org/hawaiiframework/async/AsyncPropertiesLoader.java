@@ -60,9 +60,9 @@ public class AsyncPropertiesLoader {
     try {
       return loadYamlExecutorConfigurationProperties(
           new String(Files.readAllBytes(Paths.get(configFile)), "UTF-8"));
-    } catch (Exception e) {
+    } catch (Exception exception) {
       LOGGER.error("Unable to load async configuration file '{}'.", configFile);
-      throw new HawaiiException(e);
+      throw new HawaiiException(exception);
     }
   }
 

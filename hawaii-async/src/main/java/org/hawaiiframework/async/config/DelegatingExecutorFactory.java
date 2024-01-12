@@ -25,7 +25,7 @@ import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.SystemProperties;
 import org.hawaiiframework.async.model.TaskProperties;
-import org.hawaiiframework.async.task_listener.TaskListenerFactory;
+import org.hawaiiframework.async.task.listener.TaskListenerFactory;
 import org.hawaiiframework.exception.HawaiiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

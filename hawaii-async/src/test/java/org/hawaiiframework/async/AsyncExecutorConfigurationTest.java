@@ -30,7 +30,7 @@ import org.hawaiiframework.async.model.ExecutorProperties;
 import org.hawaiiframework.async.model.SystemProperties;
 import org.hawaiiframework.async.model.TaskProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
-import org.hawaiiframework.async.task_listener.KibanaLogFieldsTaskListenerFactory;
+import org.hawaiiframework.async.task.listener.KibanaLogFieldsTaskListenerFactory;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.hawaiiframework.async.timeout.TaskAbortStrategy;
 import org.junit.Before;

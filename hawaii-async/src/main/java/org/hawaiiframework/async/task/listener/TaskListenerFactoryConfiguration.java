@@ -1,4 +1,4 @@
-package org.hawaiiframework.async.task_listener;
+package org.hawaiiframework.async.task.listener;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

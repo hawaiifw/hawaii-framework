@@ -38,8 +38,8 @@ public class AbortedHttpRequestInterceptor implements ClientHttpRequestIntercept
       HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
     try {
       return execution.execute(request, body);
-    } catch (SocketException e) {
-      throw new TaskTimeoutException("Task timed out.", e);
+    } catch (SocketException exception) {
+      throw new TaskTimeoutException("Task timed out.", exception);
     }
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.async.task_listener;
+package org.hawaiiframework.async.task.listener;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
@@ -51,7 +51,7 @@ public class LoggingTaskListener implements TaskListener {
   }
 
   @Override
-  @SuppressWarnings("try")
+  @SuppressWarnings({"try", "unused"})
   public void startExecution() {
     try (AutoCloseableKibanaLogField callStart =
         KibanaLogFields.tagCloseable(LOG_TYPE, CALL_START)) {
@@ -63,7 +63,7 @@ public class LoggingTaskListener implements TaskListener {
   }
 
   @Override
-  @SuppressWarnings("try")
+  @SuppressWarnings({"PMD.LawOfDemeter", "try", "unused"})
   public void finish() {
     TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
     String duration = formatTime(taskStatistics.getTotalTime());

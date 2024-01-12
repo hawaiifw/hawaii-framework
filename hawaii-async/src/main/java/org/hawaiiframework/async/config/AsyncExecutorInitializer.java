@@ -26,7 +26,7 @@ import org.hawaiiframework.async.AbortableTaskDecorator;
 import org.hawaiiframework.async.DelegatingExecutor;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.model.ExecutorProperties;
-import org.hawaiiframework.async.task_listener.TaskListenerFactory;
+import org.hawaiiframework.async.task.listener.TaskListenerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -152,9 +152,7 @@ public class AsyncExecutorInitializer {
    * @return true if the names match
    */
   private boolean isDefaultExecutor(String executorName) {
-    if (StringUtils.isBlank(executorName)) {
-      return false;
-    }
-    return executorName.equals(configuration.getDefaultExecutor());
+    return !StringUtils.isBlank(executorName)
+        && executorName.equals(configuration.getDefaultExecutor());
   }
 }

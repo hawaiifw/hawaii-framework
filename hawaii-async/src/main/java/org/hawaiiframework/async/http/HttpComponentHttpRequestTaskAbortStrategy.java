@@ -58,8 +58,8 @@ public class HttpComponentHttpRequestTaskAbortStrategy implements TaskAbortStrat
       LOGGER.trace("Invoking HttpUriRequest#abort().");
       request.abort();
       return true;
-    } catch (UnsupportedOperationException e) {
-      LOGGER.error("Cannot stop http request.", e);
+    } catch (UnsupportedOperationException exception) {
+      LOGGER.error("Cannot stop http request.", exception);
       return false;
     }
   }

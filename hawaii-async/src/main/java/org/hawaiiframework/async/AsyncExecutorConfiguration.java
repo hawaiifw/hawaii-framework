@@ -24,12 +24,11 @@ import org.hawaiiframework.async.config.AsyncExecutorInitializer;
 import org.hawaiiframework.async.config.BeanRegistrar;
 import org.hawaiiframework.async.config.DelegatingExecutorFactory;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
-import org.hawaiiframework.async.task_listener.TaskListenerFactoryConfiguration;
+import org.hawaiiframework.async.task.listener.TaskListenerFactoryConfiguration;
 import org.hawaiiframework.sql.DataSourceProxyConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
@@ -105,12 +104,11 @@ public class AsyncExecutorConfiguration
 
   /** {@inheritDoc} */
   @Override
-  public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry)
-      throws BeansException {
+  public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) {
     LOGGER.trace("Creating beans for async executors.");
     registrar = new BeanRegistrar(registry);
 
-    ExecutorConfigurationProperties properties = getProperties();
+    properties = getProperties();
     registrar.registerBean(
         EXECUTOR_CONFIGURATION_PROPERTIES, ExecutorConfigurationProperties.class);
 
@@ -127,10 +125,10 @@ public class AsyncExecutorConfiguration
    * works.
    */
   @Override
-  public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory)
-      throws BeansException {
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) {
     LOGGER.trace("Initializing beans for async executors.");
-    ExecutorConfigurationProperties properties = getProperties();
+    properties = getProperties();
     beanFactory.initializeBean(properties, EXECUTOR_CONFIGURATION_PROPERTIES);
 
     AsyncExecutorInitializer executorInitializer =

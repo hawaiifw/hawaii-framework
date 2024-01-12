@@ -23,7 +23,7 @@ import java.util.List;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.TaskStatistics;
-import org.hawaiiframework.async.task_listener.TaskListener;
+import org.hawaiiframework.async.task.listener.TaskListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.OrderComparator;
@@ -69,7 +69,7 @@ public class SharedTaskContext {
   /** The set of task contexts, shared data between caller and async task. */
   private final List<TaskListener> taskListeners;
 
-  /** The executors statistics. */
+  /** The executor's statistics. */
   private final ExecutorStatistics executorStatistics;
 
   /** Flag to indicate that the task has been aborted. */
@@ -166,7 +166,7 @@ public class SharedTaskContext {
   }
 
   /**
-   * Has the task been aborted?
+   * Whether the task has been aborted or not..
    *
    * @return {@code true} if the task has been aborted.
    */
@@ -220,6 +220,7 @@ public class SharedTaskContext {
    *
    * <p>It will perform cleanups. The finish should always be invoked.
    */
+  @SuppressWarnings({"java:S1181", "PMD.AvoidCatchingThrowable"})
   public void finish() {
     if (!isAborted()) {
       timeoutGuardTaskRemoveStrategy.invoke();

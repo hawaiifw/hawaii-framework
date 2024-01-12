@@ -25,8 +25,8 @@ import java.util.concurrent.Future;
 import org.hawaiiframework.async.model.ExecutorConfigurationProperties;
 import org.hawaiiframework.async.statistics.ExecutorStatistics;
 import org.hawaiiframework.async.statistics.ExecutorStatisticsView;
-import org.hawaiiframework.async.task_listener.TaskListener;
-import org.hawaiiframework.async.task_listener.TaskListenerFactory;
+import org.hawaiiframework.async.task.listener.TaskListener;
+import org.hawaiiframework.async.task.listener.TaskListenerFactory;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
 import org.slf4j.Logger;
@@ -103,8 +103,8 @@ public class DelegatingExecutor implements AsyncTaskExecutor, SchedulingTaskExec
   /**
    * {@inheritDoc}
    *
-   * @deprecated see super class for explanation
-   *     <p>Configures a {@link SharedTaskContextHolder} before delegating execution.
+   * @deprecated see super class for explanation. Configures a {@link SharedTaskContextHolder}
+   *     before delegating execution.
    */
   @Deprecated
   @Override

@@ -36,8 +36,8 @@ public class QueryTaskAbortStrategy implements TaskAbortStrategy {
       LOGGER.trace("Invoking Statement#cancel().");
       statement.cancel();
       return true;
-    } catch (SQLException e) {
-      LOGGER.warn("Could not abort statement.", e);
+    } catch (SQLException exception) {
+      LOGGER.warn("Could not abort statement.", exception);
     }
     return false;
   }

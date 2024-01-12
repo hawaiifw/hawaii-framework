@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.async.task_listener;
+package org.hawaiiframework.async.task.listener;
 
 import org.springframework.stereotype.Component;
 
-/** Task listener factory for Kibana log fields. */
+/** Factory for logging task events. */
 @Component
-public class KibanaLogFieldsTaskListenerFactory implements TaskListenerFactory {
+public class LoggingTaskListenerFactory implements TaskListenerFactory {
 
   @Override
   public TaskListener create() {
-    return new KibanaLogFieldsTaskListener();
+    return new LoggingTaskListener();
   }
 }

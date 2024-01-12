@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 /** Utility class to wrap an asynchronous call and catch all errors. */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class AsyncUtil {
 
   /** The logger to use. */
@@ -100,7 +101,7 @@ public final class AsyncUtil {
    * @param <T> the return type
    * @return the response wrapped as a future
    */
-  @SuppressWarnings("PMD.AvoidCatchingThrowable")
+  @SuppressWarnings({"java:S1181", "PMD.AvoidCatchingThrowable"})
   public static <T> CompletableFuture<T> invoke(boolean logError, AsyncCallable<T> body) {
     CompletableFuture<T> result = new CompletableFuture<>();
 
@@ -110,11 +111,11 @@ public final class AsyncUtil {
       LOGGER.trace("Invoking body completed");
       result.complete(invokeResult);
       LOGGER.trace("CompletableFuture completed");
-    } catch (Throwable e) {
+    } catch (Throwable exception) {
       if (logError) {
-        LOGGER.error("Caught exception.", e);
+        LOGGER.error("Caught exception.", exception);
       }
-      result.completeExceptionally(e);
+      result.completeExceptionally(exception);
     }
     return result;
   }

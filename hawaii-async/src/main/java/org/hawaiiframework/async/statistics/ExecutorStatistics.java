@@ -73,6 +73,7 @@ public class ExecutorStatistics {
    *
    * @return The number of queued tasks.
    */
+  @SuppressWarnings("PMD.LawOfDemeter")
   public Integer getQueueSize() {
     return executor.getThreadPoolExecutor().getQueue().size();
   }
