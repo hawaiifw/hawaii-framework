@@ -143,7 +143,7 @@ subprojects {
 
     dependencies {
         compileOnly("org.slf4j:slf4j-api")
-        compileOnly("com.google.code.findbugs:jsr305:3.0.${findbugsJsrVersion}")
+        compileOnly("com.google.code.findbugs:jsr305:${findbugsJsrVersion}")
 
         testImplementation("junit:junit")
         testImplementation("org.mockito:mockito-core")
