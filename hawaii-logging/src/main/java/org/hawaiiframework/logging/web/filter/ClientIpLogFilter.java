@@ -15,21 +15,19 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that sets some Kibana Log Fields.
@@ -65,15 +63,9 @@ public class ClientIpLogFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        setDefaultLogFields(request);
+        final String clientIp = clientIpResolver.getClientIp(request);
+        KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
+        LOGGER.debug("Client ip is '{}'.", clientIp);
         filterChain.doFilter(request, response);
-    }
-
-    private void setDefaultLogFields(final HttpServletRequest request) {
-        if (isOriginalRequest(request)) {
-            final String clientIp = clientIpResolver.getClientIp(request);
-            KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
-            LOGGER.debug("Client ip is '{}'.", clientIp);
-        }
     }
 }

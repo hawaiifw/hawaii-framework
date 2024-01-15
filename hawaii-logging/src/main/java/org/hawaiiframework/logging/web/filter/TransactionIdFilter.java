@@ -15,21 +15,20 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.TransactionId;
 import org.hawaiiframework.logging.util.UuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that assigns each request a unique transaction id and output the transaction id to the response header.
@@ -68,25 +67,17 @@ public class TransactionIdFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
+        final UUID uuid = uuidResolver.resolve(request, headerName);
 
-        if (isOriginalRequest(request)) {
-            final UUID uuid = uuidResolver.resolve(request, headerName);
+        TransactionId.set(uuid);
+        KibanaLogFields.tag(TX_ID, TransactionId.get());
 
-            TransactionId.set(uuid);
-            KibanaLogFields.tag(TX_ID, TransactionId.get());
+        LOGGER.debug("Set '{}' with value '{};.", TX_ID.getLogName(), uuid);
 
-            LOGGER.debug("Set '{}' with value '{};.", TX_ID.getLogName(), uuid);
+        if (!response.containsHeader(headerName)) {
+            response.addHeader(headerName, TransactionId.get());
         }
 
-        try {
-            if (!response.containsHeader(headerName)) {
-                response.addHeader(headerName, TransactionId.get());
-            }
-            filterChain.doFilter(request, response);
-        } finally {
-            if (isOriginalRequest(request)) {
-                TransactionId.remove();
-            }
-        }
+        filterChain.doFilter(request, response);
     }
 }

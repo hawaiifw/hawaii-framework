@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
  * Configures the {@link TransactionTypeFilter}.
  */
 @Configuration
-@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class TransactionTypeFilterConfiguration {
 
     /**

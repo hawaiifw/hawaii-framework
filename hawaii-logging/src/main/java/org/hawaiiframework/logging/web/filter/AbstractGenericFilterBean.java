@@ -15,17 +15,12 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * Adapter "interface" to be able to write FilterBeans that can be "once per request" or "for every dispatch in the request" without having
@@ -37,41 +32,9 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public abstract class AbstractGenericFilterBean extends GenericFilterBean {
+public abstract class AbstractGenericFilterBean extends OncePerRequestFilter {
 
     protected static final String WRAPPED_REQUEST_RESPONSE = WrappedHttpRequestResponse.class.getName();
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param request     The servlet request.
-     * @param response    The servlet response.
-     * @param filterChain The filter chain.
-     * @throws ServletException if an I/O related error has occurred during the processing
-     * @throws IOException      if an exception occurs that interferes with the filter's normal operation
-     */
-    @Override
-    public final void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
-        if (!(request instanceof final HttpServletRequest httpRequest) || !(response instanceof final HttpServletResponse httpResponse)) {
-            throw new ServletException("AbstractGenericFilterBean just supports HTTP requests");
-        }
-
-        doFilterInternal(httpRequest, httpResponse, filterChain);
-    }
-
-    /**
-     * Same contract as for {@code doFilter}.
-     *
-     * @param httpRequest  The http servlet request.
-     * @param httpResponse The http servlet response.
-     * @param filterChain  The filter chain.
-     * @throws ServletException if an I/O related error has occurred during the processing
-     * @throws IOException      if an exception occurs that interferes with the filter's normal operation
-     */
-    protected abstract void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-            FilterChain filterChain) throws ServletException, IOException;
-
 
     /**
      * Retrieve the {@link WrappedHttpRequestResponse} given the {@code httpServletRequest}.
@@ -110,24 +73,4 @@ public abstract class AbstractGenericFilterBean extends GenericFilterBean {
 
         return wrapped;
     }
-
-    /**
-     * Determine if the {@code httpServletRequest} already has been filtered.
-     *
-     * @param httpServletRequest The http servlet request.
-     * @return {@code true} if the request already has been filter within this context.
-     */
-    protected boolean hasBeenFiltered(final HttpServletRequest httpServletRequest) {
-        return httpServletRequest.getAttribute(this.getClass().getName()) != null;
-    }
-
-    /**
-     * Mark the {@code httpServletRequest} as already filtered.
-     *
-     * @param httpServletRequest The http servlet request.
-     */
-    protected void markHasBeenFiltered(final HttpServletRequest httpServletRequest) {
-        httpServletRequest.setAttribute(this.getClass().getName(), true);
-    }
-
 }

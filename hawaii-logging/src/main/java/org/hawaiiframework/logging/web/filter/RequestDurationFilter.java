@@ -15,16 +15,15 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -32,7 +31,6 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * A filter that logs the duration of the request.
@@ -72,15 +70,19 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
-        if (isOriginalRequest(request)) {
+        if (request.getAttribute(START_TIMESTAMP) == null) {
             request.setAttribute(START_TIMESTAMP, System.nanoTime());
         }
         try {
             filterChain.doFilter(request, response);
         } finally {
-            if (filterVoter.enabled(request) && isOriginalRequest(request)) {
-                logEnd((Long) request.getAttribute(START_TIMESTAMP));
-            }
+            logEnd(request);
+        }
+    }
+
+    private void logEnd(final HttpServletRequest request) {
+        if (!request.isAsyncStarted() && filterVoter.enabled(request)) {
+            logEnd((Long) request.getAttribute(START_TIMESTAMP));
         }
     }
 
@@ -97,5 +99,10 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
             KibanaLogFields.tag(REQUEST_DURATION, duration);
             LOGGER.info("Duration '{}' ms.", duration);
         }
+    }
+
+    @Override
+    protected boolean shouldNotFilterAsyncDispatch() {
+        return false;
     }
 }

@@ -47,11 +47,15 @@ hawaii:
       kibana-log-cleanup:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
-        order: -1400
+        order: -20_000
       request-duration:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
-        order: -1300
+        order: -17_500
+      content-caching-request-response:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -17_400
       software-version:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
@@ -76,6 +80,10 @@ hawaii:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
         order: -1000
+      request-response:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -950
       oidc:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
@@ -100,10 +108,7 @@ hawaii:
         enabled: false
         order: -400
         http-header: X-Hawaii-Request-Id
-      request-response:
-        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
-        enabled: true
-        order: -300
+
       user-details:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: false

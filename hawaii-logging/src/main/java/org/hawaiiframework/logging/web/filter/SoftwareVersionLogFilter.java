@@ -15,21 +15,19 @@
  */
 package org.hawaiiframework.logging.web.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.info.BuildProperties;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.SOFTWARE_VERSION;
-import static org.hawaiiframework.logging.web.util.ServletFilterUtil.isOriginalRequest;
 
 /**
  * Servlet filter that logs the software version of the application. It adds the version to the Kibana log fields as well.
@@ -72,7 +70,7 @@ public class SoftwareVersionLogFilter extends AbstractGenericFilterBean {
             final HttpServletResponse response,
             final FilterChain filterChain) throws ServletException, IOException {
 
-        if (filterVoter.enabled(request) && isOriginalRequest(request)) {
+        if (filterVoter.enabled(request)) {
             final String version = buildProperties.getVersion();
 
             LOGGER.info("Software Build version '{}'.", version);
