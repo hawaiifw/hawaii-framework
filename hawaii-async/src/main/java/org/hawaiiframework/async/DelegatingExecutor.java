@@ -192,8 +192,7 @@ public class DelegatingExecutor implements AsyncTaskExecutor, SchedulingTaskExec
     return delegate.getActiveCount();
   }
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   public boolean prefersShortLivedTasks() {
     return delegate.prefersShortLivedTasks();
   }

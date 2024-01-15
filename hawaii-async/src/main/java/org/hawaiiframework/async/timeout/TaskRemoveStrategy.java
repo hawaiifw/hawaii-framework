@@ -60,8 +60,7 @@ public class TaskRemoveStrategy implements TaskAbortStrategy {
     this.taskId = taskId;
   }
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   public boolean invoke() {
     LOGGER.trace("Removing {} task with id '{}'.", taskType, taskId);
     boolean wasRemoved = executor.remove(task);

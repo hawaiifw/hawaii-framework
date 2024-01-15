@@ -148,8 +148,7 @@ public class ExecutorProperties {
     this.maxPoolSize = maxPoolSize;
   }
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   public String toString() {
     return String.format(
         "%s (core size '%s', max size '%s', max pending '%s', keep alive '%s')",

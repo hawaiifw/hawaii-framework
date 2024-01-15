@@ -102,8 +102,7 @@ public class AsyncExecutorConfiguration
   /** Utility to add beans to Spring's bean definition registry. */
   private BeanRegistrar registrar;
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) {
     LOGGER.trace("Creating beans for async executors.");
     registrar = new BeanRegistrar(registry);

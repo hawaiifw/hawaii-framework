@@ -37,8 +37,7 @@ import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
  */
 public class JakartaValidationValidator<T> implements Validator<T> {
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   public void validate(T object, ValidationResult validationResult) {
     Set<String> requiredFields = new HashSet<>();

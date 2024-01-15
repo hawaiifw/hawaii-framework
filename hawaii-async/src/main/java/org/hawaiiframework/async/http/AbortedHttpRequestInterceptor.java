@@ -32,8 +32,7 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class AbortedHttpRequestInterceptor implements ClientHttpRequestInterceptor {
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   public ClientHttpResponse intercept(
       HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
     try {

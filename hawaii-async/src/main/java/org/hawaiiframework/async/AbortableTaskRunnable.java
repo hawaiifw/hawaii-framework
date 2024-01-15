@@ -45,8 +45,7 @@ public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
     this.delegate = requireNonNull(delegate);
   }
 
-  /** {@inheritDoc} */
-  @Override
+    @Override
   protected void doRun() {
     delegate.run();
   }
