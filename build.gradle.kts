@@ -57,7 +57,7 @@ subprojects {
         extra.set("graphqlJavaVersion", "20.2")
     }
 
-    val checkstyleVersion = "10.5.0"
+    val checkstyleVersion = "10.12.7"
     val errorProneVersion = "2.24.1"
     val errorProneSupportVersion = "0.14.0"
     val pmdVersion = "7.0.0-rc4"
