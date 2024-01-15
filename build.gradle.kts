@@ -88,10 +88,8 @@ subprojects {
         options.isDeprecation = true
         // options.isWarnings = true
 
-        // javac -X
-        // javac --help-lint
-        //-missing-explicit-ctor"
-        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-parameters" ))
+        // Remove -Werror to utilize the auto refactoring of refaster.
+        options.compilerArgs.addAll(arrayOf("-Xlint:all", "-Werror", "-parameters" ))
 
 
         options.errorprone {
