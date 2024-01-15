@@ -4,16 +4,11 @@ Follow the guidelines below for contributing to the Hawaii Framework.
 
 ## Code Style
 
-All Java code should use the Hawaii Framework Code Style which is based on the [Google Java Style][]
-with the most important exception that we use +4 spaces for block indentation instead of +2.
+All Java code should use the Google Code Style [Google Java Style][]. Users should import the Google code formatter for
+their IDE, see [Google Styleguide][]
 
-Users should simply import the Eclipse [Hawaii Framework Java Style code formatter][] file in their IDE.
-The same code formatter file should also be imported in IntelliJ IDEA.
-
-This [README][Hawaii Framework Java Style code formatter README] contains a full list of adjustments
-made to the code formatter.
-
-Important! Update the number of imports before using a `*` to 300. In IntelliJ IDEA this is found under 'Editor > Code Style > Java > Imports'.
+Important! Update the number of imports before using a `*` to 999. In IntelliJ IDEA this is found under 'Editor > Code
+Style > Java > Imports'.
 
 ### Apache License Header
 
@@ -88,8 +83,7 @@ public void useFixedClock(Clock clock) {
 In short: Always.
 
 The value of a Framework is hugely driven by its documentation. So every package, class, interface and
-method needs proper javadoc. One could argue this is overkill for simple getters and setters,
-but for the sake of completeness javadoc is added for those methods as well.
+method needs proper javadoc.
 
 ### How to Unit Test
 
@@ -150,10 +144,7 @@ To keep your `master` branch in sync with the [Hawaii Framework GitHub repositor
  * From here you can create a new branch from `master` (to start working on a new pull request) or
    merge the changes from `master` into one of your other local development branches.
 
-
+[Google Styleguide]: https://github.com/google/styleguide
 [Google Java Style]: https://google.github.io/styleguide/javaguide.html
-[Hawaii Framework Java Style code formatter]: https://github.com/hawaiifw/hawaii-framework/blob/master/src/eclipse/hawaii-framework-java-style.xml
-[Hawaii Framework Java Style code formatter README]: https://github.com/hawaiifw/hawaii-framework/blob/master/src/eclipse/README.md
-[Eclipse Code Formatter plugin]: http://plugins.jetbrains.com/plugin/6546
 [GitHub]: https://github.com/
 [Hawaii Framework GitHub repository]: https://github.com/hawaiifw/hawaii-framework
