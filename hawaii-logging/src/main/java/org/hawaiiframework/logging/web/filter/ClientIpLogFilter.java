@@ -52,22 +52,13 @@ public class ClientIpLogFilter extends AbstractGenericFilterBean {
     this.clientIpResolver = clientIpResolver;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    setDefaultLogFields(request);
+    String clientIp = clientIpResolver.getClientIp(request);
+    KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
+    LOGGER.debug("Client ip is '{}'.", clientIp);
     filterChain.doFilter(request, response);
-  }
-
-  private void setDefaultLogFields(HttpServletRequest request) {
-    if (!hasBeenFiltered(request)) {
-      markHasBeenFiltered(request);
-
-      String clientIp = clientIpResolver.getClientIp(request);
-      KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
-      LOGGER.debug("Client ip is '{}'.", clientIp);
-    }
   }
 }

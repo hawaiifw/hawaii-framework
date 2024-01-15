@@ -52,21 +52,18 @@ public class ContentCachingWrappedResponse extends ContentCachingResponseWrapper
     super(response);
   }
 
-  /** {@inheritDoc} */
   @Override
   public void sendError(int statusCode) throws IOException {
     redirect = true;
     super.sendError(statusCode);
   }
 
-  /** {@inheritDoc} */
   @Override
   public void sendError(int statusCode, String message) throws IOException {
     redirect = true;
     super.sendError(statusCode, message);
   }
 
-  /** {@inheritDoc} */
   @Override
   public void sendRedirect(String location) throws IOException {
     redirect = true;

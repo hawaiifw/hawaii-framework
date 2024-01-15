@@ -44,7 +44,6 @@ public class KibanaLogTransaction implements AutoCloseable {
     KibanaLogFields.tag(KibanaLogFieldNames.TX_TYPE, transactionType);
   }
 
-  /** {@inheritDoc} */
   @Override
   public void close() {
     if (!hasTx) {

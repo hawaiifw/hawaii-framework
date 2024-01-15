@@ -55,20 +55,15 @@ public class ContainerNameHttpHeaderFilter extends AbstractGenericFilterBean {
     this.hostname = hostName;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    if (!hasBeenFiltered(request)) {
-      markHasBeenFiltered(request);
+    KibanaLogFields.tag(HOST_NAME, hostname);
+    LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
 
-      KibanaLogFields.tag(HOST_NAME, hostname);
-      LOGGER.debug("Set '{}' with value '{}'.", headerName, hostname);
-
-      if (!response.containsHeader(headerName)) {
-        response.addHeader(headerName, hostname);
-      }
+    if (!response.containsHeader(headerName)) {
+      response.addHeader(headerName, hostname);
     }
 
     filterChain.doFilter(request, response);

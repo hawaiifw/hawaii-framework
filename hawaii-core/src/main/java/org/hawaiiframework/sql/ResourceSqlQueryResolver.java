@@ -54,16 +54,12 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
 
   private int order = LOWEST_PRECEDENCE;
 
-  /**
-   * Default constructor.
-   */
+  /** Default constructor. */
   public ResourceSqlQueryResolver() {
     this(new DefaultResourceLoader());
   }
 
-  /**
-   * Constructor with a {@code resourceLoader}.
-   */
+  /** Constructor with a {@code resourceLoader}. */
   public ResourceSqlQueryResolver(ResourceLoader resourceLoader) {
     super();
     this.resourceLoader = resourceLoader;
@@ -133,7 +129,8 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
         }
       } catch (IOException exception) {
         // Can't really happen as we already checked that the resource has a filename
-        throw new HawaiiException(String.format("Error accessing '%s'", resource.getFilename()), exception);
+        throw new HawaiiException(
+            String.format("Error accessing '%s'", resource.getFilename()), exception);
       }
     }
   }
@@ -145,8 +142,7 @@ public class ResourceSqlQueryResolver extends AbstractCachingSqlQueryResolver im
     String query = null;
     if (resource.exists()) {
       try {
-        query =
-            new Scanner(resource.getInputStream(), this.charset).useDelimiter("\\Z").next();
+        query = new Scanner(resource.getInputStream(), this.charset).useDelimiter("\\Z").next();
         if (queryHolder != null && resource.getFilename() != null) {
           if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Updating query {}", resource.getFilename());

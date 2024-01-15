@@ -29,7 +29,6 @@ public class TransactionIdSupplierHttpRequestInterceptor implements ClientHttpRe
     this.headerName = headerName;
   }
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   public ClientHttpResponse intercept(

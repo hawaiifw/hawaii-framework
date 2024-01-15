@@ -32,9 +32,7 @@ public final class ApplicationContextHolder {
 
   private ApplicationContextHolder() {}
 
-  /**
-   * Get the application context, or throw an {@link IllegalStateException}.
-   */
+  /** Get the application context, or throw an {@link IllegalStateException}. */
   public static ApplicationContext getRequiredApplicationContext() {
     ApplicationContext context = getApplicationContext();
     if (context == null) {
@@ -43,9 +41,7 @@ public final class ApplicationContextHolder {
     return context;
   }
 
-  /**
-   * Get the application context, or return {@code null}.
-   */
+  /** Get the application context, or return {@code null}. */
   public static ApplicationContext getApplicationContext() {
     ClassLoader classLoader = getContextClassLoader();
     while (classLoader != null) {

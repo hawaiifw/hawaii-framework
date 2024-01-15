@@ -58,7 +58,7 @@ public class SqlQueryResolverComposite implements SqlQueryResolver, Ordered {
   }
 
   @Override
-  public String resolveSqlQuery(String sqlQueryName)  {
+  public String resolveSqlQuery(String sqlQueryName) {
     for (SqlQueryResolver sqlQueryResolver : this.sqlQueryResolvers) {
       String sqlQuery = sqlQueryResolver.resolveSqlQuery(sqlQueryName);
       if (sqlQuery != null) {

@@ -26,8 +26,7 @@ import java.io.Serial;
  */
 public class HawaiiException extends RuntimeException {
 
-  @Serial
-  private static final long serialVersionUID = 6463686875194124117L;
+  @Serial private static final long serialVersionUID = 6463686875194124117L;
 
   /** Constructs a new {@code HawaiiException}. */
   public HawaiiException() {

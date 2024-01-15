@@ -33,7 +33,6 @@ public class JsonPasswordMasker implements PasswordMasker {
   /** Constant for JSON field delimiter. */
   private static final Character QUOTE = '"';
 
-  /** {@inheritDoc} */
   @Override
   public boolean matches(MaskedPasswordBuilder builder) {
     if (builder.currentCharIs(QUOTE)) {
@@ -41,7 +40,7 @@ public class JsonPasswordMasker implements PasswordMasker {
       builder.mark();
       builder.next();
       if (readUntilStartOfJsonValue(builder)) {
-        Integer indexOfStartPassword = builder.getCurrentIndex();
+        int indexOfStartPassword = builder.getCurrentIndex();
         if (readUntilEndOfJsonValue(builder)) {
           builder.maskPasswordAt(indexOfStartPassword + 1);
           return true;

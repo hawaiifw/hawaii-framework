@@ -41,9 +41,7 @@ public class ValidationErrorResponseEnricher implements ErrorResponseEnricher {
   private final ModelConverter<ValidationError, ValidationErrorResource>
       validationErrorResourceAssembler;
 
-  /**
-   * Constructor with a {@code validationErrorResourceAssembler}.
-   */
+  /** Constructor with a {@code validationErrorResourceAssembler}. */
   public ValidationErrorResponseEnricher(
       ModelConverter<ValidationError, ValidationErrorResource> validationErrorResourceAssembler) {
     super();

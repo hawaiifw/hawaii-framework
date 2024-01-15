@@ -133,8 +133,7 @@ public class MaskedPasswordBuilder {
    * @param index the index in the current buffer to append the masked password at.
    */
   public void maskPasswordAt(Integer index) {
-    result.append(stringToMask, lastAddedIndex, index)
-        .append(MASKED_PASSWORD);
+    result.append(stringToMask, lastAddedIndex, index).append(MASKED_PASSWORD);
     lastAddedIndex = currentIndex;
   }
 

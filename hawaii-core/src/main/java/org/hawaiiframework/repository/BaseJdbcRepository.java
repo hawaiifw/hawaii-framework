@@ -62,16 +62,12 @@ public class BaseJdbcRepository {
     return queryResolver.resolveSqlQuery(sqlQueryName);
   }
 
-  /**
-   * Return the JDBC template.
-   */
+  /** Return the JDBC template. */
   protected JdbcTemplate jdbcTemplate() {
     return aJdbcTemplate;
   }
 
-  /**
-   * Return the named parameter template.
-   */
+  /** Return the named parameter template. */
   protected NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
     return aNamedParameterJdbcTemplate;
   }

@@ -65,14 +65,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
       FilterChain filterChain)
       throws ServletException, IOException {
 
-    if (!filterVoter.enabled(httpServletRequest) || hasBeenFiltered(httpServletRequest)) {
-      try {
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
-      } finally {
-        logResponse(getWrapped(httpServletRequest));
-      }
-    } else {
-      markHasBeenFiltered(httpServletRequest);
+    if (filterVoter.enabled(httpServletRequest)) {
       WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
       hawaiiLogger.logRequest(wrapped.request());
 
@@ -80,6 +73,12 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         filterChain.doFilter(wrapped.request(), wrapped.response());
       } finally {
         logResponse(wrapped);
+      }
+    } else {
+      try {
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+      } finally {
+        logResponse(getWrapped(httpServletRequest));
       }
     }
   }
@@ -94,5 +93,10 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean {
         }
       }
     }
+  }
+
+  @Override
+  protected boolean shouldNotFilterAsyncDispatch() {
+    return false;
   }
 }

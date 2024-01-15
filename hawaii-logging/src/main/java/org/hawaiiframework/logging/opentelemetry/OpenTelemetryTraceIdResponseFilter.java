@@ -54,7 +54,6 @@ public class OpenTelemetryTraceIdResponseFilter extends AbstractGenericFilterBea
     LOGGER.info("Configured to use '{}'.", this.headerName);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

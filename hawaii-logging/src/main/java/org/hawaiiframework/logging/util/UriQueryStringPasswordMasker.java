@@ -43,7 +43,6 @@ public class UriQueryStringPasswordMasker implements PasswordMasker {
   /** Carriage return. */
   private static final Character CARRIAGE_RETURN = '\r';
 
-  /** {@inheritDoc} */
   @Override
   public boolean matches(MaskedPasswordBuilder builder) {
     if (builder.currentCharIs(EQUALS)) {

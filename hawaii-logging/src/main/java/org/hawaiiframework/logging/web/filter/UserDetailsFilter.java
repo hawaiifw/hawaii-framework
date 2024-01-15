@@ -43,7 +43,6 @@ public class UserDetailsFilter extends OncePerRequestFilter {
   /** The Logger. */
   private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsFilter.class);
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   protected void doFilterInternal(

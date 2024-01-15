@@ -164,8 +164,7 @@ public class HttpRequestResponseBodyLogUtil {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
       String line = bufferedReader.readLine();
       while (line != null) {
-        inputStringBuilder.append(line)
-            .append(NEW_LINE);
+        inputStringBuilder.append(line).append(NEW_LINE);
         line = bufferedReader.readLine();
       }
     } catch (HttpRetryException exception) {

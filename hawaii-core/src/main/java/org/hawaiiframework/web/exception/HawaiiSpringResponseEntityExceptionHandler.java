@@ -51,9 +51,7 @@ public class HawaiiSpringResponseEntityExceptionHandler extends ResponseEntityEx
 
   private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-  /**
-   * Constructor with an {@code errorResponseEntityBuilder}.
-   */
+  /** Constructor with an {@code errorResponseEntityBuilder}. */
   public HawaiiSpringResponseEntityExceptionHandler(
       ErrorResponseEntityBuilder errorResponseEntityBuilder) {
     super();

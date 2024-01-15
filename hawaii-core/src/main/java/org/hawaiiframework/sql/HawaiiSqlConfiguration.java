@@ -31,9 +31,7 @@ import org.springframework.core.io.FileSystemResourceLoader;
 @Configuration
 public class HawaiiSqlConfiguration {
 
-  /**
-   * Create a {@link SqlQueryResolver} bean.
-   */
+  /** Create a {@link SqlQueryResolver} bean. */
   @Bean
   @ConditionalOnMissingBean(SqlQueryResolver.class)
   public SqlQueryResolver resourceSqlQueryResolver() {

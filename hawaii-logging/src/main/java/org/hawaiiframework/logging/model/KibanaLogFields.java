@@ -90,9 +90,7 @@ public final class KibanaLogFields {
       return tag(field, (String) null);
     }
     String value =
-        values.stream()
-            .map(item -> String.format("'%s'", item))
-            .collect(joining(", ", "[", "]"));
+        values.stream().map(item -> String.format("'%s'", item)).collect(joining(", ", "[", "]"));
     return tag(field, value);
   }
 
@@ -200,11 +198,7 @@ public final class KibanaLogFields {
         .forEach(
             (key, value) -> {
               if (!key.equals(KibanaLogFieldNames.LOG_TYPE.getLogName())) {
-                result.append(' ')
-                    .append(key)
-                    .append("=\"")
-                    .append(value)
-                    .append('"');
+                result.append(' ').append(key).append("=\"").append(value).append('"');
               }
             });
 

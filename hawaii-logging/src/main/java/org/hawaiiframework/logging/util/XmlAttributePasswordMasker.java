@@ -32,7 +32,6 @@ public class XmlAttributePasswordMasker implements PasswordMasker {
   @SuppressWarnings({"PMD.ShortMethodName", "PMD.ShortVariable"})
   private static final Character GT = '>';
 
-  /** {@inheritDoc} */
   @Override
   public boolean matches(MaskedPasswordBuilder builder) {
     if (builder.currentCharIs(GT)) {

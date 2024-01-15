@@ -47,7 +47,6 @@ public class ResettableServletInputStream extends ServletInputStream {
     stream = new ByteArrayInputStream(rawData);
   }
 
-  /** {@inheritDoc} */
   @Override
   public int read() throws IOException {
     int read = stream.read();
@@ -57,19 +56,16 @@ public class ResettableServletInputStream extends ServletInputStream {
     return read;
   }
 
-  /** {@inheritDoc} */
   @Override
   public boolean isFinished() {
     return finished;
   }
 
-  /** {@inheritDoc} */
   @Override
   public boolean isReady() {
     return true;
   }
 
-  /** {@inheritDoc} */
   @Override
   public void setReadListener(ReadListener listener) {
     // ignored

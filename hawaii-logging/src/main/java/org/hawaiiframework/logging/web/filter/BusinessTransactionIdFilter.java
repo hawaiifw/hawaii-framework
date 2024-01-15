@@ -55,26 +55,21 @@ public class BusinessTransactionIdFilter extends AbstractGenericFilterBean {
     this.headerName = headerName;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+    UUID uuid = uuidResolver.resolve(request, headerName);
 
-    if (!hasBeenFiltered(request)) {
-      markHasBeenFiltered(request);
+    BusinessTransactionId.set(uuid);
+    KibanaLogFields.tag(BUSINESS_TX_ID, BusinessTransactionId.get());
 
-      UUID uuid = uuidResolver.resolve(request, headerName);
+    LOGGER.debug("Set '{}' with value '{};.", BUSINESS_TX_ID.getLogName(), uuid);
 
-      BusinessTransactionId.set(uuid);
-      KibanaLogFields.tag(BUSINESS_TX_ID, BusinessTransactionId.get());
-
-      LOGGER.debug("Set '{}' with value '{};.", BUSINESS_TX_ID.getLogName(), uuid);
-
-      if (!response.containsHeader(headerName)) {
-        response.addHeader(headerName, BusinessTransactionId.get());
-      }
+    if (!response.containsHeader(headerName)) {
+      response.addHeader(headerName, BusinessTransactionId.get());
     }
+
     filterChain.doFilter(request, response);
   }
 }

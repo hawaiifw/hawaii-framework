@@ -159,9 +159,7 @@ public class HawaiiLoggingConfiguration {
     return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getAllowedContentTypes(), true);
   }
 
-  /**
-   * Create a {@link MediaTypeVoter} for body exclusion.
-   */
+  /** Create a {@link MediaTypeVoter} for body exclusion. */
   @Bean
   @RefreshScope
   public MediaTypeVoter bodyExcludedMediaTypeVoter(

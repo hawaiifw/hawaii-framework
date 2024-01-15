@@ -57,7 +57,6 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     this.hawaiiRequestResponseLogger = hawaiiLogger;
   }
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.AvoidCatchingThrowable")
   public ClientHttpResponse intercept(

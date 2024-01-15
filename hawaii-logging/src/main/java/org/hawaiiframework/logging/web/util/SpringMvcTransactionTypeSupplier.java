@@ -50,8 +50,8 @@ public class SpringMvcTransactionTypeSupplier implements TransactionTypeSupplier
   @Override
   @SuppressWarnings("PMD.AvoidCatchingGenericException")
   public String getTransactionType(ResettableHttpServletRequest request) {
-    for (HandlerMapping handlerMapping : applicationContext.getBeansOfType(HandlerMapping.class)
-        .values()) {
+    for (HandlerMapping handlerMapping :
+        applicationContext.getBeansOfType(HandlerMapping.class).values()) {
       HandlerExecutionChain handlerExecutionChain = null;
       try {
         handlerExecutionChain = handlerMapping.getHandler(request);

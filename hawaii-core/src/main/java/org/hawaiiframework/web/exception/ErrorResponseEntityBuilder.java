@@ -36,9 +36,7 @@ public class ErrorResponseEntityBuilder {
   private final ExceptionResponseFactory exceptionResponseFactory;
   private final Set<ErrorResponseEnricher> errorResponseEnrichers = new HashSet<>();
 
-  /**
-   * The constructor.
-   */
+  /** The constructor. */
   public ErrorResponseEntityBuilder(
       ExceptionResponseFactory exceptionResponseFactory,
       List<ErrorResponseEnricher> errorResponseEnrichers) {

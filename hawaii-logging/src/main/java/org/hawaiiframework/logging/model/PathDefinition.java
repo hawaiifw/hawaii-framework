@@ -3,9 +3,7 @@ package org.hawaiiframework.logging.model;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
-/**
- * A definition for a path and method.
- */
+/** A definition for a path and method. */
 public class PathDefinition {
 
   private String pattern;
@@ -14,32 +12,24 @@ public class PathDefinition {
 
   private final PathMatcher matcher;
 
-  /**
-   * Default constructor.
-   */
+  /** Default constructor. */
   public PathDefinition() {
     this.matcher = new AntPathMatcher();
   }
 
-  /**
-   * Constructor for the given {@code pattern}.
-   */
+  /** Constructor for the given {@code pattern}. */
   public PathDefinition(String pattern) {
     this(null, pattern);
   }
 
-  /**
-   * Constructor for the given {@code method} and {@code pattern}.
-   */
+  /** Constructor for the given {@code method} and {@code pattern}. */
   public PathDefinition(String method, String pattern) {
     this();
     this.pattern = pattern;
     this.method = method;
   }
 
-  /**
-   * Check whether the method and path matches this definition.
-   */
+  /** Check whether the method and path matches this definition. */
   public boolean matches(String method, String path) {
     boolean matches = true;
     if (this.method != null) {

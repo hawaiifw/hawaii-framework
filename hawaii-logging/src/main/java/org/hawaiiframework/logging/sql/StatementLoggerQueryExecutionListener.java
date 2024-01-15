@@ -48,7 +48,6 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
   /** The system's line separator. */
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
-  /** {@inheritDoc} */
   @Override
   public void beforeQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
     if (SqlStatementLogging.isSuppressed()) {
@@ -88,7 +87,6 @@ public class StatementLoggerQueryExecutionListener implements OrderedQueryExecut
     KibanaLogFields.clear(CALL_REQUEST_BODY);
   }
 
-  /** {@inheritDoc} */
   @Override
   public void afterQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
     if (SqlStatementLogging.isSuppressed()) {

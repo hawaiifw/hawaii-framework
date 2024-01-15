@@ -27,9 +27,7 @@ public class DataSourceMethodInterceptor implements MethodInterceptor {
 
   private final DataSource dataSource;
 
-  /**
-   * Constructor with a {@code dataSource}.
-   */
+  /** Constructor with a {@code dataSource}. */
   public DataSourceMethodInterceptor(DataSource dataSource) {
     super();
     this.dataSource = dataSource;

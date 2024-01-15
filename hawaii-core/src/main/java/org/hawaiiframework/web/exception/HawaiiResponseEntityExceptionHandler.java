@@ -49,13 +49,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class HawaiiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(HawaiiResponseEntityExceptionHandler.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(HawaiiResponseEntityExceptionHandler.class);
 
   private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-  /**
-   * The constructor with a {@code errorResponseEntityBuilder}.
-   */
+  /** The constructor with a {@code errorResponseEntityBuilder}. */
   public HawaiiResponseEntityExceptionHandler(
       ErrorResponseEntityBuilder errorResponseEntityBuilder) {
     super();

@@ -15,7 +15,7 @@ public class ContentCachingRequired extends AnyNestedCondition {
   public ContentCachingRequired() {
     super(REGISTER_BEAN);
   }
-  
+
   /** Condition for {@link ContentCachingRequestResponseFilter}. */
   @ConditionalOnProperty(
       prefix = ContentCachingRequestResponseFilterConfiguration.CONFIG_PREFIX,

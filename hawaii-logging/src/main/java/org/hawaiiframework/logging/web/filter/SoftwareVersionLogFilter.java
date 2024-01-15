@@ -58,15 +58,12 @@ public class SoftwareVersionLogFilter extends AbstractGenericFilterBean {
     this.filterVoter = filterVoter;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
 
-    if (!hasBeenFiltered(request) && filterVoter.enabled(request)) {
-      markHasBeenFiltered(request);
-
+    if (filterVoter.enabled(request)) {
       String version = buildProperties.getVersion();
 
       LOGGER.info("Software Build version '{}'.", version);

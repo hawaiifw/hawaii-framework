@@ -107,7 +107,6 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     this.bodyExcludedMediaTypeVoter = bodyExcludedMediaTypeVoter;
   }
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.AvoidCatchingThrowable")
   public void logRequest(ResettableHttpServletRequest wrappedRequest) throws IOException {
@@ -213,7 +212,6 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         && !bodyExcludedMediaTypeVoter.mediaTypeMatches(contentType);
   }
 
-  /** {@inheritDoc} */
   @Override
   public void logResponse(
       HttpServletRequest servletRequest, ContentCachingWrappedResponse wrappedResponse) {
@@ -253,13 +251,12 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     }
   }
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   public void logResponse(ClientHttpResponse response) throws IOException {
     try {
       KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.CALL_RESPONSE_BODY);
-      
+
       MediaType contentType = getContentType(response);
       boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
       String responseBody = bodyLogUtil.getCallResponseBody(response);

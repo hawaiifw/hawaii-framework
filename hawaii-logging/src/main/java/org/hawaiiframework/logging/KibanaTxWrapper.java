@@ -52,7 +52,12 @@ public final class KibanaTxWrapper {
    * @param <T> The return type.
    * @return The value returned by the {@code supplier}.
    */
-  @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidCatchingThrowable", "try", "unused"})
+  @SuppressWarnings({
+    "PMD.AvoidCatchingGenericException",
+    "PMD.AvoidCatchingThrowable",
+    "try",
+    "unused"
+  })
   public static <T> T kibanaTx(String system, String txName, Returnable<T> returnable) {
     long startTime = System.nanoTime();
 
@@ -80,7 +85,12 @@ public final class KibanaTxWrapper {
    * @param txName The call's name.
    * @param invocable The actual code to invoke.
    */
-  @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidCatchingThrowable", "try", "unused"})
+  @SuppressWarnings({
+    "PMD.AvoidCatchingGenericException",
+    "PMD.AvoidCatchingThrowable",
+    "try",
+    "unused"
+  })
   public static void kibanaTx(String system, String txName, Invocable invocable) {
     long startTime = System.nanoTime();
 

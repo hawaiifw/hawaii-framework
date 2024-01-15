@@ -139,7 +139,8 @@ public class HttpRequestResponseHeadersLogUtil {
     Collections.sort(headerNames);
 
     for (String headerName : headerNames) {
-      builder.append(headerName)
+      builder
+          .append(headerName)
           .append(": ")
           .append(String.join(", ", headers.get(headerName)))
           .append(NEW_LINE);

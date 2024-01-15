@@ -46,7 +46,8 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
   /** Default maximum number of entries for the sql query cache ({@code 1024}). */
   public static final int DEFAULT_CACHE_LIMIT = 1024;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCachingSqlQueryResolver.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(AbstractCachingSqlQueryResolver.class);
 
   /**
    * Fast access cache for sql queries, returning already cached instances without a global lock.
@@ -62,8 +63,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
   @SuppressWarnings("checkstyle:Indentation")
   private final Map<Object, QueryHolder> sqlQueryCreationCache =
       new LinkedHashMap<>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
-        @Serial
-        private static final long serialVersionUID = -1795871359268002373L;
+        @Serial private static final long serialVersionUID = -1795871359268002373L;
 
         @Override
         protected boolean removeEldestEntry(Map.Entry<Object, QueryHolder> eldest) {
@@ -143,7 +143,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    *   <li>A positive number will cache a query for the given number of seconds. This is essentially
    *       the interval between refresh checks.
    *   <li>A value of "0" will check for expiry on each query access!
-   * </ul>
+   * </ul></p>
    */
   public void setCacheSeconds(int cacheSeconds) {
     this.cacheMillis = 1_000L * cacheSeconds;
@@ -169,11 +169,11 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
       if (LOGGER.isDebugEnabled()) {
         if (cachedSqlQuery == null) {
           if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("No cached instance for sql query '" + cacheKey + "' was found");
+            LOGGER.debug("No cached instance for sql query '{}' was found.", cacheKey);
           }
         } else {
           if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Cache for sql query " + cacheKey + " has been cleared");
+            LOGGER.debug("Cache for sql query '{}' has been cleared.", cacheKey);
           }
         }
       }
@@ -193,7 +193,11 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
   }
 
   @Override
-  @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount", "PMD.CognitiveComplexity"})
+  @SuppressWarnings({
+    "checkstyle:NestedIfDepth",
+    "checkstyle:ReturnCount",
+    "PMD.CognitiveComplexity"
+  })
   public String resolveSqlQuery(String sqlQueryName) {
     if (!isCache()) {
       return loadSqlQuery(sqlQueryName, null);
@@ -205,7 +209,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
         if (originalTimestamp > System.currentTimeMillis() - this.cacheMillis) {
           // Up-to-date
           if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("Query {} within cache seconds, not refreshing", sqlQueryName);
+            LOGGER.trace("Query '{}' within cache seconds, not refreshing.", sqlQueryName);
           }
           return queryHolder.getSqlQuery();
         }
@@ -221,7 +225,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
               this.sqlQueryAccessCache.put(cacheKey, queryHolder);
               this.sqlQueryCreationCache.put(cacheKey, queryHolder);
               if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace("Cached sql query [" + cacheKey + "]");
+                LOGGER.trace("Cached sql query '{}'.", cacheKey);
               }
             }
           }

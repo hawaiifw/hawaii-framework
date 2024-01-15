@@ -34,7 +34,6 @@ public class BusinessTransactionIdSupplierHttpRequestInterceptor
     this.headerName = headerName;
   }
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   public ClientHttpResponse intercept(

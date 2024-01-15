@@ -50,15 +50,13 @@ public class HttpRequestResponseDebugLogUtil {
   private static String createLogString(String requestLine, String headers, String body) {
     StringBuilder builder = new StringBuilder();
     if (requestLine != null) {
-      builder.append(requestLine)
-          .append(NEW_LINE);
+      builder.append(requestLine).append(NEW_LINE);
     }
     if (headers != null && !headers.isEmpty()) {
       builder.append(headers);
     }
     if (body != null && !body.isEmpty()) {
-      builder.append(NEW_LINE)
-          .append(body);
+      builder.append(NEW_LINE).append(body);
     }
     String value = builder.toString();
 

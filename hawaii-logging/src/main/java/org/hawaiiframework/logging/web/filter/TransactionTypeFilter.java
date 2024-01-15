@@ -52,27 +52,20 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
     this.suppliers = suppliers;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain filterChain)
       throws ServletException, IOException {
+    try {
+      WrappedHttpRequestResponse wrapped = getWrapped(httpRequest, httpResponse);
 
-    if (hasBeenFiltered(httpRequest)) {
-      filterChain.doFilter(httpRequest, httpResponse);
-    } else {
-      try {
-        markHasBeenFiltered(httpRequest);
-        WrappedHttpRequestResponse wrapped = getWrapped(httpRequest, httpResponse);
+      String type = getTransactionType(wrapped.request());
+      KibanaLogFields.tag(TX_TYPE, type);
+      LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
 
-        String type = getTransactionType(wrapped.request());
-        KibanaLogFields.tag(TX_TYPE, type);
-        LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
-
-        filterChain.doFilter(wrapped.request(), wrapped.response());
-      } catch (IOException ignored) {
-        LOGGER.warn("Could not determine the transaction type.", ignored);
-      }
+      filterChain.doFilter(wrapped.request(), wrapped.response());
+    } catch (IOException ignored) {
+      LOGGER.warn("Could not determine the transaction type.", ignored);
     }
   }
 

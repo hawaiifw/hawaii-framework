@@ -16,8 +16,6 @@
 
 package org.hawaiiframework.logging.web.filter;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +24,6 @@ import java.io.IOException;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
-import org.slf4j.Logger;
 
 /**
  * A filter that starts content caching.
@@ -35,31 +32,17 @@ import org.slf4j.Logger;
  */
 public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBean {
 
-  private static final Logger LOGGER = getLogger(ContentCachingRequestResponseFilter.class);
-
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse,
       FilterChain filterChain)
       throws ServletException, IOException {
-
-    if (hasBeenFiltered(httpServletRequest)) {
-      try {
-        LOGGER.trace("httpServletRequest has already been filtered.");
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
-      } finally {
-        copyCachedResponse(getWrapped(httpServletRequest));
-      }
-    } else {
-      markHasBeenFiltered(httpServletRequest);
-      WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
-      try {
-        filterChain.doFilter(wrapped.request(), wrapped.response());
-      } finally {
-        copyCachedResponse(wrapped);
-      }
+    WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
+    try {
+      filterChain.doFilter(wrapped.request(), wrapped.response());
+    } finally {
+      copyCachedResponse(wrapped);
     }
   }
 
@@ -73,5 +56,10 @@ public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBe
         }
       }
     }
+  }
+
+  @Override
+  protected boolean shouldNotFilterAsyncDispatch() {
+    return false;
   }
 }

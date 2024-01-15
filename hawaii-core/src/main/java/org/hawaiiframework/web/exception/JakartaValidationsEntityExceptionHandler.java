@@ -48,9 +48,7 @@ public class JakartaValidationsEntityExceptionHandler extends ResponseEntityExce
 
   private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-  /**
-   * Constructor with an {@code errorResponseEntityBuilder}.
-   */
+  /** Constructor with an {@code errorResponseEntityBuilder}. */
   public JakartaValidationsEntityExceptionHandler(
       ErrorResponseEntityBuilder errorResponseEntityBuilder) {
     super();

@@ -33,16 +33,12 @@ public class ApiErrorResponseResource extends ErrorResponseResource {
   /** The error reason. */
   private String apiErrorReason;
 
-  /**
-   * Default constructor.
-   */
+  /** Default constructor. */
   public ApiErrorResponseResource() {
     this(null);
   }
 
-  /**
-   * Constructor with an {@code apiException}.
-   */
+  /** Constructor with an {@code apiException}. */
   public ApiErrorResponseResource(ApiException apiException) {
     super(apiException);
   }

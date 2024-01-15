@@ -51,7 +51,6 @@ public class OidcLogFilter extends AbstractGenericFilterBean {
   /** The prefix in the authorization header. */
   private static final String BEARER = "Bearer ";
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   protected void doFilterInternal(

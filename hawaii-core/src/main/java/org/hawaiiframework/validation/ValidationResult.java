@@ -68,16 +68,12 @@ public class ValidationResult implements Serializable {
     return StringUtils.defaultString(nestedPath);
   }
 
-  /**
-   * Push the nested path.
-   */
+  /** Push the nested path. */
   public void pushNestedPath(String path) {
     doPushNestedPath(path, null);
   }
 
-  /**
-   * Push the nested path.
-   */
+  /** Push the nested path. */
   public void pushNestedPath(String path, int index) {
     doPushNestedPath(path, index);
   }
@@ -89,16 +85,15 @@ public class ValidationResult implements Serializable {
     }
     nestedPathBuilder.append(path);
     if (index != null) {
-      nestedPathBuilder.append(NESTED_PATH_INDEX_PREFIX)
+      nestedPathBuilder
+          .append(NESTED_PATH_INDEX_PREFIX)
           .append(index)
           .append(NESTED_PATH_INDEX_SUFFIX);
     }
     this.nestedPathStack.push(nestedPathBuilder.toString());
   }
 
-  /**
-   * Remove the nested path.
-   */
+  /** Remove the nested path. */
   public void popNestedPath() {
     try {
       this.nestedPathStack.pop();
@@ -125,39 +120,29 @@ public class ValidationResult implements Serializable {
     return unmodifiableList(this.errors);
   }
 
-  /**
-   * Reject the value.
-   */
+  /** Reject the value. */
   public void reject(String code) {
     addError(new ValidationError(code));
   }
 
-  /**
-   * Reject the value {@code expr} is {@code true}.
-   */
+  /** Reject the value {@code expr} is {@code true}. */
   public void rejectIf(boolean expr, String code) {
     if (expr) {
       reject(code);
     }
   }
 
-  /**
-   * Reject the value {@code actual} if the {@code matcher} matches.
-   */
+  /** Reject the value {@code actual} if the {@code matcher} matches. */
   public <T> void rejectIf(T actual, Matcher<? super T> matcher, String code) {
     rejectIf(matcher.matches(actual), code);
   }
 
-  /**
-   * Reject the value  with {@code code} error.
-   */
+  /** Reject the value with {@code code} error. */
   public void rejectValue(String code) {
     rejectValue(null, code);
   }
 
-  /**
-   * Reject the value for {@code field} with {@code code} error.
-   */
+  /** Reject the value for {@code field} with {@code code} error. */
   public void rejectValue(String field, String code) {
     StringBuilder fieldBuilder = new StringBuilder(getNestedPath());
     if (StringUtils.isNotBlank(field)) {
@@ -173,9 +158,7 @@ public class ValidationResult implements Serializable {
     }
   }
 
-  /**
-   * Reject the value if {@code expr} is {@code true}. Will return the {@code code} error.
-   */
+  /** Reject the value if {@code expr} is {@code true}. Will return the {@code code} error. */
   public void rejectValueIf(boolean expr, String code) {
     if (expr) {
       rejectValue(code);
@@ -183,15 +166,16 @@ public class ValidationResult implements Serializable {
   }
 
   /**
-   * Reject the value if {@code matcher} matches the value {@code actual}. Will return the
-   * {@code code} error on the {@code field}.
+   * Reject the value if {@code matcher} matches the value {@code actual}. Will return the {@code
+   * code} error on the {@code field}.
    */
   public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String code) {
     rejectValueIf(matcher.matches(actual), code);
   }
 
   /**
-   * Reject the value if {@code expr} is {@code true}. Will return the {@code code} error on the {@code field}.
+   * Reject the value if {@code expr} is {@code true}. Will return the {@code code} error on the
+   * {@code field}.
    */
   public void rejectValueIf(boolean expr, String field, String code) {
     if (expr) {
@@ -200,7 +184,8 @@ public class ValidationResult implements Serializable {
   }
 
   /**
-   * Reject the value if the value matches the {@code matcher}. Will return the {@code code} error on the {@code field}.
+   * Reject the value if the value matches the {@code matcher}. Will return the {@code code} error
+   * on the {@code field}.
    */
   public <T> void rejectValueIf(T actual, Matcher<? super T> matcher, String field, String code) {
     rejectValueIf(matcher.matches(actual), field, code);

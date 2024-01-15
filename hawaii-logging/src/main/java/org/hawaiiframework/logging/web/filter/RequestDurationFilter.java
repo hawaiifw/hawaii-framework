@@ -55,31 +55,22 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
    * @param filterVoter The filter voter.
    */
   public RequestDurationFilter(FilterVoter filterVoter) {
+
     super();
     this.filterVoter = filterVoter;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    if (hasBeenFiltered(request)) {
-      try {
-        filterChain.doFilter(request, response);
-      } finally {
-        logEnd(request);
-      }
-    } else {
-      markHasBeenFiltered(request);
+    if (request.getAttribute(START_TIMESTAMP) == null) {
       request.setAttribute(START_TIMESTAMP, System.nanoTime());
-      try {
-        filterChain.doFilter(request, response);
-      } finally {
-        if (filterVoter.enabled(request)) {
-          logEnd(request);
-        }
-      }
+    }
+    try {
+      filterChain.doFilter(request, response);
+    } finally {
+      logEnd(request);
     }
   }
 
@@ -102,5 +93,10 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
       KibanaLogFields.tag(REQUEST_DURATION, duration);
       LOGGER.info("Duration '{}' ms.", duration);
     }
+  }
+
+  @Override
+  protected boolean shouldNotFilterAsyncDispatch() {
+    return false;
   }
 }

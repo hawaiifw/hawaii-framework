@@ -60,7 +60,6 @@ public class MicrometerTraceIdResponseFilter extends AbstractGenericFilterBean {
     LOGGER.info("Configured to use '{}'.", this.headerName);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

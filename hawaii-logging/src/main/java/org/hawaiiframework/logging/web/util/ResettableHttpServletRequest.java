@@ -67,7 +67,6 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
     }
   }
 
-  /** {@inheritDoc} */
   @Override
   public ServletInputStream getInputStream() throws IOException {
     if (servletStream == null) {
@@ -76,7 +75,6 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
     return servletStream;
   }
 
-  /** {@inheritDoc} */
   @Override
   public BufferedReader getReader() throws IOException {
     return new BufferedReader(
@@ -87,7 +85,6 @@ public class ResettableHttpServletRequest extends HttpServletRequestWrapper {
     return IOUtils.toByteArray(request.getReader(), request.getCharacterEncoding());
   }
 
-  /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
   public <T extends HttpUpgradeHandler> T upgrade(Class<T> httpUpgradeHandlerClass)
