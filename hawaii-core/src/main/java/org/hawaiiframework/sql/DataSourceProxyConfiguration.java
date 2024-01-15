@@ -16,6 +16,7 @@
 
 package org.hawaiiframework.sql;
 
+import java.util.List;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,27 +24,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.OrderComparator;
 
-import java.util.List;
-
-/**
- * Configuration for the datasource proxy.
- */
+/** Configuration for the datasource proxy. */
 @ConditionalOnClass(ProxyDataSource.class)
 @Configuration
 public class DataSourceProxyConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(DataSourceProxyBeanPostProcessor.class)
-    @ConditionalOnClass(ProxyDataSource.class)
-    public DataSourceProxyBeanPostProcessor datasourceProxyBeanPostProcessor(final DataSourceProxyFactory dataSourceProxyFactory) {
-        return new DataSourceProxyBeanPostProcessor(dataSourceProxyFactory);
-    }
+  /** Create a {@link DataSourceProxyBeanPostProcessor} bean. */
+  @Bean
+  @ConditionalOnClass(ProxyDataSource.class)
+  @ConditionalOnMissingBean(DataSourceProxyBeanPostProcessor.class)
+  public DataSourceProxyBeanPostProcessor datasourceProxyBeanPostProcessor(
+      DataSourceProxyFactory dataSourceProxyFactory) {
+    return new DataSourceProxyBeanPostProcessor(dataSourceProxyFactory);
+  }
 
-    @Bean
-    @ConditionalOnMissingBean(DataSourceProxyFactory.class)
-    @ConditionalOnClass(ProxyDataSource.class)
-    public DataSourceProxyFactory proxyDataSourceFactory(final List<OrderedQueryExecutionListener> listeners) {
-        listeners.sort(OrderComparator.INSTANCE);
-        return new DataSourceProxyFactory(listeners);
-    }
+  /** Create a {@link DataSourceProxyFactory} bean. */
+  @Bean
+  @ConditionalOnClass(ProxyDataSource.class)
+  @ConditionalOnMissingBean(DataSourceProxyFactory.class)
+  public DataSourceProxyFactory proxyDataSourceFactory(
+      List<OrderedQueryExecutionListener> listeners) {
+    listeners.sort(OrderComparator.INSTANCE);
+    return new DataSourceProxyFactory(listeners);
+  }
 }

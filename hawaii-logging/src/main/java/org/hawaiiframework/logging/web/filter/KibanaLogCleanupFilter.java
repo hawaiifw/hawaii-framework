@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * A filter that cleans up the Kibana Log Fields.
@@ -33,22 +33,18 @@ import java.io.IOException;
  */
 public class KibanaLogCleanupFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogCleanupFilter.class);
+  /** The Logger. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogCleanupFilter.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
-        try {
-            filterChain.doFilter(request, response);
-        } finally {
-            LOGGER.info("Clearing Kibana log fields.");
-            KibanaLogFields.clear();
-        }
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    try {
+      filterChain.doFilter(request, response);
+    } finally {
+      LOGGER.info("Clearing Kibana log fields.");
+      KibanaLogFields.clear();
     }
+  }
 }

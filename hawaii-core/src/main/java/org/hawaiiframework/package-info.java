@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Hawaii Framework.
- */
+/** Hawaii Framework. */
 package org.hawaiiframework;

@@ -35,11 +35,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 /**
  * This class creates proper HTTP response bodies for exceptions.
  *
- * <p>Separate controller advice with it's own order, so that is used before the {@link HawaiiResponseEntityExceptionHandler}.
- * This is needed because in the code we tend to wrap exceptions within Hawaii exceptions
- * and the Hawaii exception is preferred above the cause within that exceptions.</p>
+ * <p>Separate controller advice with it's own order, so that is used before the {@link
+ * HawaiiResponseEntityExceptionHandler}. This is needed because in the code we tend to wrap
+ * exceptions within Hawaii exceptions and the Hawaii exception is preferred above the cause within
+ * that exceptions.
  *
- * <p>(in other words, don't delete this file or merge this file with the {@link HawaiiResponseEntityExceptionHandler}!)</p>
+ * <p>(in other words, don't delete this file or merge this file with the {@link
+ * HawaiiResponseEntityExceptionHandler}!)
  *
  * @since 6.0.0
  */
@@ -47,45 +49,55 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class HawaiiSpringResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
+  private final ErrorResponseEntityBuilder errorResponseEntityBuilder;
 
-    public HawaiiSpringResponseEntityExceptionHandler(final ErrorResponseEntityBuilder errorResponseEntityBuilder) {
-        this.errorResponseEntityBuilder = errorResponseEntityBuilder;
-    }
+  /** Constructor with an {@code errorResponseEntityBuilder}. */
+  public HawaiiSpringResponseEntityExceptionHandler(
+      ErrorResponseEntityBuilder errorResponseEntityBuilder) {
+    super();
+    this.errorResponseEntityBuilder = errorResponseEntityBuilder;
+  }
 
-    /**
-     * Handles {@code AccessDeniedException} instances.
-     * <p>
-     * The response status is: 403 Forbidden.
-     *
-     * @param ex      the exception
-     * @param request the current request
-     * @return a response entity reflecting the current exception
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseBody
-    public ResponseEntity<Object> accessDeniedException(final AccessDeniedException ex, final WebRequest request) {
-        final HttpStatus status = HttpStatus.FORBIDDEN;
-        return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
-    }
+  /**
+   * Handles {@code AccessDeniedException} instances.
+   *
+   * <p>The response status is: 403 Forbidden.
+   *
+   * @param exception the exception
+   * @param request the current request
+   * @return a response entity reflecting the current exception
+   */
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseBody
+  public ResponseEntity<Object> accessDeniedException(
+      AccessDeniedException exception, WebRequest request) {
+    HttpStatus status = HttpStatus.FORBIDDEN;
+    return handleExceptionInternal(
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
+  }
 
-    /**
-     * The overridden message not readable exception handler.
-     *
-     * @param ex the exception to handle
-     * @param headers the headers to use for the response
-     * @param statusCode the status code to use for the response
-     * @param request the current request
-     * @return a response entity reflecting the current exception
-     */
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex,
-        final HttpHeaders headers, final HttpStatusCode statusCode, final WebRequest request) {
-        final HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleExceptionInternal(ex, buildErrorResponseBody(ex, status, request), EMPTY, status, request);
-    }
+  /**
+   * The overridden message not readable exception handler.
+   *
+   * @param exception the exception to handle
+   * @param headers the headers to use for the response
+   * @param statusCode the status code to use for the response
+   * @param request the current request
+   * @return a response entity reflecting the current exception
+   */
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException exception,
+      HttpHeaders headers,
+      HttpStatusCode statusCode,
+      WebRequest request) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    return handleExceptionInternal(
+        exception, buildErrorResponseBody(exception, status, request), EMPTY, status, request);
+  }
 
-    private ErrorResponseResource buildErrorResponseBody(final Throwable throwable, final HttpStatus status, final WebRequest request) {
-        return errorResponseEntityBuilder.buildErrorResponseBody(throwable, status, request);
-    }
+  private ErrorResponseResource buildErrorResponseBody(
+      Throwable throwable, HttpStatus status, WebRequest request) {
+    return errorResponseEntityBuilder.buildErrorResponseBody(throwable, status, request);
+  }
 }

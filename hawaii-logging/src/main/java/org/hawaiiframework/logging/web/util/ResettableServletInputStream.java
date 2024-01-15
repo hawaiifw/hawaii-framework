@@ -13,87 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.util;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Input stream that can be 'reset', that is, the stream can be reset by supplying the (original) data again.
+ * Input stream that can be 'reset', that is, the stream can be reset by supplying the (original)
+ * data again.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class ResettableServletInputStream extends ServletInputStream {
 
-    /**
-     * The input stream to use.
-     */
-    private final InputStream stream;
+  /** The input stream to use. */
+  private final InputStream stream;
 
-    /**
-     * Flag to indicate that the stream is finished.
-     */
-    private boolean finished;
+  /** Flag to indicate that the stream is finished. */
+  private boolean finished;
 
-    /**
-     * The constructor.
-     *
-     * @param rawData A copy of another servlet input stream.
-     */
-    public ResettableServletInputStream(final byte[] rawData) {
-        super();
-        stream = new ByteArrayInputStream(rawData);
+  /**
+   * The constructor.
+   *
+   * @param rawData A copy of another servlet input stream.
+   */
+  public ResettableServletInputStream(byte[] rawData) {
+    super();
+    stream = new ByteArrayInputStream(rawData);
+  }
+
+  @Override
+  public int read() throws IOException {
+    int read = stream.read();
+    if (read == -1) {
+      finished = true;
     }
+    return read;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int read() throws IOException {
-        final int read = stream.read();
-        if (read == -1) {
-            finished = true;
-        }
-        return read;
-    }
+  @Override
+  public boolean isFinished() {
+    return finished;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isFinished() {
-        return finished;
-    }
+  @Override
+  public boolean isReady() {
+    return true;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isReady() {
-        return true;
-    }
+  @Override
+  public void setReadListener(ReadListener listener) {
+    // ignored
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setReadListener(final ReadListener listener) {
-        // ignored
-    }
-
-    /**
-     * Set the input to use for the stream.
-     *
-     * @throws IOException in case the stream cannot be reset.
-     */
-    @Override
-    public void reset() throws IOException {
-        // This relies on the stream being a byte array input stream (or a stream that supports reset...)
-        stream.reset();
-    }
+  /**
+   * Set the input to use for the stream.
+   *
+   * @throws IOException in case the stream cannot be reset.
+   */
+  @Override
+  public void reset() throws IOException {
+    // This relies on the stream being a byte array input stream (or a stream that supports
+    // reset...)
+    stream.reset();
+  }
 }

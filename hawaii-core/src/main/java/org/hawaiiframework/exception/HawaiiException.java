@@ -19,43 +19,32 @@ package org.hawaiiframework.exception;
 import java.io.Serial;
 
 /**
+ * An Hawaii Exception.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 public class HawaiiException extends RuntimeException {
 
-    /**
-     * The serial verion UUID..
-     */
-    @Serial
-    private static final long serialVersionUID = 6463686875194124117L;
+  @Serial private static final long serialVersionUID = 6463686875194124117L;
 
-    /**
-     * Constructs a new {@code HawaiiException}.
-     */
-    public HawaiiException() {
-        // This constructor is intentionally empty. Nothing special is needed here.
-    }
+  /** Constructs a new {@code HawaiiException}. */
+  public HawaiiException() {
+    super();
+  }
 
-    /**
-     * Constructs a new {@code HawaiiException} with the supplied message.
-     */
-    public HawaiiException(final String message) {
-        super(message);
-    }
+  /** Constructs a new {@code HawaiiException} with the supplied message. */
+  public HawaiiException(String message) {
+    super(message);
+  }
 
-    /**
-     * Constructs a new {@code HawaiiException} with the supplied message and {@link Throwable}.
-     */
-    public HawaiiException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+  /** Constructs a new {@code HawaiiException} with the supplied message and {@link Throwable}. */
+  public HawaiiException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * Constructs a new {@code HawaiiException} with the supplied {@link Throwable}.
-     */
-    public HawaiiException(final Throwable cause) {
-        super(cause);
-    }
-
+  /** Constructs a new {@code HawaiiException} with the supplied {@link Throwable}. */
+  public HawaiiException(Throwable cause) {
+    super(cause);
+  }
 }

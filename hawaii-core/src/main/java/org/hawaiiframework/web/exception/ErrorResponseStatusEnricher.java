@@ -28,17 +28,13 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class ErrorResponseStatusEnricher implements ErrorResponseEnricher {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doEnrich(
-            final ErrorResponseResource errorResponseResource,
-            final Throwable throwable,
-            final WebRequest request,
-            final HttpStatus httpStatus) {
-        errorResponseResource.setStatusCode(httpStatus.value());
-        errorResponseResource.setStatusMessage(httpStatus.getReasonPhrase());
-    }
-
+  @Override
+  public void doEnrich(
+      ErrorResponseResource errorResponseResource,
+      Throwable throwable,
+      WebRequest request,
+      HttpStatus httpStatus) {
+    errorResponseResource.setStatusCode(httpStatus.value());
+    errorResponseResource.setStatusMessage(httpStatus.getReasonPhrase());
+  }
 }

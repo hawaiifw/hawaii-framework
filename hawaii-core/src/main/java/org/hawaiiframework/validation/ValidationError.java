@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.validation;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * Encapsulates a validation error.
@@ -31,49 +31,49 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  */
 public class ValidationError {
 
-    private final String field;
-    private final String code;
+  private final String field;
+  private final String code;
 
-    /**
-     * Constructs a new {@link ValidationError} with the supplied error code.
-     *
-     * @param code the error code
-     */
-    public ValidationError(final String code) {
-        this(null, code);
-    }
+  /**
+   * Constructs a new {@link ValidationError} with the supplied error code.
+   *
+   * @param code the error code
+   */
+  public ValidationError(String code) {
+    this(null, code);
+  }
 
-    /**
-     * Constructs a new {@link ValidationError} with the supplied field name and error code.
-     *
-     * @param field the field name
-     * @param code  the error code
-     */
-    public ValidationError(final String field, final String code) {
-        this.field = field;
-        this.code = requireNonNull(code, "'code' must not be null");
-    }
+  /**
+   * Constructs a new {@link ValidationError} with the supplied field name and error code.
+   *
+   * @param field the field name
+   * @param code the error code
+   */
+  public ValidationError(String field, String code) {
+    this.field = field;
+    this.code = requireNonNull(code, "'code' must not be null");
+  }
 
-    /**
-     * Returns the field name or {@code null}.
-     *
-     * @return the field name or {@code null}
-     */
-    public String getField() {
-        return field;
-    }
+  /**
+   * Returns the field name or {@code null}.
+   *
+   * @return the field name or {@code null}
+   */
+  public String getField() {
+    return field;
+  }
 
-    /**
-     * Returns the error code.
-     *
-     * @return the error code
-     */
-    public String getCode() {
-        return code;
-    }
+  /**
+   * Returns the error code.
+   *
+   * @return the error code
+   */
+  public String getCode() {
+    return code;
+  }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
-    }
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
+  }
 }

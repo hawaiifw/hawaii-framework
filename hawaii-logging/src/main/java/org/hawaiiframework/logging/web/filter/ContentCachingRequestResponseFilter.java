@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
-
-import java.io.IOException;
 
 /**
  * A filter that starts content caching.
@@ -32,35 +32,34 @@ import java.io.IOException;
  */
 public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBean {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest httpServletRequest,
-            final HttpServletResponse httpServletResponse,
-            final FilterChain filterChain) throws ServletException, IOException {
-        final WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
-        try {
-            filterChain.doFilter(wrapped.request(), wrapped.response());
-        } finally {
-            copyCachedResponse(wrapped);
-        }
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse,
+      FilterChain filterChain)
+      throws ServletException, IOException {
+    WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest, httpServletResponse);
+    try {
+      filterChain.doFilter(wrapped.request(), wrapped.response());
+    } finally {
+      copyCachedResponse(wrapped);
     }
+  }
 
-    private void copyCachedResponse(final WrappedHttpRequestResponse wrapped) throws IOException {
-        if (wrapped != null) {
-            final ResettableHttpServletRequest request = wrapped.request();
-            if (!request.isAsyncStarted()) {
-                final ContentCachingWrappedResponse response = wrapped.response();
-                if (response != null) {
-                    response.copyBodyToResponse();
-                }
-            }
+  private static void copyCachedResponse(WrappedHttpRequestResponse wrapped) throws IOException {
+    if (wrapped != null) {
+      ResettableHttpServletRequest request = wrapped.request();
+      if (!request.isAsyncStarted()) {
+        ContentCachingWrappedResponse response = wrapped.response();
+        if (response != null) {
+          response.copyBodyToResponse();
         }
+      }
     }
+  }
 
-    @Override
-    protected boolean shouldNotFilterAsyncDispatch() {
-        return false;
-    }
+  @Override
+  protected boolean shouldNotFilterAsyncDispatch() {
+    return false;
+  }
 }

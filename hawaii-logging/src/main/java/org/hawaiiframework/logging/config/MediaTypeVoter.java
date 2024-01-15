@@ -16,73 +16,68 @@
 
 package org.hawaiiframework.logging.config;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Media type voter allows configuration of allowed media types.
- */
+/** Media type voter allows configuration of allowed media types. */
 public class MediaTypeVoter {
 
-    /**
-     * The logger.
-     */
-    private static final Logger LOGGER = getLogger(MediaTypeVoter.class);
+  /** The logger. */
+  private static final Logger LOGGER = getLogger(MediaTypeVoter.class);
 
-    /**
-     * The configured content types.
-     */
-    private final List<MediaType> contentTypes;
+  /** The configured content types. */
+  private final List<MediaType> contentTypes;
 
-    private final boolean matchIfEmpty;
+  private final boolean matchIfEmpty;
 
-    public MediaTypeVoter(final List<MediaType> contentTypes, final boolean matchIfEmpty) {
-        this.contentTypes = contentTypes;
-        this.matchIfEmpty = matchIfEmpty;
-        LOGGER.debug("Configured content types: '{}'.", contentTypes);
-    }
+  /** The constructor with content types and whether to match if there are no content types. */
+  public MediaTypeVoter(List<MediaType> contentTypes, boolean matchIfEmpty) {
+    this.contentTypes = contentTypes;
+    this.matchIfEmpty = matchIfEmpty;
+    LOGGER.debug("Configured content types: '{}'.", contentTypes);
+  }
 
-    public boolean mediaTypeMatches(final String contentType) {
-        return mediaTypeMatches(parseMediaType(contentType));
-    }
+  /** Check if the {@code mediaType} is one of the configured content type. */
+  public boolean mediaTypeMatches(String contentType) {
+    return mediaTypeMatches(parseMediaType(contentType));
+  }
 
-    public boolean mediaTypeMatches(final MediaType mediaType) {
-        boolean matches = false;
+  /** Check if the {@code mediaType} is one of the configured content type. */
+  public boolean mediaTypeMatches(MediaType mediaType) {
+    boolean matches = false;
 
-        if (mediaType == null || contentTypes == null || contentTypes.isEmpty()) {
-            matches = matchIfEmpty;
-        } else {
+    if (mediaType == null || contentTypes == null || contentTypes.isEmpty()) {
+      matches = matchIfEmpty;
+    } else {
 
-            for (final MediaType allowedType : contentTypes) {
-                final boolean includes = allowedType.includes(mediaType);
-                LOGGER.trace("Type '{}' contains '{}': '{}'.", allowedType, mediaType, includes);
-                if (includes) {
-                    matches = true;
-                }
-            }
-
-            LOGGER.debug("Media type '{}' does not match, since it is not configured.", mediaType);
+      for (MediaType allowedType : contentTypes) {
+        boolean includes = allowedType.includes(mediaType);
+        LOGGER.trace("Type '{}' contains '{}': '{}'.", allowedType, mediaType, includes);
+        if (includes) {
+          matches = true;
         }
+      }
 
-        return matches;
+      LOGGER.debug("Media type '{}' does not match, since it is not configured.", mediaType);
     }
 
-    private MediaType parseMediaType(final String contentType) {
-        if (isNotBlank(contentType)) {
-            try {
-                return MediaType.parseMediaType(contentType);
-            } catch (InvalidMediaTypeException exception) {
-                LOGGER.info("Got error parsing content type '{}'.", contentType, exception);
-            }
-        }
+    return matches;
+  }
 
-        return null;
+  private static MediaType parseMediaType(String contentType) {
+    if (isNotBlank(contentType)) {
+      try {
+        return MediaType.parseMediaType(contentType);
+      } catch (InvalidMediaTypeException exception) {
+        LOGGER.info("Got error parsing content type '{}'.", contentType, exception);
+      }
     }
 
+    return null;
+  }
 }

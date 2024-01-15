@@ -16,10 +16,8 @@
 
 package org.hawaiiframework.async.exception;
 
-import org.hawaiiframework.exception.HawaiiException;
-
 import java.io.Serial;
-
+import org.hawaiiframework.exception.HawaiiException;
 
 /**
  * Exception thrown when a task has been timed-out.
@@ -29,44 +27,40 @@ import java.io.Serial;
  */
 public class TaskTimeoutException extends HawaiiException {
 
-    /**
-     * The serial version UID.
-     */
-    @Serial
-    private static final long serialVersionUID = 7124314347993711382L;
+  /** The serial version UID. */
+  @Serial private static final long serialVersionUID = 7124314347993711382L;
 
-    /**
-     * Constructs a new {@code TaskTimeoutException}.
-     */
-    public TaskTimeoutException() {
-        super();
-    }
+  /** Constructs a new {@code TaskTimeoutException}. */
+  public TaskTimeoutException() {
+    super();
+  }
 
-    /**
-     * Constructs a new {@code TaskTimeoutException} with the supplied {@code message}.
-     *
-     * @param message The exception message.
-     */
-    public TaskTimeoutException(final String message) {
-        super(message);
-    }
+  /**
+   * Constructs a new {@code TaskTimeoutException} with the supplied {@code message}.
+   *
+   * @param message The exception message.
+   */
+  public TaskTimeoutException(String message) {
+    super(message);
+  }
 
-    /**
-     * Constructs a new {@code TaskTimeoutException} with the supplied {@code message} and {@code cause}.
-     *
-     * @param message The exception message.
-     * @param cause   The exception cause.
-     */
-    public TaskTimeoutException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * Constructs a new {@code TaskTimeoutException} with the supplied {@code message} and {@code
+   * cause}.
+   *
+   * @param message The exception message.
+   * @param cause The exception cause.
+   */
+  public TaskTimeoutException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * Constructs a new {@code TaskTimeoutException} with the supplied {@code cause}.
-     *
-     * @param cause The cause.
-     */
-    public TaskTimeoutException(final Throwable cause) {
-        super(cause);
-    }
+  /**
+   * Constructs a new {@code TaskTimeoutException} with the supplied {@code cause}.
+   *
+   * @param cause The cause.
+   */
+  public TaskTimeoutException(Throwable cause) {
+    super(cause);
+  }
 }

@@ -22,21 +22,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configuration for statement execution logging.
- */
+/** Configuration for statement execution logging. */
 @ConditionalOnClass(QueryExecutionListener.class)
 @Configuration
 public class StatementLoggerQueryExecutionListenerConfiguration {
-    /**
-     * Create a statement logger query execution listener.
-     *
-     * @return The listener that logs JDBC statements.
-     */
-    @ConditionalOnClass(QueryExecutionListener.class)
-    @Bean
-    public StatementLoggerQueryExecutionListener statementLoggerQueryExecutionListener() {
-        return new StatementLoggerQueryExecutionListener();
-    }
-
+  /**
+   * Create a statement logger query execution listener.
+   *
+   * @return The listener that logs JDBC statements.
+   */
+  @Bean
+  @ConditionalOnClass(QueryExecutionListener.class)
+  public StatementLoggerQueryExecutionListener statementLoggerQueryExecutionListener() {
+    return new StatementLoggerQueryExecutionListener();
+  }
 }

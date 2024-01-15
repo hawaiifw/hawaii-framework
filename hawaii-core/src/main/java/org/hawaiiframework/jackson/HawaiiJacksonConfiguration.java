@@ -24,31 +24,33 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Hawaii opinionated Jackson configuration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 @Configuration
 public class HawaiiJacksonConfiguration {
 
-    /**
-     * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects with {@link ObjectMapper}.
-     *
-     * @return The Java Time Jackson module.
-     */
+  /**
+   * Returns a Jackson {@link Module} capable of serializing {@code java.time} objects with {@link
+   * ObjectMapper}.
+   *
+   * @return The Java Time Jackson module.
+   */
+  @Bean
+  public JavaTimeModule javaTimeModule() {
+    return new JavaTimeModule();
+  }
 
-    @Bean
-    public JavaTimeModule javaTimeModule() {
-        return new JavaTimeModule();
-    }
-
-    /**
-     * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with {@link ObjectMapper}.
-     *
-     * @return The JSON org Jackson module.
-     */
-
-    @Bean
-    public JsonOrgModule jsonOrgModule() {
-        return new JsonOrgModule();
-    }
+  /**
+   * Returns a Jackson {@link Module} capable of serializing {@code org.json} objects with {@link
+   * ObjectMapper}.
+   *
+   * @return The JSON org Jackson module.
+   */
+  @Bean
+  public JsonOrgModule jsonOrgModule() {
+    return new JsonOrgModule();
+  }
 }

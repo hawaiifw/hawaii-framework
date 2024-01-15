@@ -20,144 +20,142 @@ package org.hawaiiframework.async.model;
  * Configuration properties for a single executor.
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 @SuppressWarnings("PMD.DataClass")
 public class ExecutorProperties {
 
-    /**
-     * The executor name.
-     * <p>
-     * The name is also used as the thread name prefix,
-     * see {@link org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setThreadNamePrefix(String)}
-     */
-    private String name;
+  /**
+   * The executor name.
+   *
+   * <p>The name is also used as the thread name prefix, see {@link
+   * org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setThreadNamePrefix(String)}
+   */
+  private String name;
 
-    /**
-     * The core pool size.
-     */
-    private Integer corePoolSize;
+  /** The core pool size. */
+  private Integer corePoolSize;
 
-    /**
-     * The keep-alive time.
-     *
-     * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setKeepAliveSeconds(int)
-     */
-    private Integer keepAliveTime;
+  /**
+   * The keep-alive time.
+   *
+   * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setKeepAliveSeconds(int)
+   */
+  private Integer keepAliveTime;
 
-    /**
-     * The maximum number of pending requests.
-     *
-     * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setQueueCapacity(int)
-     */
-    private Integer maxPendingRequests;
+  /**
+   * The maximum number of pending requests.
+   *
+   * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setQueueCapacity(int)
+   */
+  private Integer maxPendingRequests;
 
-    /**
-     * The maximum pool size.
-     *
-     * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setMaxPoolSize(int)
-     */
-    private Integer maxPoolSize;
+  /**
+   * The maximum pool size.
+   *
+   * @see org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor#setMaxPoolSize(int)
+   */
+  private Integer maxPoolSize;
 
-    /**
-     * Getter for name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+  /**
+   * Getter for name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-    /**
-     * Setter for name.
-     *
-     * @param name the name
-     */
-    public void setName(final String name) {
-        this.name = name;
-    }
+  /**
+   * Setter for name.
+   *
+   * @param name the name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    /**
-     * Getter for core pool size.
-     *
-     * @return the core pool size
-     */
-    public Integer getCorePoolSize() {
-        return corePoolSize;
-    }
+  /**
+   * Getter for core pool size.
+   *
+   * @return the core pool size
+   */
+  public Integer getCorePoolSize() {
+    return corePoolSize;
+  }
 
-    /**
-     * Setter for core pool size.
-     *
-     * @param corePoolSize the core pool size
-     */
-    public void setCorePoolSize(final Integer corePoolSize) {
-        this.corePoolSize = corePoolSize;
-    }
+  /**
+   * Setter for core pool size.
+   *
+   * @param corePoolSize the core pool size
+   */
+  public void setCorePoolSize(Integer corePoolSize) {
+    this.corePoolSize = corePoolSize;
+  }
 
-    /**
-     * Getter for keep-alive time.
-     *
-     * @return the keep-alive time
-     */
-    public Integer getKeepAliveTime() {
-        return keepAliveTime;
-    }
+  /**
+   * Getter for keep-alive time.
+   *
+   * @return the keep-alive time
+   */
+  public Integer getKeepAliveTime() {
+    return keepAliveTime;
+  }
 
-    /**
-     * Setter for keep-alive time.
-     *
-     * @param keepAliveTime the keep-alive time
-     */
-    public void setKeepAliveTime(final Integer keepAliveTime) {
-        this.keepAliveTime = keepAliveTime;
-    }
+  /**
+   * Setter for keep-alive time.
+   *
+   * @param keepAliveTime the keep-alive time
+   */
+  public void setKeepAliveTime(Integer keepAliveTime) {
+    this.keepAliveTime = keepAliveTime;
+  }
 
-    /**
-     * Getter for max pending requests.
-     *
-     * @return the max pending requests
-     */
-    public Integer getMaxPendingRequests() {
-        return maxPendingRequests;
-    }
+  /**
+   * Getter for max pending requests.
+   *
+   * @return the max pending requests
+   */
+  public Integer getMaxPendingRequests() {
+    return maxPendingRequests;
+  }
 
-    /**
-     * Setter for name.
-     *
-     * @param maxPendingRequests the max pending requests
-     */
-    public void setMaxPendingRequests(final Integer maxPendingRequests) {
-        this.maxPendingRequests = maxPendingRequests;
-    }
+  /**
+   * Setter for name.
+   *
+   * @param maxPendingRequests the max pending requests
+   */
+  public void setMaxPendingRequests(Integer maxPendingRequests) {
+    this.maxPendingRequests = maxPendingRequests;
+  }
 
-    /**
-     * Getter for max pool size.
-     *
-     * @return the max pool size
-     */
-    public Integer getMaxPoolSize() {
-        return maxPoolSize;
-    }
+  /**
+   * Getter for max pool size.
+   *
+   * @return the max pool size
+   */
+  public Integer getMaxPoolSize() {
+    return maxPoolSize;
+  }
 
-    /**
-     * Setter for max pool size.
-     *
-     * @param maxPoolSize the max pool size
-     */
-    public void setMaxPoolSize(final Integer maxPoolSize) {
-        this.maxPoolSize = maxPoolSize;
-    }
+  /**
+   * Setter for max pool size.
+   *
+   * @param maxPoolSize the max pool size
+   */
+  public void setMaxPoolSize(Integer maxPoolSize) {
+    this.maxPoolSize = maxPoolSize;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%s (core size '%s', max size '%s', max pending '%s', keep alive '%s')", getName(), getCorePoolSize(),
-                getMaxPoolSize(), getMaxPendingRequests(), getKeepAliveTime());
-    }
-
+  @Override
+  public String toString() {
+    return String.format(
+        "%s (core size '%s', max size '%s', max pending '%s', keep alive '%s')",
+        getName(),
+        getCorePoolSize(),
+        getMaxPoolSize(),
+        getMaxPendingRequests(),
+        getKeepAliveTime());
+  }
 }

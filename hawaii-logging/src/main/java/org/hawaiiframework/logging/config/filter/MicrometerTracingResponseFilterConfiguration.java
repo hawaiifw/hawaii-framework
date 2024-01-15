@@ -16,6 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.OpenTelemetryTraceIdResponseFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import io.micrometer.tracing.Tracer;
 import org.hawaiiframework.logging.micrometer.MicrometerTraceIdResponseFilter;
 import org.hawaiiframework.logging.opentelemetry.OpenTelemetryTraceIdResponseFilter;
@@ -27,54 +31,49 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.OpenTelemetryTraceIdResponseFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configuration to add open telemetry trace ids to the http servlet responses.
- */
+/** Configuration to add open telemetry trace ids to the http servlet responses. */
 @Configuration
 @ConditionalOnClass(Tracer.class)
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class MicrometerTracingResponseFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.micrometer-tracing-response";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.micrometer-tracing-response";
 
-    private static final Logger LOGGER = getLogger(MicrometerTracingResponseFilterConfiguration.class);
+  private static final Logger LOGGER =
+      getLogger(MicrometerTracingResponseFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".http-header:traceid}")
-    private String headerName;
+  @Value("${" + CONFIG_PREFIX + ".http-header:traceid}")
+  private String headerName;
 
-    @Value("${" + CONFIG_PREFIX + ".order:-1000}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-1000}")
+  private int filterOrder;
 
-    /**
-     * Create the {@link OpenTelemetryTraceIdResponseFilter} bean.
-     *
-     * @param tracer The tracer.
-     * @return the {@link OpenTelemetryTraceIdResponseFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public MicrometerTraceIdResponseFilter micrometerTraceIdResponseFilter(final Tracer tracer) {
-        LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
-        return new MicrometerTraceIdResponseFilter(headerName, tracer);
-    }
+  /**
+   * Create the {@link OpenTelemetryTraceIdResponseFilter} bean.
+   *
+   * @param tracer The tracer.
+   * @return the {@link OpenTelemetryTraceIdResponseFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public MicrometerTraceIdResponseFilter micrometerTraceIdResponseFilter(Tracer tracer) {
+    LOGGER.trace("Configuration: header '{}', order '{}'.", headerName, filterOrder);
+    return new MicrometerTraceIdResponseFilter(headerName, tracer);
+  }
 
-    /**
-     * Register the {@link #micrometerTraceIdResponseFilter(Tracer)} bean.
-     *
-     * @param micrometerTraceIdResponseFilter the micrometerTraceIdResponseFilter
-     * @return the {@link #micrometerTraceIdResponseFilter(Tracer)} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<MicrometerTraceIdResponseFilter> micrometerTraceIdResponseFilterRegistration(
-            final MicrometerTraceIdResponseFilter micrometerTraceIdResponseFilter) {
-        return createFilterRegistrationBean(micrometerTraceIdResponseFilter, filterOrder);
-    }
+  /**
+   * Register the {@link #micrometerTraceIdResponseFilter(Tracer)} bean.
+   *
+   * @param micrometerTraceIdResponseFilter the micrometerTraceIdResponseFilter
+   * @return the {@link #micrometerTraceIdResponseFilter(Tracer)} bean, wrapped in a {@link
+   *     FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<MicrometerTraceIdResponseFilter>
+      micrometerTraceIdResponseFilterRegistration(
+          MicrometerTraceIdResponseFilter micrometerTraceIdResponseFilter) {
+    return createFilterRegistrationBean(micrometerTraceIdResponseFilter, filterOrder);
+  }
 }

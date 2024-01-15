@@ -32,6 +32,4 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass({JavaTimeModule.class, JsonOrgModule.class})
 @Import(HawaiiJacksonConfiguration.class)
 @Configuration
-public class HawaiiJacksonAutoConfiguration {
-
-}
+public class HawaiiJacksonAutoConfiguration {}

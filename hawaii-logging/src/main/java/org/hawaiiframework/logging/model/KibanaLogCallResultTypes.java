@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.model;
 
 /**
@@ -22,16 +23,10 @@ package org.hawaiiframework.logging.model;
  * @since 2.0.0
  */
 public enum KibanaLogCallResultTypes {
-    /**
-     * Success.
-     */
-    SUCCESS,
-    /**
-     * Timeout.
-     */
-    TIMEOUT,
-    /**
-     * Failure.
-     */
-    FAILURE
+  /** Success. */
+  SUCCESS,
+  /** Timeout. */
+  TIMEOUT,
+  /** Failure. */
+  FAILURE
 }

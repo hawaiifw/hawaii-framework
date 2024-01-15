@@ -2,6 +2,9 @@
 
 ## 6.0.0.M7
 * Upgrade to Spring Boot 3.2.x
+* Adopt Google Code Standard
+* Update quality plugin versions
+* Use error prone and Spotless 
 
 ## 6.0.0.M6
 * Enable GraphQL transaction type logging for multiParts.

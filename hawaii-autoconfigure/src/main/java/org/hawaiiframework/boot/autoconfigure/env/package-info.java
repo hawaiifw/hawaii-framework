@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * Hawaii {@link org.springframework.core.env.Environment} support.
- */
+/** Hawaii {@link org.springframework.core.env.Environment} support. */
 package org.hawaiiframework.boot.autoconfigure.env;

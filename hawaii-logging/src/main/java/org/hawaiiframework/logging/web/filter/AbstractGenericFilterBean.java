@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,54 +24,53 @@ import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * Adapter "interface" to be able to write FilterBeans that can be "once per request" or "for every dispatch in the request" without having
- * to change code.
- * <p>
- * So, if a filter changes from {@link AbstractGenericFilterBean} to {@link org.springframework.web.filter.OncePerRequestFilter} then
- * the filter code remains the same.
+ * Adapter "interface" to be able to write FilterBeans that can be "once per request" or "for every
+ * dispatch in the request" without having to change code.
+ *
+ * <p>So, if a filter changes from {@link AbstractGenericFilterBean} to {@link
+ * org.springframework.web.filter.OncePerRequestFilter} then the filter code remains the same.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public abstract class AbstractGenericFilterBean extends OncePerRequestFilter {
 
-    protected static final String WRAPPED_REQUEST_RESPONSE = WrappedHttpRequestResponse.class.getName();
+  protected static final String WRAPPED_REQUEST_RESPONSE =
+      WrappedHttpRequestResponse.class.getName();
 
-    /**
-     * Retrieve the {@link WrappedHttpRequestResponse} given the {@code httpServletRequest}.
-     *
-     * @param httpServletRequest The http servlet request.
-     * @return The, possibly {@code null}, {@link WrappedHttpRequestResponse}.
-     */
-    protected WrappedHttpRequestResponse getWrapped(final HttpServletRequest httpServletRequest) {
-        return (WrappedHttpRequestResponse) httpServletRequest.getAttribute(
-            WRAPPED_REQUEST_RESPONSE);
+  /**
+   * Retrieve the {@link WrappedHttpRequestResponse} given the {@code httpServletRequest}.
+   *
+   * @param httpServletRequest The http servlet request.
+   * @return The, possibly {@code null}, {@link WrappedHttpRequestResponse}.
+   */
+  protected WrappedHttpRequestResponse getWrapped(HttpServletRequest httpServletRequest) {
+    return (WrappedHttpRequestResponse) httpServletRequest.getAttribute(WRAPPED_REQUEST_RESPONSE);
+  }
+
+  /**
+   * Retrieve or create the {@link WrappedHttpRequestResponse}.
+   *
+   * @param httpServletRequest The http servlet request.
+   * @param httpServletResponse The http servlet response.
+   * @return a, never {@code null} {@link WrappedHttpRequestResponse}.
+   */
+  protected WrappedHttpRequestResponse getWrapped(
+      HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest);
+    if (wrapped != null) {
+      return wrapped;
     }
 
-    /**
-     * Retrieve or create the {@link WrappedHttpRequestResponse}.
-     *
-     * @param httpServletRequest The http servlet request.
-     * @param httpServletResponse The http servlet response.
-     * @return a, never {@code null} {@link WrappedHttpRequestResponse}.
-     */
-    protected WrappedHttpRequestResponse getWrapped(final HttpServletRequest httpServletRequest,
-        final HttpServletResponse httpServletResponse) {
-        WrappedHttpRequestResponse wrapped = getWrapped(httpServletRequest);
-        if (wrapped != null) {
-            return wrapped;
-        }
+    ContentCachingWrappedResponse wrappedResponse =
+        new ContentCachingWrappedResponse(httpServletResponse);
+    ResettableHttpServletRequest wrappedRequest =
+        new ResettableHttpServletRequest(httpServletRequest, wrappedResponse);
 
-        final ContentCachingWrappedResponse wrappedResponse = new ContentCachingWrappedResponse(
-            httpServletResponse);
-        final ResettableHttpServletRequest wrappedRequest = new ResettableHttpServletRequest(
-            httpServletRequest, wrappedResponse);
+    wrapped = new WrappedHttpRequestResponse(wrappedRequest, wrappedResponse);
 
-        wrapped = new WrappedHttpRequestResponse(wrappedRequest,
-            wrappedResponse);
+    httpServletRequest.setAttribute(WRAPPED_REQUEST_RESPONSE, wrapped);
 
-        httpServletRequest.setAttribute(WRAPPED_REQUEST_RESPONSE, wrapped);
-
-        return wrapped;
-    }
+    return wrapped;
+  }
 }

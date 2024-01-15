@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.util;
 
 /**
@@ -20,11 +21,8 @@ package org.hawaiiframework.logging.web.util;
  *
  * @param request The wrapped http servlet request.
  * @param response The wrapped response.
- *
  * @author Giuseppe Collura
  * @since 6.0.0
  */
-public record WrappedHttpRequestResponse(ResettableHttpServletRequest request,
-                                         ContentCachingWrappedResponse response) {
-
-}
+public record WrappedHttpRequestResponse(
+    ResettableHttpServletRequest request, ContentCachingWrappedResponse response) {}

@@ -16,54 +16,52 @@
 
 package org.hawaiiframework.web.exception;
 
-import java.io.Serial;
-
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+import java.io.Serial;
+
 /**
+ * An internal service error exception.
+ *
  * @author Ivan Melotte
  * @since 2.0.0
  */
 public class InternalServerErrorException extends HttpException {
 
-    /**
-     * The serial version UID.
-     */
-    @Serial
-    private static final long serialVersionUID = -7187613746044972447L;
+  /** The serial version UID. */
+  @Serial private static final long serialVersionUID = -7187613746044972447L;
 
-    /**
-     * Constructs a new {@code InternalServerErrorException}.
-     */
-    public InternalServerErrorException() {
-        super(INTERNAL_SERVER_ERROR);
-    }
+  /** Constructs a new {@code InternalServerErrorException}. */
+  public InternalServerErrorException() {
+    super(INTERNAL_SERVER_ERROR);
+  }
 
-    /**
-     * Constructs a new {@code InternalServerErrorException} with the supplied message.
-     *
-     * @param message The message to set.
-     */
-    public InternalServerErrorException(final String message) {
-        super(message, INTERNAL_SERVER_ERROR);
-    }
+  /**
+   * Constructs a new {@code InternalServerErrorException} with the supplied message.
+   *
+   * @param message The message to set.
+   */
+  public InternalServerErrorException(String message) {
+    super(message, INTERNAL_SERVER_ERROR);
+  }
 
-    /**
-     * Constructs a new {@code InternalServerErrorException} with the supplied message and {@link Throwable}.
-     *
-     * @param message The message to set.
-     * @param cause   The cause.
-     */
-    public InternalServerErrorException(final String message, final Throwable cause) {
-        super(message, cause, INTERNAL_SERVER_ERROR);
-    }
+  /**
+   * Constructs a new {@code InternalServerErrorException} with the supplied message and {@link
+   * Throwable}.
+   *
+   * @param message The message to set.
+   * @param cause The cause.
+   */
+  public InternalServerErrorException(String message, Throwable cause) {
+    super(message, cause, INTERNAL_SERVER_ERROR);
+  }
 
-    /**
-     * Constructs a new {@code InternalServerErrorException} with the supplied {@link Throwable}.
-     *
-     * @param cause The cause.
-     */
-    public InternalServerErrorException(final Throwable cause) {
-        super(cause, INTERNAL_SERVER_ERROR);
-    }
+  /**
+   * Constructs a new {@code InternalServerErrorException} with the supplied {@link Throwable}.
+   *
+   * @param cause The cause.
+   */
+  public InternalServerErrorException(Throwable cause) {
+    super(cause, INTERNAL_SERVER_ERROR);
+  }
 }

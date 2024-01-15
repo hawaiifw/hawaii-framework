@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.boot.autoconfigure.logging;
 
 import org.hawaiiframework.logging.config.HawaiiLoggingConfiguration;
@@ -23,7 +24,8 @@ import org.springframework.context.annotation.Import;
 /**
  * Autoconfiguration for the Hawaii logging module.
  *
- * The class simply imports {@link HawaiiLoggingConfiguration} which does the actual configuration.
+ * <p>The class simply imports {@link HawaiiLoggingConfiguration} which does the actual
+ * configuration.
  *
  * @author Paul Klos
  * @author Wouter Eerdekens
@@ -32,6 +34,4 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ConditionalOnClass(HawaiiLoggingConfiguration.class)
 @Import(HawaiiLoggingConfiguration.class)
-public class HawaiiLoggingAutoConfiguration {
-
-}
+public class HawaiiLoggingAutoConfiguration {}

@@ -21,20 +21,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * The Hawaii autoconfiguration.
+ *
  * @author Marcel Overdijk
  * @since 2.0.0
  */
 @Configuration
 public class HawaiiAutoConfiguration {
 
-    /**
-     * The application context binder listener.
-     *
-     * @return the ApplicationContextBinderApplicationListener bean.
-     */
-    @Bean
-    public ApplicationContextBinderApplicationListener applicationContextBinderApplicationListener() {
-        return new ApplicationContextBinderApplicationListener();
-    }
-
+  /**
+   * The application context binder listener.
+   *
+   * @return the ApplicationContextBinderApplicationListener bean.
+   */
+  @Bean
+  public ApplicationContextBinderApplicationListener applicationContextBinderApplicationListener() {
+    return new ApplicationContextBinderApplicationListener();
+  }
 }

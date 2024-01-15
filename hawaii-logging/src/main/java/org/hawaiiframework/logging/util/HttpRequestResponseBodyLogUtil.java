@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
-import org.slf4j.Logger;
-import org.springframework.http.client.ClientHttpResponse;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,158 +30,154 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
+import org.slf4j.Logger;
+import org.springframework.http.client.ClientHttpResponse;
 
 /**
  * Utility for logging requests / responses.
- * <p>
- * The utility can be used to generate HTTP request / response log strings. Both for incoming service calls as outgoing calls (i.e. calls
- * to backend systems).
+ *
+ * <p>The utility can be used to generate HTTP request / response log strings. Both for incoming
+ * service calls as outgoing calls (i.e. calls to backend systems).
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.LooseCoupling")
 public class HttpRequestResponseBodyLogUtil {
 
-    private static final Logger LOGGER = getLogger(HttpRequestResponseBodyLogUtil.class);
+  private static final Logger LOGGER = getLogger(HttpRequestResponseBodyLogUtil.class);
 
-    /**
-     * The configured newline to look for.
-     */
-    private static final String NEW_LINE = System.getProperty("line.separator");
+  /** The configured newline to look for. */
+  private static final String NEW_LINE = System.lineSeparator();
 
-    /**
-     * Masks passwords in json, xml and query strings.
-     */
-    private final PasswordMaskerUtil passwordMasker;
+  /** Masks passwords in json, xml and query strings. */
+  private final PasswordMaskerUtil passwordMasker;
 
-    /**
-     * The constructor for the log utility.
-     *
-     * @param passwordMasker The password masker utility.
-     */
-    public HttpRequestResponseBodyLogUtil(final PasswordMaskerUtil passwordMasker) {
-        this.passwordMasker = passwordMasker;
+  /**
+   * The constructor for the log utility.
+   *
+   * @param passwordMasker The password masker utility.
+   */
+  public HttpRequestResponseBodyLogUtil(PasswordMaskerUtil passwordMasker) {
+    this.passwordMasker = passwordMasker;
+  }
+
+  /**
+   * Get the request body. With password masking.
+   *
+   * @param servletRequest The servlet request.
+   * @return The body.
+   * @throws IOException In case the body could not be read.
+   */
+  public String getTxRequestBody(HttpServletRequest servletRequest) throws IOException {
+    return maskPasswords(getPostBody(servletRequest));
+  }
+
+  /**
+   * Get the response body. With password masking.
+   *
+   * @param servletResponse The servlet response.
+   * @return The body.
+   */
+  public String getTxResponseBody(ContentCachingWrappedResponse servletResponse) {
+    String characterEncoding = servletResponse.getCharacterEncoding();
+    if (APPLICATION_JSON_VALUE.equals(servletResponse.getContentType())) {
+      characterEncoding = "UTF-8";
+    }
+    if (characterEncoding == null || characterEncoding.isEmpty()) {
+      characterEncoding = Charset.defaultCharset().name();
+    }
+    return maskPasswords(toString(servletResponse.getContentAsByteArray(), characterEncoding));
+  }
+
+  /**
+   * Get the call request body. With password masking.
+   *
+   * @param body The http request body.
+   * @return The body.
+   */
+  public String getCallRequestBody(byte[] body) {
+    return maskPasswords(toString(body, Charset.defaultCharset()));
+  }
+
+  /**
+   * Get the call response body. With password masking.
+   *
+   * @param response The http response.
+   * @return The body.
+   * @throws IOException in case something went wrong getting the payload from the response.
+   */
+  public String getCallResponseBody(ClientHttpResponse response) throws IOException {
+    StringBuilder inputStringBuilder = new StringBuilder();
+
+    return maskPasswords(getResponseBody(inputStringBuilder, response));
+  }
+
+  private static String toString(byte[] body, String charset) {
+    return toString(body, Charset.forName(charset));
+  }
+
+  private static String toString(byte[] body, Charset charset) {
+    return new String(body, charset);
+  }
+
+  private static String getPostBody(HttpServletRequest servletRequest) throws IOException {
+    String body =
+        IOUtils.toString(servletRequest.getInputStream(), servletRequest.getCharacterEncoding());
+    if (StringUtils.isNotBlank(body)) {
+      return body;
     }
 
-    /**
-     * Get the request body.
-     * With password masking.
-     *
-     * @param servletRequest The servlet request.
-     * @return The body.
-     * @throws IOException In case the body could not be read.
-     */
-    public String getTxRequestBody(final HttpServletRequest servletRequest) throws IOException {
-        return maskPasswords(getPostBody(servletRequest));
-    }
+    return getPostParametersBody(servletRequest);
+  }
 
-    /**
-     * Get the response body.
-     * With password masking.
-     *
-     * @param servletResponse The servlet response.
-     * @return The body.
-     */
-    public String getTxResponseBody(final ContentCachingWrappedResponse servletResponse) {
-        String characterEncoding = servletResponse.getCharacterEncoding();
-        if (APPLICATION_JSON_VALUE.equals(servletResponse.getContentType())) {
-            characterEncoding = "UTF-8";
+  private static String getPostParametersBody(HttpServletRequest request) {
+    Map<String, String[]> parameters = request.getParameterMap();
+    return getPostParametersBody(request, parameters);
+  }
+
+  private static String getPostParametersBody(
+      HttpServletRequest request, Map<String, String[]> parameters) {
+    if (parameters == null || parameters.isEmpty()) {
+      return "";
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    List<String> parameterNames = new ArrayList<>(parameters.keySet());
+    Collections.sort(parameterNames);
+    for (String parameterName : parameterNames) {
+      String[] parameterValues = request.getParameterValues(parameterName);
+      if (parameterValues != null) {
+        for (String value : parameterValues) {
+          stringBuilder.append(parameterName).append('=').append(value).append('\n');
         }
-        if (characterEncoding == null || characterEncoding.isEmpty()) {
-            characterEncoding = Charset.defaultCharset().name();
-        }
-        return maskPasswords(toString(servletResponse.getContentAsByteArray(), characterEncoding));
+      }
+    }
+    return stringBuilder.toString();
+  }
+
+  private static String getResponseBody(
+      StringBuilder inputStringBuilder, ClientHttpResponse response) throws IOException {
+    try (InputStreamReader inputStreamReader = new InputStreamReader(response.getBody(), UTF_8);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+      String line = bufferedReader.readLine();
+      while (line != null) {
+        inputStringBuilder.append(line).append(NEW_LINE);
+        line = bufferedReader.readLine();
+      }
+    } catch (HttpRetryException exception) {
+      LOGGER.warn("Got retry exception.");
+      LOGGER.trace("Stacktrace is: ", exception);
+    } catch (IOException exception) {
+      LOGGER.warn("Could not get response body.", exception);
     }
 
-    /**
-     * Get the call request body.
-     * With password masking.
-     *
-     * @param body The http request body.
-     * @return The body.
-     */
-    public String getCallRequestBody(final byte[] body) {
-        return maskPasswords(toString(body, Charset.defaultCharset()));
-    }
+    return inputStringBuilder.toString();
+  }
 
-    /**
-     * Get the call response body.
-     * With password masking.
-     *
-     * @param response The http response.
-     * @return The body.
-     * @throws IOException in case something went wrong getting the payload from the response.
-     */
-    public String getCallResponseBody(final ClientHttpResponse response) throws IOException {
-        final StringBuilder inputStringBuilder = new StringBuilder();
-
-        return maskPasswords(getResponseBody(inputStringBuilder, response));
-    }
-
-    private String toString(final byte[] body, final String charset) {
-        return toString(body, Charset.forName(charset));
-    }
-
-    private String toString(final byte[] body, final Charset charset) {
-        return new String(body, charset);
-    }
-
-    private String getPostBody(final HttpServletRequest servletRequest) throws IOException {
-        final String body = IOUtils.toString(servletRequest.getInputStream(), servletRequest.getCharacterEncoding());
-        if (StringUtils.isNotBlank(body)) {
-            return body;
-        }
-
-        return getPostParametersBody(servletRequest);
-    }
-
-    private String getPostParametersBody(final HttpServletRequest request) {
-        final Map<String, String[]> parameters = request.getParameterMap();
-        return getPostParametersBody(request, parameters);
-    }
-
-    private String getPostParametersBody(final HttpServletRequest request, final Map<String, String[]> parameters) {
-        if (parameters == null || parameters.isEmpty()) {
-            return "";
-        }
-        final StringBuilder stringBuilder = new StringBuilder();
-        final List<String> parameterNames = new ArrayList<>(parameters.keySet());
-        Collections.sort(parameterNames);
-        for (final String parameterName : parameterNames) {
-            final String[] parameterValues = request.getParameterValues(parameterName);
-            if (parameterValues != null) {
-                for (final String value : parameterValues) {
-                    stringBuilder.append(parameterName).append('=').append(value).append('\n');
-                }
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    private String getResponseBody(final StringBuilder inputStringBuilder, final ClientHttpResponse response) throws IOException {
-        try (InputStreamReader inputStreamReader = new InputStreamReader(response.getBody(), UTF_8);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                inputStringBuilder.append(line);
-                inputStringBuilder.append(NEW_LINE);
-                line = bufferedReader.readLine();
-            }
-        } catch (HttpRetryException httpRetryException) {
-            LOGGER.warn("Got retry exception.");
-            LOGGER.trace("Stacktrace is: ", httpRetryException);
-        } catch (IOException ex) {
-            LOGGER.warn("Could not get response body.", ex);
-        }
-
-        return inputStringBuilder.toString();
-    }
-
-    private String maskPasswords(final String input) {
-        return passwordMasker.maskPasswordsIn(input);
-    }
+  private String maskPasswords(String input) {
+    return passwordMasker.maskPasswordsIn(input);
+  }
 }

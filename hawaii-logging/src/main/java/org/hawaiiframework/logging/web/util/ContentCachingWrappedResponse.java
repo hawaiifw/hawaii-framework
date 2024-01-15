@@ -13,103 +13,90 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.util;
-
-import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.springframework.http.MediaType;
-import org.springframework.web.util.ContentCachingResponseWrapper;
-
-import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.slf4j.Logger;
+import org.springframework.http.MediaType;
+import org.springframework.web.util.ContentCachingResponseWrapper;
+
 /**
- * An extension of {@link ContentCachingResponseWrapper} that keeps track whether the response is a redirect.
+ * An extension of {@link ContentCachingResponseWrapper} that keeps track whether the response is a
+ * redirect.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class ContentCachingWrappedResponse extends ContentCachingResponseWrapper {
 
-    private static final Logger LOGGER = getLogger(ContentCachingWrappedResponse.class);
+  private static final Logger LOGGER = getLogger(ContentCachingWrappedResponse.class);
 
-    /**
-     * Flag to indicate that the response is a redirect.
-     */
-    private boolean redirect;
+  /** Flag to indicate that the response is a redirect. */
+  private boolean redirect;
 
-    /**
-     * Flag to indicate that the response is a stream.
-     */
-    private boolean streaming;
+  /** Flag to indicate that the response is a stream. */
+  private boolean streaming;
 
-    /**
-     * The constructor.
-     *
-     * @param response The response to wrap.
-     */
-    public ContentCachingWrappedResponse(final HttpServletResponse response) {
-        super(response);
+  /**
+   * The constructor.
+   *
+   * @param response The response to wrap.
+   */
+  public ContentCachingWrappedResponse(HttpServletResponse response) {
+    super(response);
+  }
+
+  @Override
+  public void sendError(int statusCode) throws IOException {
+    redirect = true;
+    super.sendError(statusCode);
+  }
+
+  @Override
+  public void sendError(int statusCode, String message) throws IOException {
+    redirect = true;
+    super.sendError(statusCode, message);
+  }
+
+  @Override
+  public void sendRedirect(String location) throws IOException {
+    redirect = true;
+    super.sendRedirect(location);
+  }
+
+  /**
+   * Return {@code true} if this is a redirect.
+   *
+   * @return {@code true} if this is a redirect.
+   */
+  public boolean isRedirect() {
+    return redirect;
+  }
+
+  @Override
+  public void addHeader(String name, String value) {
+    super.addHeader(name, value);
+    if (isTextEventStreamHeader(name, value)) {
+      LOGGER.debug("Triggered streaming for this content-caching response.");
+      this.streaming = true;
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sendError(final int statusCode) throws IOException {
-        redirect = true;
-        super.sendError(statusCode);
+  private static boolean isTextEventStreamHeader(String name, String value) {
+    return CONTENT_TYPE.equals(name) && TEXT_EVENT_STREAM.equals(MediaType.valueOf(value));
+  }
+
+  @Override
+  public void flushBuffer() throws IOException {
+    if (streaming) {
+      copyBodyToResponse(false);
+      getResponse().flushBuffer();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sendError(final int statusCode, final String message) throws IOException {
-        redirect = true;
-        super.sendError(statusCode, message);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sendRedirect(final String location) throws IOException {
-        redirect = true;
-        super.sendRedirect(location);
-    }
-
-    /**
-     * Return {@code true} if this is a redirect.
-     *
-     * @return {@code true} if this is a redirect.
-     */
-    public boolean isRedirect() {
-        return redirect;
-    }
-
-    @Override
-    public void addHeader(final String name, final String value) {
-        super.addHeader(name, value);
-        if (isTextEventStreamHeader(name, value)) {
-            LOGGER.debug("Triggered streaming for this content-caching response.");
-            this.streaming = true;
-        }
-    }
-
-    private static boolean isTextEventStreamHeader(final String name, final String value) {
-        return CONTENT_TYPE.equals(name) && TEXT_EVENT_STREAM.equals(MediaType.valueOf(value));
-    }
-
-    @Override
-    public void flushBuffer() throws IOException {
-        if (streaming) {
-            copyBodyToResponse(false);
-            getResponse().flushBuffer();
-        }
-    }
-
+  }
 }

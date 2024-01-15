@@ -16,18 +16,17 @@
 
 package org.hawaiiframework.validation.field;
 
-import org.hawaiiframework.validation.ValidationError;
-import org.hawaiiframework.validation.ValidationResult;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Objects;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThrows;
+
+import java.util.Objects;
+import org.hawaiiframework.validation.ValidationError;
+import org.hawaiiframework.validation.ValidationResult;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for {@link FieldRejection}.
@@ -36,114 +35,107 @@ import static org.junit.Assert.assertThrows;
  */
 public class FieldRejectionTest {
 
-    private static final String FIELD_NAME = "some_name";
+  private static final String FIELD_NAME = "some_name";
 
-    private static final String INVALID = "invalid";
-    private static final String REQUIRED = "required";
+  private static final String INVALID = "invalid";
+  private static final String REQUIRED = "required";
 
-    private static final String ERR_CODE = "some_error_code";
+  private static final String ERR_CODE = "some_error_code";
 
-    private ValidationResult validationResult;
+  private ValidationResult validationResult;
 
-    @Before
-    public void setUp() {
-        validationResult = new ValidationResult();
-    }
+  @Before
+  public void setUp() {
+    validationResult = new ValidationResult();
+  }
 
-    @Test
-    public void testRejectNull() {
-        String actual = null;
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .whenNull();
+  @Test
+  public void testRejectNull() {
+    String actual = null;
+    validationResult.rejectField(FIELD_NAME, actual).whenNull();
 
-        assureErrorHas(FIELD_NAME, REQUIRED);
-    }
+    assureErrorHas(FIELD_NAME, REQUIRED);
+  }
 
-    @Test
-    public void testRejectNullWithErrorCode() {
-        String actual = null;
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .whenNull(ERR_CODE);
+  @Test
+  public void testRejectNullWithErrorCode() {
+    String actual = null;
+    validationResult.rejectField(FIELD_NAME, actual).whenNull(ERR_CODE);
 
-        assureErrorHas(FIELD_NAME, ERR_CODE);
-    }
+    assureErrorHas(FIELD_NAME, ERR_CODE);
+  }
 
-    @Test
-    public void assureThatEvaluationStopsAfterFirstMatch() {
-        String actual = null;
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .whenNull()
-                .orWhen(Objects::isNull, ERR_CODE);
+  @Test
+  public void assureThatEvaluationStopsAfterFirstMatch() {
+    String actual = null;
+    validationResult.rejectField(FIELD_NAME, actual).whenNull().orWhen(Objects::isNull, ERR_CODE);
 
-        assureErrorHas(FIELD_NAME, REQUIRED);
-    }
+    assureErrorHas(FIELD_NAME, REQUIRED);
+  }
 
-    @Test
-    public void testThatOrderDoesMatter() {
-        assertThrows(NullPointerException.class, () -> {
-                    String actual = null;
-                    validationResult
-                            .rejectField(FIELD_NAME, actual)
-                            .orWhen(String::length, is(greaterThan(10)), ERR_CODE)
-                            .or()
-                            .whenNull();
-                }
-        );
-    }
+  @Test
+  public void testThatOrderDoesMatter() {
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          String actual = null;
+          validationResult
+              .rejectField(FIELD_NAME, actual)
+              .orWhen(String::length, is(greaterThan(10)), ERR_CODE)
+              .or()
+              .whenNull();
+        });
+  }
 
-    @Test
-    public void assureThatEvaluationStopsAfterFirstMatchWithExplicitOr() {
-        String actual = null;
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .whenNull()
-                .or()
-                .when(Objects::isNull, ERR_CODE);
+  @Test
+  public void assureThatEvaluationStopsAfterFirstMatchWithExplicitOr() {
+    String actual = null;
+    validationResult
+        .rejectField(FIELD_NAME, actual)
+        .whenNull()
+        .or()
+        .when(Objects::isNull, ERR_CODE);
 
-        assureErrorHas(FIELD_NAME, REQUIRED);
-    }
+    assureErrorHas(FIELD_NAME, REQUIRED);
+  }
 
-    @Test
-    public void testMatchersWork() {
-        String actual = "Some string containing 'foo'.";
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .when(containsString("'bar'"), "error")
-                .or()
-                .when(containsString("'foo'"), ERR_CODE);
+  @Test
+  public void testMatchersWork() {
+    String actual = "Some string containing 'foo'.";
+    validationResult
+        .rejectField(FIELD_NAME, actual)
+        .when(containsString("'bar'"), "error")
+        .or()
+        .when(containsString("'foo'"), ERR_CODE);
 
-        assureErrorHas(FIELD_NAME, ERR_CODE);
-    }
+    assureErrorHas(FIELD_NAME, ERR_CODE);
+  }
 
-    @Test
-    public void testMatchersWorkWithoutExplicitErrorCode() {
-        String actual = "Some string containing 'foo'.";
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .when(containsString("'bar'"), "error")
-                .or()
-                .when(containsString("'foo'"));
+  @Test
+  public void testMatchersWorkWithoutExplicitErrorCode() {
+    String actual = "Some string containing 'foo'.";
+    validationResult
+        .rejectField(FIELD_NAME, actual)
+        .when(containsString("'bar'"), "error")
+        .or()
+        .when(containsString("'foo'"));
 
-        assureErrorHas(FIELD_NAME, INVALID);
-    }
+    assureErrorHas(FIELD_NAME, INVALID);
+  }
 
-    @Test
-    public void testFunction() {
-        String actual = "Some string containing 'foo'.";
-        validationResult
-                .rejectField(FIELD_NAME, actual)
-                .or(String::length, is(greaterThan(10)), "length");
+  @Test
+  public void testFunction() {
+    String actual = "Some string containing 'foo'.";
+    validationResult
+        .rejectField(FIELD_NAME, actual)
+        .or(String::length, is(greaterThan(10)), "length");
 
-        assureErrorHas(FIELD_NAME, "length");
+    assureErrorHas(FIELD_NAME, "length");
+  }
 
-    }
-
-    private void assureErrorHas(String field, String code) {
-        ValidationError validationError = validationResult.getErrors().get(0);
-        assertThat(validationError.getField(), is(field));
-        assertThat(validationError.getCode(), is(code));
-    }
+  private void assureErrorHas(String field, String code) {
+    ValidationError validationError = validationResult.getErrors().get(0);
+    assertThat(validationError.getField(), is(field));
+    assertThat(validationError.getCode(), is(code));
+  }
 }

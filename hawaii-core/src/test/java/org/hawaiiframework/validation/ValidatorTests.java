@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.validation;
 
-import org.junit.Test;
-
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import org.junit.Test;
 
 /**
  * Tests for {@link Validator}.
@@ -28,58 +28,64 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class ValidatorTests {
 
-    private Object object = new Object();
+  private Object object = new Object();
 
-    @Test
-    public void testValidateAndThrowReturnsVoidWhenNoValidationErrors() {
-        Validator<Object> validator = (object, validationResult) -> {
-            // no validation errors
+  @Test
+  public void testValidateAndThrowReturnsVoidWhenNoValidationErrors() {
+    Validator<Object> validator =
+        (object, validationResult) -> {
+          // no validation errors
         };
-        validator.validateAndThrow(object);
-    }
+    validator.validateAndThrow(object);
+  }
 
-    @Test
-    public void testValidateAndThrowWithValidationResultReturnsVoidWhenNoValidationErrors() {
-        Validator<Object> validator = (object, validationResult) -> {
-            // no validation errors
+  @Test
+  public void testValidateAndThrowWithValidationResultReturnsVoidWhenNoValidationErrors() {
+    Validator<Object> validator =
+        (object, validationResult) -> {
+          // no validation errors
         };
-        ValidationResult validationResult = new ValidationResult();
-        validator.validateAndThrow(object, validationResult);
-    }
+    ValidationResult validationResult = new ValidationResult();
+    validator.validateAndThrow(object, validationResult);
+  }
 
-    @Test(expected = ValidationException.class)
-    public void testValidateAndThrowThrowsExceptionWhenValidationErrors() {
-        Validator<Object> validator = (object, validationResult) -> {
-            // force validation error
-            validationResult.reject("error");
+  @Test(expected = ValidationException.class)
+  public void testValidateAndThrowThrowsExceptionWhenValidationErrors() {
+    Validator<Object> validator =
+        (object, validationResult) -> {
+          // force validation error
+          validationResult.reject("error");
         };
-        validator.validateAndThrow(object);
-    }
+    validator.validateAndThrow(object);
+  }
 
-    @Test(expected = ValidationException.class)
-    public void testValidateAndThrowWithValidationResultThrowsExceptionWhenValidationErrors() {
-        Validator<Object> validator = (object, validationResult) -> {
-            // force validation error
-            validationResult.reject("error");
+  @Test(expected = ValidationException.class)
+  public void testValidateAndThrowWithValidationResultThrowsExceptionWhenValidationErrors() {
+    Validator<Object> validator =
+        (object, validationResult) -> {
+          // force validation error
+          validationResult.reject("error");
         };
-        ValidationResult validationResult = new ValidationResult();
-        validator.validateAndThrow(object, validationResult);
-    }
+    ValidationResult validationResult = new ValidationResult();
+    validator.validateAndThrow(object, validationResult);
+  }
 
-    @Test
-    public void testIsValidReturnsTrueWhenNoValidationErrors() {
-        Validator<Object> validator = (object, validationResult) -> {
-            // no validation errors
+  @Test
+  public void testIsValidReturnsTrueWhenNoValidationErrors() {
+    Validator<Object> validator =
+        (object, validationResult) -> {
+          // no validation errors
         };
-        assertThat(validator.isValid(object), is(true));
-    }
+    assertThat(validator.isValid(object), is(true));
+  }
 
-    @Test
-    public void testIsValidReturnsFalseWhenValidationErrors() {
-        Validator<Object> validator = (object, validationResult) -> {
-            // force validation error
-            validationResult.reject("error");
+  @Test
+  public void testIsValidReturnsFalseWhenValidationErrors() {
+    Validator<Object> validator =
+        (object, validationResult) -> {
+          // force validation error
+          validationResult.reject("error");
         };
-        assertThat(validator.isValid(object), is(false));
-    }
+    assertThat(validator.isValid(object), is(false));
+  }
 }

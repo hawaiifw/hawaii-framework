@@ -16,14 +16,13 @@
 
 package org.hawaiiframework.async.http;
 
+import java.io.IOException;
+import java.net.SocketException;
 import org.hawaiiframework.async.exception.TaskTimeoutException;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-
-import java.io.IOException;
-import java.net.SocketException;
 
 /**
  * HTTP request interceptor to set a task id as a header on an HTTP request.
@@ -33,17 +32,13 @@ import java.net.SocketException;
  */
 public class AbortedHttpRequestInterceptor implements ClientHttpRequestInterceptor {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution)
-            throws IOException {
-        try {
-            return execution.execute(request, body);
-        } catch (SocketException e) {
-            throw new TaskTimeoutException("Task timed out.", e);
-        }
+  @Override
+  public ClientHttpResponse intercept(
+      HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    try {
+      return execution.execute(request, body);
+    } catch (SocketException exception) {
+      throw new TaskTimeoutException("Task timed out.", exception);
     }
-
+  }
 }

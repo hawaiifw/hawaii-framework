@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
+
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.util.ClientIpResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
 
 /**
  * A filter that sets some Kibana Log Fields.
@@ -37,35 +36,29 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_I
  */
 public class ClientIpLogFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientIpLogFilter.class);
+  /** The Logger. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClientIpLogFilter.class);
 
-    /**
-     * HostResolver for this class.
-     */
-    private final ClientIpResolver clientIpResolver;
+  /** HostResolver for this class. */
+  private final ClientIpResolver clientIpResolver;
 
-    /**
-     * The constructor.
-     *
-     * @param clientIpResolver HostResolver for this class.
-     */
-    @Autowired
-    public ClientIpLogFilter(final ClientIpResolver clientIpResolver) {
-        this.clientIpResolver = clientIpResolver;
-    }
+  /**
+   * The constructor.
+   *
+   * @param clientIpResolver HostResolver for this class.
+   */
+  public ClientIpLogFilter(ClientIpResolver clientIpResolver) {
+    super();
+    this.clientIpResolver = clientIpResolver;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
-        final String clientIp = clientIpResolver.getClientIp(request);
-        KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
-        LOGGER.debug("Client ip is '{}'.", clientIp);
-        filterChain.doFilter(request, response);
-    }
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    String clientIp = clientIpResolver.getClientIp(request);
+    KibanaLogFields.tag(TX_REQUEST_IP, clientIp);
+    LOGGER.debug("Client ip is '{}'.", clientIp);
+    filterChain.doFilter(request, response);
+  }
 }

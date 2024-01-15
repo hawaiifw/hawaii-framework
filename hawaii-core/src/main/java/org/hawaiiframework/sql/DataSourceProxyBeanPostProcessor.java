@@ -16,44 +16,42 @@
 
 package org.hawaiiframework.sql;
 
+import javax.sql.DataSource;
 import net.ttddyy.dsproxy.support.ProxyDataSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import javax.sql.DataSource;
-
-/**
- * Bean post processor.
- */
+/** Bean post processor. */
 public class DataSourceProxyBeanPostProcessor implements BeanPostProcessor {
 
-    private final DataSourceProxyFactory dataSourceProxyFactory;
+  private final DataSourceProxyFactory dataSourceProxyFactory;
 
-    public DataSourceProxyBeanPostProcessor(final DataSourceProxyFactory dataSourceProxyFactory) {
-        this.dataSourceProxyFactory = dataSourceProxyFactory;
+  /** The constructor with a {@code dataSourceProxyFactory}. */
+  public DataSourceProxyBeanPostProcessor(DataSourceProxyFactory dataSourceProxyFactory) {
+    this.dataSourceProxyFactory = dataSourceProxyFactory;
+  }
+
+  @Override
+  public Object postProcessAfterInitialization(Object bean, String ignored) {
+    return createDataSourceProxy(bean);
+  }
+
+  private Object createDataSourceProxy(Object bean) {
+    if (!(bean instanceof DataSource) || bean instanceof ProxyDataSource) {
+      return bean;
     }
 
-    @Override
-    public Object postProcessAfterInitialization(final Object bean, final String ignored) {
-        return createDataSourceProxy(bean);
-    }
-
-    private Object createDataSourceProxy(final Object bean) {
-        if (!(bean instanceof DataSource) || bean instanceof ProxyDataSource) {
-            return bean;
-        }
-
-        final DataSource proxyDataSource = dataSourceProxyFactory.proxy((DataSource) bean);
-        // Instead of directly returning a less specific datasource bean
-        // (e.g.: HikariDataSource -> DataSource), return a proxy object.
-        // See following links for why:
-        //   https://stackoverflow.com/questions/44237787/how-to-use-user-defined-database-proxy-in-datajpatest
-        //   https://gitter.im/spring-projects/spring-boot?at=5983602d2723db8d5e70a904
-        //   http://blog.arnoldgalovics.com/2017/06/26/configuring-a-datasource-proxy-in-spring-boot/
-        final ProxyFactory factory = new ProxyFactory(bean);
-        factory.setProxyTargetClass(true);
-        factory.addAdvice(new DataSourceMethodInterceptor(proxyDataSource));
-        return factory.getProxy();
-    }
-
+    DataSource proxyDataSource = dataSourceProxyFactory.proxy((DataSource) bean);
+    // Instead of directly returning a less specific datasource bean
+    // (e.g.: HikariDataSource -> DataSource), return a proxy object.
+    // See following links for why:
+    //
+    // https://stackoverflow.com/questions/44237787/how-to-use-user-defined-database-proxy-in-datajpatest
+    //   https://gitter.im/spring-projects/spring-boot?at=5983602d2723db8d5e70a904
+    //   http://blog.arnoldgalovics.com/2017/06/26/configuring-a-datasource-proxy-in-spring-boot/
+    ProxyFactory factory = new ProxyFactory(bean);
+    factory.setProxyTargetClass(true);
+    factory.addAdvice(new DataSourceMethodInterceptor(proxyDataSource));
+    return factory.getProxy();
+  }
 }

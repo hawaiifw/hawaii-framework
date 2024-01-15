@@ -21,27 +21,26 @@ import java.io.Serializable;
 /**
  * Interface that defines an API error of the application.
  *
- * An API error is a well-defined error situation with a unique error code.
+ * <p>An API error is a well-defined error situation with a unique error code.
  *
- * An application built on Hawaii Framework might implement this using an enum.
+ * <p>An application built on Hawaii Framework might implement this using an enum.
  *
  * @author Paul Klos
  * @since 2.0.0
  */
 public interface ApiError extends Serializable {
 
-    /**
-     * Getter for the error code.
-     *
-     * @return the error code
-     */
-    String getErrorCode();
+  /**
+   * Getter for the error code.
+   *
+   * @return the error code
+   */
+  String getErrorCode();
 
-    /**
-     * Get the error reason.
-     *
-     * @return the reason
-     */
-    String getReason();
-
+  /**
+   * Get the error reason.
+   *
+   * @return the reason
+   */
+  String getReason();
 }

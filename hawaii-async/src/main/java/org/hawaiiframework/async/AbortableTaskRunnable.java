@@ -16,10 +16,10 @@
 
 package org.hawaiiframework.async;
 
+import static java.util.Objects.requireNonNull;
+
 import org.hawaiiframework.async.timeout.SharedTaskContext;
 import org.springframework.lang.NonNull;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Delegating Runnable that copies the MDC to the executing thread before running the delegate.
@@ -30,29 +30,23 @@ import static java.util.Objects.requireNonNull;
  */
 public class AbortableTaskRunnable extends HawaiiAsyncRunnable {
 
-    /**
-     * The delegate.
-     */
-    private final Runnable delegate;
+  /** The delegate. */
+  private final Runnable delegate;
 
-    /**
-     * Construct a new instance.
-     *
-     * @param delegate          the delegate to run.
-     * @param sharedTaskContext the abort strategy to set.
-     */
-    public AbortableTaskRunnable(@NonNull final Runnable delegate, @NonNull final SharedTaskContext sharedTaskContext) {
-        super(requireNonNull(sharedTaskContext));
-        this.delegate = requireNonNull(delegate);
-    }
+  /**
+   * Construct a new instance.
+   *
+   * @param delegate the delegate to run.
+   * @param sharedTaskContext the abort strategy to set.
+   */
+  public AbortableTaskRunnable(
+      @NonNull Runnable delegate, @NonNull SharedTaskContext sharedTaskContext) {
+    super(requireNonNull(sharedTaskContext));
+    this.delegate = requireNonNull(delegate);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doRun() {
-        delegate.run();
-    }
-
-
+  @Override
+  protected void doRun() {
+    delegate.run();
+  }
 }

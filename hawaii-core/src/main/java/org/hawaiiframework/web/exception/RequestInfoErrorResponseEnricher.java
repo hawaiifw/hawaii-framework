@@ -16,47 +16,48 @@
 
 package org.hawaiiframework.web.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.hawaiiframework.web.resource.ErrorResponseResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 /**
  * This enricher copies information from the original web request onto the error response resource.
  *
- * The enricher captures the following request information:
+ * <p>The enricher captures the following request information:
  *
  * <ul>
- *     <li>The request uri</li>
- *     <li>Query parameters</li>
- *     <li>The request method</li>
- *     <li>The requested content type</li>
+ *   <li>The request uri
+ *   <li>Query parameters
+ *   <li>The request method
+ *   <li>The requested content type
  * </ul>
+ *
  * @author Paul Klos
  * @since 2.0.0
  */
 public class RequestInfoErrorResponseEnricher implements ErrorResponseEnricher {
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p><strong>NOTE:</strong> This enricher only applies if the request is a {@link ServletWebRequest}.
-     */
-    @Override
-    public void doEnrich(
-            final ErrorResponseResource errorResponseResource,
-            final Throwable throwable,
-            final WebRequest request,
-            final HttpStatus httpStatus) {
-        if (request instanceof ServletWebRequest) {
-            final ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-            final HttpServletRequest httpServletRequest = (HttpServletRequest) servletWebRequest.getNativeRequest();
-            errorResponseResource.setUri(httpServletRequest.getRequestURI());
-            errorResponseResource.setQuery(httpServletRequest.getQueryString());
-            errorResponseResource.setMethod(httpServletRequest.getMethod());
-            errorResponseResource.setContentType(httpServletRequest.getContentType());
-        }
+  /**
+   * {@inheritDoc}
+   *
+   * <p><strong>NOTE:</strong> This enricher only applies if the request is a {@link
+   * ServletWebRequest}.
+   */
+  @Override
+  public void doEnrich(
+      ErrorResponseResource errorResponseResource,
+      Throwable throwable,
+      WebRequest request,
+      HttpStatus httpStatus) {
+    if (request instanceof ServletWebRequest servletWebRequest) {
+      HttpServletRequest httpServletRequest =
+          (HttpServletRequest) servletWebRequest.getNativeRequest();
+      errorResponseResource.setUri(httpServletRequest.getRequestURI());
+      errorResponseResource.setQuery(httpServletRequest.getQueryString());
+      errorResponseResource.setMethod(httpServletRequest.getMethod());
+      errorResponseResource.setContentType(httpServletRequest.getContentType());
     }
+  }
 }

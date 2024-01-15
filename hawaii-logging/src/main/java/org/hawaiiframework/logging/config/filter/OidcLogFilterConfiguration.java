@@ -16,6 +16,11 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.OidcLogFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import com.nimbusds.jwt.PlainJWT;
 import org.hawaiiframework.logging.oidc.OidcLogFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,51 +30,42 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.OidcLogFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configuration to add OIDC fields to the Kibana log.
- */
+/** Configuration to add OIDC fields to the Kibana log. */
 @Configuration
-@ConditionalOnClass(com.nimbusds.jwt.PlainJWT.class)
+@ConditionalOnClass(PlainJWT.class)
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class OidcLogFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.oidc";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.oidc";
 
-    private static final Logger LOGGER = getLogger(OidcLogFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(OidcLogFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-900}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-900}")
+  private int filterOrder;
 
-    /**
-     * Create the {@link OidcLogFilter} bean.
-     *
-     * @return the {@link OidcLogFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public OidcLogFilter oidcLogFilter() {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new OidcLogFilter();
-    }
+  /**
+   * Create the {@link OidcLogFilter} bean.
+   *
+   * @return the {@link OidcLogFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public OidcLogFilter oidcLogFilter() {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new OidcLogFilter();
+  }
 
-    /**
-     * Register the {@link #oidcLogFilter()} bean.
-     *
-     * @param oidcLogFilter the {@link #oidcLogFilter()} bean.
-     * @return the {@link #oidcLogFilter()} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<OidcLogFilter> oidcLogFilterRegistration(
-            final OidcLogFilter oidcLogFilter) {
-        return createFilterRegistrationBean(oidcLogFilter, filterOrder);
-    }
-
+  /**
+   * Register the {@link #oidcLogFilter()} bean.
+   *
+   * @param oidcLogFilter the {@link #oidcLogFilter()} bean.
+   * @return the {@link #oidcLogFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<OidcLogFilter> oidcLogFilterRegistration(
+      OidcLogFilter oidcLogFilter) {
+    return createFilterRegistrationBean(oidcLogFilter, filterOrder);
+  }
 }

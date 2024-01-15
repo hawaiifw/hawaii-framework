@@ -16,6 +16,10 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.SoftwareVersionLogFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.web.filter.SoftwareVersionLogFilter;
 import org.slf4j.Logger;
@@ -26,10 +30,6 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.SoftwareVersionLogFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configures the {@link SoftwareVersionLogFilter}.
@@ -42,41 +42,39 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class SoftwareVersionLogFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.software-version";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.software-version";
 
-    private static final Logger LOGGER = getLogger(SoftwareVersionLogFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(SoftwareVersionLogFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-1200}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-1200}")
+  private int filterOrder;
 
-    /**
-     * Create the software version logging filter bean.
-     *
-     * @param buildProperties The build properties.
-     * @param filterVoter     The filter voter.
-     * @return the {@link SoftwareVersionLogFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public SoftwareVersionLogFilter softwareVersionLogFilter(final BuildProperties buildProperties, final FilterVoter filterVoter) {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new SoftwareVersionLogFilter(buildProperties, filterVoter);
-    }
+  /**
+   * Create the software version logging filter bean.
+   *
+   * @param buildProperties The build properties.
+   * @param filterVoter The filter voter.
+   * @return the {@link SoftwareVersionLogFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public SoftwareVersionLogFilter softwareVersionLogFilter(
+      BuildProperties buildProperties, FilterVoter filterVoter) {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new SoftwareVersionLogFilter(buildProperties, filterVoter);
+  }
 
-    /**
-     * Create and register the {@link SoftwareVersionLogFilter} bean.
-     *
-     * @param softwareVersionLogFilter The filter to register.
-     * @return the  {@link SoftwareVersionLogFilter} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<SoftwareVersionLogFilter> softwareVersionLogFilterRegistration(
-            final SoftwareVersionLogFilter softwareVersionLogFilter) {
-        return createFilterRegistrationBean(softwareVersionLogFilter, filterOrder);
-    }
-
+  /**
+   * Create and register the {@link SoftwareVersionLogFilter} bean.
+   *
+   * @param softwareVersionLogFilter The filter to register.
+   * @return the {@link SoftwareVersionLogFilter} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<SoftwareVersionLogFilter> softwareVersionLogFilterRegistration(
+      SoftwareVersionLogFilter softwareVersionLogFilter) {
+    return createFilterRegistrationBean(softwareVersionLogFilter, filterOrder);
+  }
 }

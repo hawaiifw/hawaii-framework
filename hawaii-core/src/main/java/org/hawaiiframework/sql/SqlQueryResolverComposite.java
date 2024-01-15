@@ -16,13 +16,12 @@
 
 package org.hawaiiframework.sql;
 
-import org.hawaiiframework.exception.HawaiiException;
-import org.springframework.core.Ordered;
-import org.springframework.util.CollectionUtils;
+import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import org.springframework.core.Ordered;
+import org.springframework.util.CollectionUtils;
 
 /**
  * A {@link SqlQueryResolver} that delegates to others.
@@ -32,44 +31,40 @@ import java.util.List;
  */
 public class SqlQueryResolverComposite implements SqlQueryResolver, Ordered {
 
-    private final List<SqlQueryResolver> sqlQueryResolvers = new ArrayList<>();
+  private final List<SqlQueryResolver> sqlQueryResolvers = new ArrayList<>();
 
-    private int order = Ordered.LOWEST_PRECEDENCE;
+  private int order = LOWEST_PRECEDENCE;
 
-    /**
-     * Return the list of {@link SqlQueryResolver}s to delegate to.
-     */
-    public List<SqlQueryResolver> getSqlQueryResolvers() {
-        return Collections.unmodifiableList(this.sqlQueryResolvers);
+  /** Return the list of {@link SqlQueryResolver}s to delegate to. */
+  public List<SqlQueryResolver> getSqlQueryResolvers() {
+    return unmodifiableList(this.sqlQueryResolvers);
+  }
+
+  /** Set the list of {@link SqlQueryResolver}s to delegate to. */
+  public void setSqlQueryResolvers(List<SqlQueryResolver> sqlQueryResolvers) {
+    this.sqlQueryResolvers.clear();
+    if (!CollectionUtils.isEmpty(sqlQueryResolvers)) {
+      this.sqlQueryResolvers.addAll(sqlQueryResolvers);
     }
+  }
 
-    /**
-     * Set the list of {@link SqlQueryResolver}s to delegate to.
-     */
-    public void setSqlQueryResolvers(final List<SqlQueryResolver> sqlQueryResolvers) {
-        this.sqlQueryResolvers.clear();
-        if (!CollectionUtils.isEmpty(sqlQueryResolvers)) {
-            this.sqlQueryResolvers.addAll(sqlQueryResolvers);
-        }
-    }
+  @Override
+  public int getOrder() {
+    return this.order;
+  }
 
-    @Override
-    public int getOrder() {
-        return this.order;
-    }
+  public void setOrder(int order) {
+    this.order = order;
+  }
 
-    public void setOrder(final int order) {
-        this.order = order;
+  @Override
+  public String resolveSqlQuery(String sqlQueryName) {
+    for (SqlQueryResolver sqlQueryResolver : this.sqlQueryResolvers) {
+      String sqlQuery = sqlQueryResolver.resolveSqlQuery(sqlQueryName);
+      if (sqlQuery != null) {
+        return sqlQuery;
+      }
     }
-
-    @Override
-    public String resolveSqlQuery(final String sqlQueryName) throws HawaiiException {
-        for (final SqlQueryResolver sqlQueryResolver : this.sqlQueryResolvers) {
-            final String sqlQuery = sqlQueryResolver.resolveSqlQuery(sqlQueryName);
-            if (sqlQuery != null) {
-                return sqlQuery;
-            }
-        }
-        return null;
-    }
+    return null;
+  }
 }

@@ -16,53 +16,50 @@
 
 package org.hawaiiframework.sql;
 
-import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
-
-import javax.sql.DataSource;
 import java.util.List;
+import javax.sql.DataSource;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 
 /**
  * Factory to create a datasource proxy with listeners.
- * <p>
- * See {@link OrderedQueryExecutionListener}s.
+ *
+ * <p>See {@link OrderedQueryExecutionListener}s.
  */
 public class DataSourceProxyFactory {
 
-    /**
-     * The listeners to use in the data source proxy.
-     */
-    private final List<OrderedQueryExecutionListener> listeners;
+  /** The listeners to use in the data source proxy. */
+  private final List<OrderedQueryExecutionListener> listeners;
 
-    /**
-     * The constructor.
-     *
-     * @param listeners The listeners to use in the data source proxy.
-     */
-    public DataSourceProxyFactory(final List<OrderedQueryExecutionListener> listeners) {
-        this.listeners = listeners;
+  /**
+   * The constructor.
+   *
+   * @param listeners The listeners to use in the data source proxy.
+   */
+  public DataSourceProxyFactory(List<OrderedQueryExecutionListener> listeners) {
+    this.listeners = listeners;
+  }
+
+  private boolean isEmpty() {
+    return listeners.isEmpty();
+  }
+
+  /**
+   * Creates a data source proxy for the {@code target} iff there are listeners.
+   *
+   * <p>Otherwise it will return the target itself.
+   *
+   * @param target The data source to create a proxy for.
+   * @return The data source to use.
+   */
+  public DataSource proxy(DataSource target) {
+    if (isEmpty()) {
+      return target;
     }
 
-    private boolean isEmpty() {
-        return listeners.isEmpty();
+    ProxyDataSourceBuilder builder = ProxyDataSourceBuilder.create(target);
+    for (OrderedQueryExecutionListener listener : listeners) {
+      builder.listener(listener);
     }
-
-    /**
-     * Creates a data source proxy for the {@code target} iff there are listeners.
-     *
-     * Otherwise it will return the target itself.
-     *
-     * @param target The data source to create a proxy for.
-     * @return The data source to use.
-     */
-    public DataSource proxy(final DataSource target) {
-        if (isEmpty()) {
-            return target;
-        }
-
-        final ProxyDataSourceBuilder builder = ProxyDataSourceBuilder.create(target);
-        for (final OrderedQueryExecutionListener listener : listeners) {
-            builder.listener(listener);
-        }
-        return builder.build();
-    }
+    return builder.build();
+  }
 }

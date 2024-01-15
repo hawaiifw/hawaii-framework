@@ -16,91 +16,83 @@
 
 package org.hawaiiframework.async.statistics;
 
-
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * Executor statistics.
- * <p>
- * The executor statistics contain the number of threads used, the maximum number configured, the queued task count, the executed task
- * count and the aborted task count.
+ *
+ * <p>The executor statistics contain the number of threads used, the maximum number configured, the
+ * queued task count, the executed task count and the aborted task count.
  *
  * @author Rutger Lubbers
  * @since 2.0.0
  */
 public class ExecutorStatistics {
 
-    /**
-     * The thread pool task executor we're interested in.
-     */
-    private final ThreadPoolTaskExecutor executor;
+  /** The thread pool task executor we're interested in. */
+  private final ThreadPoolTaskExecutor executor;
 
-    /**
-     * The number of aborted tasks.
-     */
-    private final AtomicLong abortedTaskCount = new AtomicLong(0L);
+  /** The number of aborted tasks. */
+  private final AtomicLong abortedTaskCount = new AtomicLong(0L);
 
-    /**
-     * Create a new statistics instance for the {@code executor}.
-     *
-     * @param executor The executor we're holding the statistics for.
-     */
-    public ExecutorStatistics(final ThreadPoolTaskExecutor executor) {
-        this.executor = executor;
-    }
+  /**
+   * Create a new statistics instance for the {@code executor}.
+   *
+   * @param executor The executor we're holding the statistics for.
+   */
+  public ExecutorStatistics(ThreadPoolTaskExecutor executor) {
+    this.executor = executor;
+  }
 
-    /**
-     * Increase the number of aborted tasks.
-     */
-    public void incrementAbortedTaskCount() {
-        abortedTaskCount.incrementAndGet();
-    }
+  /** Increase the number of aborted tasks. */
+  public void incrementAbortedTaskCount() {
+    abortedTaskCount.incrementAndGet();
+  }
 
-    /**
-     * Get the executor's pool size.
-     *
-     * @return The current number of threads in use by the executor.
-     */
-    public Integer getPoolSize() {
-        return executor.getPoolSize();
-    }
+  /**
+   * Get the executor's pool size.
+   *
+   * @return The current number of threads in use by the executor.
+   */
+  public Integer getPoolSize() {
+    return executor.getPoolSize();
+  }
 
-    /**
-     * Get the executor's max pool size.
-     *
-     * @return The executor's max pool size.
-     */
-    public Integer getMaxPoolSize() {
-        return executor.getMaxPoolSize();
-    }
+  /**
+   * Get the executor's max pool size.
+   *
+   * @return The executor's max pool size.
+   */
+  public Integer getMaxPoolSize() {
+    return executor.getMaxPoolSize();
+  }
 
-    /**
-     * Get the executor's queued task size.
-     *
-     * @return The number of queued tasks.
-     */
-    public Integer getQueueSize() {
-        return executor.getThreadPoolExecutor().getQueue().size();
-    }
+  /**
+   * Get the executor's queued task size.
+   *
+   * @return The number of queued tasks.
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public Integer getQueueSize() {
+    return executor.getThreadPoolExecutor().getQueue().size();
+  }
 
-    /**
-     * Get the number of completed tasks.
-     *
-     * @return The executor's completed task count.
-     */
-    public Long getCompletedTaskCount() {
-        return executor.getThreadPoolExecutor().getCompletedTaskCount();
-    }
+  /**
+   * Get the number of completed tasks.
+   *
+   * @return The executor's completed task count.
+   */
+  public Long getCompletedTaskCount() {
+    return executor.getThreadPoolExecutor().getCompletedTaskCount();
+  }
 
-    /**
-     * Get the number of aborted tasks.
-     *
-     * @return The executor's aborted task count.
-     */
-    public Long getAbortedTaskCount() {
-        return abortedTaskCount.get();
-    }
-
+  /**
+   * Get the number of aborted tasks.
+   *
+   * @return The executor's aborted task count.
+   */
+  public Long getAbortedTaskCount() {
+    return abortedTaskCount.get();
+  }
 }

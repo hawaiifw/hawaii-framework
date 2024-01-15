@@ -33,69 +33,67 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configures the {@link TransactionTypeFilter}.
- */
+/** Configures the {@link TransactionTypeFilter}. */
 @Configuration
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class TransactionTypeFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.transaction-type";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.transaction-type";
 
-    private static final Logger LOGGER = getLogger(TransactionTypeFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(TransactionTypeFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:-1000}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:-1000}")
+  private int filterOrder;
 
-    /**
-     * Create the {@link TransactionTypeFilter} bean.
-     *
-     * @param transactionTypeSuppliers The transaction type suppliers.
-     * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public TransactionTypeFilter transactionTypeFilter(final List<TransactionTypeSupplier> transactionTypeSuppliers) {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new TransactionTypeFilter(transactionTypeSuppliers);
-    }
+  /**
+   * Create the {@link TransactionTypeFilter} bean.
+   *
+   * @param transactionTypeSuppliers The transaction type suppliers.
+   * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public TransactionTypeFilter transactionTypeFilter(
+      List<TransactionTypeSupplier> transactionTypeSuppliers) {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new TransactionTypeFilter(transactionTypeSuppliers);
+  }
 
-    /**
-     * Create the {@link SpringMvcTransactionTypeSupplier} bean.
-     *
-     * @param applicationContext The application context of the Spring Boot Application.
-     * @return the {@link SpringMvcTransactionTypeSupplier} bean.
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public SpringMvcTransactionTypeSupplier springMvcTransactionTypeSupplier(final ApplicationContext applicationContext) {
-        return new SpringMvcTransactionTypeSupplier(applicationContext);
-    }
+  /**
+   * Create the {@link SpringMvcTransactionTypeSupplier} bean.
+   *
+   * @param applicationContext The application context of the Spring Boot Application.
+   * @return the {@link SpringMvcTransactionTypeSupplier} bean.
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public SpringMvcTransactionTypeSupplier springMvcTransactionTypeSupplier(
+      ApplicationContext applicationContext) {
+    return new SpringMvcTransactionTypeSupplier(applicationContext);
+  }
 
-    /**
-     * Create the {@link GraphQlTransactionTypeSupplier} bean.
-     *
-     * @return the {@link GraphQlTransactionTypeSupplier} bean.
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public GraphQlTransactionTypeSupplier graphQlTransactionTypeSupplier() {
-        return new GraphQlTransactionTypeSupplier();
-    }
+  /**
+   * Create the {@link GraphQlTransactionTypeSupplier} bean.
+   *
+   * @return the {@link GraphQlTransactionTypeSupplier} bean.
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public GraphQlTransactionTypeSupplier graphQlTransactionTypeSupplier() {
+    return new GraphQlTransactionTypeSupplier();
+  }
 
-    /**
-     * Register the {@link TransactionTypeFilter} bean.
-     *
-     * @param transactionNameFilter the transaction name filter
-     * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<TransactionTypeFilter> transactionTypeFilterRegistration(
-            final TransactionTypeFilter transactionNameFilter) {
-        return createFilterRegistrationBean(transactionNameFilter, filterOrder);
-    }
+  /**
+   * Register the {@link TransactionTypeFilter} bean.
+   *
+   * @param transactionNameFilter the transaction name filter
+   * @return the {@link TransactionTypeFilter} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<TransactionTypeFilter> transactionTypeFilterRegistration(
+      TransactionTypeFilter transactionNameFilter) {
+    return createFilterRegistrationBean(transactionNameFilter, filterOrder);
+  }
 }

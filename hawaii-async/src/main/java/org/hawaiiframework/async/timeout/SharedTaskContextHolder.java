@@ -24,90 +24,84 @@ import org.slf4j.LoggerFactory;
  * Is used by the guarded task to register it's task abort command (if applicable).
  *
  * @since 2.0.0
- *
  * @author Rutger Lubbers
  * @author Paul Klos
  */
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class SharedTaskContextHolder {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(SharedTaskContextHolder.class);
+  /** The logger to use. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(SharedTaskContextHolder.class);
 
-    /**
-     * The ThreadLocal to hold the {@link SharedTaskContext} per thread.
-     */
-    private static ThreadLocal<SharedTaskContext> threadLocalStore = new ThreadLocal<>();
+  /** The ThreadLocal to hold the {@link SharedTaskContext} per thread. */
+  private static ThreadLocal<SharedTaskContext> threadLocalStore = new ThreadLocal<>();
 
-    private SharedTaskContextHolder() {
-        // Utility without constructor.
+  private SharedTaskContextHolder() {
+    // Utility without constructor.
+  }
+
+  /**
+   * Initialize the {@link SharedTaskContextHolder} with the {@code sharedTaskContext}.
+   *
+   * <p>By registering the {@code sharedTaskContext} the strategy is made available for other code
+   * within the executing thread. This allows the guard task to abort the task being executed
+   * without knowing how.
+   *
+   * <p>The task itself is responsible to register a {@link TaskAbortStrategy} in the {@code
+   * sharedTaskContext}. This can be done by calling the {@link
+   * #setTaskAbortStrategy(TaskAbortStrategy)}.
+   *
+   * <p>As an example, see the {@link HawaiiHttpComponentsClientHttpRequestFactory}.
+   *
+   * @param sharedTaskContext the shared strategy to hold for the current thread.
+   */
+  public static void register(SharedTaskContext sharedTaskContext) {
+    threadLocalStore.set(sharedTaskContext);
+  }
+
+  /** Removes the current {@link SharedTaskContext} from the ThreadLocal store. */
+  public static void remove() {
+    threadLocalStore.remove();
+  }
+
+  /**
+   * Set the current thread's {@code taskAbortStrategy}.
+   *
+   * <p>This sets the {@code taskAbortStrategy} into the thread's {@link SharedTaskContext}.
+   *
+   * @param taskAbortStrategy The strategy to set.
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public static void setTaskAbortStrategy(TaskAbortStrategy taskAbortStrategy) {
+    SharedTaskContext sharedTaskContext = get();
+    if (sharedTaskContext != null) {
+      LOGGER.trace("Setting task abort strategy.");
+      sharedTaskContext.setTaskAbortStrategy(taskAbortStrategy);
     }
+  }
 
-    /**
-     * Initialize the {@link SharedTaskContextHolder} with the {@code sharedTaskContext}.
-     * <p>
-     * By registering the {@code sharedTaskContext} the strategy is made available for other code within the executing thread. This
-     * allows the guard task to abort the task being executed without knowing how.
-     * <p>
-     * The task itself is responsible to register a {@link TaskAbortStrategy} in the {@code sharedTaskContext}. This can be done by
-     * calling the {@link #setTaskAbortStrategy(TaskAbortStrategy)}.
-     * <p>
-     * As an example, see the {@link HawaiiHttpComponentsClientHttpRequestFactory}.
-     *
-     * @param sharedTaskContext the shared strategy to hold for the current thread.
-     */
-    public static void register(final SharedTaskContext sharedTaskContext) {
-        threadLocalStore.set(sharedTaskContext);
+  /**
+   * Getter for #sharedTaskAbortStrategy.
+   *
+   * @return the shared task abort strategy
+   */
+  public static SharedTaskContext get() {
+    return threadLocalStore.get();
+  }
+
+  /**
+   * Return the task id for the current thread's task.
+   *
+   * <p>It delegates to the thread local {@link SharedTaskContext#getTaskId()}.
+   *
+   * @return The task's id.
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public static String getTaskId() {
+    SharedTaskContext sharedTaskContext = get();
+    if (sharedTaskContext == null) {
+      return null;
     }
-
-    /**
-     * Removes the current {@link SharedTaskContext} from the ThreadLocal store.
-     */
-    public static void remove() {
-        threadLocalStore.remove();
-    }
-
-    /**
-     * Set the current thread's {@code taskAbortStrategy}.
-     * <p>
-     * This sets the {@code taskAbortStrategy} into the thread's {@link SharedTaskContext}.
-     *
-     * @param taskAbortStrategy The strategy to set.
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public static void setTaskAbortStrategy(final TaskAbortStrategy taskAbortStrategy) {
-        final SharedTaskContext sharedTaskContext = get();
-        if (sharedTaskContext != null) {
-            LOGGER.trace("Setting task abort strategy.");
-            sharedTaskContext.setTaskAbortStrategy(taskAbortStrategy);
-        }
-    }
-
-    /**
-     * Getter for #sharedTaskAbortStrategy.
-     *
-     * @return the shared task abort strategy
-     */
-    public static SharedTaskContext get() {
-        return threadLocalStore.get();
-    }
-
-    /**
-     * Return the task id for the current thread's task.
-     *
-     * It delegates to the thread local {@link SharedTaskContext#getTaskId()}.
-     *
-     * @return The task's id.
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public static String getTaskId() {
-        final SharedTaskContext sharedTaskContext = get();
-        if (sharedTaskContext == null) {
-            return null;
-        }
-        return sharedTaskContext.getTaskId();
-    }
-
+    return sharedTaskContext.getTaskId();
+  }
 }

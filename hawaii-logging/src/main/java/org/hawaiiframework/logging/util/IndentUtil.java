@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 /**
@@ -23,40 +24,34 @@ package org.hawaiiframework.logging.util;
  */
 public final class IndentUtil {
 
-    /**
-     * The default indent to use if none specified.
-     */
-    public static final String DEFAULT_INDENTATION = "  ";
+  /** The default indent to use if none specified. */
+  public static final String DEFAULT_INDENTATION = "  ";
 
-    /**
-     * The configured newline to look for.
-     */
-    private static final String NEW_LINE = System.getProperty("line.separator");
+  /** The configured newline to look for. */
+  private static final String NEW_LINE = System.lineSeparator();
 
+  private IndentUtil() {
+    // Utility constructor.
+  }
 
-    private IndentUtil() {
-        // Utility constructor.
-    }
+  /**
+   * Indent the {@code value} with the default indent. See {@link IndentUtil#DEFAULT_INDENTATION}.
+   *
+   * @param value The value to indent.
+   * @return An indented string.
+   */
+  public static String indent(String value) {
+    return indent(value, DEFAULT_INDENTATION);
+  }
 
-    /**
-     * Indent the {@code value} with the default indent. See {@link IndentUtil#DEFAULT_INDENTATION}.
-     *
-     * @param value The value to indent.
-     * @return An indented string.
-     */
-    public static String indent(final String value) {
-        return indent(value, DEFAULT_INDENTATION);
-    }
-
-    /**
-     * Indent the {@code value} with the given {@code indent}.
-     *
-     * @param value       The value to indent.
-     * @param indentation The indentation.
-     * @return An indented string.
-     */
-    public static String indent(final String value, final String indentation) {
-        return indentation + value.replace(NEW_LINE, String.format("%n%s", indentation));
-    }
-
+  /**
+   * Indent the {@code value} with the given {@code indent}.
+   *
+   * @param value The value to indent.
+   * @param indentation The indentation.
+   * @return An indented string.
+   */
+  public static String indent(String value, String indentation) {
+    return indentation + value.replace(NEW_LINE, String.format("%n%s", indentation));
+  }
 }

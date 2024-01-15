@@ -16,7 +16,12 @@
 
 package org.hawaiiframework.logging.config.filter;
 
+import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration.CONFIG_PREFIX;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import jakarta.servlet.DispatcherType;
+import java.util.EnumSet;
 import org.hawaiiframework.logging.web.filter.UserDetailsFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,51 +32,43 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.EnumSet;
-
-import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
-import static org.hawaiiframework.logging.config.filter.UserDetailsFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Configures the {@link UserDetailsFilter}.
- */
+/** Configures the {@link UserDetailsFilter}. */
 @Configuration
 @ConditionalOnClass(UserDetails.class)
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class UserDetailsFilterConfiguration {
 
-    /**
-     * The configuration properties' prefix.
-     */
-    public static final String CONFIG_PREFIX = "hawaii.logging.filters.user-details";
+  /** The configuration properties' prefix. */
+  public static final String CONFIG_PREFIX = "hawaii.logging.filters.user-details";
 
-    private static final Logger LOGGER = getLogger(UserDetailsFilterConfiguration.class);
+  private static final Logger LOGGER = getLogger(UserDetailsFilterConfiguration.class);
 
-    @Value("${" + CONFIG_PREFIX + ".order:200}")
-    private int filterOrder;
+  @Value("${" + CONFIG_PREFIX + ".order:200}")
+  private int filterOrder;
 
-    /**
-     * Create the {@link UserDetailsFilter} bean.
-     *
-     * @return the {@link UserDetailsFilter} bean
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public UserDetailsFilter userDetailsFilter() {
-        LOGGER.trace("Configuration: order '{}'.", filterOrder);
-        return new UserDetailsFilter();
-    }
+  /**
+   * Create the {@link UserDetailsFilter} bean.
+   *
+   * @return the {@link UserDetailsFilter} bean
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public UserDetailsFilter userDetailsFilter() {
+    LOGGER.trace("Configuration: order '{}'.", filterOrder);
+    return new UserDetailsFilter();
+  }
 
-    /**
-     * Register the {@link #userDetailsFilter()} bean.
-     *
-     * @param userDetailsFilter the user details filter
-     * @return the {@link #userDetailsFilter()} bean, wrapped in a {@link FilterRegistrationBean}
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-    public FilterRegistrationBean<UserDetailsFilter> userDetailsFilterRegistration(final UserDetailsFilter userDetailsFilter) {
-        return createFilterRegistrationBean(userDetailsFilter, filterOrder, EnumSet.of(DispatcherType.REQUEST));
-    }
+  /**
+   * Register the {@link #userDetailsFilter()} bean.
+   *
+   * @param userDetailsFilter the user details filter
+   * @return the {@link #userDetailsFilter()} bean, wrapped in a {@link FilterRegistrationBean}
+   */
+  @Bean
+  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
+  public FilterRegistrationBean<UserDetailsFilter> userDetailsFilterRegistration(
+      UserDetailsFilter userDetailsFilter) {
+    return createFilterRegistrationBean(
+        userDetailsFilter, filterOrder, EnumSet.of(DispatcherType.REQUEST));
+  }
 }

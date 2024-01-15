@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER_NAME;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +32,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER_NAME;
-
 /**
  * A filter that adds the logged in user (UserDetails) to the Kibana Log Fields.
  *
@@ -40,30 +40,25 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.USER_NAME;
  */
 public class UserDetailsFilter extends OncePerRequestFilter {
 
-    /**
-     * The Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsFilter.class);
+  /** The Logger. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsFilter.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
-            final Object principal = auth.getPrincipal();
-            LOGGER.debug("Request called by '{}'.", principal);
-            if (principal instanceof UserDetails userDetails) {
-                final String username = userDetails.getUsername();
-                KibanaLogFields.tag(USER_NAME, username);
-                LOGGER.debug("User has user name '{}'.", username);
-            }
-        }
-
-        filterChain.doFilter(request, response);
+  @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
+      Object principal = auth.getPrincipal();
+      LOGGER.debug("Request called by '{}'.", principal);
+      if (principal instanceof UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        KibanaLogFields.tag(USER_NAME, username);
+        LOGGER.debug("User has user name '{}'.", username);
+      }
     }
 
+    filterChain.doFilter(request, response);
+  }
 }

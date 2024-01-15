@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.async.task_listener;
+package org.hawaiiframework.async.task.listener;
 
 /**
- * Factory for a task listener. The listeners are invoked for the async task lifecycle events.
- * See {@link TaskListener}.
+ * Factory for a task listener. The listeners are invoked for the async task lifecycle events. See
+ * {@link TaskListener}.
  */
 public interface TaskListenerFactory {
 
-    /**
-     * Create a task listener.
-     *
-     * @return The task listener for this provider.
-     */
-    TaskListener create();
+  /**
+   * Create a task listener.
+   *
+   * @return The task listener for this provider.
+   */
+  TaskListener create();
 }

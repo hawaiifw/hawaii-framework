@@ -16,9 +16,8 @@
 
 package org.hawaiiframework.logging.oidc;
 
-import org.hawaiiframework.logging.model.KibanaLogField;
-
 import java.util.Arrays;
+import org.hawaiiframework.logging.model.KibanaLogField;
 
 /**
  * Kibana Log Field Names for OIDC fields.
@@ -27,56 +26,48 @@ import java.util.Arrays;
  * @since 3.0.0.M21
  */
 public enum OidcKibanaLogFieldNames implements KibanaLogField {
-    /**
-     * The subject.
-     */
-    SUBJECT("sub"),
-    /**
-     * The audience.
-     */
-    AUDIENCE("aud"),
-    /**
-     * The authorized party.
-     */
-    AUTHORIZED_PARTY("azp"),
-    /**
-     * The user id.
-     */
-    USER_ID("user_id");
+  /** The subject. */
+  SUBJECT("sub"),
+  /** The audience. */
+  AUDIENCE("aud"),
+  /** The authorized party. */
+  AUTHORIZED_PARTY("azp"),
+  /** The user id. */
+  USER_ID("user_id");
 
-    /**
-     * The logging key for this MDC entry.
-     */
-    private final String fieldName;
+  /** The logging key for this MDC entry. */
+  private final String fieldName;
 
-    /**
-     * @param fieldName the kibana log's field name..
-     */
-    OidcKibanaLogFieldNames(final String fieldName) {
-        this.fieldName = fieldName;
+  /**
+   * The constructor.
+   *
+   * @param fieldName the kibana log's field name.
+   */
+  OidcKibanaLogFieldNames(String fieldName) {
+    this.fieldName = fieldName;
+  }
+
+  @Override
+  public String getLogName() {
+    return fieldName;
+  }
+
+  /**
+   * Lookup method that does not throw an exception if the specified key is not found.
+   *
+   * @param key the key to look for
+   * @return the KibanaLogField with the given name, or null
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public static OidcKibanaLogFieldNames fromKey(String key) {
+    OidcKibanaLogFieldNames result = null;
+    if (key != null) {
+      result =
+          Arrays.stream(values())
+              .filter(fieldName -> fieldName.matches(key))
+              .findAny()
+              .orElse(null);
     }
-
-    /**
-     * @return the kibana log's field name.
-     */
-    @Override
-    public String getLogName() {
-        return fieldName;
-    }
-
-    /**
-     * Lookup method that does not throw an exception if the specified
-     * key is not found.
-     *
-     * @param key the key to look for
-     * @return the KibanaLogField with the given name, or null
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public static OidcKibanaLogFieldNames fromKey(final String key) {
-        OidcKibanaLogFieldNames result = null;
-        if (key != null) {
-            result = Arrays.stream(values()).filter(fieldName -> fieldName.matches(key)).findAny().orElse(null);
-        }
-        return result;
-    }
+    return result;
+  }
 }

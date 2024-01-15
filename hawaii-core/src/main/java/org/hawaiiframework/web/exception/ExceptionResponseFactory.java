@@ -26,11 +26,11 @@ import org.hawaiiframework.web.resource.ErrorResponseResource;
  */
 public interface ExceptionResponseFactory {
 
-    /**
-     * Create the response resource.
-     *
-     * @param throwable the exception
-     * @return the error resource
-     */
-    ErrorResponseResource create(Throwable throwable);
+  /**
+   * Create the response resource.
+   *
+   * @param throwable the exception
+   * @return the error resource
+   */
+  ErrorResponseResource create(Throwable throwable);
 }

@@ -16,59 +16,56 @@
 
 package org.hawaiiframework.web.exception;
 
+import static java.util.Objects.requireNonNull;
+
+import java.io.Serial;
 import org.hawaiiframework.exception.HawaiiException;
 import org.springframework.http.HttpStatus;
 
-import java.io.Serial;
-
-import static java.util.Objects.requireNonNull;
-
 /**
+ * An HTTP exception.
+ *
  * @author Ivan Melotte
  * @since 2.0.0
  */
 public class HttpException extends HawaiiException {
 
-    /**
-     * The serial version UID.
-     */
-    @Serial
-    private static final long serialVersionUID = -5505430727908889048L;
+  /** The serial version UID. */
+  @Serial private static final long serialVersionUID = -5505430727908889048L;
 
-    private final HttpStatus httpStatus;
+  private final HttpStatus httpStatus;
 
-    /**
-     * Constructs a new {@code HttpException} with the supplied {@link HttpStatus}.
-     */
-    public HttpException(final HttpStatus httpStatus) {
-        this.httpStatus = requireNonNull(httpStatus);
-    }
+  /** Constructs a new {@code HttpException} with the supplied {@link HttpStatus}. */
+  public HttpException(HttpStatus httpStatus) {
+    super();
+    this.httpStatus = requireNonNull(httpStatus);
+  }
 
-    /**
-     * Constructs a new {@code HttpException} with the supplied message and {@link HttpStatus}.
-     */
-    public HttpException(final String message, final HttpStatus httpStatus) {
-        super(message);
-        this.httpStatus = requireNonNull(httpStatus);
-    }
+  /** Constructs a new {@code HttpException} with the supplied message and {@link HttpStatus}. */
+  public HttpException(String message, HttpStatus httpStatus) {
+    super(message);
+    this.httpStatus = requireNonNull(httpStatus);
+  }
 
-    /**
-     * Constructs a new {@code HttpException} with the supplied message, {@link Throwable} and {@link HttpStatus}.
-     */
-    public HttpException(final String message, final Throwable cause, final HttpStatus httpStatus) {
-        super(message, cause);
-        this.httpStatus = requireNonNull(httpStatus);
-    }
+  /**
+   * Constructs a new {@code HttpException} with the supplied message, {@link Throwable} and {@link
+   * HttpStatus}.
+   */
+  public HttpException(String message, Throwable cause, HttpStatus httpStatus) {
+    super(message, cause);
+    this.httpStatus = requireNonNull(httpStatus);
+  }
 
-    /**
-     * Constructs a new {@code HttpException} with the supplied {@link Throwable} and {@link HttpStatus}.
-     */
-    public HttpException(final Throwable cause, final HttpStatus httpStatus) {
-        super(cause);
-        this.httpStatus = requireNonNull(httpStatus);
-    }
+  /**
+   * Constructs a new {@code HttpException} with the supplied {@link Throwable} and {@link
+   * HttpStatus}.
+   */
+  public HttpException(Throwable cause, HttpStatus httpStatus) {
+    super(cause);
+    this.httpStatus = requireNonNull(httpStatus);
+  }
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
+  public HttpStatus getHttpStatus() {
+    return httpStatus;
+  }
 }

@@ -19,31 +19,28 @@ import java.io.Serial;
 
 public class TestApiException extends ApiException {
 
-    /**
-     * The serial version UID.
-     */
-    @Serial
-    private static final long serialVersionUID = 1364163403888317961L;
+  /** The serial version UID. */
+  @Serial private static final long serialVersionUID = 1364163403888317961L;
 
-    private static final ApiError error = new ApiError() {
+  private static final ApiError error =
+      new ApiError() {
 
         @Override
         public String getErrorCode() {
-            return "100";
+          return "100";
         }
 
         @Override
         public String getReason() {
-            return "reason";
+          return "reason";
         }
-    };
+      };
 
-    public TestApiException() {
-        this(null);
-    }
+  public TestApiException() {
+    this(null);
+  }
 
-    public TestApiException(Throwable orig) {
-        super(error, orig);
-    }
-
+  public TestApiException(Throwable orig) {
+    super(error, orig);
+  }
 }

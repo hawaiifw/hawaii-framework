@@ -13,52 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.model;
 
 import java.util.UUID;
 
-/**
- * Class that holds a request id in a ThreadLocal.
- */
+/** Class that holds a request id in a ThreadLocal. */
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class RequestId {
 
-    /**
-     * The thread local id.
-     */
-    private static final ThreadLocal<UUID> ID = new InheritableThreadLocal<>();
+  /** The thread local id. */
+  private static final ThreadLocal<UUID> UUID_THREAD_LOCAL = new InheritableThreadLocal<>();
 
-    private RequestId() {
-        // private constructor for utility class.
+  private RequestId() {
+    // private constructor for utility class.
+  }
+
+  /**
+   * Return the id as string.
+   *
+   * @return The ID as string, or {@code null} if not set.
+   */
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public static String get() {
+    if (UUID_THREAD_LOCAL.get() == null) {
+      return null;
     }
+    return UUID_THREAD_LOCAL.get().toString();
+  }
 
-    /**
-     * Return the id as string.
-     *
-     * @return The ID as string, or {@code null} if not set.
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    public static String get() {
-        if (ID.get() == null) {
-            return null;
-        }
-        return ID.get().toString();
-    }
+  /**
+   * Set the request id.
+   *
+   * @param value The UUID to set.
+   */
+  public static void set(UUID value) {
+    UUID_THREAD_LOCAL.set(value);
+  }
 
-    /**
-     * Set the request id.
-     *
-     * @param value The UUID to set.
-     */
-    public static void set(final UUID value) {
-        ID.set(value);
-    }
-
-    /**
-     * Clear the thread local.
-     */
-    public static void remove() {
-        ID.remove();
-    }
-
+  /** Clear the thread local. */
+  public static void remove() {
+    UUID_THREAD_LOCAL.remove();
+  }
 }

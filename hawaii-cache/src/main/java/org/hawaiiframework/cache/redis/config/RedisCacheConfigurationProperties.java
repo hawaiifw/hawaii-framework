@@ -13,41 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.cache.redis.config;
 
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.Duration;
-
-/**
- * Redis configuration properties.
- */
+/** Redis configuration properties. */
 @SuppressWarnings("constructor")
 @Configuration
 @ConfigurationProperties(prefix = "spring.data.redis")
 public class RedisCacheConfigurationProperties {
 
-    /**
-     * The default expiration.
-     */
-    private Duration defaultExpiration;
+  /** The default expiration. */
+  private Duration defaultExpiration;
 
-    /**
-     * Get the default expiration.
-     *
-     * @return The default expiration.
-     */
-    public Duration getDefaultExpiration() {
-        return defaultExpiration;
-    }
+  public Duration getDefaultExpiration() {
+    return defaultExpiration;
+  }
 
-    /**
-     * set the default expiration.
-     *
-     * @param defaultExpiration The default expiration.
-     */
-    public void setDefaultExpiration(final Duration defaultExpiration) {
-        this.defaultExpiration = defaultExpiration;
-    }
+  public void setDefaultExpiration(Duration defaultExpiration) {
+    this.defaultExpiration = defaultExpiration;
+  }
 }

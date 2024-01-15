@@ -16,16 +16,15 @@
 
 package org.hawaiiframework.web.exception;
 
-import org.hawaiiframework.web.resource.ErrorResponseResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.context.request.WebRequest;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
+import org.hawaiiframework.web.resource.ErrorResponseResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * This class creates proper HTTP response bodies for exceptions.
@@ -34,62 +33,63 @@ import static java.util.Objects.requireNonNull;
  */
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 public class ErrorResponseEntityBuilder {
-    private final ExceptionResponseFactory exceptionResponseFactory;
-    private final Set<ErrorResponseEnricher> errorResponseEnrichers = new HashSet<>();
+  private final ExceptionResponseFactory exceptionResponseFactory;
+  private final Set<ErrorResponseEnricher> errorResponseEnrichers = new HashSet<>();
 
-    public ErrorResponseEntityBuilder(final ExceptionResponseFactory exceptionResponseFactory,
-            final List<ErrorResponseEnricher> errorResponseEnrichers) {
-        this.exceptionResponseFactory =
-                requireNonNull(exceptionResponseFactory, "'exceptionResponseFactory' must not be null");
-        if (errorResponseEnrichers != null) {
-            this.errorResponseEnrichers.addAll(errorResponseEnrichers);
-        }
+  /** The constructor. */
+  public ErrorResponseEntityBuilder(
+      ExceptionResponseFactory exceptionResponseFactory,
+      List<ErrorResponseEnricher> errorResponseEnrichers) {
+    this.exceptionResponseFactory =
+        requireNonNull(exceptionResponseFactory, "'exceptionResponseFactory' must not be null");
+    if (errorResponseEnrichers != null) {
+      this.errorResponseEnrichers.addAll(errorResponseEnrichers);
     }
+  }
 
-    /**
-     * Builds a meaningful response body for the given throwable, HTTP status and request.
-     * <p>
-     * This method constructs an {@link ErrorResponseResource} using {@link #exceptionResponseFactory} and then applies
-     * the error response enrichers returned from {@link #getResponseEnrichers()} to complete the response.
-     *
-     * @param throwable the exception
-     * @param status    the HTTP status
-     * @param request   the current request
-     * @return an error response
-     */
-    public ErrorResponseResource buildErrorResponseBody(
-            final Throwable throwable,
-            final HttpStatus status,
-            final WebRequest request) {
-        final ErrorResponseResource resource = exceptionResponseFactory.create(throwable);
-        getResponseEnrichers().forEach(enricher -> enricher.enrich(resource, request, status));
-        return resource;
-    }
+  /**
+   * Builds a meaningful response body for the given throwable, HTTP status and request.
+   *
+   * <p>This method constructs an {@link ErrorResponseResource} using {@link
+   * #exceptionResponseFactory} and then applies the error response enrichers returned from {@link
+   * #getResponseEnrichers()} to complete the response.
+   *
+   * @param throwable the exception
+   * @param status the HTTP status
+   * @param request the current request
+   * @return an error response
+   */
+  public ErrorResponseResource buildErrorResponseBody(
+      Throwable throwable, HttpStatus status, WebRequest request) {
+    ErrorResponseResource resource = exceptionResponseFactory.create(throwable);
+    getResponseEnrichers().forEach(enricher -> enricher.enrich(resource, request, status));
+    return resource;
+  }
 
-    /**
-     * Registers a {@link ErrorResponseEnricher}.
-     *
-     * @param errorResponseEnricher the error response enricher
-     */
-    public void addResponseEnricher(final ErrorResponseEnricher errorResponseEnricher) {
-        errorResponseEnrichers.add(errorResponseEnricher);
-    }
+  /**
+   * Registers a {@link ErrorResponseEnricher}.
+   *
+   * @param errorResponseEnricher the error response enricher
+   */
+  public void addResponseEnricher(ErrorResponseEnricher errorResponseEnricher) {
+    errorResponseEnrichers.add(errorResponseEnricher);
+  }
 
-    /**
-     * De-registers a {@link ErrorResponseEnricher}.
-     *
-     * @param errorResponseEnricher the error response enricher
-     */
-    public void removeResponseEnricher(final ErrorResponseEnricher errorResponseEnricher) {
-        errorResponseEnrichers.remove(errorResponseEnricher);
-    }
+  /**
+   * De-registers a {@link ErrorResponseEnricher}.
+   *
+   * @param errorResponseEnricher the error response enricher
+   */
+  public void removeResponseEnricher(ErrorResponseEnricher errorResponseEnricher) {
+    errorResponseEnrichers.remove(errorResponseEnricher);
+  }
 
-    /**
-     * Returns a collection of registered response enrichers.
-     *
-     * @return the response enrichers
-     */
-    public Collection<ErrorResponseEnricher> getResponseEnrichers() {
-        return new HashSet<>(errorResponseEnrichers);
-    }
+  /**
+   * Returns a collection of registered response enrichers.
+   *
+   * @return the response enrichers
+   */
+  public Collection<ErrorResponseEnricher> getResponseEnrichers() {
+    return new HashSet<>(errorResponseEnrichers);
+  }
 }

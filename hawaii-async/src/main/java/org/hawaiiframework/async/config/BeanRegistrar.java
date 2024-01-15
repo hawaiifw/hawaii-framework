@@ -33,59 +33,54 @@ import org.springframework.lang.Nullable;
  */
 public class BeanRegistrar {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeanRegistrar.class);
+  /** The logger to use. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(BeanRegistrar.class);
 
-    /**
-     * Spring's bean definition registry.
-     */
-    private final BeanDefinitionRegistry registry;
+  /** Spring's bean definition registry. */
+  private final BeanDefinitionRegistry registry;
 
-    /**
-     * The constructor.
-     *
-     * @param registry Spring's bean definition registry.
-     */
-    public BeanRegistrar(final BeanDefinitionRegistry registry) {
-        this.registry = registry;
+  /**
+   * The constructor.
+   *
+   * @param registry Spring's bean definition registry.
+   */
+  public BeanRegistrar(BeanDefinitionRegistry registry) {
+    this.registry = registry;
+  }
+
+  /**
+   * Create a {@link GenericBeanDefinition} of the specified class and register it with the
+   * registry.
+   *
+   * @param beanName the bean name
+   * @param clazz the bean class
+   */
+  public void registerBean(String beanName, Class<?> clazz) {
+    registerBean(beanName, clazz, null);
+  }
+
+  /**
+   * Create a {@link GenericBeanDefinition} of the specified class and register it with the
+   * registry.
+   *
+   * @param beanName the bean name
+   * @param clazz the bean class
+   * @param constructorArgumentValues the constructor arguments.
+   */
+  public void registerBean(
+      String beanName,
+      Class<?> clazz,
+      @Nullable ConstructorArgumentValues constructorArgumentValues) {
+    GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+    beanDefinition.setBeanClass(clazz);
+    beanDefinition.setAutowireMode(ConfigurableListableBeanFactory.AUTOWIRE_NO);
+    beanDefinition.setDependencyCheck(GenericBeanDefinition.DEPENDENCY_CHECK_NONE);
+    if (constructorArgumentValues != null) {
+      beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
     }
 
-    /**
-     * Create a {@link GenericBeanDefinition} of the specified class and register it with the registry.
-     *
-     * @param beanName the bean name
-     * @param clazz    the bean class
-     */
-    public void registerBean(
-        final String beanName,
-        final Class<?> clazz) {
-        registerBean(beanName, clazz, null);
-    }
+    LOGGER.trace("Registering bean '{}' of type '{}'.", beanName, clazz.getSimpleName());
 
-    /**
-     * Create a {@link GenericBeanDefinition} of the specified class and register it with the registry.
-     *
-     * @param beanName                  the bean name
-     * @param clazz                     the bean class
-     * @param constructorArgumentValues the constructor arguments.
-     */
-    public void registerBean(
-        final String beanName,
-        final Class<?> clazz,
-        @Nullable final ConstructorArgumentValues constructorArgumentValues) {
-        final GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-        beanDefinition.setBeanClass(clazz);
-        beanDefinition.setAutowireMode(ConfigurableListableBeanFactory.AUTOWIRE_NO);
-        beanDefinition.setDependencyCheck(GenericBeanDefinition.DEPENDENCY_CHECK_NONE);
-        if (constructorArgumentValues != null) {
-            beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
-        }
-
-        LOGGER.trace("Registering bean '{}' of type '{}'.", beanName, clazz.getSimpleName());
-
-        registry.registerBeanDefinition(beanName, beanDefinition);
-    }
-
+    registry.registerBeanDefinition(beanName, beanDefinition);
+  }
 }

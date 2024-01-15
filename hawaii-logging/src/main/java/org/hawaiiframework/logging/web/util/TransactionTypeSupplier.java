@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.util;
 
 import java.io.IOException;
@@ -25,12 +26,11 @@ import java.io.IOException;
  */
 public interface TransactionTypeSupplier {
 
-
-    /**
-    * Get the transaction type for the {@code request}.
-    *
-    * @param request The request.
-    * @return Optional, {@code null} if the type is unknown;
-    */
-    String getTransactionType(ResettableHttpServletRequest request) throws IOException;
+  /**
+   * Get the transaction type for the {@code request}.
+   *
+   * @param request The request.
+   * @return Optional, {@code null} if the type is unknown;
+   */
+  String getTransactionType(ResettableHttpServletRequest request) throws IOException;
 }

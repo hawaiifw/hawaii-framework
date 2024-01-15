@@ -16,8 +16,6 @@
 
 package org.hawaiiframework.validation;
 
-import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
 import jakarta.validation.Validation;
@@ -27,57 +25,57 @@ import jakarta.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
 
 /**
  * Validate a bean with jakarta validations (JSR-303).
  *
- * See {@code resources/META-INF/services/jakarta.validation.ConstraintValidator} to add validators for existing constraints.
+ * <p>See {@code resources/META-INF/services/jakarta.validation.ConstraintValidator} to add
+ * validators for existing constraints.
  *
  * @param <T> The type to validate.
  */
 public class JakartaValidationValidator<T> implements Validator<T> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("PMD.LawOfDemeter")
-    @Override
-    public void validate(final T object, final ValidationResult validationResult) {
-        final Set<String> requiredFields = new HashSet<>();
-        final Set<String> invalidFields = new HashSet<>();
+  @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
+  public void validate(T object, ValidationResult validationResult) {
+    Set<String> requiredFields = new HashSet<>();
+    Set<String> invalidFields = new HashSet<>();
 
-        try (ValidatorFactoryImpl factory = (ValidatorFactoryImpl) Validation.buildDefaultValidatorFactory()) {
-            final jakarta.validation.Validator validator = factory.getValidator();
+    try (ValidatorFactoryImpl factory =
+        (ValidatorFactoryImpl) Validation.buildDefaultValidatorFactory()) {
+      jakarta.validation.Validator validator = factory.getValidator();
 
-            final Set<ConstraintViolation<T>> violations = validator.validate(object);
-            for (final ConstraintViolation<T> constraintViolation : violations) {
-                final Path path = constraintViolation.getPropertyPath();
-                final String propertyPath = path.toString();
-                final Annotation annotation = constraintViolation.getConstraintDescriptor().getAnnotation();
-                final Class<? extends Annotation> annotationType = annotation.annotationType();
-                final boolean required = isRequired(annotationType);
-                if (required) {
-                    invalidFields.remove(propertyPath);
-                    requiredFields.add(propertyPath);
-                } else {
-                    if (!requiredFields.contains(propertyPath)) {
-                        invalidFields.add(propertyPath);
-                    }
-                }
-            }
-
-            for (final String path : requiredFields) {
-                validationResult.rejectValue(path, "REQUIRED");
-            }
-            for (final String path : invalidFields) {
-                validationResult.rejectValue(path, "INVALID");
-            }
+      Set<ConstraintViolation<T>> violations = validator.validate(object);
+      for (ConstraintViolation<T> constraintViolation : violations) {
+        Path path = constraintViolation.getPropertyPath();
+        String propertyPath = path.toString();
+        Annotation annotation = constraintViolation.getConstraintDescriptor().getAnnotation();
+        Class<? extends Annotation> annotationType = annotation.annotationType();
+        boolean required = isRequired(annotationType);
+        if (required) {
+          invalidFields.remove(propertyPath);
+          requiredFields.add(propertyPath);
+        } else {
+          if (!requiredFields.contains(propertyPath)) {
+            invalidFields.add(propertyPath);
+          }
         }
-    }
+      }
 
-    private boolean isRequired(final Class<? extends Annotation> annotationType) {
-        return annotationType.isAssignableFrom(NotBlank.class)
-            || annotationType.isAssignableFrom(NotEmpty.class)
-            || annotationType.isAssignableFrom(NotNull.class);
+      for (String path : requiredFields) {
+        validationResult.rejectValue(path, "REQUIRED");
+      }
+      for (String path : invalidFields) {
+        validationResult.rejectValue(path, "INVALID");
+      }
     }
+  }
+
+  private static boolean isRequired(Class<? extends Annotation> annotationType) {
+    return annotationType.isAssignableFrom(NotBlank.class)
+        || annotationType.isAssignableFrom(NotEmpty.class)
+        || annotationType.isAssignableFrom(NotNull.class);
+  }
 }

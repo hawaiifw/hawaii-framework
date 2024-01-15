@@ -18,32 +18,30 @@ package org.hawaiiframework.logging.web.filter;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestLogAppender extends AppenderBase<ILoggingEvent> {
 
-    private final List<ILoggingEvent> loggingEvents = new ArrayList<>();
+  private final List<ILoggingEvent> loggingEvents = new ArrayList<>();
 
-    @Override
-    protected void append(final ILoggingEvent eventObject) {
-        loggingEvents.add(eventObject);
+  @Override
+  protected void append(ILoggingEvent eventObject) {
+    loggingEvents.add(eventObject);
+  }
+
+  public ILoggingEvent getLastLoggedEvent() {
+    if (loggingEvents.isEmpty()) {
+      return null;
     }
 
+    return loggingEvents.get(loggingEvents.size() - 1);
+  }
 
-    public ILoggingEvent getLastLoggedEvent() {
-        if (loggingEvents.isEmpty()) {
-            return null;
-        }
-
-        return loggingEvents.get(loggingEvents.size() - 1);
-    }
-
-    public ILoggingEvent findEventForMessage(final String message) {
-        return loggingEvents.stream()
-                .filter(event -> event.getMessage().equals(message))
-                .findFirst()
-                .orElse(null);
-    }
+  public ILoggingEvent findEventForMessage(String message) {
+    return loggingEvents.stream()
+        .filter(event -> event.getMessage().equals(message))
+        .findFirst()
+        .orElse(null);
+  }
 }

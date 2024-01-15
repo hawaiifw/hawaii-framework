@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.opentelemetry;
 
 import io.opentelemetry.api.trace.Span;
@@ -35,48 +36,44 @@ import org.slf4j.LoggerFactory;
  */
 public class OpenTelemetryTraceIdResponseFilter extends AbstractGenericFilterBean {
 
-    /**
-     * The logger to use.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OpenTelemetryTraceIdResponseFilter.class);
+  /** The logger to use. */
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(OpenTelemetryTraceIdResponseFilter.class);
 
-    /**
-     * The configured header name to write the trace id in.
-     */
-    private final String headerName;
+  /** The configured header name to write the trace id in. */
+  private final String headerName;
 
-    /**
-     * Constructor.
-     *
-     * @param headerName the name of the header to response with.
-     */
-    public OpenTelemetryTraceIdResponseFilter(final String headerName) {
-        this.headerName = Objects.toString(headerName, "traceid");
-        LOGGER.info("Configured to use '{}'.", this.headerName);
+  /**
+   * Constructor.
+   *
+   * @param headerName the name of the header to response with.
+   */
+  public OpenTelemetryTraceIdResponseFilter(String headerName) {
+    super();
+    this.headerName = Objects.toString(headerName, "traceid");
+    LOGGER.info("Configured to use '{}'.", this.headerName);
+  }
+
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+
+    Span activeSpan = Span.current();
+    if (activeSpan != null) {
+      addHeader(response, activeSpan.getSpanContext());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
+    filterChain.doFilter(request, response);
+  }
 
-        final Span activeSpan = Span.current();
-        if (activeSpan != null) {
-            addHeader(response, activeSpan.getSpanContext());
-        }
+  private void addHeader(HttpServletResponse response, SpanContext context) {
+    addHeader(response, context.getTraceId());
+  }
 
-        filterChain.doFilter(request, response);
+  private void addHeader(HttpServletResponse response, String value) {
+    if (!response.containsHeader(headerName)) {
+      response.setHeader(headerName, value);
     }
-
-    private void addHeader(final HttpServletResponse response, final SpanContext context) {
-        addHeader(response, context.getTraceId());
-    }
-
-    private void addHeader(final HttpServletResponse response, final String value) {
-        if (!response.containsHeader(headerName)) {
-            response.setHeader(headerName, value);
-        }
-    }
+  }
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.boot.autoconfigure.cache;
 
 import org.hawaiiframework.cache.redis.config.RedisConfiguration;
@@ -20,7 +21,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-
 
 /**
  * Cache auto configuration.
@@ -31,6 +31,4 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 @Configuration
 @ConditionalOnClass({RedisConfiguration.class, RedisConnectionFactory.class})
 @Import(RedisConfiguration.class)
-public class HawaiiRedisAutoConfiguration {
-
-}
+public class HawaiiRedisAutoConfiguration {}

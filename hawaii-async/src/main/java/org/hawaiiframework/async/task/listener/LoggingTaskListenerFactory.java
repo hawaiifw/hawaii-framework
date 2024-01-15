@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.util.tuple;
+package org.hawaiiframework.async.task.listener;
 
-/**
- * A {@code Tuple}.
- *
- * @author Marcel Overdijk
- * @since 2.0.0
- */
-public interface Tuple {
+import org.springframework.stereotype.Component;
 
-    /**
-     * Returns the number of elements of this tuple.
-     *
-     * @return the number of elements of this tuple
-     */
-    int size();
+/** Factory for logging task events. */
+@Component
+public class LoggingTaskListenerFactory implements TaskListenerFactory {
+
+  @Override
+  public TaskListener create() {
+    return new LoggingTaskListener();
+  }
 }

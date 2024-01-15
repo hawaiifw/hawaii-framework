@@ -26,35 +26,35 @@ import org.hawaiiframework.async.timeout.SharedTaskContextHolder;
  */
 public abstract class HawaiiAsyncRunnable implements Runnable {
 
-    /**
-     * The abort strategy to set on the executing thread's ThreadLocal {@link SharedTaskContextHolder}.
-     */
-    protected final SharedTaskContext sharedTaskContext;
+  /**
+   * The abort strategy to set on the executing thread's ThreadLocal {@link
+   * SharedTaskContextHolder}.
+   */
+  protected final SharedTaskContext sharedTaskContext;
 
-    /**
-     * Constructor.
-     *
-     * @param sharedTaskContext the context for the api call thread
-     */
-    protected HawaiiAsyncRunnable(final SharedTaskContext sharedTaskContext) {
-        this.sharedTaskContext = sharedTaskContext;
+  /**
+   * Constructor.
+   *
+   * @param sharedTaskContext the context for the api call thread
+   */
+  protected HawaiiAsyncRunnable(SharedTaskContext sharedTaskContext) {
+    this.sharedTaskContext = sharedTaskContext;
+  }
+
+  @Override
+  public void run() {
+    try {
+      SharedTaskContextHolder.register(sharedTaskContext);
+      sharedTaskContext.startExecution();
+      doRun();
+    } finally {
+      sharedTaskContext.finish();
     }
+  }
 
-    @Override
-    public void run() {
-        try {
-            SharedTaskContextHolder.register(sharedTaskContext);
-            sharedTaskContext.startExecution();
-            doRun();
-        } finally {
-            sharedTaskContext.finish();
-        }
-    }
-
-    /**
-     * This method is executed by {@link Runnable} run. Run executes all administrative calls. Code specified in this
-     * method will be executed in between those calls.
-     */
-    protected abstract void doRun();
-
+  /**
+   * This method is executed by {@link Runnable} run. Run executes all administrative calls. Code
+   * specified in this method will be executed in between those calls.
+   */
+  protected abstract void doRun();
 }

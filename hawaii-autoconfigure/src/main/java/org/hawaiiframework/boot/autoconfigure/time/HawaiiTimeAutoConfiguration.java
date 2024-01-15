@@ -16,14 +16,13 @@
 
 package org.hawaiiframework.boot.autoconfigure.time;
 
+import java.time.ZoneId;
 import org.hawaiiframework.time.HawaiiTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.ZoneId;
 
 /**
  * {@link HawaiiTime} autoconfiguration.
@@ -36,16 +35,15 @@ import java.time.ZoneId;
 @EnableConfigurationProperties(HawaiiTimeProperties.class)
 public class HawaiiTimeAutoConfiguration {
 
-    @Autowired
-    private HawaiiTimeProperties properties;
+  @Autowired private HawaiiTimeProperties properties;
 
-    /**
-     * Get the Hawaii Time bean.
-     *
-     * @return the hawaii time.
-     */
-    @Bean
-    public HawaiiTime hawaiiTime() {
-        return new HawaiiTime(ZoneId.of(properties.getTimezone()));
-    }
+  /**
+   * Get the Hawaii Time bean.
+   *
+   * @return the hawaii time.
+   */
+  @Bean
+  public HawaiiTime hawaiiTime() {
+    return new HawaiiTime(ZoneId.of(properties.getTimezone()));
+  }
 }

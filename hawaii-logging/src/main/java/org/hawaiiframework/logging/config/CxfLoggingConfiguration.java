@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.config;
 
 import org.apache.cxf.Bus;
@@ -24,37 +25,36 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configures the Apache CXF bus to use logging interceptors.
- */
+/** Configures the Apache CXF bus to use logging interceptors. */
 @ConditionalOnClass(name = "org.apache.cxf.Bus")
 @ConditionalOnProperty(prefix = "hawaii.logging.soap", name = "enabled", matchIfMissing = true)
 @Configuration
 public class CxfLoggingConfiguration {
 
-    /**
-     * Configures the Apache CXF bus to use logging interceptors.
-     * @return the Apache CXF bus.
-     */
-    @Bean
-    public Bus busConfiguration() {
-        final Bus bus = BusFactory.getDefaultBus();
-        bus.getInInterceptors().add(loggingInInterceptor());
-        bus.getInFaultInterceptors().add(loggingInInterceptor());
-        bus.getOutInterceptors().add(loggingOutInterceptor());
-        bus.getOutFaultInterceptors().add(loggingOutInterceptor());
-        return bus;
-    }
+  /**
+   * Configures the Apache CXF bus to use logging interceptors.
+   *
+   * @return the Apache CXF bus.
+   */
+  @Bean
+  public Bus busConfiguration() {
+    Bus bus = BusFactory.getDefaultBus();
+    bus.getInInterceptors().add(loggingInInterceptor());
+    bus.getInFaultInterceptors().add(loggingInInterceptor());
+    bus.getOutInterceptors().add(loggingOutInterceptor());
+    bus.getOutFaultInterceptors().add(loggingOutInterceptor());
+    return bus;
+  }
 
-    private LoggingInInterceptor loggingInInterceptor() {
-        final LoggingInInterceptor inInterceptor = new LoggingInInterceptor();
-        inInterceptor.setPrettyLogging(true);
-        return inInterceptor;
-    }
+  private static LoggingInInterceptor loggingInInterceptor() {
+    LoggingInInterceptor inInterceptor = new LoggingInInterceptor();
+    inInterceptor.setPrettyLogging(true);
+    return inInterceptor;
+  }
 
-    private LoggingOutInterceptor loggingOutInterceptor() {
-        final LoggingOutInterceptor outInterceptor = new LoggingOutInterceptor();
-        outInterceptor.setPrettyLogging(true);
-        return outInterceptor;
-    }
+  private static LoggingOutInterceptor loggingOutInterceptor() {
+    LoggingOutInterceptor outInterceptor = new LoggingOutInterceptor();
+    outInterceptor.setPrettyLogging(true);
+    return outInterceptor;
+  }
 }
