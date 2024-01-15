@@ -143,7 +143,7 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    *   <li>A positive number will cache a query for the given number of seconds. This is essentially
    *       the interval between refresh checks.
    *   <li>A value of "0" will check for expiry on each query access!
-   * </ul></p>
+   * </ul>
    */
   public void setCacheSeconds(int cacheSeconds) {
     this.cacheMillis = 1_000L * cacheSeconds;

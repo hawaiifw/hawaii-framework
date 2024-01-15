@@ -47,7 +47,7 @@ public class TimeoutGuardTask extends HawaiiAsyncRunnable {
     super(sharedTaskContext);
   }
 
-    @Override
+  @Override
   protected void doRun() {
     LOGGER.trace("Executing guard task.");
     sharedTaskContext.timeout();

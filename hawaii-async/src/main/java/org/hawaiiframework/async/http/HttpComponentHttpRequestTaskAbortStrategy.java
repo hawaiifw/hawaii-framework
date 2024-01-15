@@ -51,7 +51,7 @@ public class HttpComponentHttpRequestTaskAbortStrategy implements TaskAbortStrat
     this.request = requireNonNull(request);
   }
 
-    @Override
+  @Override
   public boolean invoke() {
     try {
       LOGGER.trace("Invoking HttpUriRequest#abort().");

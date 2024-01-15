@@ -85,7 +85,7 @@ public class RedisCache<T> implements Cache<T> {
     return keyPrefix + key;
   }
 
-    @Override
+  @Override
   public void put(@NonNull String key, @NonNull T value) {
     requireNonNull(key, "Key should not be null");
     requireNonNull(value);
@@ -98,7 +98,7 @@ public class RedisCache<T> implements Cache<T> {
     }
   }
 
-    @Override
+  @Override
   public void put(@NonNull String key, @NonNull T value, @NonNull Duration duration) {
     requireNonNull(key);
     requireNonNull(value);
@@ -110,13 +110,13 @@ public class RedisCache<T> implements Cache<T> {
     redisTemplate.expire(cacheKey, duration);
   }
 
-    @Override
+  @Override
   public void put(@NonNull String key, @NonNull T value, @NonNull LocalDateTime expiresAt) {
     requireNonNull(expiresAt);
     put(key, value, expiresAt.atZone(hawaiiTime.getZone()));
   }
 
-    @Override
+  @Override
   public void put(@NonNull String key, @NonNull T value, @NonNull ZonedDateTime expiresAt) {
     requireNonNull(expiresAt);
     putAndSetExpiry(key, value, expiresAt.toInstant());
@@ -132,7 +132,7 @@ public class RedisCache<T> implements Cache<T> {
     redisTemplate.expire(cacheKey, exp, TimeUnit.MILLISECONDS);
   }
 
-    @Override
+  @Override
   public T get(@NonNull String key) {
     requireNonNull(key);
 
@@ -141,7 +141,7 @@ public class RedisCache<T> implements Cache<T> {
     return redisTemplate.opsForValue().get(cacheKey);
   }
 
-    @Override
+  @Override
   public void remove(@NonNull String key) {
     requireNonNull(key);
 

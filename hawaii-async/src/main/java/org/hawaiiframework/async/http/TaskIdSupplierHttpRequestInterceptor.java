@@ -50,7 +50,7 @@ public class TaskIdSupplierHttpRequestInterceptor implements ClientHttpRequestIn
     this.headerName = headerName;
   }
 
-    @Override
+  @Override
   @SuppressWarnings("PMD.LawOfDemeter")
   public ClientHttpResponse intercept(
       HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {

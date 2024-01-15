@@ -73,7 +73,7 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
         requireNonNull(nullListConversionStrategy, "'nullListConversionStrategy' must not be null");
   }
 
-    @Override
+  @Override
   public T convert(S source) {
     if (source == null) {
       return null;
@@ -83,7 +83,7 @@ public abstract class AbstractModelConverter<S, T> implements ModelConverter<S, 
     return target;
   }
 
-    @Override
+  @Override
   public List<T> convert(Iterable<? extends S> objects) {
     if (objects == null) {
       return nullListConversionStrategy.apply();

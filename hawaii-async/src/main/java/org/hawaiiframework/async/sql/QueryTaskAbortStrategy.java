@@ -29,7 +29,7 @@ public class QueryTaskAbortStrategy implements TaskAbortStrategy {
     this.statement = statement;
   }
 
-    @Override
+  @Override
   public boolean invoke() {
     try {
       LOGGER.trace("Invoking Statement#cancel().");

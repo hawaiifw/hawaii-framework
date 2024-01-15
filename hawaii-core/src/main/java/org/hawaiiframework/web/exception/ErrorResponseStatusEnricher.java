@@ -28,7 +28,7 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class ErrorResponseStatusEnricher implements ErrorResponseEnricher {
 
-    @Override
+  @Override
   public void doEnrich(
       ErrorResponseResource errorResponseResource,
       Throwable throwable,
