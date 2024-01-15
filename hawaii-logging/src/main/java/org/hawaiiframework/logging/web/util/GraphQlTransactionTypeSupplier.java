@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.util;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;

@@ -2,7 +2,6 @@ import net.ltgt.gradle.errorprone.errorprone
 import com.diffplug.gradle.spotless.SpotlessTask
 import java.util.*
 
-
 plugins {
     id("java-library")
 
@@ -62,6 +61,7 @@ subprojects {
     val errorProneVersion = "2.24.1"
     val errorProneSupportVersion = "0.14.0"
     val pmdVersion = "7.0.0-rc4"
+    val findbugsJsrVersion = "3.0.2"
 
     apply(plugin = "java-library")
     apply(plugin = "signing")
@@ -143,7 +143,7 @@ subprojects {
 
     dependencies {
         compileOnly("org.slf4j:slf4j-api")
-        compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+        compileOnly("com.google.code.findbugs:jsr305:3.0.${findbugsJsrVersion}")
 
         testImplementation("junit:junit")
         testImplementation("org.mockito:mockito-core")
@@ -198,6 +198,10 @@ subprojects {
         logging.captureStandardError(LogLevel.INFO)
         logging.captureStandardOutput(LogLevel.INFO)
     }
+
+    /**
+     * Configuration of Spotless.
+     */
     spotless {
         java {
             googleJavaFormat()
@@ -205,6 +209,7 @@ subprojects {
         }
     }
     project.tasks["spotlessJavaCheck"].enabled = false
+
     /**
      * Configuration of PMD.
      */
@@ -218,13 +223,11 @@ subprojects {
         // clear the default list of rules, otherwise this will override our custom configuration.
         ruleSets = listOf<String>()
     }
+
     project.tasks["pmdTest"].enabled = false
 
     /**
-     * Configuration of check style
-     */
-    /**
-     * Checkstyle
+     * Configuration of check style.
      */
     checkstyle {
         toolVersion = checkstyleVersion
@@ -240,7 +243,7 @@ subprojects {
             html.required.set(true)
             html.stylesheet = resources.text.fromFile("${rootDir}/src/quality/config/checkstyle/checkstyle-no-frames-severity-sorted.xsl")
         }
-        isShowViolations = true
+        isShowViolations = false
     }
 
     project.tasks["checkstyleTest"].enabled = false

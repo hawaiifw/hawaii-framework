@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.util;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -47,32 +48,41 @@ public class SpringMvcTransactionTypeSupplier implements TransactionTypeSupplier
   }
 
   @Override
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   public String getTransactionType(ResettableHttpServletRequest request) {
-    HandlerMethod handler = null;
-
-    for (HandlerMapping handlerMapping :
-        applicationContext.getBeansOfType(HandlerMapping.class).values()) {
+    for (HandlerMapping handlerMapping : applicationContext.getBeansOfType(HandlerMapping.class)
+        .values()) {
       HandlerExecutionChain handlerExecutionChain = null;
       try {
         handlerExecutionChain = handlerMapping.getHandler(request);
-      } catch (Exception e) {
+      } catch (Exception exception) {
         LOGGER.warn("Exception when fetching the handler");
       }
-      if (handlerExecutionChain != null) {
-        var tempHandler = handlerExecutionChain.getHandler();
-        handler = tempHandler instanceof HandlerMethod handlerMethod ? handlerMethod : null;
-        break;
+      String transactionType = getTransactionType(handlerExecutionChain);
+      if (transactionType != null) {
+        return transactionType;
       }
     }
 
-    if (handler == null) {
-      LOGGER.debug("No handler found.");
-    } else {
+    LOGGER.debug("No handler found.");
+    return null;
+  }
 
-      var nameMethod = handler.getMethod().getName();
-      var nameController = handler.getBeanType().getSimpleName();
-      return nameController + "." + nameMethod;
+  @SuppressWarnings("PMD.LawOfDemeter")
+  private static String getTransactionType(HandlerExecutionChain handlerExecutionChain) {
+    if (handlerExecutionChain != null) {
+      var tempHandler = handlerExecutionChain.getHandler();
+      if (tempHandler instanceof HandlerMethod handlerMethod) {
+        return getTransactionType(handlerMethod);
+      }
     }
     return null;
+  }
+
+  @SuppressWarnings("PMD.LawOfDemeter")
+  private static String getTransactionType(HandlerMethod handler) {
+    var nameMethod = handler.getMethod().getName();
+    var nameController = handler.getBeanType().getSimpleName();
+    return nameController + "." + nameMethod;
   }
 }

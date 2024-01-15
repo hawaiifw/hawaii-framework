@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.scheduled;
 
 import static java.util.UUID.randomUUID;
@@ -61,9 +62,9 @@ public class ScheduledAspect {
 
       LOGGER.trace("Started scheduled task with tx id '{}'.", TransactionId.get());
       return pjp.proceed();
-    } catch (Exception ex) {
-      LOGGER.error("Caught error '{}'.", ex.getMessage(), ex);
-      throw ex;
+    } catch (Exception exception) {
+      LOGGER.error("Caught error '{}'.", exception.getMessage(), exception);
+      throw exception;
     } finally {
       RequestId.remove();
       TransactionId.remove();

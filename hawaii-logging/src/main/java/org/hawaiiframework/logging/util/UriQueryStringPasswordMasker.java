@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 /**
@@ -33,7 +34,7 @@ public class UriQueryStringPasswordMasker implements PasswordMasker {
   private static final Character QUOTE = '"';
 
   /** Constant for start of XML tag. */
-  @SuppressWarnings("PMD.ShortVariable")
+  @SuppressWarnings({"PMD.ShortMethodName", "PMD.ShortVariable"})
   private static final Character LT = '<';
 
   /** Newline. */

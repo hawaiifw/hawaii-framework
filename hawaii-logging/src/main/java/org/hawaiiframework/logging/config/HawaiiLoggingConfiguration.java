@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.config;
 
 import org.hawaiiframework.logging.http.DefaultHawaiiRequestResponseLogger;
@@ -158,6 +159,9 @@ public class HawaiiLoggingConfiguration {
     return new MediaTypeVoter(hawaiiLoggingConfigurationProperties.getAllowedContentTypes(), true);
   }
 
+  /**
+   * Create a {@link MediaTypeVoter} for body exclusion.
+   */
   @Bean
   @RefreshScope
   public MediaTypeVoter bodyExcludedMediaTypeVoter(

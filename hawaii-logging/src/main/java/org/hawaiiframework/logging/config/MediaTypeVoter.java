@@ -35,16 +35,25 @@ public class MediaTypeVoter {
 
   private final boolean matchIfEmpty;
 
+  /**
+   * The constructor with content types and whether to match if there are no content types.
+   */
   public MediaTypeVoter(List<MediaType> contentTypes, boolean matchIfEmpty) {
     this.contentTypes = contentTypes;
     this.matchIfEmpty = matchIfEmpty;
     LOGGER.debug("Configured content types: '{}'.", contentTypes);
   }
 
+  /**
+   * Check if the {@code mediaType} is one of the configured content type.
+   */
   public boolean mediaTypeMatches(String contentType) {
     return mediaTypeMatches(parseMediaType(contentType));
   }
 
+  /**
+   * Check if the {@code mediaType} is one of the configured content type.
+   */
   public boolean mediaTypeMatches(MediaType mediaType) {
     boolean matches = false;
 

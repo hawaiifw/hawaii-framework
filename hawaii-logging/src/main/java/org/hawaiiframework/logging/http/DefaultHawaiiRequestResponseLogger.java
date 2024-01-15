@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.http;
 
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.FAILURE;
@@ -108,6 +109,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
   /** {@inheritDoc} */
   @Override
+  @SuppressWarnings("PMD.AvoidCatchingThrowable")
   public void logRequest(ResettableHttpServletRequest wrappedRequest) throws IOException {
     String method = wrappedRequest.getMethod();
     String requestUri = wrappedRequest.getRequestURI();
@@ -131,9 +133,9 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
         requestBody = bodyLogUtil.getTxRequestBody(wrappedRequest);
       }
       addBodyTag(contentTypeCanBeLogged, TX_REQUEST_BODY, requestBody);
-    } catch (Throwable t) {
-      LOGGER.error("Error getting payload for request.", t);
-      throw t;
+    } catch (Throwable throwable) {
+      LOGGER.error("Error getting payload for request.", throwable);
+      throw throwable;
     } finally {
       LOGGER.info(
           "Invoked '{} {}' with content type '{}' and size of '{}' bytes.",
@@ -141,7 +143,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
           requestUri,
           contentType,
           contentLength);
-      if (contentTypeCanBeLogged) {
+      if (contentTypeCanBeLogged && LOGGER.isDebugEnabled()) {
         LOGGER.debug(
             "Request is:\n{}",
             debugLogUtil.getTxRequestDebugOutput(wrappedRequest, requestHeaders, requestBody));
@@ -154,26 +156,28 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     }
   }
 
-  /** {@inheritDoc} */
   @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
   public void logRequest(HttpRequest request, byte[] body) {
     try {
+      KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.CALL_REQUEST_BODY);
+
       HttpMethod method = request.getMethod();
+      KibanaLogFields.tag(CALL_REQUEST_METHOD, method.name());
+
       String requestUri = request.getURI().toString();
+      KibanaLogFields.tag(CALL_REQUEST_URI, requestUri);
+
       int contentLength = body.length;
+      KibanaLogFields.tag(CALL_REQUEST_SIZE, contentLength);
+
+      String requestHeaders = headersLogUtil.getCallRequestHeaders(request);
+      KibanaLogFields.tag(CALL_REQUEST_HEADERS, requestHeaders);
+
       // contentType can be null (a GET for example, doesn't have a Content-Type header usually)
       MediaType contentType = getContentType(request);
       boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
-      String requestHeaders = headersLogUtil.getCallRequestHeaders(request);
       String requestBody = bodyLogUtil.getCallRequestBody(body);
-
-      KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.CALL_REQUEST_BODY);
-
-      KibanaLogFields.tag(CALL_REQUEST_METHOD, method.name());
-      KibanaLogFields.tag(CALL_REQUEST_URI, requestUri);
-
-      KibanaLogFields.tag(CALL_REQUEST_SIZE, contentLength);
-      KibanaLogFields.tag(CALL_REQUEST_HEADERS, requestHeaders);
       addBodyTag(contentTypeCanBeLogged, CALL_REQUEST_BODY, requestBody);
 
       LOGGER.info(
@@ -182,7 +186,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
           requestUri,
           contentType,
           contentLength);
-      if (contentTypeCanBeLogged) {
+      if (contentTypeCanBeLogged && LOGGER.isDebugEnabled()) {
         LOGGER.debug(
             "Call is:\n{}",
             debugLogUtil.getCallRequestDebugOutput(
@@ -215,26 +219,26 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
       HttpServletRequest servletRequest, ContentCachingWrappedResponse wrappedResponse) {
 
     try {
-      String requestURI = servletRequest.getRequestURI();
-      int contentLength = wrappedResponse.getContentSize();
-      String contentType = getContentType(wrappedResponse);
-      boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
-      HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
-      String responseHeaders = headersLogUtil.getTxResponseHeaders(wrappedResponse);
-      String responseBody = bodyLogUtil.getTxResponseBody(wrappedResponse);
-
       KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.RESPONSE_BODY);
 
-      KibanaLogFields.tag(TX_RESPONSE_SIZE, contentLength);
-      KibanaLogFields.tag(TX_RESPONSE_HEADERS, responseHeaders);
-
-      addBodyTag(contentTypeCanBeLogged, TX_RESPONSE_BODY, responseBody);
-
+      HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
       KibanaLogFields.tag(TX_STATUS, httpStatus.value());
 
+      int contentLength = wrappedResponse.getContentSize();
+      KibanaLogFields.tag(TX_RESPONSE_SIZE, contentLength);
+
+      String responseHeaders = headersLogUtil.getTxResponseHeaders(wrappedResponse);
+      KibanaLogFields.tag(TX_RESPONSE_HEADERS, responseHeaders);
+
+      String contentType = getContentType(wrappedResponse);
+      boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
+      String responseBody = bodyLogUtil.getTxResponseBody(wrappedResponse);
+      addBodyTag(contentTypeCanBeLogged, TX_RESPONSE_BODY, responseBody);
+
+      String requestUri = servletRequest.getRequestURI();
       LOGGER.info(
           "Response '{}' is '{}' with content type '{}' and size of '{}' bytes.",
-          requestURI,
+          requestUri,
           httpStatus,
           contentType,
           contentLength);
@@ -251,21 +255,23 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
 
   /** {@inheritDoc} */
   @Override
+  @SuppressWarnings("PMD.LawOfDemeter")
   public void logResponse(ClientHttpResponse response) throws IOException {
     try {
-      HttpStatusCode httpStatus = response.getStatusCode();
+      KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.CALL_RESPONSE_BODY);
+      
       MediaType contentType = getContentType(response);
       boolean contentTypeCanBeLogged = contentTypeCanBeLogged(contentType);
-      String responseHeaders = headersLogUtil.getCallResponseHeaders(response);
       String responseBody = bodyLogUtil.getCallResponseBody(response);
-      int contentLength = responseBody.length();
-
-      KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.CALL_RESPONSE_BODY);
-
-      KibanaLogFields.tag(CALL_RESPONSE_SIZE, contentLength);
-      KibanaLogFields.tag(CALL_RESPONSE_HEADERS, responseHeaders);
       addBodyTag(contentTypeCanBeLogged, CALL_RESPONSE_BODY, responseBody);
 
+      int contentLength = responseBody.length();
+      KibanaLogFields.tag(CALL_RESPONSE_SIZE, contentLength);
+
+      String responseHeaders = headersLogUtil.getCallResponseHeaders(response);
+      KibanaLogFields.tag(CALL_RESPONSE_HEADERS, responseHeaders);
+
+      HttpStatusCode httpStatus = response.getStatusCode();
       if (httpStatus.is2xxSuccessful() || httpStatus.is3xxRedirection()) {
         KibanaLogFields.tag(CALL_STATUS, SUCCESS);
       } else {
@@ -306,6 +312,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     return getContentType(response.getHeaders());
   }
 
+  @SuppressWarnings("PMD.LooseCoupling")
   private static MediaType getContentType(HttpHeaders httpHeaders) {
     return httpHeaders.getContentType();
   }

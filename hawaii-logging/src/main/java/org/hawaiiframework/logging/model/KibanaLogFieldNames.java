@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.model;
 
 import java.util.Arrays;
@@ -127,15 +128,14 @@ public enum KibanaLogFieldNames implements KibanaLogField {
   private final String fieldName;
 
   /**
-   * @param fieldName the kibana log's field name..
+   * The constructor.
+   *
+   * @param fieldName the kibana log's field name.
    */
   KibanaLogFieldNames(String fieldName) {
     this.fieldName = fieldName;
   }
 
-  /**
-   * @return the kibana log's field name.
-   */
   @Override
   public String getLogName() {
     return fieldName;

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
@@ -54,6 +55,7 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
    * @param filterVoter The filter voter.
    */
   public RequestDurationFilter(FilterVoter filterVoter) {
+    super();
     this.filterVoter = filterVoter;
   }
 
@@ -87,7 +89,7 @@ public class RequestDurationFilter extends AbstractGenericFilterBean {
     }
   }
 
-  @SuppressWarnings("try")
+  @SuppressWarnings({"try", "unused"})
   private static void logEnd(Long start) {
     if (start == null) {
       LOGGER.info("Could not read start timestamp from request!");

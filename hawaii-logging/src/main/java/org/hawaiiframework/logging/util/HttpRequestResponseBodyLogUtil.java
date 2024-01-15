@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -44,12 +45,13 @@ import org.springframework.http.client.ClientHttpResponse;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
+@SuppressWarnings("PMD.LooseCoupling")
 public class HttpRequestResponseBodyLogUtil {
 
   private static final Logger LOGGER = getLogger(HttpRequestResponseBodyLogUtil.class);
 
   /** The configured newline to look for. */
-  private static final String NEW_LINE = System.getProperty("line.separator");
+  private static final String NEW_LINE = System.lineSeparator();
 
   /** Masks passwords in json, xml and query strings. */
   private final PasswordMaskerUtil passwordMasker;
@@ -162,15 +164,15 @@ public class HttpRequestResponseBodyLogUtil {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
       String line = bufferedReader.readLine();
       while (line != null) {
-        inputStringBuilder.append(line);
-        inputStringBuilder.append(NEW_LINE);
+        inputStringBuilder.append(line)
+            .append(NEW_LINE);
         line = bufferedReader.readLine();
       }
-    } catch (HttpRetryException httpRetryException) {
+    } catch (HttpRetryException exception) {
       LOGGER.warn("Got retry exception.");
-      LOGGER.trace("Stacktrace is: ", httpRetryException);
-    } catch (IOException ex) {
-      LOGGER.warn("Could not get response body.", ex);
+      LOGGER.trace("Stacktrace is: ", exception);
+    } catch (IOException exception) {
+      LOGGER.warn("Could not get response body.", exception);
     }
 
     return inputStringBuilder.toString();

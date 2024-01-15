@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.sse;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -27,6 +28,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+/**
+ * SSE Emitter that logs what is emitted.
+ */
 public class LoggingSseEmitter extends SseEmitter {
 
   private static final Logger LOGGER = getLogger(LoggingSseEmitter.class);
@@ -34,13 +38,17 @@ public class LoggingSseEmitter extends SseEmitter {
   private final KibanaLogContext context;
   private final List<HttpMessageConverter<?>> converters;
 
+  /**
+   * Constructor with {@code converters} and a {@code context}.
+   */
   public LoggingSseEmitter(List<HttpMessageConverter<?>> converters, KibanaLogContext context) {
+    super();
     this.converters = converters;
     this.context = context;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"PMD.LawOfDemeter", "unchecked"})
   public void send(SseEventBuilder builder) throws IOException {
     LoggingSseHttpOutputMessage output = new LoggingSseHttpOutputMessage();
     for (DataWithMediaType dataWithMediaType : builder.build()) {

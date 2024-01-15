@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_TYPE;
@@ -47,6 +48,7 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
    * @param suppliers The transaction type suppliers.
    */
   public TransactionTypeFilter(List<TransactionTypeSupplier> suppliers) {
+    super();
     this.suppliers = suppliers;
   }
 

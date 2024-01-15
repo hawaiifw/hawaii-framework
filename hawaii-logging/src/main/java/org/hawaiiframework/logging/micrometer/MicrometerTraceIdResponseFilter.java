@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.micrometer;
 
 import io.micrometer.tracing.CurrentTraceContext;
@@ -53,6 +54,7 @@ public class MicrometerTraceIdResponseFilter extends AbstractGenericFilterBean {
    * @param tracer the tracer.
    */
   public MicrometerTraceIdResponseFilter(String headerName, Tracer tracer) {
+    super();
     this.headerName = Objects.toString(headerName, "traceid");
     this.tracer = tracer;
     LOGGER.info("Configured to use '{}'.", this.headerName);

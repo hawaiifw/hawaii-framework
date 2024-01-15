@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 import static java.util.Objects.requireNonNull;
@@ -132,8 +133,8 @@ public class MaskedPasswordBuilder {
    * @param index the index in the current buffer to append the masked password at.
    */
   public void maskPasswordAt(Integer index) {
-    result.append(stringToMask, lastAddedIndex, index);
-    result.append(MASKED_PASSWORD);
+    result.append(stringToMask, lastAddedIndex, index)
+        .append(MASKED_PASSWORD);
     lastAddedIndex = currentIndex;
   }
 

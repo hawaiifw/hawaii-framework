@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,10 +35,11 @@ import org.springframework.http.client.ClientHttpResponse;
  * @author Rutger Lubbers
  * @since 3.0.0
  */
+@SuppressWarnings("PMD.LooseCoupling")
 public class HttpRequestResponseHeadersLogUtil {
 
   /** The configured newline to look for. */
-  private static final String NEW_LINE = System.getProperty("line.separator");
+  private static final String NEW_LINE = System.lineSeparator();
 
   /** Masks passwords in json strings. */
   private final PasswordMaskerUtil passwordMasker;
@@ -100,6 +102,7 @@ public class HttpRequestResponseHeadersLogUtil {
     }
     return headers;
   }
+
   /**
    * Get call request headers. With password masking.
    *
@@ -136,10 +139,10 @@ public class HttpRequestResponseHeadersLogUtil {
     Collections.sort(headerNames);
 
     for (String headerName : headerNames) {
-      builder.append(headerName);
-      builder.append(": ");
-      builder.append(String.join(", ", headers.get(headerName)));
-      builder.append(NEW_LINE);
+      builder.append(headerName)
+          .append(": ")
+          .append(String.join(", ", headers.get(headerName)))
+          .append(NEW_LINE);
     }
   }
 }

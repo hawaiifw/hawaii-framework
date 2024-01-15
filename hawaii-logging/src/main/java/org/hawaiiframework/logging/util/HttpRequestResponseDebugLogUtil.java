@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 import static java.lang.String.format;
@@ -34,7 +35,7 @@ import org.springframework.http.HttpStatus;
 public class HttpRequestResponseDebugLogUtil {
 
   /** The configured newline to look for. */
-  private static final String NEW_LINE = System.getProperty("line.separator");
+  private static final String NEW_LINE = System.lineSeparator();
 
   /**
    * Create a request line for the {@code requestUri} and {@code protocol}.
@@ -49,15 +50,15 @@ public class HttpRequestResponseDebugLogUtil {
   private static String createLogString(String requestLine, String headers, String body) {
     StringBuilder builder = new StringBuilder();
     if (requestLine != null) {
-      builder.append(requestLine);
-      builder.append(NEW_LINE);
+      builder.append(requestLine)
+          .append(NEW_LINE);
     }
     if (headers != null && !headers.isEmpty()) {
       builder.append(headers);
     }
     if (body != null && !body.isEmpty()) {
-      builder.append(NEW_LINE);
-      builder.append(body);
+      builder.append(NEW_LINE)
+          .append(body);
     }
     String value = builder.toString();
 

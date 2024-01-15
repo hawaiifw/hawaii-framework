@@ -40,7 +40,7 @@ public final class SqlStatementLogging {
   }
 
   /**
-   * Is logging suppressed?
+   * Return {@code true} if the logging is suppressed.
    *
    * @return {@code true} if the logging is suppressed for this thread.
    */

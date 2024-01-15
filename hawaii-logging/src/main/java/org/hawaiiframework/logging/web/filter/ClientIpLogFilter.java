@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_IP;
@@ -47,6 +48,7 @@ public class ClientIpLogFilter extends AbstractGenericFilterBean {
    * @param clientIpResolver HostResolver for this class.
    */
   public ClientIpLogFilter(ClientIpResolver clientIpResolver) {
+    super();
     this.clientIpResolver = clientIpResolver;
   }
 

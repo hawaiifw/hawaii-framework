@@ -41,7 +41,7 @@ public final class HttpRequestLogging {
   }
 
   /**
-   * Is logging enabled?
+   * Return {@code true} if the logging is enabled.
    *
    * @return {@code true} if the logging is enabled for this thread.
    */
@@ -50,7 +50,7 @@ public final class HttpRequestLogging {
   }
 
   /**
-   * Is logging suppressed?
+   * Return {@code true} if the logging is suppressed.
    *
    * @return {@code true} if the logging is suppressed for this thread.
    */

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.model;
 
 import java.util.UUID;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public final class TransactionId {
 
   /** The thread local id. */
-  private static final ThreadLocal<UUID> ID = new InheritableThreadLocal<>();
+  private static final ThreadLocal<UUID> UUID_THREAD_LOCAL = new InheritableThreadLocal<>();
 
   private TransactionId() {
     // private constructor for utility class.
@@ -35,7 +36,7 @@ public final class TransactionId {
    */
   @SuppressWarnings("PMD.LawOfDemeter")
   public static String get() {
-    UUID uuid = ID.get();
+    UUID uuid = UUID_THREAD_LOCAL.get();
     if (uuid == null) {
       return null;
     }
@@ -48,11 +49,11 @@ public final class TransactionId {
    * @param value The UUID to set.
    */
   public static void set(UUID value) {
-    ID.set(value);
+    UUID_THREAD_LOCAL.set(value);
   }
 
   /** Clear the thread local. */
   public static void remove() {
-    ID.remove();
+    UUID_THREAD_LOCAL.remove();
   }
 }

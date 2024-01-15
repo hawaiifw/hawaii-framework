@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_ID;
@@ -53,6 +54,7 @@ public class TransactionIdFilter extends AbstractGenericFilterBean {
    * @param headerName the headerName to use for the Hawaii transaction id.
    */
   public TransactionIdFilter(String headerName) {
+    super();
     this.headerName = headerName;
   }
 

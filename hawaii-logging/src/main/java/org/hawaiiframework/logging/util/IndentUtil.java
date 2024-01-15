@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 /**
@@ -27,7 +28,7 @@ public final class IndentUtil {
   public static final String DEFAULT_INDENTATION = "  ";
 
   /** The configured newline to look for. */
-  private static final String NEW_LINE = System.getProperty("line.separator");
+  private static final String NEW_LINE = System.lineSeparator();
 
   private IndentUtil() {
     // Utility constructor.

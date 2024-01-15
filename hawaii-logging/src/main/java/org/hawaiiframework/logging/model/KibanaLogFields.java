@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.model;
 
 import static java.util.stream.Collectors.joining;
@@ -89,7 +90,9 @@ public final class KibanaLogFields {
       return tag(field, (String) null);
     }
     String value =
-        values.stream().map(s -> String.format("'%s'", s)).collect(joining(", ", "[", "]"));
+        values.stream()
+            .map(item -> String.format("'%s'", item))
+            .collect(joining(", ", "[", "]"));
     return tag(field, value);
   }
 
@@ -197,11 +200,11 @@ public final class KibanaLogFields {
         .forEach(
             (key, value) -> {
               if (!key.equals(KibanaLogFieldNames.LOG_TYPE.getLogName())) {
-                result.append(' ');
-                result.append(key);
-                result.append("=\"");
-                result.append(value);
-                result.append('"');
+                result.append(' ')
+                    .append(key)
+                    .append("=\"")
+                    .append(value)
+                    .append('"');
               }
             });
 

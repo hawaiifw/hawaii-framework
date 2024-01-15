@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.filter;
 
 import static java.util.UUID.randomUUID;
@@ -50,6 +51,7 @@ public class RequestIdFilter extends AbstractGenericFilterBean {
    * @param headerName the name of the header to store the Hawaii request id.
    */
   public RequestIdFilter(String headerName) {
+    super();
     this.headerName = headerName;
   }
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.http.client;
 
 import static org.hawaiiframework.logging.model.KibanaLogCallResultTypes.FAILURE;
@@ -58,6 +59,7 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
 
   /** {@inheritDoc} */
   @Override
+  @SuppressWarnings("PMD.AvoidCatchingThrowable")
   public ClientHttpResponse intercept(
       HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
     try {
@@ -69,19 +71,19 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
         hawaiiRequestResponseLogger.logResponse(response);
       }
       return response;
-    } catch (IOException t) {
+    } catch (IOException exception) {
       /*
        * We should detect a time-out properly. Most likely this _is_ a timeout, however, this is not certain.
        */
       KibanaLogFields.tag(CALL_STATUS, TIMEOUT);
       KibanaLogFields.tag(LOG_TYPE, CALL_END);
-      LOGGER.info("Got IO exception during call, most likely a timeout from backend.", t);
-      throw t;
-    } catch (Throwable t) {
+      LOGGER.info("Got IO exception during call, most likely a timeout from backend.", exception);
+      throw exception;
+    } catch (Throwable throwable) {
       KibanaLogFields.tag(CALL_STATUS, FAILURE);
       KibanaLogFields.tag(LOG_TYPE, CALL_END);
-      LOGGER.info("Got exception during call, most likely a configuration issue.", t);
-      throw t;
+      LOGGER.info("Got exception during call, most likely a configuration issue.", throwable);
+      throw throwable;
     } finally {
       KibanaLogFields.clear(CALL_STATUS, LOG_TYPE);
     }

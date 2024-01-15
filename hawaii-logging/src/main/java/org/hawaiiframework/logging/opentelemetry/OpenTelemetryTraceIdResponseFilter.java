@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.opentelemetry;
 
 import io.opentelemetry.api.trace.Span;
@@ -48,6 +49,7 @@ public class OpenTelemetryTraceIdResponseFilter extends AbstractGenericFilterBea
    * @param headerName the name of the header to response with.
    */
   public OpenTelemetryTraceIdResponseFilter(String headerName) {
+    super();
     this.headerName = Objects.toString(headerName, "traceid");
     LOGGER.info("Configured to use '{}'.", this.headerName);
   }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 /**
@@ -26,7 +27,7 @@ package org.hawaiiframework.logging.util;
 public interface PasswordMasker {
 
   /**
-   * Did the masked find a match and could it be masked?
+   * Check if the builder matches the pattern could be masked.
    *
    * @param builder a "string builder" that builds a string without the password fields.
    * @return whether some masking has been done.

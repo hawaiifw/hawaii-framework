@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 import static java.util.UUID.randomUUID;
@@ -51,8 +52,8 @@ public class UuidResolver {
       LOGGER.trace("Found header '{}' with value '{}' in request.", headerName, txIdHeader);
       try {
         uuid = UUID.fromString(txIdHeader);
-      } catch (IllegalArgumentException e) {
-        LOGGER.error("Could not create UUID from header.", e);
+      } catch (IllegalArgumentException exception) {
+        LOGGER.error("Could not create UUID from header.", exception);
       }
     }
 

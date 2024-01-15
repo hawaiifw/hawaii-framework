@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.util;
 
 /**
@@ -24,11 +25,11 @@ package org.hawaiiframework.logging.util;
 public class XmlAttributePasswordMasker implements PasswordMasker {
 
   /** Constant for start of XML tag. */
-  @SuppressWarnings("PMD.ShortVariable")
+  @SuppressWarnings({"PMD.ShortMethodName", "PMD.ShortVariable"})
   private static final Character LT = '<';
 
   /** Constant for end of XML tag. */
-  @SuppressWarnings("PMD.ShortVariable")
+  @SuppressWarnings({"PMD.ShortMethodName", "PMD.ShortVariable"})
   private static final Character GT = '>';
 
   /** {@inheritDoc} */

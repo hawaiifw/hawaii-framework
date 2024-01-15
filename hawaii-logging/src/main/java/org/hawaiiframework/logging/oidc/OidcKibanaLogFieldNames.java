@@ -39,15 +39,14 @@ public enum OidcKibanaLogFieldNames implements KibanaLogField {
   private final String fieldName;
 
   /**
-   * @param fieldName the kibana log's field name..
+   * The constructor.
+   *
+   * @param fieldName the kibana log's field name.
    */
   OidcKibanaLogFieldNames(String fieldName) {
     this.fieldName = fieldName;
   }
 
-  /**
-   * @return the kibana log's field name.
-   */
   @Override
   public String getLogName() {
     return fieldName;

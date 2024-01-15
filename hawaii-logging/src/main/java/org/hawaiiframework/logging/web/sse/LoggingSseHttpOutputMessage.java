@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.hawaiiframework.logging.web.sse;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -23,6 +24,9 @@ import java.io.OutputStream;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpOutputMessage;
 
+/**
+ * An SSE message for logging.
+ */
 public class LoggingSseHttpOutputMessage implements HttpOutputMessage {
 
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -37,6 +41,9 @@ public class LoggingSseHttpOutputMessage implements HttpOutputMessage {
     return new HttpHeaders();
   }
 
+  /**
+   * Get the message's copntents.
+   */
   public String getContents() {
     return outputStream.toString(UTF_8);
   }

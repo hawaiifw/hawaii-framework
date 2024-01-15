@@ -29,6 +29,7 @@ public final class FilterRegistrationBeanUtil {
 
   private static final Logger LOGGER = getLogger(FilterRegistrationBeanUtil.class);
 
+  @SuppressWarnings("PMD.LooseCoupling")
   private static final EnumSet<DispatcherType> ALL_DISPATCHER_TYPES =
       EnumSet.allOf(DispatcherType.class);
 
@@ -59,6 +60,7 @@ public final class FilterRegistrationBeanUtil {
    * @param <T> the specific filter type.
    * @return the filter registration.
    */
+  @SuppressWarnings("PMD.LooseCoupling")
   public static <T extends Filter> FilterRegistrationBean<T> createFilterRegistrationBean(
       T filter, int filterOrder, EnumSet<DispatcherType> dispatcherTypes) {
     LOGGER.trace("Setting filter order for '{}' to '{}'.", filter, filterOrder);

@@ -68,9 +68,9 @@ public class OidcLogFilter extends AbstractGenericFilterBean {
         KibanaLogFields.tag(AUDIENCE, claimsSet.getAudience());
         KibanaLogFields.tag(AUTHORIZED_PARTY, claimsSet.getStringClaim("azp"));
         KibanaLogFields.tag(USER_ID, claimsSet.getStringClaim("user_id"));
-      } catch (ParseException e) {
+      } catch (ParseException exception) {
         // Invalid plain JWT encoding
-        LOGGER.warn("Caught exception parsing JWT.", e);
+        LOGGER.warn("Caught exception parsing JWT.", exception);
       }
     }
 
