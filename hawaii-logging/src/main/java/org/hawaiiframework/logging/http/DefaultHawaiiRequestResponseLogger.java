@@ -219,8 +219,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     try {
       KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.RESPONSE_BODY);
 
-      HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
-      KibanaLogFields.tag(TX_STATUS, httpStatus.value());
+      HttpStatus httpStatus = addHttpStatusTag(wrappedResponse);
 
       int contentLength = wrappedResponse.getContentSize();
       KibanaLogFields.tag(TX_RESPONSE_SIZE, contentLength);
@@ -298,6 +297,16 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
       KibanaLogFields.tag(tag, responseBody);
     } else {
       KibanaLogFields.tag(tag, "invalid mime type for logging");
+    }
+  }
+
+  private static HttpStatus addHttpStatusTag(ContentCachingWrappedResponse wrappedResponse) {
+    if(KibanaLogFields.get(TX_STATUS) == null){
+      HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
+      KibanaLogFields.tag(TX_STATUS, httpStatus.value());
+      return httpStatus;
+    } else {
+      return HttpStatus.valueOf(KibanaLogFields.get(TX_STATUS));
     }
   }
 
