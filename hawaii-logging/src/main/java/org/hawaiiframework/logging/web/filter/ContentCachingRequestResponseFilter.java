@@ -21,6 +21,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.hawaiiframework.logging.model.MockMvcFilter;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
@@ -30,7 +31,8 @@ import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
  *
  * @author Rutger Lubbers
  */
-public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBean {
+public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBean
+    implements MockMvcFilter {
 
   @Override
   protected void doFilterInternal(

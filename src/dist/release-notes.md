@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 6.0.0.M8
+* Added a marker interface for filters used in Mock MVC tests.
+
 ## 6.0.0.M7
 * Upgrade to Spring Boot 3.2.x
 * Adopt Google Code Standard
