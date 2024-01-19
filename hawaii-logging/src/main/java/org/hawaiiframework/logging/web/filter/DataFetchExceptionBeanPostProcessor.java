@@ -18,9 +18,9 @@ package org.hawaiiframework.logging.web.filter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.hawaiiframework.logging.web.util.DataFetchTypeInterceptor;
-import org.springframework.aop.framework.ProxyFactory;
+import org.hawaiiframework.logging.web.util.KibanaDataFetcherExceptionResolver;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 
 /**
@@ -35,11 +35,8 @@ public class DataFetchExceptionBeanPostProcessor implements BeanPostProcessor {
   @Override
   public Object postProcessAfterInitialization(@Nonnull Object bean,
       @Nullable String ignored) {
-    if (bean instanceof DataFetcherExceptionResolverAdapter) {
-      ProxyFactory factory = new ProxyFactory(bean);
-      factory.setProxyTargetClass(true);
-      factory.addAdvice(new DataFetchTypeInterceptor());
-      return factory.getProxy();
+    if (bean instanceof DataFetcherExceptionResolver delegate) {
+      return new KibanaDataFetcherExceptionResolver(delegate);
     }
     return bean;
   }

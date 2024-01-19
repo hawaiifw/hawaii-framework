@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Import;
 @Import({
   CxfLoggingConfiguration.class,
   DataSourceProxyConfiguration.class,
+  GraphqlConfiguration.class,
   HawaiiLoggingFilterConfiguration.class,
   ScheduledConfiguration.class,
   StatementLoggerQueryExecutionListenerConfiguration.class

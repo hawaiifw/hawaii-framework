@@ -74,6 +74,9 @@ public enum KibanaLogFieldNames implements KibanaLogField {
   /** The transaction status. */
   TX_STATUS("tx_status"),
 
+  /** The HTTP status. */
+  HTTP_STATUS("http_status"),
+
   /** The call id. */
   CALL_ID("call_id"),
   /** The call type. */

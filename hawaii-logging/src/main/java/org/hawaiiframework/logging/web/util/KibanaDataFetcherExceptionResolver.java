@@ -21,17 +21,14 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_STATUS;
 import graphql.ErrorClassification;
 import graphql.GraphQLError;
 import graphql.schema.DataFetchingEnvironment;
-import java.lang.reflect.Method;
 import java.util.List;
-import javax.annotation.Nonnull;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.graphql.execution.ErrorType;
 import reactor.core.publisher.Mono;
 
 /**
- * The data fetch type interceptor. Will translate the graphQl errors to error codes and add this to
+ * The kibana data fetch exception resolver adapter. Will translate the graphQl errors to error codes and add this to
  * the logging as {@code TX_STATUS}.
  *
  * <p>This wont intercept the default graphQl schema validation errors because these are caught early on in
@@ -40,7 +37,16 @@ import reactor.core.publisher.Mono;
  * @author Giuseppe Collura
  * @since 6.0.0
  */
-public class DataFetchTypeInterceptor implements MethodInterceptor {
+public class KibanaDataFetcherExceptionResolver implements DataFetcherExceptionResolver {
+
+  private final DataFetcherExceptionResolver delegate;
+
+  /**
+   * The constructor.
+   */
+  public KibanaDataFetcherExceptionResolver(DataFetcherExceptionResolver delegate) {
+    this.delegate = delegate;
+  }
 
   /**
    * Convert {@link ErrorClassification} into an error code.
@@ -70,15 +76,9 @@ public class DataFetchTypeInterceptor implements MethodInterceptor {
   }
 
   @Override
-  @SuppressWarnings({"PMD.LawOfDemeter", "unchecked"})
-  public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
-    Method method = invocation.getMethod().getDeclaringClass()
-        .getMethod("resolveException", Throwable.class,
-            DataFetchingEnvironment.class);
-
-    Mono<List<GraphQLError>> monoErrors = (Mono<List<GraphQLError>>) method.invoke(
-        invocation.getThis(),
-        invocation.getArguments());
+  public Mono<List<GraphQLError>> resolveException(Throwable exception,
+      DataFetchingEnvironment environment) {
+    Mono<List<GraphQLError>> monoErrors = delegate.resolveException(exception, environment);
     List<GraphQLError> errors = monoErrors.block();
 
     if (errors != null && !errors.isEmpty()) {
@@ -86,7 +86,7 @@ public class DataFetchTypeInterceptor implements MethodInterceptor {
       Integer errorCode = convertToErrorCode(errorType);
       setTransactionStatus(errorCode);
     }
-    return invocation.proceed();
-  }
 
+    return monoErrors;
+  }
 }

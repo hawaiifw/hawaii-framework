@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package org.hawaiiframework.logging.config.filter;
+package org.hawaiiframework.logging.config;
 
 import static org.hawaiiframework.logging.config.filter.TransactionTypeFilterConfiguration.CONFIG_PREFIX;
-import static org.slf4j.LoggerFactory.getLogger;
 
+import graphql.GraphQL;
 import org.hawaiiframework.logging.web.filter.DataFetchExceptionBeanPostProcessor;
 import org.hawaiiframework.logging.web.util.GraphQlTransactionTypeSupplier;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
+import org.springframework.graphql.execution.GraphQlSource;
 
 /** Configures the {@link GraphQlTransactionTypeSupplier} and the {@link DataFetchExceptionBeanPostProcessor}. */
 @Configuration
+@ConditionalOnClass({ GraphQL.class, GraphQlSource.class })
 @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-public class GraphqlFilterConfiguration {
+public class GraphqlConfiguration {
 
   /** The configuration properties' prefix. */
-  public static final String CONFIG_PREFIX = "hawaii.logging.filters.graphQl";
-
-  private static final Logger LOGGER = getLogger(GraphqlFilterConfiguration.class);
-
-  @Value("${" + CONFIG_PREFIX + ".order:-1000}")
-  private int filterOrder;
+  public static final String CONFIG_PREFIX = "hawaii.logging.graphql";
 
   /**
    * Create a data fetch exception bean post processor that wraps
@@ -61,7 +57,6 @@ public class GraphqlFilterConfiguration {
   @Bean
   @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
   public GraphQlTransactionTypeSupplier graphQlTransactionTypeSupplier() {
-    LOGGER.trace("Configuration: order '{}'.", filterOrder);
     return new GraphQlTransactionTypeSupplier();
   }
 
