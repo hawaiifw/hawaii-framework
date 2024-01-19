@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.hawaiiframework.logging.model.MockMvcFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class KibanaLogCleanupFilter extends AbstractGenericFilterBean {
+public class KibanaLogCleanupFilter extends AbstractGenericFilterBean implements MockMvcFilter {
 
   /** The Logger. */
   private static final Logger LOGGER = LoggerFactory.getLogger(KibanaLogCleanupFilter.class);

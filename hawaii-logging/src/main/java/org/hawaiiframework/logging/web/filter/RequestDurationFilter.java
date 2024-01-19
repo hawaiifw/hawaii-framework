@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.hawaiiframework.logging.model.MockMvcFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class RequestDurationFilter extends AbstractGenericFilterBean {
+public class RequestDurationFilter extends AbstractGenericFilterBean implements MockMvcFilter {
 
   /** The Logger. */
   private static final Logger LOGGER = LoggerFactory.getLogger(RequestDurationFilter.class);

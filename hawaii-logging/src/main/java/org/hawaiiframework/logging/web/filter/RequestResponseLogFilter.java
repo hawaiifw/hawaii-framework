@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.hawaiiframework.logging.config.FilterVoter;
 import org.hawaiiframework.logging.http.HawaiiRequestResponseLogger;
+import org.hawaiiframework.logging.model.MockMvcFilter;
 import org.hawaiiframework.logging.web.util.ContentCachingWrappedResponse;
 import org.hawaiiframework.logging.web.util.ResettableHttpServletRequest;
 import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
@@ -36,7 +37,7 @@ import org.hawaiiframework.logging.web.util.WrappedHttpRequestResponse;
  * @author Rutger Lubbers
  * @since 2.0.0
  */
-public class RequestResponseLogFilter extends AbstractGenericFilterBean {
+public class RequestResponseLogFilter extends AbstractGenericFilterBean implements MockMvcFilter {
 
   /** The request response logger to use. */
   private final HawaiiRequestResponseLogger hawaiiLogger;
