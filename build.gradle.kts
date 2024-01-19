@@ -82,6 +82,8 @@ subprojects {
     }
 
     tasks.withType<JavaCompile> {
+        dependsOn("spotlessApply")
+
         options.encoding = Charsets.UTF_8.name()
 
         options.isDeprecation = true
@@ -202,7 +204,6 @@ subprojects {
     spotless {
         java {
             googleJavaFormat()
-            // custom("replace Javax", { it.replace("import javax.", "import jakarta.") })
         }
     }
     project.tasks["spotlessJavaCheck"].enabled = false
