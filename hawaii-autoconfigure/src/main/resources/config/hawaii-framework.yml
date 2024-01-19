@@ -80,6 +80,10 @@ hawaii:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true
         order: -1000
+      graphQl:
+        # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+        enabled: true
+        order: -1000
       request-response:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: true

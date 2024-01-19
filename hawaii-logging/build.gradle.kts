@@ -16,6 +16,7 @@ dependencies {
     compileOnly("org.apache.cxf:cxf-rt-features-logging:${project.extra["apacheCxfVersion"]}")
     compileOnly("org.aspectj:aspectjrt")
     compileOnly("org.springframework.cloud:spring-cloud-context:${project.extra["springCloudVersion"]}")
+    compileOnly("org.springframework.boot:spring-boot-starter-graphql")
     compileOnly("org.springframework.security:spring-security-core")
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("net.ttddyy:datasource-proxy:${project.extra["dataSourceProxyVersion"]}")
@@ -23,6 +24,7 @@ dependencies {
     compileOnly("com.nimbusds:nimbus-jose-jwt:${project.extra["nimbusJoseJwtVersion"]}")
     compileOnly("org.json:json:${project.extra["orgJsonVersion"]}")
     compileOnly("com.graphql-java:graphql-java:${project.extra["graphqlJavaVersion"]}")
+
 
     testImplementation("jakarta.servlet:jakarta.servlet-api")
     testImplementation("org.apache.commons:commons-text:${project.extra["commonsTextVersion"]}")

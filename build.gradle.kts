@@ -1,5 +1,4 @@
 import net.ltgt.gradle.errorprone.errorprone
-import com.diffplug.gradle.spotless.SpotlessTask
 import java.util.*
 
 plugins {
@@ -54,7 +53,7 @@ subprojects {
         extra.set("orgJsonVersion", "20231013")
         extra.set("springCloudVersion", "4.1.0")
         extra.set("validationApiVersion", "3.0.2")
-        extra.set("graphqlJavaVersion", "20.2")
+        extra.set("graphqlJavaVersion", "21.0")
     }
 
     val checkstyleVersion = "10.12.7"

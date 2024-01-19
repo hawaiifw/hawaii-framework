@@ -22,7 +22,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.List;
 import org.hawaiiframework.logging.web.filter.TransactionTypeFilter;
-import org.hawaiiframework.logging.web.util.GraphQlTransactionTypeSupplier;
 import org.hawaiiframework.logging.web.util.SpringMvcTransactionTypeSupplier;
 import org.hawaiiframework.logging.web.util.TransactionTypeSupplier;
 import org.slf4j.Logger;
@@ -71,17 +70,6 @@ public class TransactionTypeFilterConfiguration {
   public SpringMvcTransactionTypeSupplier springMvcTransactionTypeSupplier(
       ApplicationContext applicationContext) {
     return new SpringMvcTransactionTypeSupplier(applicationContext);
-  }
-
-  /**
-   * Create the {@link GraphQlTransactionTypeSupplier} bean.
-   *
-   * @return the {@link GraphQlTransactionTypeSupplier} bean.
-   */
-  @Bean
-  @ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
-  public GraphQlTransactionTypeSupplier graphQlTransactionTypeSupplier() {
-    return new GraphQlTransactionTypeSupplier();
   }
 
   /**

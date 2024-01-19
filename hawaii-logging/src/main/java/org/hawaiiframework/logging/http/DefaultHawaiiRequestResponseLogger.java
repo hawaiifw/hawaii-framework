@@ -219,7 +219,6 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
     try {
       KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.RESPONSE_BODY);
 
-      HttpStatus httpStatus = addHttpStatusTag(wrappedResponse);
 
       int contentLength = wrappedResponse.getContentSize();
       KibanaLogFields.tag(TX_RESPONSE_SIZE, contentLength);
@@ -233,6 +232,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
       addBodyTag(contentTypeCanBeLogged, TX_RESPONSE_BODY, responseBody);
 
       String requestUri = servletRequest.getRequestURI();
+      HttpStatus httpStatus = addHttpStatusTag(wrappedResponse);
       LOGGER.info(
           "Response '{}' is '{}' with content type '{}' and size of '{}' bytes.",
           requestUri,
@@ -301,12 +301,12 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
   }
 
   private static HttpStatus addHttpStatusTag(ContentCachingWrappedResponse wrappedResponse) {
-    if(KibanaLogFields.get(TX_STATUS) == null){
+    if (KibanaLogFields.get(TX_STATUS) == null) {
       HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
       KibanaLogFields.tag(TX_STATUS, httpStatus.value());
       return httpStatus;
     } else {
-      return HttpStatus.valueOf(KibanaLogFields.get(TX_STATUS));
+      return HttpStatus.valueOf(Integer.parseInt(KibanaLogFields.get(TX_STATUS)));
     }
   }
 
