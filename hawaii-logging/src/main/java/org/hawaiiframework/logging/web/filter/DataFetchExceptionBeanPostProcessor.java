@@ -16,27 +16,35 @@
 
 package org.hawaiiframework.logging.web.filter;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.hawaiiframework.logging.web.util.GraphQlHttpStatusSupplier;
 import org.hawaiiframework.logging.web.util.KibanaDataFetcherExceptionResolver;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter;
 
 /**
- * Data fetch bean post processor. Will create a wrapper around
- * {@link DataFetcherExceptionResolverAdapter}s to extract the graphQl error codes if present.
+ * Data fetch bean post processor. Will create a wrapper around {@link
+ * DataFetcherExceptionResolverAdapter}s to extract the graphQl error codes if present.
  *
  * @author Giuseppe Collura
  * @since 6.0.0
  */
 public class DataFetchExceptionBeanPostProcessor implements BeanPostProcessor {
 
+  private final List<GraphQlHttpStatusSupplier> suppliers;
+
+  /** The constructor. */
+  public DataFetchExceptionBeanPostProcessor(List<GraphQlHttpStatusSupplier> suppliers) {
+    this.suppliers = suppliers;
+  }
+
   @Override
-  public Object postProcessAfterInitialization(@Nonnull Object bean,
-      @Nullable String ignored) {
+  public Object postProcessAfterInitialization(@Nonnull Object bean, @Nullable String ignored) {
     if (bean instanceof DataFetcherExceptionResolver delegate) {
-      return new KibanaDataFetcherExceptionResolver(delegate);
+      return new KibanaDataFetcherExceptionResolver(delegate, suppliers);
     }
     return bean;
   }

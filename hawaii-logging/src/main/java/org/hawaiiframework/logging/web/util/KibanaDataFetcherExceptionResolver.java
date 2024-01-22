@@ -17,35 +17,41 @@
 package org.hawaiiframework.logging.web.util;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_STATUS;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import graphql.ErrorClassification;
 import graphql.GraphQLError;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import org.hawaiiframework.logging.model.KibanaLogFields;
+import org.slf4j.Logger;
 import org.springframework.graphql.execution.DataFetcherExceptionResolver;
-import org.springframework.graphql.execution.ErrorType;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 /**
- * The kibana data fetch exception resolver adapter. Will translate the graphQl errors to error codes and add this to
- * the logging as {@code TX_STATUS}.
+ * The kibana data fetch exception resolver adapter. Will translate the graphQl errors to error
+ * codes and add this to the logging as {@code TX_STATUS}.
  *
- * <p>This wont intercept the default graphQl schema validation errors because these are caught early on in
- * the request.</p>
+ * <p>This wont intercept the default graphQl schema validation errors because these are caught
+ * early on in the request.
  *
  * @author Giuseppe Collura
  * @since 6.0.0
  */
 public class KibanaDataFetcherExceptionResolver implements DataFetcherExceptionResolver {
 
+  private static final Logger LOGGER = getLogger(KibanaDataFetcherExceptionResolver.class);
+
   private final DataFetcherExceptionResolver delegate;
 
-  /**
-   * The constructor.
-   */
-  public KibanaDataFetcherExceptionResolver(DataFetcherExceptionResolver delegate) {
+  private final List<GraphQlHttpStatusSupplier> suppliers;
+
+  /** The constructor. */
+  public KibanaDataFetcherExceptionResolver(
+      DataFetcherExceptionResolver delegate, List<GraphQlHttpStatusSupplier> suppliers) {
     this.delegate = delegate;
+    this.suppliers = suppliers;
   }
 
   /**
@@ -54,37 +60,29 @@ public class KibanaDataFetcherExceptionResolver implements DataFetcherExceptionR
    * @param errorClassification The error classification.
    * @return the, possibly {@code null}, error code.
    */
-  private static Integer convertToErrorCode(ErrorClassification errorClassification) {
-    if (errorClassification instanceof ErrorType errorType) {
-      return switch (errorType) {
-        case NOT_FOUND -> 404;
-        case INTERNAL_ERROR -> 500;
-        case BAD_REQUEST -> 400;
-        case FORBIDDEN -> 403;
-        case UNAUTHORIZED -> 401;
-      };
+  private HttpStatus convertToErrorCode(ErrorClassification errorClassification) {
+    for (GraphQlHttpStatusSupplier supplier : suppliers) {
+      HttpStatus status = supplier.getStatus(errorClassification);
+      if (status != null) {
+        return status;
+      }
     }
 
-    // There is an error, but we can't identify the error type.
-    return 400;
-  }
-
-  private static void setTransactionStatus(Integer statusCode) {
-    if (statusCode != null) {
-      KibanaLogFields.tag(TX_STATUS, statusCode);
-    }
+    LOGGER.info(
+        "Could not identify the HTTP status based on the graphQl error `{}`.", errorClassification);
+    return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 
   @Override
-  public Mono<List<GraphQLError>> resolveException(Throwable exception,
-      DataFetchingEnvironment environment) {
+  public Mono<List<GraphQLError>> resolveException(
+      Throwable exception, DataFetchingEnvironment environment) {
     Mono<List<GraphQLError>> monoErrors = delegate.resolveException(exception, environment);
     List<GraphQLError> errors = monoErrors.block();
 
     if (errors != null && !errors.isEmpty()) {
       ErrorClassification errorType = errors.get(0).getErrorType();
-      Integer errorCode = convertToErrorCode(errorType);
-      setTransactionStatus(errorCode);
+      HttpStatus errorCode = convertToErrorCode(errorType);
+      KibanaLogFields.tag(TX_STATUS, errorCode);
     }
 
     return monoErrors;
