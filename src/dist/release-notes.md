@@ -1,5 +1,10 @@
 # Release Notes #
 
+## 6.0.0.M9
+* Made graphQl support configurable
+* Added kibana data fetch exception resolver to convert the error codes and add them to the `KibanaLogFields`
+* Added graphQl error to http status suppliers
+
 ## 6.0.0.M8
 * Added a marker interface for filters used in Mock MVC tests.
 

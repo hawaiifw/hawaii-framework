@@ -138,12 +138,12 @@ public abstract class AbstractCachingSqlQueryResolver implements SqlQueryResolve
    * <p>Note, setting this to anything other than -1 only makes sense if the queries are loaded from
    * a source other than the classpath.
    *
-   * <p><ul>
-   *   <li>Default is "-1", indicating to cache forever.
-   *   <li>A positive number will cache a query for the given number of seconds. This is essentially
-   *       the interval between refresh checks.
-   *   <li>A value of "0" will check for expiry on each query access!
-   * </ul>
+   * <p>Default is "-1", indicating to cache forever.
+   *
+   * <p>A positive number will cache a query for the given number of seconds. This is essentially
+   * the interval between refresh checks.
+   *
+   * <p>A value of "0" will check for expiry on each query access!
    */
   public void setCacheSeconds(int cacheSeconds) {
     this.cacheMillis = 1_000L * cacheSeconds;

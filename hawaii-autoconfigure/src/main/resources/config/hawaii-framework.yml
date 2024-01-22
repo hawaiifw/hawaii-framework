@@ -113,6 +113,9 @@ hawaii:
         # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
         enabled: false
         order: 200
+    graphql:
+      # Must set explicitly to false if not required. If the property is not present, the default is "enabled = true".
+      enabled: true
     scheduled:
       enabled: true
   time:

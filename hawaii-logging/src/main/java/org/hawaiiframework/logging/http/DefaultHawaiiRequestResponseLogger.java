@@ -27,6 +27,7 @@ import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_RESPONS
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_RESPONSE_HEADERS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_RESPONSE_SIZE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_STATUS;
+import static org.hawaiiframework.logging.model.KibanaLogFieldNames.HTTP_STATUS;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_BODY;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_REQUEST_HEADERS;
@@ -220,7 +221,11 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
       KibanaLogFields.tag(LOG_TYPE, KibanaLogTypeNames.RESPONSE_BODY);
 
       HttpStatus httpStatus = HttpStatus.valueOf(wrappedResponse.getStatus());
-      KibanaLogFields.tag(TX_STATUS, httpStatus.value());
+      KibanaLogFields.tag(HTTP_STATUS, httpStatus.value());
+
+      if (KibanaLogFields.get(TX_STATUS) == null) {
+        KibanaLogFields.tag(TX_STATUS, httpStatus);
+      }
 
       int contentLength = wrappedResponse.getContentSize();
       KibanaLogFields.tag(TX_RESPONSE_SIZE, contentLength);
@@ -234,6 +239,7 @@ public class DefaultHawaiiRequestResponseLogger implements HawaiiRequestResponse
       addBodyTag(contentTypeCanBeLogged, TX_RESPONSE_BODY, responseBody);
 
       String requestUri = servletRequest.getRequestURI();
+
       LOGGER.info(
           "Response '{}' is '{}' with content type '{}' and size of '{}' bytes.",
           requestUri,
