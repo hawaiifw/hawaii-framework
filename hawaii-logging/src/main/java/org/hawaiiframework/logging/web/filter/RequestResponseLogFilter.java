@@ -87,7 +87,7 @@ public class RequestResponseLogFilter extends AbstractGenericFilterBean implemen
   private void logResponse(WrappedHttpRequestResponse wrapped) throws IOException {
     if (wrapped != null) {
       ResettableHttpServletRequest request = wrapped.request();
-      if (!request.isAsyncStarted() && filterVoter.enabled(request)) {
+      if (!isAsyncStarted(request) && filterVoter.enabled(request)) {
         ContentCachingWrappedResponse response = wrapped.response();
         if (response != null) {
           hawaiiLogger.logResponse(request, response);

@@ -76,7 +76,7 @@ public class RequestDurationFilter extends AbstractGenericFilterBean implements 
   }
 
   private void logEnd(HttpServletRequest request) {
-    if (!request.isAsyncStarted() && filterVoter.enabled(request)) {
+    if (!isAsyncStarted(request) && filterVoter.enabled(request)) {
       logEnd((Long) request.getAttribute(START_TIMESTAMP));
     }
   }
