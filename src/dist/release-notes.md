@@ -1,6 +1,6 @@
 # Release Notes #
 
-## 6.0.0-M10-SNAPSHOT
+## 6.0.0-M10
 * Fix to use correct property in Kibana Log Cleanup Filter configuration 
 
 ## 6.0.0.M9
