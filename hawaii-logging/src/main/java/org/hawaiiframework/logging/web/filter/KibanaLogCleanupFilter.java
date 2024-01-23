@@ -44,7 +44,7 @@ public class KibanaLogCleanupFilter extends AbstractGenericFilterBean implements
     try {
       filterChain.doFilter(request, response);
     } finally {
-      LOGGER.info("Clearing Kibana log fields.");
+      LOGGER.trace("Clearing Kibana log fields.");
       KibanaLogFields.clear();
     }
   }
