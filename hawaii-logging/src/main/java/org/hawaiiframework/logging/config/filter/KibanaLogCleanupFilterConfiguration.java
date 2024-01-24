@@ -17,6 +17,7 @@
 package org.hawaiiframework.logging.config.filter;
 
 import static org.hawaiiframework.logging.config.filter.FilterRegistrationBeanUtil.createFilterRegistrationBean;
+import static org.hawaiiframework.logging.config.filter.KibanaLogCleanupFilterConfiguration.CONFIG_PREFIX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.hawaiiframework.logging.web.filter.KibanaLogCleanupFilter;
@@ -29,10 +30,7 @@ import org.springframework.context.annotation.Configuration;
 
 /** Configures the {@link KibanaLogCleanupFilter}. */
 @Configuration
-@ConditionalOnProperty(
-    prefix = ContainerNameHttpHeaderFilterConfiguration.CONFIG_PREFIX,
-    name = "enabled",
-    matchIfMissing = true)
+@ConditionalOnProperty(prefix = CONFIG_PREFIX, name = "enabled", matchIfMissing = true)
 public class KibanaLogCleanupFilterConfiguration {
 
   /** The configuration properties' prefix. */

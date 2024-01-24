@@ -38,7 +38,7 @@ subprojects {
     project.group = "org.hawaiiframework"
 
     buildscript {
-        extra.set("springBootVersion", "3.2.1")
+        extra.set("springBootVersion", "3.2.2")
         extra.set("apacheCxfVersion", "4.0.3")
         extra.set("bouncycastleVersion", "1.77")
         extra.set("commonsIoVersion", "2.15.1")
