@@ -121,8 +121,9 @@ public final class KibanaTxWrapper {
   @SuppressWarnings({"try", "unused"})
   private static void logEnd(long startTime) {
     String duration = format("%.2f", (System.nanoTime() - startTime) / 1E6);
-    try (AutoCloseableKibanaLogField endTag = tagCloseable(LOG_TYPE, END);
-        AutoCloseableKibanaLogField durationTag = tagCloseable(TX_DURATION, duration)) {
+    try (AutoCloseableKibanaLogField closeable =
+        tagCloseable(LOG_TYPE, END)
+            .and(TX_DURATION, duration)) {
       LOGGER.info("Duration '{}' ms.", duration);
     }
   }

@@ -124,7 +124,7 @@ public final class KibanaLogFields {
    * @return a closable field.
    */
   public static AutoCloseableKibanaLogField tagCloseable(KibanaLogField field, String value) {
-    return new AutoCloseableKibanaLogField(tag(field, value));
+    return new AutoCloseableKibanaLogFieldImpl(tag(field, value));
   }
 
   /**
@@ -136,7 +136,7 @@ public final class KibanaLogFields {
    */
   public static AutoCloseableKibanaLogField tagCloseable(
       KibanaLogField field, Collection<String> values) {
-    return new AutoCloseableKibanaLogField(tag(field, values));
+    return new AutoCloseableKibanaLogFieldImpl(tag(field, values));
   }
 
   /**

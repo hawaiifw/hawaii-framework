@@ -1,37 +1,60 @@
 package org.hawaiiframework.logging.model;
 
-/**
- * A wrapper around a KibanaLogField where the field is closeable.
- *
- * <p>Closing the field will remove the field (and it's value) from the KibanaLogFields, so further
- * logging will not be marked with the field.
- */
-public class AutoCloseableKibanaLogField implements KibanaLogField, AutoCloseable {
+import static org.hawaiiframework.logging.model.KibanaLogFields.tagCloseable;
 
-  /** The delegate log field to close. */
-  private final KibanaLogField delegate;
+import java.util.Collection;
+
+/** A wrapper around a multiKibanaLogField where the field is closeable. */
+public interface AutoCloseableKibanaLogField extends KibanaLogField, AutoCloseable {
 
   /**
-   * The constructor.
+   * Chain the closeable.
    *
-   * @param delegate The delegate log field to close.
+   * @param field The field to set.
+   * @param value The value to set.
+   * @return a closable field.
    */
-  public AutoCloseableKibanaLogField(KibanaLogField delegate) {
-    this.delegate = delegate;
+  default AutoCloseableKibanaLogField and(KibanaLogField field, Enum<?> value) {
+    AutoCloseableKibanaLogField other = tagCloseable(field, value);
+    return new CompoundAutocloseableKibanaLogField(this, other);
+  }
+
+  /**
+   * Chain the closeable.
+   *
+   * @param field The field to set.
+   * @param value The value to set.
+   * @return a closable field.
+   */
+  default AutoCloseableKibanaLogField and(KibanaLogField field, int value) {
+    AutoCloseableKibanaLogField other = tagCloseable(field, value);
+    return new CompoundAutocloseableKibanaLogField(this, other);
+  }
+
+  /**
+   * Chain the closeable.
+   *
+   * @param field The field to set.
+   * @param value The value to set.
+   * @return a closable field.
+   */
+  default AutoCloseableKibanaLogField and(KibanaLogField field, String value) {
+    AutoCloseableKibanaLogField other = tagCloseable(field, value);
+    return new CompoundAutocloseableKibanaLogField(this, other);
+  }
+
+  /**
+   * Chain the closeable.
+   *
+   * @param field The field to set.
+   * @param value The value to set.
+   * @return a closable field.
+   */
+  default AutoCloseableKibanaLogField and(KibanaLogField field, Collection<String> value) {
+    AutoCloseableKibanaLogField other = tagCloseable(field, value);
+    return new CompoundAutocloseableKibanaLogField(this, other);
   }
 
   @Override
-  public String getLogName() {
-    return delegate.getLogName();
-  }
-
-  @Override
-  public boolean matches(String key) {
-    return delegate.matches(key);
-  }
-
-  @Override
-  public void close() {
-    KibanaLogFields.clear(this);
-  }
+  void close();
 }
