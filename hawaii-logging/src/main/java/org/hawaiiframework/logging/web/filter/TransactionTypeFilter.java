@@ -61,7 +61,7 @@ public class TransactionTypeFilter extends AbstractGenericFilterBean {
 
       String type = getTransactionType(wrapped.request());
       KibanaLogFields.tag(TX_TYPE, type);
-      LOGGER.debug("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
+      LOGGER.trace("Set '{}' with value '{}'.", TX_TYPE.getLogName(), type);
 
       filterChain.doFilter(wrapped.request(), wrapped.response());
     } catch (IOException ignored) {

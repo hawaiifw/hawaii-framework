@@ -48,10 +48,10 @@ public class ContentCachingRequestResponseFilter extends AbstractGenericFilterBe
     }
   }
 
-  private static void copyCachedResponse(WrappedHttpRequestResponse wrapped) throws IOException {
+  private void copyCachedResponse(WrappedHttpRequestResponse wrapped) throws IOException {
     if (wrapped != null) {
       ResettableHttpServletRequest request = wrapped.request();
-      if (!request.isAsyncStarted()) {
+      if (!isAsyncStarted(request)) {
         ContentCachingWrappedResponse response = wrapped.response();
         if (response != null) {
           response.copyBodyToResponse();

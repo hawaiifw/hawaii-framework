@@ -1,5 +1,8 @@
 # Release Notes #
 
+## 6.0.0-M10
+* Fix to use correct property in Kibana Log Cleanup Filter configuration 
+
 ## 6.0.0.M9
 * Made graphQl support configurable
 * Added kibana data fetch exception resolver to convert the error codes and add them to the `KibanaLogFields`
