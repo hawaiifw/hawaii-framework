@@ -5,6 +5,7 @@ public class PersonModelConverter extends AbstractModelConverter<PersonInput, Pe
   public PersonModelConverter(NullListConversionStrategy<PersonInput> strategy) {
     super(PersonInput.class, strategy);
   }
+
   /**
    * Converts the given source object into the target object.
    *

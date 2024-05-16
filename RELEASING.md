@@ -1,3 +1,4 @@
+git s
 ## Releasing
 
 Follow the steps below for publishing a new release.

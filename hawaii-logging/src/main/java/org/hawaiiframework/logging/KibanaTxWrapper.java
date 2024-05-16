@@ -25,7 +25,6 @@ import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
 
 import org.hawaiiframework.exception.HawaiiException;
-import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.util.Invocable;
 import org.hawaiiframework.util.Returnable;
@@ -55,14 +54,14 @@ public final class KibanaTxWrapper {
   @SuppressWarnings({
     "PMD.AvoidCatchingGenericException",
     "PMD.AvoidCatchingThrowable",
+    "PMD.UseExplicitTypes",
     "try",
     "unused"
   })
   public static <T> T kibanaTx(String system, String txName, Returnable<T> returnable) {
     long startTime = System.nanoTime();
 
-    try (KibanaLogTransaction kibanaLogTransaction =
-        new KibanaLogTransaction(getTxType(system, txName))) {
+    try (var logTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
       try {
         logStart();
         return returnable.invoke();
@@ -88,14 +87,14 @@ public final class KibanaTxWrapper {
   @SuppressWarnings({
     "PMD.AvoidCatchingGenericException",
     "PMD.AvoidCatchingThrowable",
+    "PMD.UseExplicitTypes",
     "try",
     "unused"
   })
   public static void kibanaTx(String system, String txName, Invocable invocable) {
     long startTime = System.nanoTime();
 
-    try (KibanaLogTransaction kibanaLogTransaction =
-        new KibanaLogTransaction(getTxType(system, txName))) {
+    try (var logTransaction = new KibanaLogTransaction(getTxType(system, txName))) {
       try {
         logStart();
         invocable.invoke();
@@ -111,19 +110,17 @@ public final class KibanaTxWrapper {
     }
   }
 
-  @SuppressWarnings({"try", "unused"})
+  @SuppressWarnings({"PMD.UseExplicitTypes", "try", "unused"})
   private static void logStart() {
-    try (AutoCloseableKibanaLogField startTag = tagCloseable(LOG_TYPE, CALL_START)) {
+    try (var closableTag = tagCloseable(LOG_TYPE, CALL_START)) {
       LOGGER.info("Started '{}'.", KibanaLogFields.get(TX_TYPE));
     }
   }
 
-  @SuppressWarnings({"try", "unused"})
+  @SuppressWarnings({"PMD.UseExplicitTypes", "try", "unused"})
   private static void logEnd(long startTime) {
     String duration = format("%.2f", (System.nanoTime() - startTime) / 1E6);
-    try (AutoCloseableKibanaLogField closeable =
-        tagCloseable(LOG_TYPE, END)
-            .and(TX_DURATION, duration)) {
+    try (var closableTag = tagCloseable(LOG_TYPE, END).and(TX_DURATION, duration)) {
       LOGGER.info("Duration '{}' ms.", duration);
     }
   }

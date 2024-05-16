@@ -37,6 +37,7 @@ public class ErrorResponseResource {
   private int statusCode;
   private String statusMessage;
   private String errorMessage;
+
   /** The throwable this resource was created for. */
   private final Throwable throwable;
 

@@ -44,6 +44,7 @@ public class SharedTaskContext {
   private static final Logger LOGGER = LoggerFactory.getLogger(SharedTaskContext.class);
 
   private static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
+
   /** The registered task removal strategy. */
   private TaskRemoveStrategy taskRemoveStrategy;
 

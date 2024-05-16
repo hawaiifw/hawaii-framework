@@ -18,13 +18,12 @@ package org.hawaiiframework.async.task.listener;
 
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.CALL_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
+import static org.hawaiiframework.logging.model.KibanaLogFields.tagCloseable;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_END;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.CALL_START;
 
 import org.hawaiiframework.async.statistics.TaskStatistics;
 import org.hawaiiframework.async.timeout.SharedTaskContext;
-import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
-import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,10 +50,9 @@ public class LoggingTaskListener implements TaskListener {
   }
 
   @Override
-  @SuppressWarnings({"try", "unused"})
+  @SuppressWarnings({"PMD.UseExplicitTypes", "try", "unused"})
   public void startExecution() {
-    try (AutoCloseableKibanaLogField callStart =
-        KibanaLogFields.tagCloseable(LOG_TYPE, CALL_START)) {
+    try (var closableTag = tagCloseable(LOG_TYPE, CALL_START)) {
       LOGGER.info(
           "Performing task '{}' with id '{}'.",
           sharedTaskContext.getTaskName(),
@@ -63,14 +61,12 @@ public class LoggingTaskListener implements TaskListener {
   }
 
   @Override
-  @SuppressWarnings({"PMD.LawOfDemeter", "try", "unused"})
+  @SuppressWarnings({"PMD.LawOfDemeter", "PMD.UseExplicitTypes", "try", "unused"})
   public void finish() {
     TaskStatistics taskStatistics = sharedTaskContext.getTaskStatistics();
     String duration = formatTime(taskStatistics.getTotalTime());
 
-    try (AutoCloseableKibanaLogField callEnd = KibanaLogFields.tagCloseable(LOG_TYPE, CALL_END);
-        AutoCloseableKibanaLogField durationField =
-            KibanaLogFields.tagCloseable(CALL_DURATION, duration)) {
+    try (var closableTags = tagCloseable(LOG_TYPE, CALL_END).and(CALL_DURATION, duration)) {
 
       LOGGER.info(
           "Task '{}' with id '{}' took '{}' msec ('{}' queue time, '{}' execution time).",

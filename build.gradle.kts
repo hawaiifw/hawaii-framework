@@ -7,17 +7,17 @@ plugins {
     // For publishing
     id("signing")
     id("maven-publish")
-    id("io.github.gradle-nexus.publish-plugin") version ("2.0.0-rc-1")
+    id("io.github.gradle-nexus.publish-plugin") version ("2.0.0")
 
     // Quality plugins. These are embedded plugins of gradle and their version come with the gradle version.
     id("checkstyle")
     id("net.ltgt.errorprone") version ("3.1.0")
     id("pmd")
-    id("com.diffplug.spotless") version ("6.12.0")
+    id("com.diffplug.spotless") version ("6.25.0")
 
     // Dependency management
-    id("io.spring.dependency-management") version ("1.1.4")
-    id("com.github.ben-manes.versions") version "0.50.0"
+    id("io.spring.dependency-management") version ("1.1.5")
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 apply(plugin = "io.github.gradle-nexus.publish-plugin")
@@ -38,28 +38,29 @@ subprojects {
     project.group = "org.hawaiiframework"
 
     buildscript {
-        extra.set("springBootVersion", "3.2.2")
-        extra.set("apacheCxfVersion", "4.0.3")
-        extra.set("bouncycastleVersion", "1.77")
-        extra.set("commonsIoVersion", "2.15.1")
-        extra.set("commonsTextVersion", "1.11.0")
+        extra.set("springBootVersion", "3.2.5")
+        extra.set("apacheCxfVersion", "4.0.4")
+        extra.set("bouncycastleVersion", "1.78.1")
+        extra.set("commonsIoVersion", "2.16.1")
+        extra.set("commonsTextVersion", "1.12.0")
         extra.set("dataSourceProxyVersion", "1.10")
         extra.set("hamcrestVersion", "2.2")
         extra.set("hibernatorValidatorVersion", "8.0.1.Final")
         extra.set("httpcomponentsClient5Version", "5.3")
         extra.set("jasyptVersion", "1.9.3")
-        extra.set("nimbusJoseJwtVersion", "9.37.3")
-        extra.set("opentelemetryVersion", "1.34.1")
-        extra.set("orgJsonVersion", "20231013")
-        extra.set("springCloudVersion", "4.1.0")
-        extra.set("validationApiVersion", "3.0.2")
+        extra.set("nimbusJoseJwtVersion", "9.39.1")
+        extra.set("opentelemetryVersion", "1.38.0")
+        extra.set("orgJsonVersion", "20240303")
+        extra.set("springCloudVersion", "4.1.2")
+        extra.set("validationApiVersion", "3.1.0-M2")
         extra.set("graphqlJavaVersion", "21.0")
     }
 
-    val checkstyleVersion = "10.12.7"
-    val errorProneVersion = "2.24.1"
-    val errorProneSupportVersion = "0.14.0"
-    val pmdVersion = "7.0.0-rc4"
+    val checkstyleVersion = "10.13.0"
+    val errorProneVersion = "2.27.1"
+    val googleJavaFormatVersion = "1.22.0"
+    val picnicErrorProneVersion = "0.16.1"
+    val pmdVersion = "7.1.0"
     val findbugsJsrVersion = "3.0.2"
 
     apply(plugin = "java-library")
@@ -151,7 +152,7 @@ subprojects {
 
         errorprone("com.google.errorprone:error_prone_core:${errorProneVersion}")
         // Error Prone Support's additional bug checkers.
-        errorprone("tech.picnic.error-prone-support:error-prone-contrib:${errorProneSupportVersion}")
+        errorprone("tech.picnic.error-prone-support:error-prone-contrib:${picnicErrorProneVersion}")
 
         pmd("net.sourceforge.pmd:pmd-ant:${pmdVersion}")
         pmd("net.sourceforge.pmd:pmd-java:${pmdVersion}")
@@ -203,7 +204,7 @@ subprojects {
      */
     spotless {
         java {
-            googleJavaFormat()
+            googleJavaFormat(googleJavaFormatVersion)
         }
     }
     project.tasks["spotlessJavaCheck"].enabled = false

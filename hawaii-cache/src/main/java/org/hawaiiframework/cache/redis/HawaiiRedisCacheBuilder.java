@@ -238,7 +238,7 @@ public class HawaiiRedisCacheBuilder {
   @SuppressWarnings("PMD.LawOfDemeter")
   private <V> RedisCache<V> generateRedisCache(
       RedisTemplate<String, V> template, HawaiiTime hawaiiTime, String keyPrefix) {
-    var expiration =
+    Duration expiration =
         defaultExpiration != null ? defaultExpiration : cacheConfiguration.getDefaultExpiration();
     return new RedisCache<>(template, hawaiiTime, expiration, keyPrefix);
   }
