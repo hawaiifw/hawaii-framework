@@ -21,7 +21,7 @@ public class HostResolver {
    *
    * @return the base url
    */
-  @SuppressWarnings("PMD.LawOfDemeter")
+  @SuppressWarnings({"PMD.LawOfDemeter", "PMD.UseExplicitTypes"})
   public String getBaseUrl() {
     var requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     var request = requestAttributes.getRequest();

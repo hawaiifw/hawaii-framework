@@ -1,5 +1,13 @@
 # Release Notes #
 
+## 6.0.0-M11
+* Extend autocloseable Kibana log fields to allow chaining.
+  ```
+  try (var closeable = tagCloseable(LOG_TYPE, CALL_END).and(CALL_DURATION, duration)) {
+    ...
+  }
+  ```
+
 ## 6.0.0-M10
 * Fix to use correct property in Kibana Log Cleanup Filter configuration 
 

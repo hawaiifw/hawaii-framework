@@ -12,7 +12,7 @@ public final class KibanaLogContext {
 
   /** Create a new instance, copying the MDC (context map). */
   public KibanaLogContext() {
-    var copyContextMap = MDC.getCopyOfContextMap();
+    Map<String, String> copyContextMap = MDC.getCopyOfContextMap();
     if (copyContextMap != null) {
       contextMap.putAll(copyContextMap);
     }

@@ -126,7 +126,7 @@ public class RedisCache<T> implements Cache<T> {
     requireNonNull(key);
     requireNonNull(value);
     String cacheKey = getKey(key);
-    var exp = hawaiiTime.between(expiry);
+    Long exp = hawaiiTime.between(expiry);
     LOGGER.debug("Putting '{}' with expiration of '{}'.", cacheKey, expiry);
     redisTemplate.opsForValue().set(cacheKey, value);
     redisTemplate.expire(cacheKey, exp, TimeUnit.MILLISECONDS);

@@ -68,7 +68,7 @@ public class SpringMvcTransactionTypeSupplier implements TransactionTypeSupplier
     return null;
   }
 
-  @SuppressWarnings("PMD.LawOfDemeter")
+  @SuppressWarnings({"PMD.LawOfDemeter", "PMD.UseExplicitTypes"})
   private static String getTransactionType(HandlerExecutionChain handlerExecutionChain) {
     if (handlerExecutionChain != null) {
       var tempHandler = handlerExecutionChain.getHandler();
@@ -81,8 +81,8 @@ public class SpringMvcTransactionTypeSupplier implements TransactionTypeSupplier
 
   @SuppressWarnings("PMD.LawOfDemeter")
   private static String getTransactionType(HandlerMethod handler) {
-    var nameMethod = handler.getMethod().getName();
-    var nameController = handler.getBeanType().getSimpleName();
+    String nameMethod = handler.getMethod().getName();
+    String nameController = handler.getBeanType().getSimpleName();
     return nameController + "." + nameMethod;
   }
 }

@@ -47,6 +47,7 @@ public class ExecutorConfigurationProperties {
 
   /** The separator for a task name. Set to a period. */
   private static final String SEPARATOR = "\\.";
+
   /**
    * The default queue.
    *

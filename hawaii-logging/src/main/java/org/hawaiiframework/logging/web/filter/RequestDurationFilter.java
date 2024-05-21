@@ -19,6 +19,7 @@ package org.hawaiiframework.logging.web.filter;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.LOG_TYPE;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.REQUEST_DURATION;
 import static org.hawaiiframework.logging.model.KibanaLogFieldNames.TX_DURATION;
+import static org.hawaiiframework.logging.model.KibanaLogFields.tagCloseable;
 import static org.hawaiiframework.logging.model.KibanaLogTypeNames.END;
 
 import jakarta.servlet.FilterChain;
@@ -27,7 +28,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.hawaiiframework.logging.config.FilterVoter;
-import org.hawaiiframework.logging.model.AutoCloseableKibanaLogField;
 import org.hawaiiframework.logging.model.KibanaLogFields;
 import org.hawaiiframework.logging.model.MockMvcFilter;
 import org.slf4j.Logger;
@@ -81,14 +81,14 @@ public class RequestDurationFilter extends AbstractGenericFilterBean implements 
     }
   }
 
-  @SuppressWarnings({"try", "unused"})
+  @SuppressWarnings({"PMD.UseExplicitTypes", "try", "unused"})
   private static void logEnd(Long start) {
     if (start == null) {
       LOGGER.info("Could not read start timestamp from request!");
       return;
     }
 
-    try (AutoCloseableKibanaLogField endField = KibanaLogFields.tagCloseable(LOG_TYPE, END)) {
+    try (var closableTag = tagCloseable(LOG_TYPE, END)) {
       String duration = String.format("%.2f", (System.nanoTime() - start) / 1E6);
       KibanaLogFields.tag(TX_DURATION, duration);
       KibanaLogFields.tag(REQUEST_DURATION, duration);
