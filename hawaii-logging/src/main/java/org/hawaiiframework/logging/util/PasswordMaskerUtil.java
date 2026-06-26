@@ -86,7 +86,7 @@ public class PasswordMaskerUtil {
       while (builder.hasNext()) {
         boolean fieldMasked = false;
         for (PasswordMasker masker : PASSWORD_MASKERS) {
-          fieldMasked = masker.matches(builder);
+          fieldMasked |= masker.matches(builder);
         }
         if (fieldMasked) {
           break;
